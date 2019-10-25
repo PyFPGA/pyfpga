@@ -50,6 +50,8 @@ class Tool:
         """Set the TOP LEVEL of the project."""
         raise NotImplementedError(self.set_top.__name__)
 
+    STRATEGIES = ['none', 'area', 'speed', 'power']
+
     set_strategy(self, strategy):
         """Set the Optimization STRATEGY.
 
@@ -57,25 +59,29 @@ class Tool:
         """
         raise NotImplementedError(self.set_strategy.__name__)
 
+    PHASES = ['pre_syn', 'post_syn', 'post_imp', 'post_bit']
+
     set_options(self, options, phase):
         """Set the specified OPTIONS in the desired phase.
 
         The OPTIONs are specific for each tool (one or more Tcl lines).
-        The valid PHASEs are pre_syn (default), post_syn, post_impl and
-        post_bit.
+        The valid PHASEs are pre_syn, post_syn, post_imp and post_bit.
         """
         raise NotImplementedError(self.set_options.__name__)
 
-    set_flow(self, task):
-        """Set the tasks of the workflow to perform.
+    TASKS = ['prj', 'syn', 'imp', 'bit']
 
-        The valid options are syn for only Synthesis, imp for synthesis and
-        implementation and bit (default) to add the bitstream generation.
+    create(self, task):
+        """Creates the input file for the Tool.
+
+        The valid TASKs are prj to only create the project file, syn for also
+        performs the synthesis, imp to add implementation and bit (default)
+        to finish with the bitstream generation.
         """
-        raise NotImplementedError(self.set_flow.__name__)
+        raise NotImplementedError(self.create.__name__)
 
     generate(self):
-        """Creates the Project File and run the tool."""
+        """Run the tool."""
         raise NotImplementedError(self.generate.__name__)
 
     transfer(self, device, position, name, width):
