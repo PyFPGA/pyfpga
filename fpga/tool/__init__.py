@@ -30,15 +30,15 @@ class Tool:
     tool implementation to provide the needed funcionality.
     """
 
-    set_project(self, name):
+    def set_project(self, name):
         """Set the NAME of the project."""
         raise NotImplementedError(self.set_project.__name__)
 
-    set_device(self, device):
+    def set_device(self, device):
         """Set the target DEVICE."""
         raise NotImplementedError(self.set_device.__name__)
 
-    set_file(self, file, lib):
+    def set_file(self, file, lib):
         """Set a FILE of the project belonging to LIB.
 
         LIB is only useful for VHDL files belonging to a library which is not
@@ -46,13 +46,13 @@ class Tool:
         """
         raise NotImplementedError(self.set_file.__name__)
 
-    set_top(self, toplevel):
+    def set_top(self, toplevel):
         """Set the TOP LEVEL of the project."""
         raise NotImplementedError(self.set_top.__name__)
 
     STRATEGIES = ['none', 'area', 'speed', 'power']
 
-    set_strategy(self, strategy):
+    def set_strategy(self, strategy):
         """Set the Optimization STRATEGY.
 
         The valid options are none (default), area, speed and power.
@@ -61,7 +61,7 @@ class Tool:
 
     PHASES = ['pre_syn', 'post_syn', 'post_imp', 'post_bit']
 
-    set_options(self, options, phase):
+    def set_options(self, options, phase):
         """Set the specified OPTIONS in the desired phase.
 
         The OPTIONs are specific for each tool (one or more Tcl lines).
@@ -71,7 +71,7 @@ class Tool:
 
     TASKS = ['prj', 'syn', 'imp', 'bit']
 
-    create(self, task):
+    def create(self, task):
         """Creates the input file for the Tool.
 
         The valid TASKs are prj to only create the project file, syn for also
@@ -80,11 +80,11 @@ class Tool:
         """
         raise NotImplementedError(self.create.__name__)
 
-    generate(self):
+    def generate(self):
         """Run the tool."""
         raise NotImplementedError(self.generate.__name__)
 
-    transfer(self, device, position, name, width):
+    def transfer(self, device, position, name, width):
         """Transfer the bitstream to a DEVICE.
 
         Optionally, the POSITION in the Jtag chain (for FPGAs and some old
