@@ -22,14 +22,24 @@ Main Class of PyFPGA, which provides functionalities to create a project,
 generate files and transfer to a Device.
 """
 
+from fpga.tool.ise import Ise
+from fpga.tool.libero import Libero
+from fpga.tool.quartus import Quartus
+from fpga.tool.vivado import Vivado
+
 
 class Project:
     """Manage an FPGA project."""
 
-    __init__(self, tool, device=None, name=None):
-        """Instantiate the Tool to use.
-
-        If a DEVICE is not specified, the default of the selected TOOL is
-        used. The default project NAME is the same as the TOOL but another
-        one can be specified.
-        """
+    def __init__(self, tool='vivado', device=None, project=None):
+        """Instantiate the Tool to use."""
+        if tool is 'ise':
+            self.tool = Ise(project, device)
+        elif tool is 'libero':
+            self.tool = Libero(project, device)
+        elif tool is 'quartus':
+            self.tool = Quartus(project, device)
+        elif tool is 'vivado':
+            self.tool = Vivado(project, device)
+        else:
+            raise NotImplementedError(tool)

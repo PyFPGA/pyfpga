@@ -30,13 +30,17 @@ class Tool:
     tool implementation to provide the needed funcionality.
     """
 
+    def __init__(self, name, device):
+        self.set_project(name)
+        self.set_device(device)
+
     def set_project(self, name):
         """Set the NAME of the project."""
-        raise NotImplementedError(self.set_project.__name__)
+        raise NotImplementedError('set_project')
 
     def set_device(self, device):
         """Set the target DEVICE."""
-        raise NotImplementedError(self.set_device.__name__)
+        raise NotImplementedError('set_device')
 
     def set_file(self, file, lib):
         """Set a FILE of the project belonging to LIB.
@@ -44,11 +48,11 @@ class Tool:
         LIB is only useful for VHDL files belonging to a library which is not
         Work.
         """
-        raise NotImplementedError(self.set_file.__name__)
+        raise NotImplementedError('set_file')
 
     def set_top(self, toplevel):
         """Set the TOP LEVEL of the project."""
-        raise NotImplementedError(self.set_top.__name__)
+        raise NotImplementedError('set_top')
 
     STRATEGIES = ['none', 'area', 'speed', 'power']
 
@@ -57,7 +61,7 @@ class Tool:
 
         The valid options are none (default), area, speed and power.
         """
-        raise NotImplementedError(self.set_strategy.__name__)
+        raise NotImplementedError('set_strategy')
 
     PHASES = ['pre_syn', 'post_syn', 'post_imp', 'post_bit']
 
@@ -67,7 +71,7 @@ class Tool:
         The OPTIONs are specific for each tool (one or more Tcl lines).
         The valid PHASEs are pre_syn, post_syn, post_imp and post_bit.
         """
-        raise NotImplementedError(self.set_options.__name__)
+        raise NotImplementedError('set_options')
 
     TASKS = ['prj', 'syn', 'imp', 'bit']
 
@@ -78,11 +82,11 @@ class Tool:
         performs the synthesis, imp to add implementation and bit (default)
         to finish with the bitstream generation.
         """
-        raise NotImplementedError(self.create.__name__)
+        raise NotImplementedError('create')
 
     def generate(self):
         """Run the tool."""
-        raise NotImplementedError(self.generate.__name__)
+        raise NotImplementedError('generate')
 
     def transfer(self, device, position, name, width):
         """Transfer the bitstream to a DEVICE.
@@ -91,4 +95,4 @@ class Tool:
         memories), the NAME (for SPI/BPI memories) and the data WIDTH (for
         memories) can be specified.
         """
-        raise NotImplementedError(self.transfer.__name__)
+        raise NotImplementedError('transfer')

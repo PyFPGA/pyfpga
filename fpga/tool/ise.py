@@ -21,5 +21,8 @@
 Implements the support of ISE (Xilinx).
 """
 
+from fpga.tool import Tool
 
-class ISE(Tool):
+
+class Ise(Tool):
+    pass

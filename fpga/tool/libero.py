@@ -21,5 +21,8 @@
 Implements the support of Libero (Microchip/Microsemi).
 """
 
+from fpga.tool import Tool
+
 
 class Libero(Tool):
+    pass

@@ -21,5 +21,8 @@
 Implements the support of Vivado (Xilinx).
 """
 
+from fpga.tool import Tool
+
 
 class Vivado(Tool):
+    pass

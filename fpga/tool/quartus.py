@@ -21,5 +21,8 @@
 Implements the support of Quartus (Intel/Altera).
 """
 
+from fpga.tool import Tool
+
 
 class Quartus(Tool):
+    pass
