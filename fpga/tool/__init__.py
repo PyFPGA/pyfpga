@@ -42,13 +42,12 @@ class Tool:
         """Set the target DEVICE."""
         raise NotImplementedError('set_device')
 
-    def set_file(self, file, lib):
-        """Set a FILE of the project belonging to LIB.
+    def add_file(self, file, lib):
+        """Add a FILE to the project.
 
-        LIB is only useful for VHDL files belonging to a library which is not
-        Work.
+        LIB is optional and only useful for VHDL files.
         """
-        raise NotImplementedError('set_file')
+        raise NotImplementedError('add_file')
 
     def set_top(self, toplevel):
         """Set the TOP LEVEL of the project."""
@@ -75,18 +74,16 @@ class Tool:
 
     TASKS = ['prj', 'syn', 'imp', 'bit']
 
-    def create(self, task):
-        """Creates the input file for the Tool.
+    def generate(self, task):
+        """Run the FPGA tool.
 
         The valid TASKs are prj to only create the project file, syn for also
         performs the synthesis, imp to add implementation and bit (default)
         to finish with the bitstream generation.
         """
-        raise NotImplementedError('create')
-
-    def generate(self):
-        """Run the tool."""
         raise NotImplementedError('generate')
+
+    DEVICES = ['fpga', 'spi', 'bpi', 'xcf']
 
     def transfer(self, device, position, name, width):
         """Transfer the bitstream to a DEVICE.

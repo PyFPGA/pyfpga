@@ -22,6 +22,8 @@ Main Class of PyFPGA, which provides functionalities to create a project,
 generate files and transfer to a Device.
 """
 
+import glob
+
 from fpga.tool.ise import Ise
 from fpga.tool.libero import Libero
 from fpga.tool.quartus import Quartus
@@ -33,13 +35,56 @@ class Project:
 
     def __init__(self, tool='vivado', device=None, project=None):
         """Instantiate the Tool to use."""
-        if tool is 'ise':
+        if tool == 'ise':
             self.tool = Ise(project, device)
-        elif tool is 'libero':
+        elif tool == 'libero':
             self.tool = Libero(project, device)
-        elif tool is 'quartus':
+        elif tool == 'quartus':
             self.tool = Quartus(project, device)
-        elif tool is 'vivado':
+        elif tool == 'vivado':
             self.tool = Vivado(project, device)
         else:
             raise NotImplementedError(tool)
+
+    def add_files(self, pathname, lib):
+        """Add files to the project.
+
+        PATHNAME must be a string containing an absolute or relative path
+        specification, and can contain shell-style wildcards.
+        LIB is optional and only useful for VHDL files.
+        """
+        files = glob.glob(pathname)
+        for file in files:
+            self.tool.add_file(file, lib)
+
+    def set_top(self, toplevel):
+        """Set the TOP LEVEL of the project."""
+        self.tool.set_top(toplevel)
+
+    def set_strategy(self, strategy):
+        """Set the Optimization STRATEGY."""
+        self.tool.set_strategy(strategy)
+
+    def pre_syn_opts(self, options):
+        """Set pre synthesis OPTIONS."""
+        self.tool.set_options(options, 'pre_syn')
+
+    def post_syn_opts(self, options):
+        """Set post synthesis OPTIONS."""
+        self.tool.set_options(options, 'post_syn')
+
+    def post_imp_opts(self, options):
+        """Set post implementation OPTIONS."""
+        self.tool.set_options(options, 'post_imp')
+
+    def post_bit_opts(self, options):
+        """Set post bitstream generation OPTIONS."""
+        self.tool.set_options(options, 'post_bit')
+
+    def generate(self, task):
+        """Run the FPGA tool."""
+        self.tool.generate(task)
+
+    def transfer(self, device, position, name, width):
+        """Transfer the bitstream to a DEVICE."""
+        self.tool.transfer(device, position, name, width)
