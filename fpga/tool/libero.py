@@ -25,4 +25,4 @@ from fpga.tool import Tool
 
 
 class Libero(Tool):
-    pass
+    """Implementation of the class to support Libero."""

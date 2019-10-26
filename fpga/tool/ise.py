@@ -25,4 +25,4 @@ from fpga.tool import Tool
 
 
 class Ise(Tool):
-    pass
+    """Implementation of the class to support ISE."""

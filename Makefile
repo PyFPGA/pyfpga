@@ -1,6 +1,12 @@
 #!/usr/bin/make
 
-all:
+all: pep8 pylint
 
 pep8:
 	@pycodestyle fpga
+
+pylint:
+	@pylint --errors-only fpga
+
+pylint-full:
+	@pylint fpga
