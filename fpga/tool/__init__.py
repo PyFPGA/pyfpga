@@ -37,7 +37,7 @@ class Tool:
         self.project = project
         self.device = device
         self.files = ""
-        self.phase = {
+        self.options = {
             'project': '',
             'pre_flow': '',
             'post_syn': '',
@@ -64,7 +64,7 @@ class Tool:
         The OPTIONs are specific for each tool (one or more Tcl lines). The
         valid PHASEs are project, pre_flow, post_syn, post_imp and post_bit.
         """
-        raise NotImplementedError('set_options')
+        self.options[phase] = options
 
     _STRATEGIES = ['none', 'area', 'speed', 'power']
 
