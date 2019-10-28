@@ -36,7 +36,8 @@ class Tool:
         """Initializes the attributes of the class."""
         self.project = project
         self.device = device
-        self.files = ""
+        self.files = ''
+        self.strategy = 'none'
         self.options = {
             'project': '',
             'pre_flow': '',
@@ -56,6 +57,21 @@ class Tool:
         """Set the TOP LEVEL of the project."""
         raise NotImplementedError('set_top')
 
+    _STRATEGIES = ['none', 'area', 'speed', 'power']
+
+    def set_strategy(self, strategy):
+        """Set the Optimization STRATEGY.
+
+        The valid options are none (default), area, speed and power.
+        """
+        if strategy in self._STRATEGIES:
+            self.strategy = strategy
+        else:
+            raise ValueError(
+                '{} is not a valid strategy ({})'
+                .format(strategy, " ,".join(self._STRATEGIES))
+            )
+
     _PHASES = ['project', 'pre_flow', 'post_syn', 'post_imp', 'post_bit']
 
     def set_options(self, options, phase):
@@ -66,16 +82,13 @@ class Tool:
         """
         self.options[phase] = options
 
-    _STRATEGIES = ['none', 'area', 'speed', 'power']
-
     _TASKS = ['prj', 'syn', 'imp', 'bit']
 
     _TEMPLATE = os.path.join(os.path.dirname(__file__), '/template.tcl')
 
-    def generate(self, strategy, task):
+    def generate(self, task):
         """Run the FPGA tool.
 
-        The valid STRATEGIES are none (default), area, speed and power.
         The valid TASKs are prj to only create the project file, syn for also
         performs the synthesis, imp to add implementation and bit (default)
         to finish with the bitstream generation.
