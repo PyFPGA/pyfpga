@@ -21,26 +21,31 @@
 Defines the interface to be inherited to support a tool.
 """
 
+import os.path
+
 
 class Tool:
     """Tool interface.
 
-    It is the basic interface for tool implementations. By default, the
-    methods raise a NotImplementedError exception and should be replaced by a
-    tool implementation to provide the needed funcionality.
+    It is the basic interface for tool implementations. By default, most of
+    the methods raises a NotImplementedError exception and should be replaced
+    by a tool implementation to provide the needed funcionality.
     """
 
-    def __init__(self, name, device):
-        self.set_project(name)
-        self.set_device(device)
-
-    def set_project(self, name):
-        """Set the NAME of the project."""
-        raise NotImplementedError('set_project')
-
-    def set_device(self, device):
-        """Set the target DEVICE."""
-        raise NotImplementedError('set_device')
+    def __init__(self, project, device):
+        """Initializes the attributes of the class."""
+        self.project = project
+        self.device = device
+        self.strategy = 'none'
+        self.task = 'bit'
+        self.files = ""
+        self.phase = {
+            'project': '',
+            'pre_flow': '',
+            'post_syn': '',
+            'post_imp': '',
+            'post_bit': ''
+        }
 
     def add_file(self, file, lib):
         """Add a FILE to the project.
@@ -53,7 +58,7 @@ class Tool:
         """Set the TOP LEVEL of the project."""
         raise NotImplementedError('set_top')
 
-    STRATEGIES = ['none', 'area', 'speed', 'power']
+    _STRATEGIES = ['none', 'area', 'speed', 'power']
 
     def set_strategy(self, strategy):
         """Set the Optimization STRATEGY.
@@ -62,17 +67,26 @@ class Tool:
         """
         raise NotImplementedError('set_strategy')
 
-    PHASES = ['pre_syn', 'post_syn', 'post_imp', 'post_bit']
+    _PHASES = ['project', 'pre_flow', 'post_syn', 'post_imp', 'post_bit']
 
     def set_options(self, options, phase):
-        """Set the specified OPTIONS in the desired phase.
+        """Set the specified OPTIONS in the desired PHASE.
 
-        The OPTIONs are specific for each tool (one or more Tcl lines).
-        The valid PHASEs are pre_syn, post_syn, post_imp and post_bit.
+        The OPTIONs are specific for each tool (one or more Tcl lines). The
+        valid PHASEs are project, pre_flow, post_syn, post_imp and post_bit.
         """
         raise NotImplementedError('set_options')
 
-    TASKS = ['prj', 'syn', 'imp', 'bit']
+    def get_template(self):
+        """Loads a template Tcl file."""
+        file = os.path.join(os.path.dirname(__file__), 'template.tcl')
+        self.template = open(file).read()
+
+    def get_script(self):
+        """Generates the script to be used as input of the Tool."""
+        raise NotImplementedError('get_script')
+
+    _TASKS = ['prj', 'syn', 'imp', 'bit']
 
     def generate(self, task):
         """Run the FPGA tool.
