@@ -65,19 +65,23 @@ class Project:
         """Set the Optimization STRATEGY."""
         self.tool.set_strategy(strategy)
 
-    def pre_syn_opts(self, options):
-        """Set pre synthesis OPTIONS."""
-        self.tool.set_options(options, 'pre_syn')
+    def set_project_opts(self, options):
+        """Set project OPTIONS."""
+        self.tool.set_options(options, 'project')
 
-    def post_syn_opts(self, options):
+    def set_pre_flow_opts(self, options):
+        """Set pre flow OPTIONS."""
+        self.tool.set_options(options, 'pre_flow')
+
+    def set_post_syn_opts(self, options):
         """Set post synthesis OPTIONS."""
         self.tool.set_options(options, 'post_syn')
 
-    def post_imp_opts(self, options):
+    def set_post_imp_opts(self, options):
         """Set post implementation OPTIONS."""
         self.tool.set_options(options, 'post_imp')
 
-    def post_bit_opts(self, options):
+    def set_post_bit_opts(self, options):
         """Set post bitstream generation OPTIONS."""
         self.tool.set_options(options, 'post_bit')
 
