@@ -36,8 +36,6 @@ class Tool:
         """Initializes the attributes of the class."""
         self.project = project
         self.device = device
-        self.strategy = 'none'
-        self.task = 'bit'
         self.files = ""
         self.phase = {
             'project': '',
@@ -58,15 +56,6 @@ class Tool:
         """Set the TOP LEVEL of the project."""
         raise NotImplementedError('set_top')
 
-    _STRATEGIES = ['none', 'area', 'speed', 'power']
-
-    def set_strategy(self, strategy):
-        """Set the Optimization STRATEGY.
-
-        The valid options are none (default), area, speed and power.
-        """
-        raise NotImplementedError('set_strategy')
-
     _PHASES = ['project', 'pre_flow', 'post_syn', 'post_imp', 'post_bit']
 
     def set_options(self, options, phase):
@@ -77,27 +66,23 @@ class Tool:
         """
         raise NotImplementedError('set_options')
 
-    def get_template(self):
-        """Loads a template Tcl file."""
-        file = os.path.join(os.path.dirname(__file__), 'template.tcl')
-        self.template = open(file).read()
-
-    def get_script(self):
-        """Generates the script to be used as input of the Tool."""
-        raise NotImplementedError('get_script')
+    _STRATEGIES = ['none', 'area', 'speed', 'power']
 
     _TASKS = ['prj', 'syn', 'imp', 'bit']
 
-    def generate(self, task):
+    _TEMPLATE = os.path.join(os.path.dirname(__file__), '/template.tcl')
+
+    def generate(self, strategy, task):
         """Run the FPGA tool.
 
+        The valid STRATEGIES are none (default), area, speed and power.
         The valid TASKs are prj to only create the project file, syn for also
         performs the synthesis, imp to add implementation and bit (default)
         to finish with the bitstream generation.
         """
         raise NotImplementedError('generate')
 
-    DEVICES = ['fpga', 'spi', 'bpi', 'xcf']
+    _DEVICES = ['fpga', 'spi', 'bpi', 'xcf']
 
     def transfer(self, device, position, name, width):
         """Transfer the bitstream to a DEVICE.

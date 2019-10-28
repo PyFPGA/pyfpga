@@ -61,10 +61,6 @@ class Project:
         """Set the TOP LEVEL of the project."""
         self.tool.set_top(toplevel)
 
-    def set_strategy(self, strategy):
-        """Set the Optimization STRATEGY."""
-        self.tool.set_strategy(strategy)
-
     def set_project_opts(self, options):
         """Set project OPTIONS."""
         self.tool.set_options(options, 'project')
@@ -85,9 +81,9 @@ class Project:
         """Set post bitstream generation OPTIONS."""
         self.tool.set_options(options, 'post_bit')
 
-    def generate(self, task):
+    def generate(self, strategy, task):
         """Run the FPGA tool."""
-        self.tool.generate(task)
+        self.tool.generate(strategy, task)
 
     def transfer(self, device, position, name, width):
         """Transfer the bitstream to a DEVICE."""
