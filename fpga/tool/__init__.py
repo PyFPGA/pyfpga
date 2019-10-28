@@ -24,6 +24,15 @@ Defines the interface to be inherited to support a tool.
 import os.path
 
 
+def check_value(value, values):
+    """Check if VALUE is included in VALUES."""
+    if value not in values:
+        raise ValueError(
+            '{} is not a valid value ({})'
+            .format(value, " ,".join(values))
+        )
+
+
 class Tool:
     """Tool interface.
 
@@ -38,6 +47,7 @@ class Tool:
         self.device = device
         self.files = ''
         self.strategy = 'none'
+        self.task = 'bit'
         self.options = {
             'project': '',
             'pre_flow': '',
@@ -64,13 +74,8 @@ class Tool:
 
         The valid options are none (default), area, speed and power.
         """
-        if strategy in self._STRATEGIES:
-            self.strategy = strategy
-        else:
-            raise ValueError(
-                '{} is not a valid strategy ({})'
-                .format(strategy, " ,".join(self._STRATEGIES))
-            )
+        check_value(strategy, self._STRATEGIES)
+        self.strategy = strategy
 
     _PHASES = ['project', 'pre_flow', 'post_syn', 'post_imp', 'post_bit']
 
@@ -80,19 +85,25 @@ class Tool:
         The OPTIONs are specific for each tool (one or more Tcl lines). The
         valid PHASEs are project, pre_flow, post_syn, post_imp and post_bit.
         """
+        check_value(phase, self._PHASES)
         self.options[phase] = options
 
     _TASKS = ['prj', 'syn', 'imp', 'bit']
 
-    _TEMPLATE = os.path.join(os.path.dirname(__file__), '/template.tcl')
-
-    def generate(self, task):
-        """Run the FPGA tool.
+    def set_task(self, task):
+        """Set the TASK to reach when the Tool is executed.
 
         The valid TASKs are prj to only create the project file, syn for also
         performs the synthesis, imp to add implementation and bit (default)
         to finish with the bitstream generation.
         """
+        check_value(task, self._TASKS)
+        self.task = 'bit'
+
+    _TEMPLATE = os.path.join(os.path.dirname(__file__), '/template.tcl')
+
+    def generate(self):
+        """Run the FPGA tool."""
         raise NotImplementedError('generate')
 
     _DEVICES = ['fpga', 'spi', 'bpi', 'xcf']

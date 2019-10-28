@@ -85,9 +85,13 @@ class Project:
         """Set post bitstream generation OPTIONS."""
         self.tool.set_options(options, 'post_bit')
 
-    def generate(self, task):
+    def set_task(self, task):
+        """Set the TASK to reach when the Tool is executed."""
+        self.tool.set_task(task)
+
+    def generate(self):
         """Run the FPGA tool."""
-        self.tool.generate(task)
+        self.tool.generate()
 
     def transfer(self, device, position, name, width):
         """Transfer the bitstream to a DEVICE."""
