@@ -46,6 +46,10 @@ class Project:
         else:
             raise NotImplementedError(tool)
 
+    def get_config(self):
+        """Get the Project Configurations."""
+        return self.tool.get_config()
+
     def add_files(self, pathname, lib):
         """Add files to the project.
 
