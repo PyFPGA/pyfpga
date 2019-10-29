@@ -122,7 +122,7 @@ class Tool:
         check_value(task, self._TASKS)
         self.task = task
 
-    _TCL_PATH = os.path.join(os.path.dirname(__file__), '/template.tcl')
+    _TCL_PATH = os.path.join(os.path.dirname(__file__), 'template.tcl')
     _TEMPLATE = open(_TCL_PATH).read()
 
     def generate(self):
