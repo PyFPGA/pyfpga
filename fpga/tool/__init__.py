@@ -98,7 +98,7 @@ class Tool:
         to finish with the bitstream generation.
         """
         check_value(task, self._TASKS)
-        self.task = 'bit'
+        self.task = task
 
     _TEMPLATE = os.path.join(os.path.dirname(__file__), '/template.tcl')
 
