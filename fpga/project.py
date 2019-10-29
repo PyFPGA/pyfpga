@@ -75,19 +75,19 @@ class Project:
 
     def set_pre_flow_opts(self, options):
         """Set pre flow OPTIONS."""
-        self.tool.set_options(options, 'pre_flow')
+        self.tool.set_options(options, 'pre-flow')
 
     def set_post_syn_opts(self, options):
         """Set post synthesis OPTIONS."""
-        self.tool.set_options(options, 'post_syn')
+        self.tool.set_options(options, 'post-syn')
 
     def set_post_imp_opts(self, options):
         """Set post implementation OPTIONS."""
-        self.tool.set_options(options, 'post_imp')
+        self.tool.set_options(options, 'post-imp')
 
     def set_post_bit_opts(self, options):
         """Set post bitstream generation OPTIONS."""
-        self.tool.set_options(options, 'post_bit')
+        self.tool.set_options(options, 'post-bit')
 
     def set_task(self, task):
         """Set the TASK to reach when the Tool is executed."""

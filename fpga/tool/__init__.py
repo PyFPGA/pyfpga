@@ -37,8 +37,8 @@ class Tool:
     """Tool interface.
 
     It is the basic interface for tool implementations. There are methods that
-    by default raises a NotImplementedError exception and should be replaced
-    by a tool implementation to provide the needed funcionality.
+    raises a NotImplementedError exception and should be replaced by a tool
+    implementation to provide the needed funcionality.
     """
 
     _TOOL = 'UNDEFINED'
@@ -60,21 +60,21 @@ class Tool:
         self.task = 'bit'
         self.options = {
             'project': '',
-            'pre_flow': '',
-            'post_syn': '',
-            'post_imp': '',
-            'post_bit': ''
+            'pre-flow': '',
+            'post-syn': '',
+            'post-imp': '',
+            'post-bit': ''
         }
 
     def get_config(self):
         """Get Configurations."""
         info = {
-            "tool" : self._TOOL,
-            "project" : self.project,
-            "extension" : self._EXTENSION,
-            "device" : self.device,
-            "strategy" : self.strategy,
-            "task" : self.task
+            "tool": self._TOOL,
+            "project": self.project,
+            "extension": self._EXTENSION,
+            "device": self.device,
+            "strategy": self.strategy,
+            "task": self.task
         }
         return info
 
@@ -99,13 +99,13 @@ class Tool:
         check_value(strategy, self._STRATEGIES)
         self.strategy = strategy
 
-    _PHASES = ['project', 'pre_flow', 'post_syn', 'post_imp', 'post_bit']
+    _PHASES = ['project', 'pre-flow', 'post-syn', 'post-imp', 'post-bit']
 
     def set_options(self, options, phase):
         """Set the specified OPTIONS in the desired PHASE.
 
         The OPTIONs are specific for each tool (one or more Tcl lines). The
-        valid PHASEs are project, pre_flow, post_syn, post_imp and post_bit.
+        valid PHASEs are project, pre-flow, post-syn, post-imp and post-bit.
         """
         check_value(phase, self._PHASES)
         self.options[phase] = options
