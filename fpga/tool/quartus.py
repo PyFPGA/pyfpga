@@ -1,6 +1,6 @@
 #
-# Copyright (C) 2015-2019 INTI
-# Copyright (C) 2015-2019 Rodrigo A. Melo
+# Copyright (C) 2019 INTI
+# Copyright (C) 2019 Rodrigo A. Melo
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
