@@ -26,3 +26,11 @@ from fpga.tool import Tool
 
 class Vivado(Tool):
     """Implementation of the class to support Vivado."""
+
+    _TOOL = 'vivado'
+    _EXTENSION = 'xpr'
+    _DEVICE = 'xc7z010-1-clg400'
+
+    def generate(self):
+        tcl = self._TEMPLATE
+        open("%s.tcl" % self._TOOL, 'w').write(tcl)

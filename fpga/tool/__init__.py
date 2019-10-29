@@ -36,15 +36,25 @@ def check_value(value, values):
 class Tool:
     """Tool interface.
 
-    It is the basic interface for tool implementations. By default, most of
-    the methods raises a NotImplementedError exception and should be replaced
+    It is the basic interface for tool implementations. There are methods that
+    by default raises a NotImplementedError exception and should be replaced
     by a tool implementation to provide the needed funcionality.
     """
 
+    _TOOL = 'UNDEFINED'
+    _EXTENSION = 'UNDEFINED'
+    _DEVICE = 'UNDEFINED'
+
     def __init__(self, project, device):
         """Initializes the attributes of the class."""
-        self.project = project
-        self.device = device
+        if project is None:
+            self.project = self._TOOL
+        else:
+            self.project = project
+        if device is None:
+            self.device = self._DEVICE
+        else:
+            self.device = device
         self.files = ''
         self.strategy = 'none'
         self.task = 'bit'
@@ -55,6 +65,18 @@ class Tool:
             'post_imp': '',
             'post_bit': ''
         }
+
+    def get_config(self):
+        """Get Configurations."""
+        info = {
+            "tool" : self._TOOL,
+            "project" : self.project,
+            "extension" : self._EXTENSION,
+            "device" : self.device,
+            "strategy" : self.strategy,
+            "task" : self.task
+        }
+        return info
 
     def add_file(self, file, lib):
         """Add a FILE to the project.
@@ -100,7 +122,8 @@ class Tool:
         check_value(task, self._TASKS)
         self.task = task
 
-    _TEMPLATE = os.path.join(os.path.dirname(__file__), '/template.tcl')
+    _TCL_PATH = os.path.join(os.path.dirname(__file__), '/template.tcl')
+    _TEMPLATE = open(_TCL_PATH).read()
 
     def generate(self):
         """Run the FPGA tool."""
