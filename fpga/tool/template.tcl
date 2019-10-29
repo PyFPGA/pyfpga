@@ -49,15 +49,15 @@ proc fpga_files {} {
 }
 
 proc fpga_area_opts {} {
-@AREA_OPTS
+@OPTS_AREA
 }
 
 proc fpga_power_opts {} {
-@POWER_OPTS
+@OPTS_POWER
 }
 
 proc fpga_speed_opts {} {
-@SPEED_OPTS
+@OPTS_SPEED
 }
 
 proc fpga_run_syn {} {
@@ -74,7 +74,7 @@ proc fpga_run_bit {} {
 
 proc fpga_options {} {
     if {[catch {
-@PROJECT_OPTS
+@OPTS_PROJECT
     } ERRMSG]} {
         puts "ERROR: there was a problem applying your project options.\n"
         puts $ERRMSG
@@ -84,7 +84,7 @@ proc fpga_options {} {
 
 proc fpga_pre_flow {} {
     if {[catch {
-@PRE_FLOW_OPTS
+@OPTS_PRE_FLOW
     } ERRMSG]} {
         puts "ERROR: there was a problem applying your pre-flow options.\n"
         puts $ERRMSG
@@ -94,7 +94,7 @@ proc fpga_pre_flow {} {
 
 proc fpga_post_syn {} {
     if {[catch {
-@POST_SYN_OPTS
+@OPTS_POST_SYN
     } ERRMSG]} {
         puts "ERROR: there was a problem applying your post-syn options.\n"
         puts $ERRMSG
@@ -104,7 +104,7 @@ proc fpga_post_syn {} {
 
 proc fpga_post_imp {} {
     if {[catch {
-@POST_IMP_OPTS
+@OPTS_POST_IMP
     } ERRMSG]} {
         puts "ERROR: there was a problem applying your post-imp options.\n"
         puts $ERRMSG
@@ -114,7 +114,7 @@ proc fpga_post_imp {} {
 
 proc fpga_post_bit {} {
     if {[catch {
-@POST_BIT_OPTS
+@OPTS_POST_BIT
     } ERRMSG]} {
         puts "ERROR: there was a problem applying your post-bit options.\n"
         puts $ERRMSG
