@@ -15,14 +15,15 @@ setup(
     author_email='rodrigomelo9@gmail.com',
     license='GPLv3',
     url='https://gitlab.com/rodrigomelo9/pyfpga',
+    package_data={'': ['tool/*.tcl']},
     packages=find_packages(),
-    entry_points={
-        'console_scripts': [
-            'fpga-temp = fpga.temp:main',
-            'fpga-synt = fpga.synt:main',
-            'fpga-prog = fpga.prog:main'
-        ],
-    },
+#    entry_points={
+#        'console_scripts': [
+#            'fpga-temp = fpga.temp:main',
+#            'fpga-synt = fpga.synt:main',
+#            'fpga-prog = fpga.prog:main'
+#        ],
+#    },
     classifiers=[
         'Development Status :: 1 - Planning',
         'Environment :: Console',
