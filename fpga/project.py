@@ -101,18 +101,26 @@ class Project:
         """Set post bitstream generation OPTIONS."""
         self.tool.set_options(options, 'post-bit')
 
-    def generate(self):
-        """Run the FPGA tool."""
+    def _run_in_other_dir(self, funcname):
+        """Run a function in other directory."""
         prevdir = os.getcwd()
         nextdir = os.path.join(prevdir, self.outdir)
         try:
             if not os.path.exists(nextdir):
                 os.mkdir(nextdir)
             os.chdir(nextdir)
-            self.tool.generate()
+            funcname()
         finally:
             os.chdir(prevdir)
 
-    def transfer(self, device, position, name, width):
-        """Transfer the bitstream to a DEVICE."""
-        self.tool.transfer(device, position, name, width)
+    def generate(self):
+        """Run the FPGA tool."""
+        self._run_in_other_dir(self.tool.generate)
+
+    def set_hard(self, devtype, position, name, width):
+        """Set hardware configurations for the programmer."""
+        self.tool.set_hard(devtype, position, name, width)
+
+    def transfer(self):
+        """Transfer a bitstream."""
+        self._run_in_other_dir(self.tool.transfer)

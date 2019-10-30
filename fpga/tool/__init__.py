@@ -153,13 +153,18 @@ class Tool:
         """Run the FPGA tool."""
         raise NotImplementedError('generate')
 
-    _DEVICES = ['fpga', 'spi', 'bpi', 'xcf']
+    _DEVTYPES = ['fpga', 'spi', 'bpi', 'xcf']
 
-    def transfer(self, device, position, name, width):
-        """Transfer the bitstream to a DEVICE.
+    def set_hard(self, devtype, position, name, width):
+        """Set hardware configurations for the programmer.
 
-        Optionally, the POSITION in the Jtag chain (for FPGAs and some old
+        The valid device types are fpga, spi, bpi and xcf.
+        Also, the POSITION in the Jtag chain (for FPGAs and some old
         memories), the NAME (for SPI/BPI memories) and the data WIDTH (for
         memories) can be specified.
         """
+        raise NotImplementedError('transfer')
+
+    def transfer(self, device, position, name, width):
+        """Transfer a bitstream."""
         raise NotImplementedError('transfer')
