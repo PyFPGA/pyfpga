@@ -46,10 +46,15 @@ class Project:
             self.tool = Vivado(project, device)
         else:
             raise NotImplementedError(tool)
+        self.outdir = 'build'
 
     def get_config(self):
         """Get the Project Configurations."""
         return self.tool.get_config()
+
+    def set_outdir(self, outdir):
+        """Set the OUTput DIRectory."""
+        self.outdir = outdir
 
     def add_files(self, pathname, lib=None):
         """Add files to the project.
@@ -72,6 +77,10 @@ class Project:
         """Set the Optimization STRATEGY."""
         self.tool.set_strategy(strategy)
 
+    def set_task(self, task):
+        """Set the TASK to reach when the Tool is executed."""
+        self.tool.set_task(task)
+
     def set_project_opts(self, options):
         """Set project OPTIONS."""
         self.tool.set_options(options, 'project')
@@ -92,13 +101,17 @@ class Project:
         """Set post bitstream generation OPTIONS."""
         self.tool.set_options(options, 'post-bit')
 
-    def set_task(self, task):
-        """Set the TASK to reach when the Tool is executed."""
-        self.tool.set_task(task)
-
     def generate(self):
         """Run the FPGA tool."""
-        self.tool.generate()
+        prevdir = os.getcwd()
+        nextdir = os.path.join(prevdir, self.outdir)
+        try:
+            if not os.path.exists(nextdir):
+                os.mkdir(nextdir)
+            os.chdir(nextdir)
+            self.tool.generate()
+        finally:
+            os.chdir(prevdir)
 
     def transfer(self, device, position, name, width):
         """Transfer the bitstream to a DEVICE."""
