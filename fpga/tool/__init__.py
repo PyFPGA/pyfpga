@@ -127,8 +127,8 @@ class Tool:
         check_value(task, self._TASKS)
         self.task = task
 
-    def get_tcl(self):
-        """Get the Tcl to be used as input of the Tool."""
+    def create_tcl(self):
+        """Create the Tcl to be used as input of the Tool."""
         template = os.path.join(os.path.dirname(__file__), 'template.tcl')
         tcl = open(template).read()
         tcl = tcl.replace("#TOOL#", self._TOOL)
@@ -147,7 +147,7 @@ class Tool:
         tcl = tcl.replace("#POST_SYN_OPTS#", self.options['post-syn'])
         tcl = tcl.replace("#POST_IMP_OPTS#", self.options['post-imp'])
         tcl = tcl.replace("#POST_BIT_OPTS#", self.options['post-bit'])
-        return tcl
+        open("%s.tcl" % self._TOOL, 'w').write(tcl)
 
     def generate(self):
         """Run the FPGA tool."""

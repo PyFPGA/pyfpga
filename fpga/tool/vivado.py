@@ -32,5 +32,4 @@ class Vivado(Tool):
     _DEVICE = 'xc7z010-1-clg400'
 
     def generate(self):
-        print(self.get_tcl())
-#        open("%s.tcl" % self._TOOL, 'w').write(tcl)
+        self.create_tcl()
