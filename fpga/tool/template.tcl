@@ -29,6 +29,7 @@
 # Things to tuneup (#SOMETHING#) for each project
 #
 
+global TOOL
 set TOOL     #TOOL#
 set PROJECT  #PROJECT#
 set STRATEGY #STRATEGY#
@@ -83,7 +84,8 @@ set ERR_PHASE   3
 # Procedures for multi vendor support
 #
 
-proc fpga_create { TOOL } {
+proc fpga_create {} {
+    global TOOL
     switch $TOOL {
         "ise"     { project new $PROJECT.xise }
         "libero"  {
@@ -97,7 +99,8 @@ proc fpga_create { TOOL } {
     }
 }
 
-proc fpga_open { TOOL } {
+proc fpga_open {} {
+    global TOOL
     switch $TOOL {
         "ise"     { project open $PROJECT.xise }
         "libero"  {
@@ -111,7 +114,8 @@ proc fpga_open { TOOL } {
     }
 }
 
-proc fpga_close { TOOL } {
+proc fpga_close {} {
+    global TOOL
     switch $TOOL {
         "ise"     { project close }
         "libero"  { close_project }
@@ -120,7 +124,8 @@ proc fpga_close { TOOL } {
     }
 }
 
-proc fpga_device { TOOL } {
+proc fpga_device {} {
+    global TOOL
     switch $TOOL {
         "ise"     {
             project set family  $FAMILY
@@ -140,7 +145,63 @@ proc fpga_device { TOOL } {
     }
 }
 
-proc fpga_top { TOOL } {
+proc fpga_file {FILE {LIB ""}} {
+    global TOOL
+    regexp -nocase {\.(\w*)$} $FILE -> ext
+    if { $ext == "tcl" } {
+        source $FILE
+        return
+    }
+    switch $TOOL {
+        "ise" {
+            if { $LIB != "" } {
+                lib_vhdl new $LIB
+                xfile add $FILE -lib_vhdl $LIB
+            } else {
+                xfile add $FILE
+            }
+        }
+        "libero" {
+            if {$ext == "pdc"} {
+                create_links -io_pdc $FILE
+                organize_tool_files -tool {PLACEROUTE} -file $FILE -input_type {constraint}
+            } elseif {$ext == "sdc"} {
+                create_links -sdc $FILE
+                organize_tool_files -tool {SYNTHESIZE} -file $FILE -input_type {constraint}
+                organize_tool_files -tool {VERIFYTIMING} -file $FILE -input_type {constraint}
+            } else {
+                create_links -hdl_source $FILE
+            }
+            if { $LIB != "" } {
+                add_library -library $LIB
+                add_file_to_library -library $LIB -file $FILE
+            }
+        }
+        "quartus" {
+            if {$ext == "v"} {
+                set TYPE VERILOG_FILE
+            } elseif {$ext == "sv"} {
+                set TYPE SYSTEMVERILOG_FILE
+            } else {
+                set TYPE VHDL_FILE
+            }
+            if { $LIB != "" } {
+                set_global_assignment -name $TYPE $FILE -library $LIB
+            } else {
+                set_global_assignment -name $TYPE $FILE
+            }
+        }
+        "vivado" {
+            add_files $FILE
+            if { $LIB != "" } {
+                set_property library $LIB [get_files $FILE]
+            }
+        }
+    }
+}
+
+proc fpga_top {} {
+    global TOOL
     switch $TOOL {
         "ise"     { project set top $TOP }
         "libero"  { set_root $TOP }
@@ -149,7 +210,8 @@ proc fpga_top { TOOL } {
     }
 }
 
-proc fpga_area_opts { TOOL } {
+proc fpga_area_opts {} {
+    global TOOL
     switch $TOOL {
         "ise"     {
             project set "Optimization Goal" "Area"
@@ -173,7 +235,8 @@ proc fpga_area_opts { TOOL } {
     }
 }
 
-proc fpga_power_opts { TOOL } {
+proc fpga_power_opts {} {
+    global TOOL
     switch $TOOL {
         "ise"     {
             project set "Optimization Goal" "Area"
@@ -202,7 +265,8 @@ proc fpga_power_opts { TOOL } {
     }
 }
 
-proc fpga_speed_opts { TOOL } {
+proc fpga_speed_opts {} {
+    global TOOL
     switch $TOOL {
         "ise"     {
             project set "Optimization Goal" "Speed"
@@ -235,7 +299,8 @@ proc fpga_speed_opts { TOOL } {
     }
 }
 
-proc fpga_run_syn { TOOL } {
+proc fpga_run_syn {} {
+    global TOOL
     switch $TOOL {
         "ise"     {
             process run "Synthesize" -force rerun
@@ -254,7 +319,8 @@ proc fpga_run_syn { TOOL } {
     }
 }
 
-proc fpga_run_imp { TOOL } {
+proc fpga_run_imp {} {
+    global TOOL
     switch $TOOL {
         "ise"     {
             process run "Translate" -force rerun
@@ -278,7 +344,8 @@ proc fpga_run_imp { TOOL } {
     }
 }
 
-proc fpga_run_bit { TOOL } {
+proc fpga_run_bit {} {
+    global TOOL
     switch $TOOL {
         "ise"     {
             process run "Generate Programming File" -force rerun
@@ -302,17 +369,17 @@ proc fpga_run_bit { TOOL } {
 #
 
 if {[catch {
-    fpga_create $TOOL
-    fpga_device $TOOL
+    fpga_create
+    fpga_device
     fpga_files
-    fpga_top $TOOL
+    fpga_top
     switch $STRATEGY {
-        "area"  {fpga_area_opts  $TOOL}
-        "power" {fpga_power_opts $TOOL}
-        "speed" {fpga_speed_opts $TOOL}
+        "area"  {fpga_area_opts}
+        "power" {fpga_power_opts}
+        "speed" {fpga_speed_opts}
     }
     fpga_options "project"
-    fpga_close $TOOL
+    fpga_close
 } ERRMSG]} {
     puts "ERROR: there was a problem creating a new project.\n"
     puts $ERRMSG
@@ -324,21 +391,21 @@ if {[catch {
 #
 
 if {[catch {
-    fpga_open $TOOL
+    fpga_open
     if { $TASK=="syn" || $TASK=="imp" || $TASK=="bit" } {
         fpga_options "pre-flow"
-        fpga_run_syn $TOOL
+        fpga_run_syn
         fpga_options "post-syn"
     }
     if { $TASK=="imp" || $TASK=="bit" } {
-        fpga_run_imp $TOOL
+        fpga_run_imp
         fpga_options "post-imp"
     }
     if { $TASK=="bit" } {
-        fpga_run_bit $TOOL
+        fpga_run_bit
         fpga_options "post-bit"
     }
-    fpga_close $TOOL
+    fpga_close
 } ERRMSG]} {
     puts "ERROR: there was a problem running the flow ($TASK).\n"
     puts $ERRMSG
