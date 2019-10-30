@@ -30,7 +30,7 @@ set TASK     @TASK
 
 proc fpga_create {TOOL} {
     switch $TOOL {
-        "ise"     {}
+        "ise"     { project new $PROJECT.xise }
         "libero"  {}
         "quartus" {}
         "vivado"  { create_project -force $PROJECT }
@@ -39,7 +39,7 @@ proc fpga_create {TOOL} {
 
 proc fpga_open {TOOL} {
     switch $TOOL {
-        "ise"     {}
+        "ise"     { project open $PROJECT.xise }
         "libero"  {}
         "quartus" {}
         "vivado"  { project open $PROJECT }
@@ -48,7 +48,7 @@ proc fpga_open {TOOL} {
 
 proc fpga_close {TOOL} {
     switch $TOOL {
-        "ise"     {}
+        "ise"     { project close }
         "libero"  {}
         "quartus" {}
         "vivado"  { close_project }
@@ -65,7 +65,9 @@ proc fpga_files {} {
 
 proc fpga_area_opts {TOOL} {
     switch $TOOL {
-        "ise"     {}
+        "ise"     {
+            project set "Optimization Goal" "Area"
+        }
         "libero"  {}
         "quartus" {}
         "vivado"  {
@@ -82,7 +84,12 @@ proc fpga_area_opts {TOOL} {
 
 proc fpga_power_opts {TOOL} {
     switch $TOOL {
-        "ise"     {}
+        "ise"     {
+            project set "Optimization Goal" "Area"
+            project set "Power Reduction" "true" -process "Synthesize - XST"
+            project set "Power Reduction" "high" -process "Map"
+            project set "Power Reduction" "true" -process "Place & Route"
+        }
         "libero"  {}
         "quartus" {}
         "vivado"  {
@@ -99,7 +106,9 @@ proc fpga_power_opts {TOOL} {
 
 proc fpga_speed_opts {TOOL} {
     switch $TOOL {
-        "ise"     {}
+        "ise"     {
+            project set "Optimization Goal" "Speed"
+        }
         "libero"  {}
         "quartus" {}
         "vivado"  {
@@ -124,7 +133,9 @@ proc fpga_speed_opts {TOOL} {
 
 proc fpga_run_syn {TOOL} {
     switch $TOOL {
-        "ise"     {}
+        "ise"     {
+            process run "Synthesize" -force rerun
+        }
         "libero"  {}
         "quartus" {}
         "vivado"  {
@@ -137,7 +148,11 @@ proc fpga_run_syn {TOOL} {
 
 proc fpga_run_imp {TOOL} {
     switch $TOOL {
-        "ise"     {}
+        "ise"     {
+            process run "Translate" -force rerun
+            process run "Map" -force rerun
+            process run "Place & Route" -force rerun
+        }
         "libero"  {}
         "quartus" {}
         "vivado"  {
@@ -150,7 +165,9 @@ proc fpga_run_imp {TOOL} {
 
 proc fpga_run_bit {TOOL} {
     switch $TOOL {
-        "ise"     {}
+        "ise"     {
+            process run "Generate Programming File" -force rerun
+        }
         "libero"  {}
         "quartus" {}
         "vivado"  {
