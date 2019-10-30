@@ -126,17 +126,17 @@ class Tool:
         """Get the Tcl to be used as input of the Tool."""
         template = os.path.join(os.path.dirname(__file__), 'template.tcl')
         tcl = open(template).read()
-        tcl = tcl.replace("@TOOL", self._TOOL)
-        tcl = tcl.replace("@PROJECT", self.project)
-        tcl = tcl.replace("@STRATEGY", self.strategy)
-        tcl = tcl.replace("@TASK", self.task)
-        tcl = tcl.replace("@DEVICE", self.device)
-        tcl = tcl.replace("@FILES", self.files)
-        tcl = tcl.replace("@OPTS_PROJECT", self.options['project'])
-        tcl = tcl.replace("@OPTS_PRE_FLOW", self.options['pre-flow'])
-        tcl = tcl.replace("@OPTS_POST_SYN", self.options['post-syn'])
-        tcl = tcl.replace("@OPTS_POST_IMP", self.options['post-imp'])
-        tcl = tcl.replace("@OPTS_POST_BIT", self.options['post-bit'])
+        tcl = tcl.replace("#TOOL#", self._TOOL)
+        tcl = tcl.replace("#PROJECT#", self.project)
+        tcl = tcl.replace("#STRATEGY#", self.strategy)
+        tcl = tcl.replace("#TASK#", self.task)
+        tcl = tcl.replace("#DEVICE#", self.device)
+        tcl = tcl.replace("#FILES#", self.files)
+        tcl = tcl.replace("#PROJECT_OPTS#", self.options['project'])
+        tcl = tcl.replace("#PRE_FLOW_OPTS#", self.options['pre-flow'])
+        tcl = tcl.replace("#POST_SYN_OPTS#", self.options['post-syn'])
+        tcl = tcl.replace("#POST_IMP_OPTS#", self.options['post-imp'])
+        tcl = tcl.replace("#POST_BIT_OPTS#", self.options['post-bit'])
         return tcl
 
     def generate(self):

@@ -23,12 +23,62 @@
 # Note: fpga_ is used to avoid name collisions.
 #
 
-set TOOL     @TOOL
-set PROJECT  @PROJECT
-set STRATEGY @STRATEGY
-set TASK     @TASK
+#
+# Things to tuneup (#SOMETHING#) for each project
+#
 
-proc fpga_create {TOOL} {
+set TOOL     #TOOL#
+set PROJECT  #PROJECT#
+set STRATEGY #STRATEGY#
+set TASK     #TASK#
+
+proc fpga_device {} {
+#DEVICE#
+}
+
+proc fpga_files {} {
+#FILES#
+}
+
+proc fpga_options { PHASE } {
+    if {[catch {
+        switch $PHASE {
+            "project" {
+#PROJECT_OPTS#
+            }
+            "pre-flow" {
+#PRE_FLOW_OPTS#
+            }
+            "post-syn" {
+#POST_SYN_OPTS#
+            }
+            "post-imp" {
+#POST_IMP_OPTS#
+            }
+            "post-bit" {
+#POST_BIT_OPTS#
+            }
+        }
+    } ERRMSG]} {
+        puts "ERROR: there was a problem applying your $PHASE options.\n"
+        puts $ERRMSG
+        exit $ERR_PHASE
+    }
+}
+
+#
+# Constants
+#
+
+set ERR_PROJECT 1
+set ERR_FLOW    2
+set ERR_PHASE   3
+
+#
+# Procedures for multi vendor support
+#
+
+proc fpga_create { TOOL } {
     switch $TOOL {
         "ise"     { project new $PROJECT.xise }
         "libero"  {}
@@ -37,7 +87,7 @@ proc fpga_create {TOOL} {
     }
 }
 
-proc fpga_open {TOOL} {
+proc fpga_open { TOOL } {
     switch $TOOL {
         "ise"     { project open $PROJECT.xise }
         "libero"  {}
@@ -46,7 +96,7 @@ proc fpga_open {TOOL} {
     }
 }
 
-proc fpga_close {TOOL} {
+proc fpga_close { TOOL } {
     switch $TOOL {
         "ise"     { project close }
         "libero"  {}
@@ -55,15 +105,7 @@ proc fpga_close {TOOL} {
     }
 }
 
-proc fpga_device {} {
-@DEVICE
-}
-
-proc fpga_files {} {
-@FILES
-}
-
-proc fpga_area_opts {TOOL} {
+proc fpga_area_opts { TOOL } {
     switch $TOOL {
         "ise"     {
             project set "Optimization Goal" "Area"
@@ -82,7 +124,7 @@ proc fpga_area_opts {TOOL} {
     }
 }
 
-proc fpga_power_opts {TOOL} {
+proc fpga_power_opts { TOOL } {
     switch $TOOL {
         "ise"     {
             project set "Optimization Goal" "Area"
@@ -104,7 +146,7 @@ proc fpga_power_opts {TOOL} {
     }
 }
 
-proc fpga_speed_opts {TOOL} {
+proc fpga_speed_opts { TOOL } {
     switch $TOOL {
         "ise"     {
             project set "Optimization Goal" "Speed"
@@ -131,7 +173,7 @@ proc fpga_speed_opts {TOOL} {
     }
 }
 
-proc fpga_run_syn {TOOL} {
+proc fpga_run_syn { TOOL } {
     switch $TOOL {
         "ise"     {
             process run "Synthesize" -force rerun
@@ -146,7 +188,7 @@ proc fpga_run_syn {TOOL} {
     }
 }
 
-proc fpga_run_imp {TOOL} {
+proc fpga_run_imp { TOOL } {
     switch $TOOL {
         "ise"     {
             process run "Translate" -force rerun
@@ -163,7 +205,7 @@ proc fpga_run_imp {TOOL} {
     }
 }
 
-proc fpga_run_bit {TOOL} {
+proc fpga_run_bit { TOOL } {
     switch $TOOL {
         "ise"     {
             process run "Generate Programming File" -force rerun
@@ -175,56 +217,6 @@ proc fpga_run_bit {TOOL} {
             launch_run impl_1 -to_step write_bitstream
             wait_on_run impl_1
         }
-    }
-}
-
-proc fpga_options {} {
-    if {[catch {
-@OPTS_PROJECT
-    } ERRMSG]} {
-        puts "ERROR: there was a problem applying your project options.\n"
-        puts $ERRMSG
-        exit 3
-    }
-}
-
-proc fpga_pre_flow {} {
-    if {[catch {
-@OPTS_PRE_FLOW
-    } ERRMSG]} {
-        puts "ERROR: there was a problem applying your pre-flow options.\n"
-        puts $ERRMSG
-        exit 4
-    }
-}
-
-proc fpga_post_syn {} {
-    if {[catch {
-@OPTS_POST_SYN
-    } ERRMSG]} {
-        puts "ERROR: there was a problem applying your post-syn options.\n"
-        puts $ERRMSG
-        exit 5
-    }
-}
-
-proc fpga_post_imp {} {
-    if {[catch {
-@OPTS_POST_IMP
-    } ERRMSG]} {
-        puts "ERROR: there was a problem applying your post-imp options.\n"
-        puts $ERRMSG
-        exit 6
-    }
-}
-
-proc fpga_post_bit {} {
-    if {[catch {
-@OPTS_POST_BIT
-    } ERRMSG]} {
-        puts "ERROR: there was a problem applying your post-bit options.\n"
-        puts $ERRMSG
-        exit 7
     }
 }
 
@@ -241,12 +233,12 @@ if {[catch {
         "power" {fpga_power_opts $TOOL}
         "speed" {fpga_speed_opts $TOOL}
     }
-    fpga_options
+    fpga_options "project"
     fpga_close $TOOL
 } ERRMSG]} {
     puts "ERROR: there was a problem creating a new project.\n"
     puts $ERRMSG
-    exit 1
+    exit $ERR_PROJECT
 }
 
 #
@@ -256,21 +248,21 @@ if {[catch {
 if {[catch {
     fpga_open $TOOL
     if { $TASK=="syn" || $TASK=="imp" || $TASK=="bit" } {
-        fpga_pre_flow
+        fpga_options "pre-flow"
         fpga_run_syn $TOOL
-        fpga_post_syn
+        fpga_options "post-syn"
     }
     if { $TASK=="imp" || $TASK=="bit" } {
         fpga_run_imp $TOOL
-        fpga_post_imp
+        fpga_options "post-imp"
     }
     if { $TASK=="bit" } {
         fpga_run_bit $TOOL
-        fpga_post_bit
+        fpga_options "post-bit"
     }
     fpga_close $TOOL
 } ERRMSG]} {
-    puts "ERROR: there was a problem running the flow for $TASK.\n"
+    puts "ERROR: there was a problem running the flow ($TASK).\n"
     puts $ERRMSG
-    exit 2
+    exit $ERR_FLOW
 }
