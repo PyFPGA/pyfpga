@@ -50,7 +50,7 @@ class Project:
         """Get the Project Configurations."""
         return self.tool.get_config()
 
-    def add_files(self, pathname, lib):
+    def add_files(self, pathname, lib=None):
         """Add files to the project.
 
         PATHNAME must be a string containing an absolute or relative path

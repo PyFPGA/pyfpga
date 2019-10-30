@@ -45,7 +45,7 @@ class Tool:
     _EXTENSION = 'UNDEFINED'
     _DEVICE = 'UNDEFINED'
 
-    def __init__(self, project, device):
+    def __init__(self, project=None, device=None):
         """Initializes the attributes of the class."""
         self.project = self._TOOL if project is None else project
         self.strategy = 'none'
@@ -64,7 +64,7 @@ class Tool:
             'post-imp': '#empty',
             'post-bit': '#empty'
         }
-        self.files = ''
+        self.files = []
         self.top = 'undefined'
 
     def get_config(self):
@@ -79,12 +79,16 @@ class Tool:
         }
         return info
 
-    def add_file(self, file, lib):
+    def add_file(self, file, lib=None):
         """Add a FILE to the project.
 
         LIB is optional and only useful for VHDL files.
         """
-        raise NotImplementedError('add_file')
+        command = '    '  # indentation
+        command += 'fpga_file %s' % file
+        if lib is not None:
+            command += ' %s' % lib
+        self.files.append(command)
 
     def set_top(self, top):
         """Set the TOP LEVEL of the project."""
@@ -136,7 +140,7 @@ class Tool:
         tcl = tcl.replace("#DEVICE#", self.device['device'])
         tcl = tcl.replace("#PACKAGE#", self.device['package'])
         tcl = tcl.replace("#SPEED#", self.device['speed'])
-        tcl = tcl.replace("#FILES#", self.files)
+        tcl = tcl.replace("#FILES#", "\n".join(self.files))
         tcl = tcl.replace("#TOP#", self.top)
         tcl = tcl.replace("#PROJECT_OPTS#", self.options['project'])
         tcl = tcl.replace("#PRE_FLOW_OPTS#", self.options['pre-flow'])
