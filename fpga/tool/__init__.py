@@ -48,7 +48,6 @@ class Tool:
     def __init__(self, project, device):
         """Initializes the attributes of the class."""
         self.project = self._TOOL if project is None else project
-        self.files = ''
         self.strategy = 'none'
         self.task = 'bit'
         self.device = {
@@ -65,6 +64,8 @@ class Tool:
             'post-imp': '#empty',
             'post-bit': '#empty'
         }
+        self.files = ''
+        self.top = 'undefined'
 
     def get_config(self):
         """Get Configurations."""
@@ -85,9 +86,9 @@ class Tool:
         """
         raise NotImplementedError('add_file')
 
-    def set_top(self, toplevel):
+    def set_top(self, top):
         """Set the TOP LEVEL of the project."""
-        raise NotImplementedError('set_top')
+        self.top = top
 
     _STRATEGIES = ['none', 'area', 'speed', 'power']
 
@@ -135,6 +136,8 @@ class Tool:
         tcl = tcl.replace("#DEVICE#", self.device['device'])
         tcl = tcl.replace("#PACKAGE#", self.device['package'])
         tcl = tcl.replace("#SPEED#", self.device['speed'])
+        tcl = tcl.replace("#FILES#", self.files)
+        tcl = tcl.replace("#TOP#", self.top)
         tcl = tcl.replace("#PROJECT_OPTS#", self.options['project'])
         tcl = tcl.replace("#PRE_FLOW_OPTS#", self.options['pre-flow'])
         tcl = tcl.replace("#POST_SYN_OPTS#", self.options['post-syn'])

@@ -33,6 +33,7 @@ set TOOL     #TOOL#
 set PROJECT  #PROJECT#
 set STRATEGY #STRATEGY#
 set TASK     #TASK#
+set TOP      #TOP#
 
 set FPGA     #FPGA#
 set FAMILY   #FAMILY#
@@ -136,6 +137,15 @@ proc fpga_device { TOOL } {
         "vivado"  {
             set_property "part" $FPGA [current_project]
         }
+    }
+}
+
+proc fpga_top { TOOL } {
+    switch $TOOL {
+        "ise"     { project set top $TOP }
+        "libero"  { set_root $TOP }
+        "quartus" { set_global_assignment -name TOP_LEVEL_ENTITY $TOP }
+        "vivado"  { set_property top $TOP [current_fileset] }
     }
 }
 
@@ -293,8 +303,9 @@ proc fpga_run_bit { TOOL } {
 
 if {[catch {
     fpga_create $TOOL
-    fpga_device
+    fpga_device $TOOL
     fpga_files
+    fpga_top $TOOL
     switch $STRATEGY {
         "area"  {fpga_area_opts  $TOOL}
         "power" {fpga_power_opts $TOOL}
