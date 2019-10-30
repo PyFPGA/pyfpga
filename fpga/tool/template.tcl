@@ -20,6 +20,8 @@
 # Description: Tcl script to create a new project and performs synthesis,
 # implementation and bitstream generation.
 #
+# Supported TOOLs: ise, libero, quartus, vivado
+#
 # Note: fpga_ is used to avoid name collisions.
 #
 
@@ -83,8 +85,13 @@ set ERR_PHASE   3
 proc fpga_create { TOOL } {
     switch $TOOL {
         "ise"     { project new $PROJECT.xise }
-        "libero"  {}
-        "quartus" {}
+        "libero"  {
+            new_project -name $PROJECT -location {temp-libero} -hdl {VHDL} -family {SmartFusion2}
+        }
+        "quartus" {
+            package require ::quartus::project
+            project_new $PROJECT -overwrite
+        }
         "vivado"  { create_project -force $PROJECT }
     }
 }
@@ -92,8 +99,13 @@ proc fpga_create { TOOL } {
 proc fpga_open { TOOL } {
     switch $TOOL {
         "ise"     { project open $PROJECT.xise }
-        "libero"  {}
-        "quartus" {}
+        "libero"  {
+            open_project temp-libero/$PROJECT.prjx
+        }
+        "quartus" {
+            package require ::quartus::flow
+            project_open -force $PROJECT.qpf
+        }
         "vivado"  { project open $PROJECT }
     }
 }
@@ -101,8 +113,8 @@ proc fpga_open { TOOL } {
 proc fpga_close { TOOL } {
     switch $TOOL {
         "ise"     { project close }
-        "libero"  {}
-        "quartus" {}
+        "libero"  { close_project }
+        "quartus" { project_close }
         "vivado"  { close_project }
     }
 }
@@ -132,8 +144,13 @@ proc fpga_area_opts { TOOL } {
         "ise"     {
             project set "Optimization Goal" "Area"
         }
-        "libero"  {}
-        "quartus" {}
+        "libero"  {
+            configure_tool -name {SYNTHESIZE} -params {RAM_OPTIMIZED_FOR_POWER:true}
+        }
+        "quartus" {
+            set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE AREA"
+            set_global_assignment -name OPTIMIZATION_TECHNIQUE AREA
+        }
         "vivado"  {
             set obj [get_runs synth_1]
             set_property strategy "Flow_AreaOptimized_high" $obj
@@ -154,8 +171,15 @@ proc fpga_power_opts { TOOL } {
             project set "Power Reduction" "high" -process "Map"
             project set "Power Reduction" "true" -process "Place & Route"
         }
-        "libero"  {}
-        "quartus" {}
+        "libero"  {
+            configure_tool -name {SYNTHESIZE} -params {RAM_OPTIMIZED_FOR_POWER:true}
+            configure_tool -name {PLACEROUTE} -params {PDPR:true}
+        }
+        "quartus" {
+            set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE POWER"
+            set_global_assignment -name OPTIMIZE_POWER_DURING_SYNTHESIS "EXTRA EFFORT"
+            set_global_assignment -name OPTIMIZE_POWER_DURING_FITTING "EXTRA EFFORT"
+        }
         "vivado"  {
             #enable power_opt_design and phys_opt_design
             set obj [get_runs synth_1]
@@ -173,8 +197,14 @@ proc fpga_speed_opts { TOOL } {
         "ise"     {
             project set "Optimization Goal" "Speed"
         }
-        "libero"  {}
-        "quartus" {}
+        "libero"  {
+            configure_tool -name {SYNTHESIZE} -params {RAM_OPTIMIZED_FOR_POWER:false}
+            configure_tool -name {PLACEROUTE} -params {EFFORT_LEVEL:true}
+        }
+        "quartus" {
+            set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE PERFORMANCE"
+            set_global_assignment -name OPTIMIZATION_TECHNIQUE SPEED
+        }
         "vivado"  {
             #enable phys_opt_design
             set obj [get_runs synth_1]
@@ -200,8 +230,12 @@ proc fpga_run_syn { TOOL } {
         "ise"     {
             process run "Synthesize" -force rerun
         }
-        "libero"  {}
-        "quartus" {}
+        "libero"  {
+            run_tool -name {COMPILE}
+        }
+        "quartus" {
+            execute_module -tool map
+        }
         "vivado"  {
             reset_run synth_1
             launch_runs synth_1
@@ -217,8 +251,15 @@ proc fpga_run_imp { TOOL } {
             process run "Map" -force rerun
             process run "Place & Route" -force rerun
         }
-        "libero"  {}
-        "quartus" {}
+        "libero"  {
+            configure_tool -name {PLACEROUTE} -params {REPAIR_MIN_DELAY:true}
+            run_tool -name {PLACEROUTE}
+            run_tool -name {VERIFYTIMING}
+        }
+        "quartus" {
+            execute_module -tool fit
+            execute_module -tool sta
+        }
         "vivado"  {
             open_run synth_1
             launch_runs impl_1
@@ -232,8 +273,12 @@ proc fpga_run_bit { TOOL } {
         "ise"     {
             process run "Generate Programming File" -force rerun
         }
-        "libero"  {}
-        "quartus" {}
+        "libero"  {
+            run_tool -name {GENERATEPROGRAMMINGFILE}
+        }
+        "quartus" {
+            execute_module -tool asm
+        }
         "vivado"  {
             open_run impl_1
             launch_run impl_1 -to_step write_bitstream
