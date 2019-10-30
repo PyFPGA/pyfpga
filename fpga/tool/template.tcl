@@ -32,9 +32,11 @@ set PROJECT  #PROJECT#
 set STRATEGY #STRATEGY#
 set TASK     #TASK#
 
-proc fpga_device {} {
-#DEVICE#
-}
+set FPGA     #FPGA#
+set FAMILY   #FAMILY#
+set DEVICE   #DEVICE#
+set PACKAGE  #PACKAGE#
+set SPEED    #SPEED#
 
 proc fpga_files {} {
 #FILES#
@@ -102,6 +104,26 @@ proc fpga_close { TOOL } {
         "libero"  {}
         "quartus" {}
         "vivado"  { close_project }
+    }
+}
+
+proc fpga_device { TOOL } {
+    switch $TOOL {
+        "ise"     {
+            project set family  $FAMILY
+            project set device  $DEVICE
+            project set package $PACKAGE
+            project set speed   $SPEED
+        }
+        "libero"  {
+            set_device -family $FAMILY -die $DEVICE -package $PACKAGE -speed $SPEED
+        }
+        "quartus" {
+            set_global_assignment -name DEVICE $FPGA
+        }
+        "vivado"  {
+            set_property "part" $FPGA [current_project]
+        }
     }
 }
 

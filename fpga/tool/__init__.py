@@ -47,17 +47,17 @@ class Tool:
 
     def __init__(self, project, device):
         """Initializes the attributes of the class."""
-        if project is None:
-            self.project = self._TOOL
-        else:
-            self.project = project
-        if device is None:
-            self.device = self._DEVICE
-        else:
-            self.device = device
+        self.project = self._TOOL if project is None else project
         self.files = ''
         self.strategy = 'none'
         self.task = 'bit'
+        self.device = {
+            'name': self._DEVICE if device is None else device,
+            'family': 'unused',
+            'device': 'unused',
+            'package': 'unused',
+            'speed': 'unused'
+        }
         self.options = {
             'project': '#empty',
             'pre-flow': '#empty',
@@ -72,7 +72,7 @@ class Tool:
             "tool": self._TOOL,
             "project": self.project,
             "extension": self._EXTENSION,
-            "device": self.device,
+            "device": self.device['name'],
             "strategy": self.strategy,
             "task": self.task
         }
@@ -130,8 +130,11 @@ class Tool:
         tcl = tcl.replace("#PROJECT#", self.project)
         tcl = tcl.replace("#STRATEGY#", self.strategy)
         tcl = tcl.replace("#TASK#", self.task)
-        tcl = tcl.replace("#DEVICE#", self.device)
-        tcl = tcl.replace("#FILES#", self.files)
+        tcl = tcl.replace("#FPGA#", self.device['name'])
+        tcl = tcl.replace("#FAMILY#", self.device['family'])
+        tcl = tcl.replace("#DEVICE#", self.device['device'])
+        tcl = tcl.replace("#PACKAGE#", self.device['package'])
+        tcl = tcl.replace("#SPEED#", self.device['speed'])
         tcl = tcl.replace("#PROJECT_OPTS#", self.options['project'])
         tcl = tcl.replace("#PRE_FLOW_OPTS#", self.options['pre-flow'])
         tcl = tcl.replace("#POST_SYN_OPTS#", self.options['post-syn'])
