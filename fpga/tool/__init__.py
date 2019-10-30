@@ -122,22 +122,6 @@ class Tool:
         check_value(task, self._TASKS)
         self.task = task
 
-    _TCL = {
-        'create': 'UNIMPLEMENTED',
-        'open': 'UNIMPLEMENTED',
-        'close': 'UNIMPLEMENTED',
-        'area': 'UNIMPLEMENTED',
-        'power': 'UNIMPLEMENTED',
-        'speed': 'UNIMPLEMENTED',
-        'syn': 'UNIMPLEMENTED',
-        'imp': 'UNIMPLEMENTED',
-        'bit': 'UNIMPLEMENTED'
-    }
-
-    def _device_to_tcl(self):
-        """Convert the device name to the equivalent Tcl code."""
-        return "    %s" % self.device
-
     def get_tcl(self):
         """Get the Tcl to be used as input of the Tool."""
         template = os.path.join(os.path.dirname(__file__), 'template.tcl')
@@ -146,17 +130,8 @@ class Tool:
         tcl = tcl.replace("@PROJECT", self.project)
         tcl = tcl.replace("@STRATEGY", self.strategy)
         tcl = tcl.replace("@TASK", self.task)
-        tcl = tcl.replace("@CREATE", self._TCL['create'])
-        tcl = tcl.replace("@OPEN", self._TCL['open'])
-        tcl = tcl.replace("@CLOSE", self._TCL['close'])
-        tcl = tcl.replace("@DEVICE", self._device_to_tcl())
+        tcl = tcl.replace("@DEVICE", self.device)
         tcl = tcl.replace("@FILES", self.files)
-        tcl = tcl.replace("@OPTS_AREA", self._TCL['area'])
-        tcl = tcl.replace("@OPTS_POWER", self._TCL['power'])
-        tcl = tcl.replace("@OPTS_SPEED", self._TCL['speed'])
-        tcl = tcl.replace("@SYNTHESIS", self._TCL['syn'])
-        tcl = tcl.replace("@IMPLEMENTATION", self._TCL['imp'])
-        tcl = tcl.replace("@BITSTREAM", self._TCL['bit'])
         tcl = tcl.replace("@OPTS_PROJECT", self.options['project'])
         tcl = tcl.replace("@OPTS_PRE_FLOW", self.options['pre-flow'])
         tcl = tcl.replace("@OPTS_POST_SYN", self.options['post-syn'])

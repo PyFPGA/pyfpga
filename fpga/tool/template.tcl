@@ -23,21 +23,36 @@
 # Note: fpga_ is used to avoid name collisions.
 #
 
-set tool     @TOOL
-set project  @PROJECT
-set strategy @STRATEGY
-set task     @TASK
+set TOOL     @TOOL
+set PROJECT  @PROJECT
+set STRATEGY @STRATEGY
+set TASK     @TASK
 
-proc fpga_create {} {
-@CREATE
+proc fpga_create {TOOL} {
+    switch $TOOL {
+        "ise"     {}
+        "libero"  {}
+        "quartus" {}
+        "vivado"  { create_project -force $PROJECT }
+    }
 }
 
-proc fpga_open {} {
-@OPEN
+proc fpga_open {TOOL} {
+    switch $TOOL {
+        "ise"     {}
+        "libero"  {}
+        "quartus" {}
+        "vivado"  { project open $PROJECT }
+    }
 }
 
-proc fpga_close {} {
-@CLOSE
+proc fpga_close {TOOL} {
+    switch $TOOL {
+        "ise"     {}
+        "libero"  {}
+        "quartus" {}
+        "vivado"  { close_project }
+    }
 }
 
 proc fpga_device {} {
@@ -48,28 +63,102 @@ proc fpga_files {} {
 @FILES
 }
 
-proc fpga_area_opts {} {
-@OPTS_AREA
+proc fpga_area_opts {TOOL} {
+    switch $TOOL {
+        "ise"     {}
+        "libero"  {}
+        "quartus" {}
+        "vivado"  {
+            set obj [get_runs synth_1]
+            set_property strategy "Flow_AreaOptimized_high" $obj
+            set_property "steps.synth_design.args.directive" "AreaOptimized_high" $obj
+            set_property "steps.synth_design.args.control_set_opt_threshold" "1" $obj
+            set obj [get_runs impl_1]
+            set_property strategy "Area_Explore" $obj
+            set_property "steps.opt_design.args.directive" "ExploreArea" $obj
+        }
+    }
 }
 
-proc fpga_power_opts {} {
-@OPTS_POWER
+proc fpga_power_opts {TOOL} {
+    switch $TOOL {
+        "ise"     {}
+        "libero"  {}
+        "quartus" {}
+        "vivado"  {
+            #enable power_opt_design and phys_opt_design
+            set obj [get_runs synth_1]
+            set_property strategy "Vivado Synthesis Defaults" $obj
+            set obj [get_runs impl_1]
+            set_property strategy "Power_DefaultOpt" $obj
+            set_property "steps.power_opt_design.is_enabled" "1" $obj
+            set_property "steps.phys_opt_design.is_enabled" "1" $obj
+        }
+    }
 }
 
-proc fpga_speed_opts {} {
-@OPTS_SPEED
+proc fpga_speed_opts {TOOL} {
+    switch $TOOL {
+        "ise"     {}
+        "libero"  {}
+        "quartus" {}
+        "vivado"  {
+            #enable phys_opt_design
+            set obj [get_runs synth_1]
+            set_property strategy "Flow_PerfOptimized_high" $obj
+            set_property "steps.synth_design.args.fanout_limit" "400" $obj
+            set_property "steps.synth_design.args.keep_equivalent_registers" "1" $obj
+            set_property "steps.synth_design.args.resource_sharing" "off" $obj
+            set_property "steps.synth_design.args.no_lc" "1" $obj
+            set_property "steps.synth_design.args.shreg_min_size" "5" $obj
+            set obj [get_runs impl_1]
+            set_property strategy "Performance_Explore" $obj
+            set_property "steps.opt_design.args.directive" "Explore" $obj
+            set_property "steps.place_design.args.directive" "Explore" $obj
+            set_property "steps.phys_opt_design.is_enabled" "1" $obj
+            set_property "steps.phys_opt_design.args.directive" "Explore" $obj
+            set_property "steps.route_design.args.directive" "Explore" $obj
+        }
+    }
 }
 
-proc fpga_run_syn {} {
-@SYNTHESIS
+proc fpga_run_syn {TOOL} {
+    switch $TOOL {
+        "ise"     {}
+        "libero"  {}
+        "quartus" {}
+        "vivado"  {
+            reset_run synth_1
+            launch_runs synth_1
+            wait_on_run synth_1
+        }
+    }
 }
 
-proc fpga_run_imp {} {
-@IMPLEMENTATION
+proc fpga_run_imp {TOOL} {
+    switch $TOOL {
+        "ise"     {}
+        "libero"  {}
+        "quartus" {}
+        "vivado"  {
+            open_run synth_1
+            launch_runs impl_1
+            wait_on_run impl_1
+        }
+    }
 }
 
-proc fpga_run_bit {} {
-@BITSTREAM
+proc fpga_run_bit {TOOL} {
+    switch $TOOL {
+        "ise"     {}
+        "libero"  {}
+        "quartus" {}
+        "vivado"  {
+            open_run impl_1
+            launch_run impl_1 -to_step write_bitstream
+            wait_on_run impl_1
+        }
+    }
 }
 
 proc fpga_options {} {
@@ -127,16 +216,16 @@ proc fpga_post_bit {} {
 #
 
 if {[catch {
-    fpga_create
+    fpga_create $TOOL
     fpga_device
     fpga_files
-    switch $strategy {
-        "area"  {fpga_area_opts}
-        "power" {fpga_power_opts}
-        "speed" {fpga_speed_opts}
+    switch $STRATEGY {
+        "area"  {fpga_area_opts  $TOOL}
+        "power" {fpga_power_opts $TOOL}
+        "speed" {fpga_speed_opts $TOOL}
     }
     fpga_options
-    fpga_close
+    fpga_close $TOOL
 } ERRMSG]} {
     puts "ERROR: there was a problem creating a new project.\n"
     puts $ERRMSG
@@ -148,21 +237,21 @@ if {[catch {
 #
 
 if {[catch {
-    fpga_open
+    fpga_open $TOOL
     if { $TASK=="syn" || $TASK=="imp" || $TASK=="bit" } {
         fpga_pre_flow
-        fpga_run_syn
+        fpga_run_syn $TOOL
         fpga_post_syn
     }
     if { $TASK=="imp" || $TASK=="bit" } {
-        fpga_run_imp
+        fpga_run_imp $TOOL
         fpga_post_imp
     }
     if { $TASK=="bit" } {
-        fpga_run_bit
+        fpga_run_bit $TOOL
         fpga_post_bit
     }
-    fpga_close
+    fpga_close $TOOL
 } ERRMSG]} {
     puts "ERROR: there was a problem running the flow for $TASK.\n"
     puts $ERRMSG
