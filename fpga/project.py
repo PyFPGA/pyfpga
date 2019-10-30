@@ -23,6 +23,7 @@ generate files and transfer to a Device.
 """
 
 import glob
+import os
 
 from fpga.tool.ise import Ise
 from fpga.tool.libero import Libero
@@ -57,9 +58,11 @@ class Project:
         specification, and can contain shell-style wildcards.
         LIB is optional and only useful for VHDL files.
         """
+        path = os.getcwd()
         files = glob.glob(pathname)
         for file in files:
-            self.tool.add_file(file, lib)
+            file_abs = os.path.join(path, file)
+            self.tool.add_file(file_abs, lib)
 
     def set_top(self, toplevel):
         """Set the TOP LEVEL of the project."""
