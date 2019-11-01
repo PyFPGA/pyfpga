@@ -26,3 +26,7 @@ from fpga.tool import Tool
 
 class Ise(Tool):
     """Implementation of the class to support ISE."""
+
+    _TOOL = 'ise'
+    _EXTENSION = 'xise'
+    _PART = 'XC6SLX9-2-CSG324'

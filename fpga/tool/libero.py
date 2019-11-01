@@ -26,3 +26,7 @@ from fpga.tool import Tool
 
 class Libero(Tool):
     """Implementation of the class to support Libero."""
+
+    _TOOL = 'libero'
+    _EXTENSION = 'prjx'
+    _PART = 'mpf300ts-1-fcg1152'

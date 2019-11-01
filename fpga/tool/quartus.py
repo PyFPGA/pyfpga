@@ -26,3 +26,7 @@ from fpga.tool import Tool
 
 class Quartus(Tool):
     """Implementation of the class to support Quartus."""
+
+    _TOOL = 'quartus'
+    _EXTENSION = 'qpf'
+    _PART = '10M08SAE144C8G'
