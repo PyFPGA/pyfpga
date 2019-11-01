@@ -92,25 +92,25 @@ class Project:
         """Set the TOP LEVEL of the project."""
         self.tool.set_top(toplevel)
 
-    def set_project_opts(self, options):
-        """Set project OPTIONS."""
-        self.tool.set_options(options, 'project')
+    def add_project_opt(self, option):
+        """Add a project OPTION."""
+        self.tool.add_option(option, 'project')
 
-    def set_pre_flow_opts(self, options):
-        """Set pre flow OPTIONS."""
-        self.tool.set_options(options, 'pre-flow')
+    def add_preflow_opt(self, option):
+        """Add a pre flow OPTION."""
+        self.tool.add_option(option, 'preflow')
 
-    def set_post_syn_opts(self, options):
-        """Set post synthesis OPTIONS."""
-        self.tool.set_options(options, 'post-syn')
+    def add_postsyn_opt(self, option):
+        """Add a post synthesis OPTION."""
+        self.tool.add_option(option, 'postsyn')
 
-    def set_post_imp_opts(self, options):
-        """Set post implementation OPTIONS."""
-        self.tool.set_options(options, 'post-imp')
+    def add_postimp_opt(self, option):
+        """Add a post implementation OPTION."""
+        self.tool.add_option(option, 'postimp')
 
-    def set_post_bit_opts(self, options):
-        """Set post bitstream generation OPTIONS."""
-        self.tool.set_options(options, 'post-bit')
+    def add_postbit_opt(self, option):
+        """Add a post bitstream generation OPTION."""
+        self.tool.add_option(option, 'postbit')
 
     def generate(self, strategy='none', task='bit'):
         """Run the FPGA tool."""

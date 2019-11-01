@@ -52,17 +52,17 @@ proc fpga_options { PHASE } {
             "project" {
 #PROJECT_OPTS#
             }
-            "pre-flow" {
-#PRE_FLOW_OPTS#
+            "preflow" {
+#PREFLOW_OPTS#
             }
-            "post-syn" {
-#POST_SYN_OPTS#
+            "postsyn" {
+#POSTSYN_OPTS#
             }
-            "post-imp" {
-#POST_IMP_OPTS#
+            "postimp" {
+#POSTIMP_OPTS#
             }
-            "post-bit" {
-#POST_BIT_OPTS#
+            "postbit" {
+#POSTBIT_OPTS#
             }
         }
     } ERRMSG]} {

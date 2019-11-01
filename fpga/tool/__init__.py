@@ -52,11 +52,11 @@ class Tool:
         self.task = 'bit'
         self.set_part(self._PART)
         self.options = {
-            'project': '#empty',
-            'pre-flow': '#empty',
-            'post-syn': '#empty',
-            'post-imp': '#empty',
-            'post-bit': '#empty'
+            'project': [],
+            'preflow': [],
+            'postsyn': [],
+            'postimp': [],
+            'postbit': []
         }
         self.files = []
         self.top = 'undefined'
@@ -95,16 +95,16 @@ class Tool:
         """Set the TOP LEVEL of the project."""
         self.top = top
 
-    _PHASES = ['project', 'pre-flow', 'post-syn', 'post-imp', 'post-bit']
+    _PHASES = ['project', 'preflow', 'postsyn', 'postimp', 'postbit']
 
-    def set_options(self, options, phase):
-        """Set the specified OPTIONS in the desired PHASE.
+    def add_option(self, option, phase):
+        """Add the specified OPTION in the desired PHASE.
 
-        The OPTIONs are specific for each tool (one or more Tcl lines). The
-        valid PHASEs are project, pre-flow, post-syn, post-imp and post-bit.
+        OPTIONs are specific for each tool. The valid PHASEs are project,
+        preflow, postsyn, postimp and postbit.
         """
         check_value(phase, self._PHASES)
-        self.options[phase] = options
+        self.options[phase].append(option)
 
     def create_tcl(self):
         """Create the Tcl to be used as input of the Tool."""
@@ -121,11 +121,11 @@ class Tool:
         tcl = tcl.replace('#SPEED#', self.part['speed'])
         tcl = tcl.replace('#FILES#', "\n".join(self.files))
         tcl = tcl.replace('#TOP#', self.top)
-        tcl = tcl.replace('#PROJECT_OPTS#', self.options['project'])
-        tcl = tcl.replace('#PRE_FLOW_OPTS#', self.options['pre-flow'])
-        tcl = tcl.replace('#POST_SYN_OPTS#', self.options['post-syn'])
-        tcl = tcl.replace('#POST_IMP_OPTS#', self.options['post-imp'])
-        tcl = tcl.replace('#POST_BIT_OPTS#', self.options['post-bit'])
+        tcl = tcl.replace('#PROJECT_OPTS#', "\n".join(self.options['project']))
+        tcl = tcl.replace('#PREFLOW_OPTS#', "\n".join(self.options['preflow']))
+        tcl = tcl.replace('#POSTSYN_OPTS#', "\n".join(self.options['postsyn']))
+        tcl = tcl.replace('#POSTIMP_OPTS#', "\n".join(self.options['postimp']))
+        tcl = tcl.replace('#POSTBIT_OPTS#', "\n".join(self.options['postbit']))
         open("%s.tcl" % self._TOOL, 'w').write(tcl)
 
     _TASKS = ['prj', 'syn', 'imp', 'bit']
