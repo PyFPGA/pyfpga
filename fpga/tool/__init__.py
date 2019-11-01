@@ -72,13 +72,7 @@ class Tool:
 
     def set_part(self, part):
         """Set the target PART."""
-        self.part = {
-            'name': part,
-            'family': 'unused',
-            'device': 'unused',
-            'package': 'unused',
-            'speed': 'unused'
-        }
+        self.part = part
 
     def add_file(self, file, lib=None):
         """Add a FILE to the project.
@@ -112,15 +106,11 @@ class Tool:
         tcl = open(template).read()
         tcl = tcl.replace('#TOOL#', self._TOOL)
         tcl = tcl.replace('#PROJECT#', self.project)
-        tcl = tcl.replace('#STRATEGY#', self.strategy)
-        tcl = tcl.replace('#TASK#', self.task)
-        tcl = tcl.replace('#PART#', self.part['name'])
-        tcl = tcl.replace('#FAMILY#', self.part['family'])
-        tcl = tcl.replace('#DEVICE#', self.part['device'])
-        tcl = tcl.replace('#PACKAGE#', self.part['package'])
-        tcl = tcl.replace('#SPEED#', self.part['speed'])
+        tcl = tcl.replace('#PART#', self.part)
         tcl = tcl.replace('#FILES#', "\n".join(self.files))
         tcl = tcl.replace('#TOP#', self.top)
+        tcl = tcl.replace('#STRATEGY#', self.strategy)
+        tcl = tcl.replace('#TASK#', self.task)
         tcl = tcl.replace('#PROJECT_OPTS#', "\n".join(self.options['project']))
         tcl = tcl.replace('#PREFLOW_OPTS#', "\n".join(self.options['preflow']))
         tcl = tcl.replace('#POSTSYN_OPTS#', "\n".join(self.options['postsyn']))
