@@ -2,19 +2,26 @@
 
 all: pep8 pylint
 
-pep8:
-	@pycodestyle fpga
+pep8: venv
+	@$</bin/pycodestyle fpga
 
-pylint:
-	@pylint --errors-only fpga
+pylint: venv
+	@$</bin/pylint --errors-only fpga
 
-pylint-full:
-	@pylint fpga
+pylint-full: venv
+	@$</bin/pylint fpga
 
 venv:
 	virtualenv $@ --python=python3
 	$@/bin/python3 -m pip install -e .
+	$@/bin/python3 -m pip install pyclean
+	$@/bin/python3 -m pip install pycodestyle
+	$@/bin/python3 -m pip install pylint
 	@rm -fr pyfpga.egg-info
 
-clean:
+venv-remove:
 	@rm -fr venv
+
+clean: venv
+	@$</bin/py3clean fpga
+	@rm -fr build
