@@ -22,6 +22,7 @@ Main Class of PyFPGA, which provides functionalities to create a project,
 generate files and transfer to a Device.
 """
 
+import contextlib
 import glob
 import os
 
@@ -29,6 +30,20 @@ from fpga.tool.ise import Ise
 from fpga.tool.libero import Libero
 from fpga.tool.quartus import Quartus
 from fpga.tool.vivado import Vivado
+
+
+@contextlib.contextmanager
+def _run_in_dir(directory):
+    """Run a function in the specified DIRECTORY."""
+    rundir = os.getcwd()
+    outdir = os.path.join(rundir, directory)
+    try:
+        if not os.path.exists(outdir):
+            os.mkdir(outdir)
+        os.chdir(outdir)
+        yield
+    finally:
+        os.chdir(rundir)
 
 
 class Project:
@@ -46,7 +61,7 @@ class Project:
             self.tool = Vivado(project, part)
         else:
             raise NotImplementedError(tool)
-        self.outdir = 'build'
+        self.set_outdir('build')
 
     def get_config(self):
         """Get the Project Configurations."""
@@ -101,21 +116,10 @@ class Project:
         """Set post bitstream generation OPTIONS."""
         self.tool.set_options(options, 'post-bit')
 
-    def _run_in_other_dir(self, funcname):
-        """Run a function in other directory."""
-        prevdir = os.getcwd()
-        nextdir = os.path.join(prevdir, self.outdir)
-        try:
-            if not os.path.exists(nextdir):
-                os.mkdir(nextdir)
-            os.chdir(nextdir)
-            funcname()
-        finally:
-            os.chdir(prevdir)
-
     def generate(self):
         """Run the FPGA tool."""
-        self._run_in_other_dir(self.tool.generate)
+        with _run_in_dir(self.outdir):
+            self.tool.generate()
 
     def set_hard(self, devtype, position, name, width):
         """Set hardware configurations for the programmer."""
@@ -123,4 +127,5 @@ class Project:
 
     def transfer(self):
         """Transfer a bitstream."""
-        self._run_in_other_dir(self.tool.transfer)
+        with _run_in_dir(self.outdir):
+            self.tool.transfer()
