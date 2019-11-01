@@ -49,16 +49,16 @@ def _run_in_dir(directory):
 class Project:
     """Manage an FPGA project."""
 
-    def __init__(self, tool='vivado', part=None, project=None):
+    def __init__(self, tool='vivado', project=None):
         """Instantiate the Tool to use."""
         if tool == 'ise':
-            self.tool = Ise(project, part)
+            self.tool = Ise(project)
         elif tool == 'libero':
-            self.tool = Libero(project, part)
+            self.tool = Libero(project)
         elif tool == 'quartus':
-            self.tool = Quartus(project, part)
+            self.tool = Quartus(project)
         elif tool == 'vivado':
-            self.tool = Vivado(project, part)
+            self.tool = Vivado(project)
         else:
             raise NotImplementedError(tool)
         self.set_outdir('build')
@@ -70,6 +70,10 @@ class Project:
     def set_outdir(self, outdir):
         """Set the OUTput DIRectory."""
         self.outdir = outdir
+
+    def set_part(self, part):
+        """Set the target PART."""
+        self.tool.set_part(part)
 
     def add_files(self, pathname, lib=None):
         """Add files to the project.

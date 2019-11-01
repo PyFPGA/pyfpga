@@ -45,18 +45,12 @@ class Tool:
     _EXTENSION = 'UNDEFINED'
     _PART = 'UNDEFINED'
 
-    def __init__(self, project=None, part=None):
+    def __init__(self, project=None):
         """Initializes the attributes of the class."""
         self.project = self._TOOL if project is None else project
         self.strategy = 'none'
         self.task = 'bit'
-        self.part = {
-            'name': self._PART if part is None else part,
-            'family': 'unused',
-            'device': 'unused',
-            'package': 'unused',
-            'speed': 'unused'
-        }
+        self.set_part(self._PART)
         self.options = {
             'project': '#empty',
             'pre-flow': '#empty',
@@ -74,6 +68,16 @@ class Tool:
             'project': self.project,
             'extension': self._EXTENSION,
             'part': self.part['name']
+        }
+
+    def set_part(self, part):
+        """Set the target PART."""
+        self.part = {
+            'name': part,
+            'family': 'unused',
+            'device': 'unused',
+            'package': 'unused',
+            'speed': 'unused'
         }
 
     def add_file(self, file, lib=None):
