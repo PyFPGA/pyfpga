@@ -67,7 +67,7 @@ class Tool:
             'tool': self._TOOL,
             'project': self.project,
             'extension': self._EXTENSION,
-            'part': self.part['name']
+            'part': self.part
         }
 
     def set_part(self, part):
