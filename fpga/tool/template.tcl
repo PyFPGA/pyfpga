@@ -36,7 +36,7 @@ set STRATEGY #STRATEGY#
 set TASK     #TASK#
 set TOP      #TOP#
 
-set FPGA     #FPGA#
+set PART     #PART#
 set FAMILY   #FAMILY#
 set DEVICE   #DEVICE#
 set PACKAGE  #PACKAGE#
@@ -124,7 +124,7 @@ proc fpga_close {} {
     }
 }
 
-proc fpga_device {} {
+proc fpga_part {} {
     global TOOL
     switch $TOOL {
         "ise"     {
@@ -137,10 +137,10 @@ proc fpga_device {} {
             set_device -family $FAMILY -die $DEVICE -package $PACKAGE -speed $SPEED
         }
         "quartus" {
-            set_global_assignment -name DEVICE $FPGA
+            set_global_assignment -name DEVICE $PART
         }
         "vivado"  {
-            set_property "part" $FPGA [current_project]
+            set_property "part" $PART [current_project]
         }
     }
 }
@@ -370,7 +370,7 @@ proc fpga_run_bit {} {
 
 if {[catch {
     fpga_create
-    fpga_device
+    fpga_part
     fpga_files
     fpga_top
     switch $STRATEGY {

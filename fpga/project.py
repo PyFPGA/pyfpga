@@ -34,16 +34,16 @@ from fpga.tool.vivado import Vivado
 class Project:
     """Manage an FPGA project."""
 
-    def __init__(self, tool='vivado', device=None, project=None):
+    def __init__(self, tool='vivado', part=None, project=None):
         """Instantiate the Tool to use."""
         if tool == 'ise':
-            self.tool = Ise(project, device)
+            self.tool = Ise(project, part)
         elif tool == 'libero':
-            self.tool = Libero(project, device)
+            self.tool = Libero(project, part)
         elif tool == 'quartus':
-            self.tool = Quartus(project, device)
+            self.tool = Quartus(project, part)
         elif tool == 'vivado':
-            self.tool = Vivado(project, device)
+            self.tool = Vivado(project, part)
         else:
             raise NotImplementedError(tool)
         self.outdir = 'build'

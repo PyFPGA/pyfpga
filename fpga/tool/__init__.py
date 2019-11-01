@@ -43,15 +43,15 @@ class Tool:
 
     _TOOL = 'UNDEFINED'
     _EXTENSION = 'UNDEFINED'
-    _DEVICE = 'UNDEFINED'
+    _PART = 'UNDEFINED'
 
-    def __init__(self, project=None, device=None):
+    def __init__(self, project=None, part=None):
         """Initializes the attributes of the class."""
         self.project = self._TOOL if project is None else project
         self.strategy = 'none'
         self.task = 'bit'
-        self.device = {
-            'name': self._DEVICE if device is None else device,
+        self.part = {
+            'name': self._PART if part is None else part,
             'family': 'unused',
             'device': 'unused',
             'package': 'unused',
@@ -69,15 +69,12 @@ class Tool:
 
     def get_config(self):
         """Get Configurations."""
-        info = {
-            "tool": self._TOOL,
-            "project": self.project,
-            "extension": self._EXTENSION,
-            "device": self.device['name'],
-            "strategy": self.strategy,
-            "task": self.task
+        return {
+            'tool': self._TOOL,
+            'project': self.project,
+            'extension': self._EXTENSION,
+            'part': self.part['name']
         }
-        return info
 
     def add_file(self, file, lib=None):
         """Add a FILE to the project.
@@ -131,22 +128,22 @@ class Tool:
         """Create the Tcl to be used as input of the Tool."""
         template = os.path.join(os.path.dirname(__file__), 'template.tcl')
         tcl = open(template).read()
-        tcl = tcl.replace("#TOOL#", self._TOOL)
-        tcl = tcl.replace("#PROJECT#", self.project)
-        tcl = tcl.replace("#STRATEGY#", self.strategy)
-        tcl = tcl.replace("#TASK#", self.task)
-        tcl = tcl.replace("#FPGA#", self.device['name'])
-        tcl = tcl.replace("#FAMILY#", self.device['family'])
-        tcl = tcl.replace("#DEVICE#", self.device['device'])
-        tcl = tcl.replace("#PACKAGE#", self.device['package'])
-        tcl = tcl.replace("#SPEED#", self.device['speed'])
-        tcl = tcl.replace("#FILES#", "\n".join(self.files))
-        tcl = tcl.replace("#TOP#", self.top)
-        tcl = tcl.replace("#PROJECT_OPTS#", self.options['project'])
-        tcl = tcl.replace("#PRE_FLOW_OPTS#", self.options['pre-flow'])
-        tcl = tcl.replace("#POST_SYN_OPTS#", self.options['post-syn'])
-        tcl = tcl.replace("#POST_IMP_OPTS#", self.options['post-imp'])
-        tcl = tcl.replace("#POST_BIT_OPTS#", self.options['post-bit'])
+        tcl = tcl.replace('#TOOL#', self._TOOL)
+        tcl = tcl.replace('#PROJECT#', self.project)
+        tcl = tcl.replace('#STRATEGY#', self.strategy)
+        tcl = tcl.replace('#TASK#', self.task)
+        tcl = tcl.replace('#PART#', self.part['name'])
+        tcl = tcl.replace('#FAMILY#', self.part['family'])
+        tcl = tcl.replace('#DEVICE#', self.part['device'])
+        tcl = tcl.replace('#PACKAGE#', self.part['package'])
+        tcl = tcl.replace('#SPEED#', self.part['speed'])
+        tcl = tcl.replace('#FILES#', "\n".join(self.files))
+        tcl = tcl.replace('#TOP#', self.top)
+        tcl = tcl.replace('#PROJECT_OPTS#', self.options['project'])
+        tcl = tcl.replace('#PRE_FLOW_OPTS#', self.options['pre-flow'])
+        tcl = tcl.replace('#POST_SYN_OPTS#', self.options['post-syn'])
+        tcl = tcl.replace('#POST_IMP_OPTS#', self.options['post-imp'])
+        tcl = tcl.replace('#POST_BIT_OPTS#', self.options['post-bit'])
         open("%s.tcl" % self._TOOL, 'w').write(tcl)
 
     def generate(self):

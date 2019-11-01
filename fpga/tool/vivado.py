@@ -29,7 +29,7 @@ class Vivado(Tool):
 
     _TOOL = 'vivado'
     _EXTENSION = 'xpr'
-    _DEVICE = 'xc7z010-1-clg400'
+    _PART = 'xc7z010-1-clg400'
 
     def generate(self):
         self.create_tcl()
