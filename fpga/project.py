@@ -92,14 +92,6 @@ class Project:
         """Set the TOP LEVEL of the project."""
         self.tool.set_top(toplevel)
 
-    def set_strategy(self, strategy):
-        """Set the Optimization STRATEGY."""
-        self.tool.set_strategy(strategy)
-
-    def set_task(self, task):
-        """Set the TASK to reach when the Tool is executed."""
-        self.tool.set_task(task)
-
     def set_project_opts(self, options):
         """Set project OPTIONS."""
         self.tool.set_options(options, 'project')
@@ -120,10 +112,10 @@ class Project:
         """Set post bitstream generation OPTIONS."""
         self.tool.set_options(options, 'post-bit')
 
-    def generate(self):
+    def generate(self, strategy='none', task='bit'):
         """Run the FPGA tool."""
         with _run_in_dir(self.outdir):
-            self.tool.generate()
+            self.tool.generate(strategy, task)
 
     def set_hard(self, devtype, position, name, width):
         """Set hardware configurations for the programmer."""

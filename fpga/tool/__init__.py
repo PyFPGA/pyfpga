@@ -95,16 +95,6 @@ class Tool:
         """Set the TOP LEVEL of the project."""
         self.top = top
 
-    _STRATEGIES = ['none', 'area', 'speed', 'power']
-
-    def set_strategy(self, strategy):
-        """Set the Optimization STRATEGY.
-
-        The valid options are none (default), area, speed and power.
-        """
-        check_value(strategy, self._STRATEGIES)
-        self.strategy = strategy
-
     _PHASES = ['project', 'pre-flow', 'post-syn', 'post-imp', 'post-bit']
 
     def set_options(self, options, phase):
@@ -115,18 +105,6 @@ class Tool:
         """
         check_value(phase, self._PHASES)
         self.options[phase] = options
-
-    _TASKS = ['prj', 'syn', 'imp', 'bit']
-
-    def set_task(self, task):
-        """Set the TASK to reach when the Tool is executed.
-
-        The valid TASKs are prj to only create the project file, syn for also
-        performs the synthesis, imp to add implementation and bit (default)
-        to finish with the bitstream generation.
-        """
-        check_value(task, self._TASKS)
-        self.task = task
 
     def create_tcl(self):
         """Create the Tcl to be used as input of the Tool."""
@@ -150,9 +128,23 @@ class Tool:
         tcl = tcl.replace('#POST_BIT_OPTS#', self.options['post-bit'])
         open("%s.tcl" % self._TOOL, 'w').write(tcl)
 
-    def generate(self):
-        """Run the FPGA tool."""
-        raise NotImplementedError('generate')
+    _TASKS = ['prj', 'syn', 'imp', 'bit']
+
+    _STRATEGIES = ['none', 'area', 'speed', 'power']
+
+    def generate(self, strategy, task):
+        """Run the FPGA tool.
+
+        The valid STRATEGIES are none (default), area, speed and power.
+        The valid TASKS are prj to only create the project file, syn for also
+        performs the synthesis, imp to add implementation and bit (default)
+        to finish with the bitstream generation.
+        """
+        check_value(strategy, self._STRATEGIES)
+        check_value(task, self._TASKS)
+        self.strategy = strategy
+        self.task = task
+        self.create_tcl()
 
     _DEVTYPES = ['fpga', 'spi', 'bpi', 'xcf']
 
