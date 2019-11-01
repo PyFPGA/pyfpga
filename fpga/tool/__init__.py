@@ -61,7 +61,7 @@ class Tool:
         self.files = []
         self.top = 'undefined'
 
-    def get_config(self):
+    def get_configs(self):
         """Get Configurations."""
         return {
             'tool': self._TOOL,
@@ -138,16 +138,16 @@ class Tool:
 
     _DEVTYPES = ['fpga', 'spi', 'bpi', 'xcf']
 
-    def set_hard(self, devtype, position, name, width):
-        """Set hardware configurations for the programmer.
+    def set_device(self, devtype, position, part, width):
+        """Set a device.
 
-        The valid device types are fpga, spi, bpi and xcf.
-        Also, the POSITION in the Jtag chain (for FPGAs and some old
-        memories), the NAME (for SPI/BPI memories) and the data WIDTH (for
-        memories) can be specified.
+        The valid DEVice TYPEs are fpga, spi, bpi and xcf.
+        An integer specify the POSITION in the Jtag chain.
+        PART is the name of the device.
+        WIDTH is used for memories
         """
         raise NotImplementedError('transfer')
 
-    def transfer(self, device, position, name, width):
+    def transfer(self, devtype):
         """Transfer a bitstream."""
         raise NotImplementedError('transfer')

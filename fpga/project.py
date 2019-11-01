@@ -63,9 +63,9 @@ class Project:
             raise NotImplementedError(tool)
         self.set_outdir('build')
 
-    def get_config(self):
+    def get_configs(self):
         """Get the Project Configurations."""
-        return self.tool.get_config()
+        return self.tool.get_configs()
 
     def set_outdir(self, outdir):
         """Set the OUTput DIRectory."""
@@ -117,11 +117,11 @@ class Project:
         with _run_in_dir(self.outdir):
             self.tool.generate(strategy, task)
 
-    def set_hard(self, devtype, position, name, width):
-        """Set hardware configurations for the programmer."""
-        self.tool.set_hard(devtype, position, name, width)
+    def set_device(self, devtype, position=1, part='UNDEFINED', width='1'):
+        """Set a device."""
+        self.tool.set_device(devtype, position, part, width)
 
-    def transfer(self):
+    def transfer(self, devtype='fpga'):
         """Transfer a bitstream."""
         with _run_in_dir(self.outdir):
-            self.tool.transfer()
+            self.tool.transfer(devtype)
