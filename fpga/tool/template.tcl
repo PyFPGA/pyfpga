@@ -464,18 +464,18 @@ if {[catch {
 
 if {[catch {
     fpga_open
+    fpga_options "preflow"
     if { $TASK=="syn" || $TASK=="imp" || $TASK=="bit" } {
-        fpga_options "pre-flow"
         fpga_run_syn
-        fpga_options "post-syn"
+        fpga_options "postsyn"
     }
     if { $TASK=="imp" || $TASK=="bit" } {
         fpga_run_imp
-        fpga_options "post-imp"
+        fpga_options "postimp"
     }
     if { $TASK=="bit" } {
         fpga_run_bit
-        fpga_options "post-bit"
+        fpga_options "postbit"
     }
     fpga_close
 } ERRMSG]} {
