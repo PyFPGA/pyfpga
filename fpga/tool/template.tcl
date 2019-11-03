@@ -76,7 +76,7 @@ set ERR_FLOW    4
 # Procedures for multi vendor support
 #
 
-proc fpga_create {} {
+proc fpga_create { PROJECT } {
     global TOOL
     switch $TOOL {
         "ise"     { project new $PROJECT.xise }
@@ -91,7 +91,7 @@ proc fpga_create {} {
     }
 }
 
-proc fpga_open {} {
+proc fpga_open { PROJECT } {
     global TOOL
     switch $TOOL {
         "ise"     { project open $PROJECT.xise }
@@ -116,7 +116,7 @@ proc fpga_close {} {
     }
 }
 
-proc fpga_part {} {
+proc fpga_part { PART } {
     global TOOL
     if {[catch {
         switch $TOOL {
@@ -166,7 +166,7 @@ proc fpga_part {} {
                 project set speed   $SPEED
             }
             "libero"  {
-                regexp -nocase {(.*)-(.*)-(.*)} $FPGA -> DEVICE SPEED PACKAGE
+                regexp -nocase {(.*)-(.*)-(.*)} $PART -> DEVICE SPEED PACKAGE
                 set FAMILY "Unknown"
                 if {[regexp -nocase {m2s} $DEVICE]} {
                     set FAMILY "SmartFusion2"
@@ -264,7 +264,7 @@ proc fpga_file {FILE {LIB ""}} {
     }
 }
 
-proc fpga_top {} {
+proc fpga_top { TOP } {
     global TOOL
     switch $TOOL {
         "ise"     { project set top $TOP }
@@ -441,10 +441,10 @@ proc fpga_files {} {
 #
 
 if {[catch {
-    fpga_create
-    fpga_part
+    fpga_create $PROJECT
+    fpga_part $PART
     fpga_files
-    fpga_top
+    fpga_top $TOP
     switch $STRATEGY {
         "area"  {fpga_area_opts}
         "power" {fpga_power_opts}
@@ -463,7 +463,7 @@ if {[catch {
 #
 
 if {[catch {
-    fpga_open
+    fpga_open $PROJECT
     fpga_options "preflow"
     if { $TASK=="syn" || $TASK=="imp" || $TASK=="bit" } {
         fpga_run_syn
