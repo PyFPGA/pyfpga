@@ -3,13 +3,13 @@
 all: pep8 pylint
 
 pep8: venv
-	@$</bin/pycodestyle fpga
+	$</bin/pycodestyle fpga examples
 
 pylint: venv
-	@$</bin/pylint --errors-only fpga
+	$</bin/pylint --errors-only fpga examples
 
 pylint-full: venv
-	@$</bin/pylint fpga
+	$</bin/pylint fpga examples
 
 venv:
 	virtualenv $@ --python=python3
@@ -23,5 +23,5 @@ venv-remove:
 	@rm -fr venv
 
 clean: venv
-	@$</bin/py3clean fpga
+	$</bin/py3clean fpga
 	@rm -fr build
