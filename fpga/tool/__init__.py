@@ -48,8 +48,8 @@ class Tool:
     def __init__(self, project=None):
         """Initializes the attributes of the class."""
         self.project = self._TOOL if project is None else project
-        self.strategy = 'none'
-        self.task = 'bit'
+        self.set_strategy('none')
+        self.set_task('bit')
         self.set_part(self._PART)
         self.options = {
             'project': [],
@@ -59,7 +59,7 @@ class Tool:
             'postbit': []
         }
         self.files = []
-        self.top = 'undefined'
+        self.set_top('undefined')
 
     def get_configs(self):
         """Get Configurations."""
@@ -75,10 +75,7 @@ class Tool:
         self.part = part
 
     def add_file(self, file, lib=None):
-        """Add a FILE to the project.
-
-        LIB is optional and only useful for VHDL files.
-        """
+        """Add a FILE to the project."""
         command = '    '  # indentation
         command += 'fpga_file %s' % file
         if lib is not None:
@@ -92,16 +89,12 @@ class Tool:
     _PHASES = ['project', 'preflow', 'postsyn', 'postimp', 'postbit']
 
     def add_option(self, option, phase):
-        """Add the specified OPTION in the desired PHASE.
-
-        OPTIONs are specific for each tool. The valid PHASEs are project,
-        preflow, postsyn, postimp and postbit.
-        """
+        """Add the specified OPTION in the desired PHASE."""
         check_value(phase, self._PHASES)
         self.options[phase].append(option)
 
-    def create_tcl(self):
-        """Create the Tcl to be used as input of the Tool."""
+    def _create_script(self):
+        """Create the script for the Tool execution."""
         template = os.path.join(os.path.dirname(__file__), 'template.tcl')
         tcl = open(template).read()
         tcl = tcl.replace('#TOOL#', self._TOOL)
@@ -118,35 +111,37 @@ class Tool:
         tcl = tcl.replace('#POSTBIT_OPTS#', "\n".join(self.options['postbit']))
         open("%s.tcl" % self._TOOL, 'w').write(tcl)
 
-    _TASKS = ['prj', 'syn', 'imp', 'bit']
-
     _STRATEGIES = ['none', 'area', 'speed', 'power']
 
-    def generate(self, strategy, task):
-        """Run the FPGA tool.
-
-        The valid STRATEGIES are none (default), area, speed and power.
-        The valid TASKS are prj to only create the project file, syn for also
-        performs the synthesis, imp to add implementation and bit (default)
-        to finish with the bitstream generation.
-        """
+    def set_strategy(self, strategy):
+        """Set the STRATEGY to use."""
         check_value(strategy, self._STRATEGIES)
-        check_value(task, self._TASKS)
         self.strategy = strategy
+
+    _TASKS = ['prj', 'syn', 'imp', 'bit']
+
+    def set_task(self, task):
+        """Set the TASK to perform."""
+        check_value(task, self._TASKS)
         self.task = task
-        self.create_tcl()
+
+    def generate(self, strategy=None, task=None):
+        """Run the FPGA tool."""
+        if strategy is not None:
+            self.set_strategy(strategy)
+        if task is not None:
+            self.set_task(task)
+        self._create_script()
 
     _DEVTYPES = ['fpga', 'spi', 'bpi', 'xcf']
 
     def set_device(self, devtype, position, part, width):
-        """Set a device.
+        """Set a device."""
+        raise NotImplementedError('set_device')
 
-        The valid DEVice TYPEs are fpga, spi, bpi and xcf.
-        An integer specify the POSITION in the Jtag chain.
-        PART is the name of the device.
-        WIDTH is used for memories
-        """
-        raise NotImplementedError('transfer')
+    def set_board(self, board):
+        """Set the board to use."""
+        raise NotImplementedError('set_board')
 
     def transfer(self, devtype):
         """Transfer a bitstream."""
