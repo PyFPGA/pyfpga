@@ -24,6 +24,7 @@ generate files and transfer to a Device.
 
 import contextlib
 import glob
+import inspect
 import os
 
 from fpga.tool.ise import Ise
@@ -82,10 +83,11 @@ class Project:
         specification, and can contain shell-style wildcards.
         LIB is optional and only useful for VHDL files.
         """
-        path = os.getcwd()
-        files = glob.glob(pathname)
+        rundir = os.getcwd()
+        reldir = os.path.dirname(inspect.stack()[-1].filename)
+        files = glob.glob(os.path.join(reldir, pathname))
         for file in files:
-            file_abs = os.path.join(path, file)
+            file_abs = os.path.join(rundir, file)
             self.tool.add_file(file_abs, lib)
 
     def set_top(self, toplevel):

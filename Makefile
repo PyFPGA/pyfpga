@@ -11,6 +11,9 @@ pylint: venv
 pylint-full: venv
 	$</bin/pylint fpga examples
 
+test: venv
+	$</bin/python3 examples/test.py
+
 venv:
 	virtualenv $@ --python=python3
 	$@/bin/python3 -m pip install -e .
