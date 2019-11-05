@@ -9,7 +9,7 @@ pylint: venv
 	$</bin/pylint --errors-only fpga examples
 
 pylint-full: venv
-	$</bin/pylint fpga examples
+	$</bin/pylint fpga
 
 test: venv
 	$</bin/python3 examples/test.py

@@ -15,8 +15,8 @@ prj.set_top('Top')
 
 prj.generate()
 
-#set fpga_pos  1
-#set spi_width 1
-#set spi_name  W25Q64BV
-#set bpi_width 8
-#set bpi_name  28F128J3D
+# set fpga_pos  1
+# set spi_width 1
+# set spi_name  W25Q64BV
+# set bpi_width 8
+# set bpi_name  28F128J3D

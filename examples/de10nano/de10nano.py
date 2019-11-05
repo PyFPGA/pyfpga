@@ -15,4 +15,4 @@ prj.set_top('Top')
 
 prj.generate()
 
-#set fpga_pos 2
+# set fpga_pos 2
