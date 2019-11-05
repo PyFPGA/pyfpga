@@ -25,6 +25,7 @@ generate files and transfer to a Device.
 import contextlib
 import glob
 import inspect
+import logging
 import os
 
 from fpga.tool.ise import Ise
@@ -32,6 +33,10 @@ from fpga.tool.libero import Libero
 from fpga.tool.quartus import Quartus
 from fpga.tool.vivado import Vivado
 
+
+log = logging.getLogger(__name__)
+log.level = logging.INFO
+log.addHandler(logging.NullHandler())
 
 class Project:
     """Manage an FPGA project."""
@@ -49,16 +54,20 @@ class Project:
         else:
             raise NotImplementedError(tool)
         self.rundir = os.getcwd()
+        log.debug('RUNDIR = {}'.format(self.rundir))
         self.reldir = os.path.dirname(inspect.stack()[-1].filename)
+        log.debug('RELDIR = {}'.format(self.reldir))
         self.set_outdir('build')
+
+    def set_outdir(self, outdir):
+        """Set the OUTput DIRectory."""
+        auxdir = os.path.join(self.reldir, outdir)
+        self.outdir = os.path.join(self.rundir, auxdir)
+        log.debug('OUTDIR = {}'.format(self.outdir))
 
     def get_configs(self):
         """Get the Project Configurations."""
         return self.tool.get_configs()
-
-    def set_outdir(self, outdir):
-        """Set the OUTput DIRectory."""
-        self.outdir = outdir
 
     def set_part(self, part):
         """Set the target PART."""
@@ -146,12 +155,10 @@ class Project:
     @contextlib.contextmanager
     def _run_in_dir(self):
         """Run a function in the specified DIRECTORY."""
-        auxdir = os.path.join(self.reldir, self.outdir)
-        outdir = os.path.join(self.rundir, auxdir)
         try:
-            if not os.path.exists(outdir):
-                os.makedirs(outdir)
-            os.chdir(outdir)
+            if not os.path.exists(self.outdir):
+                os.makedirs(self.outdir)
+            os.chdir(self.outdir)
             yield
         finally:
             os.chdir(self.rundir)
