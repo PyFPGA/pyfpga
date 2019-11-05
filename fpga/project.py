@@ -33,20 +33,6 @@ from fpga.tool.quartus import Quartus
 from fpga.tool.vivado import Vivado
 
 
-@contextlib.contextmanager
-def _run_in_dir(directory):
-    """Run a function in the specified DIRECTORY."""
-    rundir = os.getcwd()
-    outdir = os.path.join(rundir, directory)
-    try:
-        if not os.path.exists(outdir):
-            os.makedirs(outdir)
-        os.chdir(outdir)
-        yield
-    finally:
-        os.chdir(rundir)
-
-
 class Project:
     """Manage an FPGA project."""
 
@@ -62,6 +48,8 @@ class Project:
             self.tool = Vivado(project)
         else:
             raise NotImplementedError(tool)
+        self.rundir = os.getcwd()
+        self.reldir = os.path.dirname(inspect.stack()[-1].filename)
         self.set_outdir('build')
 
     def get_configs(self):
@@ -83,11 +71,9 @@ class Project:
         specification, and can contain shell-style wildcards.
         LIB is optional and only useful for VHDL files.
         """
-        rundir = os.getcwd()
-        reldir = os.path.dirname(inspect.stack()[-1].filename)
-        files = glob.glob(os.path.join(reldir, pathname))
+        files = glob.glob(os.path.join(self.reldir, pathname))
         for file in files:
-            file_abs = os.path.join(rundir, file)
+            file_abs = os.path.join(self.rundir, file)
             self.tool.add_file(file_abs, lib)
 
     def set_top(self, toplevel):
@@ -132,7 +118,7 @@ class Project:
 
     def generate(self, strategy=None, task=None):
         """Run the FPGA tool."""
-        with _run_in_dir(self.outdir):
+        with self._run_in_dir():
             self.tool.generate(strategy, task)
 
     def set_device(self, devtype, position=1, part='UNDEFINED', width='1'):
@@ -154,5 +140,18 @@ class Project:
 
     def transfer(self, devtype='fpga'):
         """Transfer a bitstream."""
-        with _run_in_dir(self.outdir):
+        with self._run_in_dir():
             self.tool.transfer(devtype)
+
+    @contextlib.contextmanager
+    def _run_in_dir(self):
+        """Run a function in the specified DIRECTORY."""
+        auxdir = os.path.join(self.reldir, self.outdir)
+        outdir = os.path.join(self.rundir, auxdir)
+        try:
+            if not os.path.exists(outdir):
+                os.makedirs(outdir)
+            os.chdir(outdir)
+            yield
+        finally:
+            os.chdir(self.rundir)
