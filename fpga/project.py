@@ -40,7 +40,7 @@ def _run_in_dir(directory):
     outdir = os.path.join(rundir, directory)
     try:
         if not os.path.exists(outdir):
-            os.mkdir(outdir)
+            os.makedirs(outdir)
         os.chdir(outdir)
         yield
     finally:
