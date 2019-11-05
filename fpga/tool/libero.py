@@ -30,3 +30,5 @@ class Libero(Tool):
     _TOOL = 'libero'
     _EXTENSION = 'prjx'
     _PART = 'mpf300ts-1-fcg1152'
+
+    _GEN_COMMAND = 'libero SCRIPT:libero.tcl'

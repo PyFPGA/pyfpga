@@ -30,3 +30,5 @@ class Quartus(Tool):
     _TOOL = 'quartus'
     _EXTENSION = 'qpf'
     _PART = '10M08SAE144C8G'
+
+    _GEN_COMMAND = 'quartus_sh --script quartus.tcl'

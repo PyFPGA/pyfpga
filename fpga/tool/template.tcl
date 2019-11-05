@@ -79,7 +79,10 @@ set ERR_FLOW    4
 proc fpga_create { PROJECT } {
     global TOOL
     switch $TOOL {
-        "ise"     { project new $PROJECT.xise }
+        "ise"     {
+            if { [ file exists $PROJECT.xise ] } { file delete $PROJECT.xise }
+            project new $PROJECT.xise
+        }
         "libero"  {
             new_project -name $PROJECT -location {temp-libero} -hdl {VHDL} -family {SmartFusion2}
         }
@@ -121,7 +124,7 @@ proc fpga_part { PART } {
     if {[catch {
         switch $TOOL {
             "ise"     {
-                regexp -nocase {(.*)-(.*)-(.*)} $PART -> DEVICE SPEED PACKAGE
+                regexp -nocase {(.*)(-.*)-(.*)} $PART -> DEVICE SPEED PACKAGE
                 set FAMILY "Unknown"
                 if {[regexp -nocase {xc7a\d+l} $DEVICE]} {
                     set FAMILY "artix7l"

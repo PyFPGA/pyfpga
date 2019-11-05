@@ -30,3 +30,5 @@ class Ise(Tool):
     _TOOL = 'ise'
     _EXTENSION = 'xise'
     _PART = 'XC6SLX9-2-CSG324'
+
+    _GEN_COMMAND = 'xtclsh ise.tcl'
