@@ -22,6 +22,7 @@ Defines the interface to be inherited to support a tool.
 """
 
 import os.path
+import subprocess
 
 
 def check_value(value, values):
@@ -132,6 +133,7 @@ class Tool:
         if task is not None:
             self.set_task(task)
         self._create_script()
+        subprocess.run(self._GEN_COMMAND, shell=True)
 
     _DEVTYPES = ['fpga', 'spi', 'bpi', 'xcf']
 

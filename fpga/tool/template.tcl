@@ -102,7 +102,7 @@ proc fpga_open { PROJECT } {
             package require ::quartus::flow
             project_open -force $PROJECT.qpf
         }
-        "vivado"  { project open $PROJECT }
+        "vivado"  { open_project $PROJECT }
     }
 }
 
