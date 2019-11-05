@@ -38,6 +38,7 @@ log = logging.getLogger(__name__)
 log.level = logging.INFO
 log.addHandler(logging.NullHandler())
 
+
 class Project:
     """Manage an FPGA project."""
 
@@ -80,7 +81,9 @@ class Project:
         specification, and can contain shell-style wildcards.
         LIB is optional and only useful for VHDL files.
         """
-        files = glob.glob(os.path.join(self.reldir, pathname))
+        pathname = os.path.join(self.reldir, pathname)
+        log.debug('PATHNAME = {}'.format(pathname))
+        files = glob.glob(pathname)
         for file in files:
             file_abs = os.path.join(self.rundir, file)
             self.tool.add_file(file_abs, lib)
@@ -154,9 +157,10 @@ class Project:
 
     @contextlib.contextmanager
     def _run_in_dir(self):
-        """Run a function in the specified DIRECTORY."""
+        """Run in other directory."""
         try:
             if not os.path.exists(self.outdir):
+                log.info('the output directory did not exist, created.')
                 os.makedirs(self.outdir)
             os.chdir(self.outdir)
             yield
