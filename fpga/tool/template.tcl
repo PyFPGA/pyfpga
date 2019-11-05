@@ -89,6 +89,7 @@ proc fpga_create { PROJECT } {
         "quartus" {
             package require ::quartus::project
             project_new $PROJECT -overwrite
+            set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
         }
         "vivado"  { create_project -force $PROJECT }
     }
