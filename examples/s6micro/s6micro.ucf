@@ -1,0 +1,2 @@
+NET "clk_i" LOC = "V10";
+NET "led_o" LOC = "C2";
