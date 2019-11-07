@@ -135,7 +135,7 @@ class Tool:
         if task is not None:
             self.set_task(task)
         self._create_script()
-        subprocess.run(self._GEN_COMMAND, shell=True)
+        subprocess.run(self._GEN_COMMAND, shell=True, check=True)
 
     _DEVTYPES = ['fpga', 'spi', 'bpi', 'xcf']
 
