@@ -34,9 +34,9 @@ from fpga.tool.quartus import Quartus
 from fpga.tool.vivado import Vivado
 
 
-log = logging.getLogger(__name__)
-log.level = logging.INFO
-log.addHandler(logging.NullHandler())
+LOG = logging.getLogger(__name__)
+LOG.level = logging.INFO
+LOG.addHandler(logging.NullHandler())
 
 
 class Project:
@@ -55,16 +55,16 @@ class Project:
         else:
             raise NotImplementedError(tool)
         self.rundir = os.getcwd()
-        log.debug('RUNDIR = {}'.format(self.rundir))
+        LOG.debug('RUNDIR = %s', self.rundir)
         self.reldir = os.path.dirname(inspect.stack()[-1].filename)
-        log.debug('RELDIR = {}'.format(self.reldir))
+        LOG.debug('RELDIR = %s', self.reldir)
         self.set_outdir('build')
 
     def set_outdir(self, outdir):
         """Set the OUTput DIRectory."""
         auxdir = os.path.join(self.reldir, outdir)
         self.outdir = os.path.join(self.rundir, auxdir)
-        log.debug('OUTDIR = {}'.format(self.outdir))
+        LOG.debug('OUTDIR = %s', self.outdir)
 
     def get_configs(self):
         """Get the Project Configurations."""
@@ -82,7 +82,7 @@ class Project:
         LIB is optional and only useful for VHDL files.
         """
         pathname = os.path.join(self.reldir, pathname)
-        log.debug('PATHNAME = {}'.format(pathname))
+        LOG.debug('PATHNAME = %s', pathname)
         files = glob.glob(pathname)
         for file in files:
             file_abs = os.path.join(self.rundir, file)
@@ -160,7 +160,7 @@ class Project:
         """Run in other directory."""
         try:
             if not os.path.exists(self.outdir):
-                log.info('the output directory did not exist, created.')
+                LOG.info('the output directory did not exist, created.')
                 os.makedirs(self.outdir)
             os.chdir(self.outdir)
             yield
