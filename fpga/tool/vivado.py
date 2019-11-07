@@ -21,7 +21,8 @@
 Implements the support of Vivado (Xilinx).
 """
 
-from pathlib import Path
+from glob import glob
+import subprocess
 
 from fpga.tool import Tool
 
@@ -55,8 +56,11 @@ class Vivado(Tool):
 
     _DEVTYPES = ['fpga', 'detect']
 
-    def _create_trf_script(self, devtype, position, part, width):
+    def transfer(self, devtype='fpga', position=1, part=None, width=None):
+        super().transfer(devtype, position, part, width)
         temp = _TEMPLATES[devtype]
-        bitstream = Path('.').rglob('*.bit')
-        temp = temp.replace('#BITSTREAM#', str(next(bitstream)))
-        open("%s-prog.tcl" % self._TOOL, 'w').write(temp)
+        if devtype != 'detect':
+            bitstream = glob('**/*.bit', recursive=True)
+            temp = temp.replace('#BITSTREAM#', bitstream[0])
+        open("vivado-prog.tcl", 'w').write(temp)
+        subprocess.run(self._TRF_COMMAND, shell=True, check=True)

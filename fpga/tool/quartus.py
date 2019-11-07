@@ -21,21 +21,11 @@
 Implements the support of Quartus (Intel/Altera).
 """
 
-from fpga.tool import Tool
+from glob import glob
+import re
+import subprocess
 
-_TEMPLATES = {
-    'fpga': """\
-set devices [exec jtagconfig]
-# autodetection of the first found cable
-regexp -nocase {1\\) (.*) \\[} $devices -> cable
-# Programming
-exec quartus_pgm -c $cable --mode jtag -o "p;{bitstream}@{position}"
-""",
-    'detect': """\
-set devices [exec jtagconfig]
-puts $devices
-"""
-}
+from fpga.tool import Tool
 
 
 class Quartus(Tool):
@@ -47,5 +37,20 @@ class Quartus(Tool):
 
     _GEN_COMMAND = 'quartus_sh --script quartus.tcl'
 
-    def transfer(self, devtype):
-        print(_TEMPLATES[devtype])
+    _DEVTYPES = ['fpga', 'detect']
+
+    def transfer(self, devtype, position, part, width):
+        super().transfer(devtype, position, part, width)
+        result = subprocess.run(
+            'jtagconfig', shell=True, check=True,
+            stdout=subprocess.PIPE, universal_newlines=True
+        )
+        if devtype == 'detect':
+            print(result.stdout)
+        else:
+            bitstream = glob('**/*.sof', recursive=True)
+            bitstream.extend(glob('**/*.pof', recursive=True))
+            cable = re.match(r"1\) (.*) \[", result.stdout).groups()[0]
+            cmd = 'quartus_pgm -c %s --mode jtag -o "p;%s@%s"' \
+                  % (cable, bitstream[0], position)
+            subprocess.run(cmd, shell=True, check=True)

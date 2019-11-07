@@ -130,7 +130,7 @@ class Project:
         """
         raise NotImplementedError('set_board')
 
-    def transfer(self, devtype='fpga', position=1, part=None, width=None):
+    def transfer(self, devtype='fpga', position=1, part='', width=1):
         """Transfer a bitstream."""
         with self._run_in_dir():
             self.tool.transfer(devtype, position, part, width)

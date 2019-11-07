@@ -125,12 +125,9 @@ class Tool:
         self._create_gen_script(strategy, task)
         subprocess.run(self._GEN_COMMAND, shell=True, check=True)
 
-    def _create_trf_script(self, devtype, position, part, width):
-        """Create the script for transfer execution."""
-        raise NotImplementedError('_create_trf_script')
-
-    def transfer(self, devtype='fpga', position=1, part=None, width=None):
+    def transfer(self, devtype, position, part, width):
         """Transfer a bitstream."""
         check_value(devtype, self._DEVTYPES)
-        self._create_trf_script(devtype, position, part, width)
-        subprocess.run(self._TRF_COMMAND, shell=True, check=True)
+        check_value(position, range(10))
+        isinstance(part, str)
+        check_value(width, [1, 2, 4, 8, 16, 32])

@@ -86,6 +86,10 @@ class Ise(Tool):
     _PART = 'XC6SLX9-2-CSG324'
 
     _GEN_COMMAND = 'xtclsh ise.tcl'
+    _TRF_COMMAND = 'impact -batch ise-prog.impact'
 
-    def transfer(self, devtype):
-        print(_TEMPLATES[devtype])
+    _DEVTYPES = ['fpga', 'spi', 'bpi', 'xcf', 'detect', 'unlock']
+
+    def transfer(self, devtype, position, part, width):
+        super().transfer(devtype, position, part, width)
+        raise NotImplementedError('transfer(ise)')
