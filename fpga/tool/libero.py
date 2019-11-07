@@ -47,6 +47,10 @@ class Libero(Tool):
     _PART = 'mpf300ts-1-fcg1152'
 
     _GEN_COMMAND = 'libero SCRIPT:libero.tcl'
+    _TRF_COMMAND = ''
 
-    def transfer(self, devtype):
-        print(_TEMPLATES[devtype])
+    _DEVTYPES = ['fpga']
+
+    def transfer(self, devtype, position, part, width):
+        super().transfer(devtype, position, part, width)
+        raise NotImplementedError('transfer(libero)')
