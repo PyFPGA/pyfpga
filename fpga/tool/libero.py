@@ -23,6 +23,21 @@ Implements the support of Libero (Microchip/Microsemi).
 
 from fpga.tool import Tool
 
+_TEMPLATES = {
+    'fpga': """\
+""",
+    'detect': """\
+"""
+}
+
+# open_project -file {$TEMPDIR/libero.prjx}
+# run_tool -name {CONFIGURE_CHAIN} -script {$TEMPDIR/flashpro.tcl}
+# run_tool -name {PROGRAMDEVICE}
+
+# set flashpro_programmer "configure_flashpro5_prg -vpump {ON} \
+# -clk_mode {free_running_clk} -programming_method {spi_slave} \
+# -force_freq {OFF} -freq {4000000}"
+
 
 class Libero(Tool):
     """Implementation of the class to support Libero."""
@@ -32,3 +47,6 @@ class Libero(Tool):
     _PART = 'mpf300ts-1-fcg1152'
 
     _GEN_COMMAND = 'libero SCRIPT:libero.tcl'
+
+    def transfer(self, devtype):
+        print(_TEMPLATES[devtype])

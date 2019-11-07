@@ -46,6 +46,8 @@ class Tool:
     _EXTENSION = 'UNDEFINED'
     _PART = 'UNDEFINED'
 
+    _GEN_COMMAND = 'UNDEFINED'
+
     def __init__(self, project=None):
         """Initializes the attributes of the class."""
         self.project = self._TOOL if project is None else project

@@ -23,6 +23,23 @@ Implements the support of Vivado (Xilinx).
 
 from fpga.tool import Tool
 
+_TEMPLATES = {
+    'fpga': """\
+open_hw
+connect_hw_server
+open_hw_target
+set obj [lindex [get_hw_devices [current_hw_device]] 0]
+set_property PROGRAM.FILE {bitstream} $obj
+program_hw_devices $obj
+""",
+    'detect': """\
+open_hw
+connect_hw_server
+open_hw_target
+puts [get_hw_devices]
+"""
+}
+
 
 class Vivado(Tool):
     """Implementation of the class to support Vivado."""
@@ -32,3 +49,6 @@ class Vivado(Tool):
     _PART = 'xc7z010-1-clg400'
 
     _GEN_COMMAND = 'vivado -mode batch -notrace -quiet -source vivado.tcl'
+
+    def transfer(self, devtype):
+        print(_TEMPLATES[devtype])

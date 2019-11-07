@@ -23,6 +23,20 @@ Implements the support of Quartus (Intel/Altera).
 
 from fpga.tool import Tool
 
+_TEMPLATES = {
+    'fpga': """\
+set devices [exec jtagconfig]
+# autodetection of the first found cable
+regexp -nocase {1\\) (.*) \\[} $devices -> cable
+# Programming
+exec quartus_pgm -c $cable --mode jtag -o "p;{bitstream}@{position}"
+""",
+    'detect': """\
+set devices [exec jtagconfig]
+puts $devices
+"""
+}
+
 
 class Quartus(Tool):
     """Implementation of the class to support Quartus."""
@@ -32,3 +46,6 @@ class Quartus(Tool):
     _PART = '10M08SAE144C8G'
 
     _GEN_COMMAND = 'quartus_sh --script quartus.tcl'
+
+    def transfer(self, devtype):
+        print(_TEMPLATES[devtype])

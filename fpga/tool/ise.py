@@ -88,4 +88,4 @@ class Ise(Tool):
     _GEN_COMMAND = 'xtclsh ise.tcl'
 
     def transfer(self, devtype):
-        print(_TEMPLATES['bpi'])
+        print(_TEMPLATES[devtype])
