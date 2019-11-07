@@ -23,6 +23,60 @@ Implements the support of ISE (Xilinx).
 
 from fpga.tool import Tool
 
+_TEMPLATES = {
+    'fpga': """\
+set impact_fpga "setMode -bs
+setCable -port auto
+Identify -inferir
+assignFile -p {position} -file {bitstream}
+Program -p {position}
+""",
+    'spi': """\
+setMode -pff
+addConfigDevice -name {name} -path .
+setSubmode -pff{devtype}
+addDesign -version 0 -name 0
+addDeviceChain -index 0
+addDevice -p 1 -file {bitstream}
+generate -generic
+
+setMode -bs
+setCable -port auto
+Identify
+attachflash -position {position} -{bitstream} {name}
+assignfiletoattachedflash -position {position} -file ./{name}.mcs
+Program -p {position} -dataWidth {width} -{devtype}only -e -v -loadfpga
+
+quit
+""",
+    'bpi': """\
+setMode -pff
+addConfigDevice -name {name} -path .
+setSubmode -pff{devtype}
+addDesign -version 0 -name 0
+addDeviceChain -index 0
+setAttribute -configdevice -attr flashDataWidth -value {width}
+addDevice -p 1 -file {bitstream}
+generate -generic
+
+setMode -bs
+setCable -port auto
+Identify
+attachflash -position {position} -{bitstream} {name}
+assignfiletoattachedflash -position {position} -file ./{name}.mcs
+Program -p {position} -dataWidth {width} \
+-rs1 NONE -rs0 NONE -{devtype}only -e -v -loadfpga
+
+quit
+""",
+    'detect': """\
+setMode -bs
+setCable -port auto
+Identify -inferir
+""",
+    'unlock': 'set impact_unlock "cleancablelock"'
+}
+
 
 class Ise(Tool):
     """Implementation of the class to support ISE."""
@@ -32,3 +86,6 @@ class Ise(Tool):
     _PART = 'XC6SLX9-2-CSG324'
 
     _GEN_COMMAND = 'xtclsh ise.tcl'
+
+    def transfer(self, devtype):
+        print(_TEMPLATES['bpi'])
