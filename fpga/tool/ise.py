@@ -28,44 +28,44 @@ _TEMPLATES = {
 set impact_fpga "setMode -bs
 setCable -port auto
 Identify -inferir
-assignFile -p {position} -file {bitstream}
-Program -p {position}
+assignFile -p #POSITION# -file #BITSTREAM#
+Program -p #POSITION#
 """,
     'spi': """\
 setMode -pff
-addConfigDevice -name {name} -path .
-setSubmode -pff{devtype}
+addConfigDevice -name #NAME# -path .
+setSubmode -pffspi
 addDesign -version 0 -name 0
 addDeviceChain -index 0
-addDevice -p 1 -file {bitstream}
+addDevice -p 1 -file #BITSTREAM#
 generate -generic
 
 setMode -bs
 setCable -port auto
 Identify
-attachflash -position {position} -{bitstream} {name}
-assignfiletoattachedflash -position {position} -file ./{name}.mcs
-Program -p {position} -dataWidth {width} -{devtype}only -e -v -loadfpga
+attachflash -position #POSITION# -spi #NAME#
+assignfiletoattachedflash -position #POSITION# -file ./#NAME#.mcs
+Program -p #POSITION# -dataWidth #WIDTH# -spionly -e -v -loadfpga
 
 quit
 """,
     'bpi': """\
 setMode -pff
-addConfigDevice -name {name} -path .
-setSubmode -pff{devtype}
+addConfigDevice -name #NAME# -path .
+setSubmode -pffbpi
 addDesign -version 0 -name 0
 addDeviceChain -index 0
-setAttribute -configdevice -attr flashDataWidth -value {width}
-addDevice -p 1 -file {bitstream}
+setAttribute -configdevice -attr flashDataWidth -value #WIDTH#
+addDevice -p 1 -file #BITSTREAM#
 generate -generic
 
 setMode -bs
 setCable -port auto
 Identify
-attachflash -position {position} -{bitstream} {name}
-assignfiletoattachedflash -position {position} -file ./{name}.mcs
-Program -p {position} -dataWidth {width} \
--rs1 NONE -rs0 NONE -{devtype}only -e -v -loadfpga
+attachflash -position #POSITION# -bpi #NAME#
+assignfiletoattachedflash -position #POSITION# -file ./#NAME#.mcs
+Program -p #POSITION# -dataWidth #WIDTH# \
+-rs1 NONE -rs0 NONE -bpionly -e -v -loadfpga
 
 quit
 """,
