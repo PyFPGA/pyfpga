@@ -47,12 +47,13 @@ class Tool:
     _PART = 'UNDEFINED'
 
     _GEN_COMMAND = 'UNDEFINED'
+    _TRF_COMMAND = 'UNDEFINED'
+
+    _DEVTYPES = []
 
     def __init__(self, project=None):
         """Initializes the attributes of the class."""
         self.project = self._TOOL if project is None else project
-        self.set_strategy('none')
-        self.set_task('bit')
         self.set_part(self._PART)
         self.options = {
             'project': [],
@@ -96,8 +97,8 @@ class Tool:
         check_value(phase, self._PHASES)
         self.options[phase].append(option)
 
-    def _create_script(self):
-        """Create the script for the Tool execution."""
+    def _create_gen_script(self, strategy, task):
+        """Create the script for generate execution."""
         template = os.path.join(os.path.dirname(__file__), 'template.tcl')
         tcl = open(template).read()
         tcl = tcl.replace('#TOOL#', self._TOOL)
@@ -105,8 +106,8 @@ class Tool:
         tcl = tcl.replace('#PART#', self.part)
         tcl = tcl.replace('#FILES#', "\n".join(self.files))
         tcl = tcl.replace('#TOP#', self.top)
-        tcl = tcl.replace('#STRATEGY#', self.strategy)
-        tcl = tcl.replace('#TASK#', self.task)
+        tcl = tcl.replace('#STRATEGY#', strategy)
+        tcl = tcl.replace('#TASK#', task)
         tcl = tcl.replace('#PROJECT_OPTS#', "\n".join(self.options['project']))
         tcl = tcl.replace('#PREFLOW_OPTS#', "\n".join(self.options['preflow']))
         tcl = tcl.replace('#POSTSYN_OPTS#', "\n".join(self.options['postsyn']))
@@ -115,38 +116,21 @@ class Tool:
         open("%s.tcl" % self._TOOL, 'w').write(tcl)
 
     _STRATEGIES = ['none', 'area', 'speed', 'power']
-
-    def set_strategy(self, strategy):
-        """Set the STRATEGY to use."""
-        check_value(strategy, self._STRATEGIES)
-        self.strategy = strategy
-
     _TASKS = ['prj', 'syn', 'imp', 'bit']
 
-    def set_task(self, task):
-        """Set the TASK to perform."""
-        check_value(task, self._TASKS)
-        self.task = task
-
-    def generate(self, strategy=None, task=None):
+    def generate(self, strategy='none', task='bit'):
         """Run the FPGA tool."""
-        if strategy is not None:
-            self.set_strategy(strategy)
-        if task is not None:
-            self.set_task(task)
-        self._create_script()
+        check_value(strategy, self._STRATEGIES)
+        check_value(task, self._TASKS)
+        self._create_gen_script(strategy, task)
         subprocess.run(self._GEN_COMMAND, shell=True, check=True)
 
-    _DEVTYPES = ['fpga', 'spi', 'bpi', 'xcf']
+    def _create_trf_script(self, devtype, position, part, width):
+        """Create the script for transfer execution."""
+        raise NotImplementedError('_create_trf_script')
 
-    def set_device(self, devtype, position, part, width):
-        """Set a device."""
-        raise NotImplementedError('set_device')
-
-    def set_board(self, board):
-        """Set the board to use."""
-        raise NotImplementedError('set_board')
-
-    def transfer(self, devtype):
+    def transfer(self, devtype='fpga', position=1, part=None, width=None):
         """Transfer a bitstream."""
-        raise NotImplementedError('transfer')
+        check_value(devtype, self._DEVTYPES)
+        self._create_trf_script(devtype, position, part, width)
+        subprocess.run(self._TRF_COMMAND, shell=True, check=True)

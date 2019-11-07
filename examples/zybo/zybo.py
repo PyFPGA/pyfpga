@@ -18,4 +18,12 @@ prj.add_files('zybo.vhdl')
 prj.add_files('zybo.xdc')
 prj.set_top('Top')
 
-prj.generate()
+try:
+    prj.generate()
+except Exception as e:
+    logging.warning('{} ({})'.format(type(e).__name__, e))
+
+try:
+    prj.transfer('fpga')
+except Exception as e:
+    logging.warning('{} ({})'.format(type(e).__name__, e))

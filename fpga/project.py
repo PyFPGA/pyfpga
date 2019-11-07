@@ -112,48 +112,28 @@ class Project:
         """Add a post bitstream generation OPTION."""
         self.tool.add_option(option, 'postbit')
 
-    def set_strategy(self, strategy):
-        """Set the STRATEGY to use.
+    def generate(self, strategy='none', task='bit'):
+        """Run the FPGA tool.
 
         The valid STRATEGIES are none (default), area, speed and power.
-        """
-        self.tool.set_strategy(strategy)
-
-    def set_task(self, task):
-        """Set the TASK to perform.
-
         The valid TASKS are prj to only create the project file, syn for also
         performs the synthesis, imp to add implementation and bit (default)
         to finish with the bitstream generation.
         """
-        self.tool.set_task(task)
-
-    def generate(self, strategy=None, task=None):
-        """Run the FPGA tool."""
         with self._run_in_dir():
             self.tool.generate(strategy, task)
-
-    def set_device(self, devtype, position=1, part='UNDEFINED', width='1'):
-        """Set a device.
-
-        The valid DEVice TYPEs are fpga, spi, bpi and xcf.
-        An integer specify the POSITION in the Jtag chain.
-        PART is the name of the device.
-        WIDTH is used for memories
-        """
-        self.tool.set_device(devtype, position, part, width)
 
     def set_board(self, board):
         """Set the board to use.
 
         A BOARD is a dictionary with predefined devices.
         """
-        self.tool.set_board(board)
+        raise NotImplementedError('set_board')
 
-    def transfer(self, devtype='fpga'):
+    def transfer(self, devtype='fpga', position=1, part=None, width=None):
         """Transfer a bitstream."""
         with self._run_in_dir():
-            self.tool.transfer(devtype)
+            self.tool.transfer(devtype, position, part, width)
 
     @contextlib.contextmanager
     def _run_in_dir(self):
