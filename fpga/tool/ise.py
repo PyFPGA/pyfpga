@@ -21,18 +21,21 @@
 Implements the support of ISE (Xilinx).
 """
 
+from glob import glob
+import subprocess
+
 from fpga.tool import Tool
 
 _TEMPLATES = {
-    'fpga': """\
-set impact_fpga "setMode -bs
+    'fpga': """setMode -bs
 setCable -port auto
 Identify -inferir
 assignFile -p #POSITION# -file #BITSTREAM#
 Program -p #POSITION#
+
+quit
 """,
-    'spi': """\
-setMode -pff
+    'spi': """setMode -pff
 addConfigDevice -name #NAME# -path .
 setSubmode -pffspi
 addDesign -version 0 -name 0
@@ -49,8 +52,7 @@ Program -p #POSITION# -dataWidth #WIDTH# -spionly -e -v -loadfpga
 
 quit
 """,
-    'bpi': """\
-setMode -pff
+    'bpi': """setMode -pff
 addConfigDevice -name #NAME# -path .
 setSubmode -pffbpi
 addDesign -version 0 -name 0
@@ -69,12 +71,14 @@ Program -p #POSITION# -dataWidth #WIDTH# \
 
 quit
 """,
-    'detect': """\
-setMode -bs
+    'detect': """setMode -bs
 setCable -port auto
 Identify -inferir
+quit
 """,
-    'unlock': 'set impact_unlock "cleancablelock"'
+    'unlock': """cleancablelock
+quit
+"""
 }
 
 
@@ -88,8 +92,16 @@ class Ise(Tool):
     _GEN_COMMAND = 'xtclsh ise.tcl'
     _TRF_COMMAND = 'impact -batch ise-prog.impact'
 
-    _DEVTYPES = ['fpga', 'spi', 'bpi', 'xcf', 'detect', 'unlock']
+    _DEVTYPES = ['fpga', 'spi', 'bpi', 'detect', 'unlock']
 
     def transfer(self, devtype, position, part, width):
         super().transfer(devtype, position, part, width)
-        raise NotImplementedError('transfer(ise)')
+        temp = _TEMPLATES[devtype]
+        if devtype not in ['detect', 'unlock']:
+            bitstream = glob('**/*.bit', recursive=True)
+            temp = temp.replace('#BITSTREAM#', bitstream[0])
+            temp = temp.replace('#POSITION#', str(position))
+            temp = temp.replace('#NAME#', part)
+            temp = temp.replace('#WIDTH#', str(width))
+        open("ise-prog.impact", 'w').write(temp)
+        subprocess.run(self._TRF_COMMAND, shell=True, check=True)
