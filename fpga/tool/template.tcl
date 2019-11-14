@@ -36,8 +36,14 @@ set PART     #PART#
 set TOP      #TOP#
 set STRATEGY #STRATEGY#
 set TASK     #TASK#
+set DEBUG    1
+
+proc fpga_files {} {
+#FILES#
+}
 
 proc fpga_options { PHASE } {
+    fpga_debug "fpga_options:$PHASE"
     if {[catch {
         switch $PHASE {
             "project" {
@@ -73,11 +79,17 @@ set ERR_PHASE   3
 set ERR_FLOW    4
 
 #
-# Procedures for multi vendor support
+# Procedures
 #
+
+proc fpga_debug { MSG } {
+    global TOOL DEBUG
+    if { $DEBUG } { puts ">>> PyFPGA ($TOOL):$MSG"}
+}
 
 proc fpga_create { PROJECT } {
     global TOOL
+    fpga_debug "fpga_create"
     switch $TOOL {
         "ise"     {
             if { [ file exists $PROJECT.xise ] } { file delete $PROJECT.xise }
@@ -98,6 +110,7 @@ proc fpga_create { PROJECT } {
 
 proc fpga_open { PROJECT } {
     global TOOL
+    fpga_debug "fpga_open"
     switch $TOOL {
         "ise"     { project open $PROJECT.xise }
         "libero"  {
@@ -113,6 +126,7 @@ proc fpga_open { PROJECT } {
 
 proc fpga_close {} {
     global TOOL
+    fpga_debug "fpga_close"
     switch $TOOL {
         "ise"     { project close }
         "libero"  { close_project }
@@ -123,6 +137,7 @@ proc fpga_close {} {
 
 proc fpga_part { PART } {
     global TOOL
+    fpga_debug "fpga_part"
     if {[catch {
         switch $TOOL {
             "ise"     {
@@ -217,7 +232,8 @@ proc fpga_part { PART } {
 }
 
 proc fpga_file {FILE {LIB ""}} {
-    global TOOL
+    global TOOL TOP
+    fpga_debug "fpga_file"
     regexp -nocase {\.(\w*)$} $FILE -> ext
     if { $ext == "tcl" } {
         source $FILE
@@ -236,8 +252,14 @@ proc fpga_file {FILE {LIB ""}} {
             if { $LIB == "" } { set LIB "work" }
             if {$ext == "pdc"} {
                 create_links -io_pdc $FILE
+                build_design_hierarchy
+                organize_tool_files -tool {PLACEROUTE} -file $FILE -module $TOP  -input_type {constraint}
             } elseif {$ext == "sdc"} {
                 create_links -sdc $FILE
+                build_design_hierarchy
+                organize_tool_files -tool {SYNTHESIZE} -file $FILE -module $TOP -input_type {constraint}
+                organize_tool_files -tool {PLACEROUTE} -file $FILE -module $TOP -input_type {constraint}
+                organize_tool_files -tool {VERIFYTIMING} -file $FILE -module $TOP -input_type {constraint}
             } else {
                 create_links -library $LIB -hdl_source $FILE
             }
@@ -267,6 +289,7 @@ proc fpga_file {FILE {LIB ""}} {
 
 proc fpga_top { TOP } {
     global TOOL
+    fpga_debug "fpga_top"
     switch $TOOL {
         "ise"     { project set top $TOP }
         "libero"  {
@@ -280,6 +303,7 @@ proc fpga_top { TOP } {
 
 proc fpga_area_opts {} {
     global TOOL
+    fpga_debug "fpga_area_opts"
     switch $TOOL {
         "ise"     {
             project set "Optimization Goal" "Area"
@@ -305,6 +329,7 @@ proc fpga_area_opts {} {
 
 proc fpga_power_opts {} {
     global TOOL
+    fpga_debug "fpga_power_opts"
     switch $TOOL {
         "ise"     {
             project set "Optimization Goal" "Area"
@@ -335,6 +360,7 @@ proc fpga_power_opts {} {
 
 proc fpga_speed_opts {} {
     global TOOL
+    fpga_debug "fpga_speed_opts"
     switch $TOOL {
         "ise"     {
             project set "Optimization Goal" "Speed"
@@ -369,6 +395,7 @@ proc fpga_speed_opts {} {
 
 proc fpga_run_syn {} {
     global TOOL
+    fpga_debug "fpga_run_syn"
     switch $TOOL {
         "ise"     {
             process run "Synthesize" -force rerun
@@ -389,6 +416,7 @@ proc fpga_run_syn {} {
 
 proc fpga_run_imp {} {
     global TOOL
+    fpga_debug "fpga_run_imp"
     switch $TOOL {
         "ise"     {
             process run "Translate" -force rerun
@@ -413,6 +441,7 @@ proc fpga_run_imp {} {
 
 proc fpga_run_bit {} {
     global TOOL
+    fpga_debug "fpga_run_bit"
     switch $TOOL {
         "ise"     {
             process run "Generate Programming File" -force rerun
@@ -429,14 +458,6 @@ proc fpga_run_bit {} {
             wait_on_run impl_1
         }
     }
-}
-
-#
-# Project files
-#
-
-proc fpga_files {} {
-#FILES#
 }
 
 #
