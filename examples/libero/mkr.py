@@ -2,15 +2,15 @@
 
 from fpga.project import Project
 
-prj = Project('libero', 'mpf300')
-prj.set_part('mpf300ts-1-fcg1152')
+prj = Project('libero', 'mkr')
+prj.set_part('m2s010-1-tq144')
 
-prj.set_outdir('../../build/mpf300')
+prj.set_outdir('../../build/libero')
 
 prj.add_files('../hdl/blinking.vhdl', 'examples')
 prj.add_files('../hdl/examples_pkg.vhdl', 'examples')
 prj.add_files('../hdl/top.vhdl')
-prj.add_files('mpf300.pdc')
 prj.set_top('Top')
+prj.add_files('mkr.pdc')
 
 prj.generate()

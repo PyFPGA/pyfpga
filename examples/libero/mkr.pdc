@@ -1,8 +1,8 @@
 set_io {clk_i}        \
-    -pinname Y9       \
+    -pinname 23       \
     -fixed yes        \
     -DIRECTION INPUT
 set_io {led_o}        \
-    -pinname F22      \
+    -pinname 117      \
     -fixed yes        \
     -DIRECTION OUTPUT
