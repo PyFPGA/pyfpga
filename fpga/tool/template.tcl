@@ -84,7 +84,8 @@ proc fpga_create { PROJECT } {
             project new $PROJECT.xise
         }
         "libero"  {
-            new_project -name $PROJECT -location {temp-libero} -hdl {VHDL} -family {SmartFusion2}
+            if { [ file exists $PROJECT ] } { file delete -force -- $PROJECT }
+            new_project -name $PROJECT -location $PROJECT -hdl {VHDL} -family {SmartFusion2}
         }
         "quartus" {
             package require ::quartus::project
@@ -100,7 +101,7 @@ proc fpga_open { PROJECT } {
     switch $TOOL {
         "ise"     { project open $PROJECT.xise }
         "libero"  {
-            open_project temp-libero/$PROJECT.prjx
+            open_project $PROJECT/$PROJECT.prjx
         }
         "quartus" {
             package require ::quartus::flow
@@ -170,7 +171,7 @@ proc fpga_part { PART } {
                 project set speed   $SPEED
             }
             "libero"  {
-                regexp -nocase {(.*)-(.*)-(.*)} $PART -> DEVICE SPEED PACKAGE
+                regexp -nocase {(.*)(-.*)-(.*)} $PART -> DEVICE SPEED PACKAGE
                 set FAMILY "Unknown"
                 if {[regexp -nocase {m2s} $DEVICE]} {
                     set FAMILY "SmartFusion2"
@@ -178,6 +179,8 @@ proc fpga_part { PART } {
                     set FAMILY "Igloo2"
                 } elseif {[regexp -nocase {rt4g} $DEVICE]} {
                     set FAMILY "RTG4"
+                } elseif {[regexp -nocase {mpf} $DEVICE]} {
+                    set FAMILY "PolarFire"
                 } elseif {[regexp -nocase {a2f} $DEVICE]} {
                     set FAMILY "SmartFusion"
                 } elseif {[regexp -nocase {afs} $DEVICE]} {
@@ -230,19 +233,13 @@ proc fpga_file {FILE {LIB ""}} {
             }
         }
         "libero" {
+            if { $LIB == "" } { set LIB "work" }
             if {$ext == "pdc"} {
                 create_links -io_pdc $FILE
-                organize_tool_files -tool {PLACEROUTE} -file $FILE -input_type {constraint}
             } elseif {$ext == "sdc"} {
                 create_links -sdc $FILE
-                organize_tool_files -tool {SYNTHESIZE} -file $FILE -input_type {constraint}
-                organize_tool_files -tool {VERIFYTIMING} -file $FILE -input_type {constraint}
             } else {
-                create_links -hdl_source $FILE
-            }
-            if { $LIB != "" } {
-                add_library -library $LIB
-                add_file_to_library -library $LIB -file $FILE
+                create_links -library $LIB -hdl_source $FILE
             }
         }
         "quartus" {
@@ -272,7 +269,10 @@ proc fpga_top { TOP } {
     global TOOL
     switch $TOOL {
         "ise"     { project set top $TOP }
-        "libero"  { set_root $TOP }
+        "libero"  {
+            build_design_hierarchy
+            set_root $TOP
+        }
         "quartus" { set_global_assignment -name TOP_LEVEL_ENTITY $TOP }
         "vivado"  { set_property top $TOP [current_fileset] }
     }
@@ -374,7 +374,7 @@ proc fpga_run_syn {} {
             process run "Synthesize" -force rerun
         }
         "libero"  {
-            run_tool -name {COMPILE}
+            run_tool -name {SYNTHESIZE}
         }
         "quartus" {
             execute_module -tool map
@@ -396,7 +396,6 @@ proc fpga_run_imp {} {
             process run "Place & Route" -force rerun
         }
         "libero"  {
-            configure_tool -name {PLACEROUTE} -params {REPAIR_MIN_DELAY:true}
             run_tool -name {PLACEROUTE}
             run_tool -name {VERIFYTIMING}
         }
