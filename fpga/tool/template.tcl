@@ -269,8 +269,12 @@ proc fpga_file {FILE {LIB ""}} {
                 set TYPE VERILOG_FILE
             } elseif {$ext == "sv"} {
                 set TYPE SYSTEMVERILOG_FILE
-            } else {
+            } elseif {$ext == "vhdl" || $ext == "vhd"} {
                 set TYPE VHDL_FILE
+            } elseif {$ext == "sdc"} {
+                set TYPE SDC_FILE
+            } else {
+                set TYPE SOURCE_FILE
             }
             if { $LIB != "" } {
                 set_global_assignment -name $TYPE $FILE -library $LIB
