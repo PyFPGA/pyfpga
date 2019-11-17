@@ -291,6 +291,17 @@ proc fpga_file {FILE {LIB ""}} {
     }
 }
 
+proc fpga_include { PATH } {
+    global TOOL
+    fpga_debug "fpga_include"
+    switch $TOOL {
+        "ise"     { project set "Verilog Include Directories" $PATH -process "Synthesize - XST" }
+        "libero"  { configure_tool -name {SYNTHESIZE} -params {SYNPLIFY_OPTIONS: set_option -include_path $PATH } }
+        "quartus" { set_global_assignment -name SEARCH_PATH $PATH }
+        "vivado"  { set_property include_dirs $PATH [current_fileset] }
+    }
+}
+
 proc fpga_top { TOP } {
     global TOOL
     fpga_debug "fpga_top"
