@@ -8,7 +8,7 @@ with open('README.md', 'r') as fh:
 setup(
     name='pyfpga',
     version=fpga.__version__,
-    description='A Python binding for the FPGA development tools',
+    description='A Python Class and helper scripts to use FPGA development tools in a vendor-independent way',
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='Rodrigo A. Melo',
@@ -17,13 +17,6 @@ setup(
     url='https://gitlab.com/rodrigomelo9/pyfpga',
     package_data={'': ['tool/*.tcl']},
     packages=find_packages(),
-#    entry_points={
-#        'console_scripts': [
-#            'fpga-temp = fpga.temp:main',
-#            'fpga-synt = fpga.synt:main',
-#            'fpga-prog = fpga.prog:main'
-#        ],
-#    },
     classifiers=[
         'Development Status :: 1 - Planning',
         'Environment :: Console',
