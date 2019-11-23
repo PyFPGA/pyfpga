@@ -1,6 +1,6 @@
 # PyFPGA [![License](https://img.shields.io/badge/License-GPL--3.0-orange)](LICENSE)
 
-A Python binding for the FPGA development tools.
+A Python Class and helper scripts to use FPGA development tools in a vendor-independent way.
 
 Features:
 
