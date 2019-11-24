@@ -39,6 +39,9 @@ LOG.level = logging.INFO
 LOG.addHandler(logging.NullHandler())
 
 
+TOOLS = ['ise', 'libero', 'quartus', 'vivado']
+
+
 class Project:
     """Manage an FPGA project."""
 

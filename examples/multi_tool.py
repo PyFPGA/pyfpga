@@ -1,10 +1,13 @@
-"""PyFPGA Multi Vendor example."""
+"""PyFPGA Multi Vendor example.
 
-from fpga.project import Project
+The main idea of a multi-vendor project is to implement the same HDL code with
+different tools, to make comparisons. The project name is not important and
+the default devices could be used.
+"""
 
-tools = ['ise', 'libero', 'quartus', 'vivado']
+from fpga.project import Project, TOOLS
 
-for tool in tools:
+for tool in TOOLS:
     PRJ = Project(tool)
     PRJ.set_outdir('../build/multi/%s' % tool)
     PRJ.add_files('hdl/*.vhdl')
@@ -12,4 +15,4 @@ for tool in tools:
     try:
         PRJ.generate(task='imp')
     except:
-        print('%s is not available' % tool)
+        print('There was an error running %s' % tool)
