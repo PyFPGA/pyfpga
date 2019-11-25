@@ -10,7 +10,9 @@ from fpga.project import Project, TOOLS
 for tool in TOOLS:
     PRJ = Project(tool)
     PRJ.set_outdir('../build/multi-tool/%s' % tool)
-    PRJ.add_files('hdl/*.vhdl', 'examples')
+    PRJ.add_files('hdl/blinking.vhdl', 'examples')
+    PRJ.add_files('hdl/examples_pkg.vhdl', 'examples')
+    PRJ.add_files('hdl/top.vhdl')
     PRJ.set_top('Top')
     try:
         PRJ.generate(task='imp')

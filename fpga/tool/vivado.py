@@ -47,7 +47,7 @@ class Vivado(Tool):
 
     _TOOL = 'vivado'
     _EXTENSION = 'xpr'
-    _PART = 'xc7z010-1-clg400'
+    _PART = 'xc7k160t-3-fbg484'
 
     _GEN_COMMAND = 'vivado -mode batch -notrace -quiet -source vivado.tcl'
     _TRF_COMMAND = 'vivado -mode batch -notrace -quiet -source vivado-prog.tcl'

@@ -87,7 +87,7 @@ class Ise(Tool):
 
     _TOOL = 'ise'
     _EXTENSION = 'xise'
-    _PART = 'XC6SLX9-2-CSG324'
+    _PART = 'xc7k160t-3-fbg484'
 
     _GEN_COMMAND = 'xtclsh ise.tcl'
     _TRF_COMMAND = 'impact -batch ise-prog.impact'
