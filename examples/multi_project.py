@@ -12,32 +12,45 @@ from fpga.project import Project
 PROJECTS = {
     'example1': {
         'tool': 'vivado',
-        'part': 'FPGA1',
-        'files': ['path1_1/*.vhdl', 'path1_2/*.vhdl'],
-        'top': 'top1'
+        'part': 'xc7s6cpga196-2',
+        'files': [
+            ['hdl/blinking.vhdl', 'examples'],
+            ['hdl/examples_pkg.vhdl', 'examples'],
+            ['hdl/top.vhdl']
+        ],
+        'top': 'Top'
      },
     'example2': {
         'tool': 'vivado',
-        'part': 'FPGA2',
-        'files': ['path2_1/*.vhdl', 'path2_2/*.vhdl'],
-        'top': 'top2'
+        'part': 'xc7k70t-3-fbg484',
+        'files': [
+            ['hdl/*.vhdl', 'examples']
+        ],
+        'top': 'Top'
      },
     'example3': {
         'tool': 'quartus',
-        'part': 'FPGA3',
-        'files': ['path3/*.v'],
-        'top': 'top3'
+        'part': '5CEBA2F17A7',
+        'files': [
+            ['hdl/blinking.vhdl', 'examples'],
+            ['hdl/examples_pkg.vhdl', 'examples'],
+            ['hdl/top.vhdl', 'examples']
+        ],
+        'top': 'Top'
      },
 }
 
 for project in sorted(PROJECTS.keys()):
     PRJ = Project(PROJECTS[project]['tool'], project)
-    PRJ.set_outdir('../build/projects/%s' % project)
+    PRJ.set_outdir('../build/multi-project/%s' % project)
     PRJ.set_part(PROJECTS[project]['part'])
-    for files in PROJECTS[project]['files']:
-        PRJ.add_files(files)
-    PRJ.set_part(PROJECTS[project]['top'])
+    for file in PROJECTS[project]['files']:
+        if len(file) > 1:
+            PRJ.add_files(file[0], file[1])
+        else:
+            PRJ.add_files(file[0])
+    PRJ.set_top(PROJECTS[project]['top'])
     try:
-        PRJ.generate()
+        PRJ.generate(task='imp')
     except:
         print('There was an error with the project %s' % project)
