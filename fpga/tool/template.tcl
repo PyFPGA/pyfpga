@@ -36,14 +36,13 @@ set PART     #PART#
 set TOP      #TOP#
 set STRATEGY #STRATEGY#
 set TASK     #TASK#
-set DEBUG    1
 
 proc fpga_files {} {
 #FILES#
 }
 
 proc fpga_options { PHASE } {
-    fpga_debug "fpga_options:$PHASE"
+    fpga_print "setting options for the phase '$PHASE'"
     if {[catch {
         switch $PHASE {
             "project" {
@@ -63,7 +62,7 @@ proc fpga_options { PHASE } {
             }
         }
     } ERRMSG]} {
-        puts "ERROR: there was a problem applying your $PHASE options.\n"
+        puts "ERROR: there was a problem applying your '$PHASE' options.\n"
         puts $ERRMSG
         exit $ERR_PHASE
     }
@@ -82,14 +81,14 @@ set ERR_FLOW    4
 # Procedures
 #
 
-proc fpga_debug { MSG } {
-    global TOOL DEBUG
-    if { $DEBUG } { puts ">>> PyFPGA ($TOOL):$MSG"}
+proc fpga_print { MSG } {
+    global TOOL
+    puts ">>> PyFPGA ($TOOL): $MSG"
 }
 
 proc fpga_create { PROJECT } {
     global TOOL
-    fpga_debug "fpga_create"
+    fpga_print "creating the project '$PROJECT'"
     switch $TOOL {
         "ise"     {
             if { [ file exists $PROJECT.xise ] } { file delete $PROJECT.xise }
@@ -110,7 +109,7 @@ proc fpga_create { PROJECT } {
 
 proc fpga_open { PROJECT } {
     global TOOL
-    fpga_debug "fpga_open"
+    fpga_print "opening the project '$PROJECT'"
     switch $TOOL {
         "ise"     { project open $PROJECT.xise }
         "libero"  {
@@ -126,7 +125,7 @@ proc fpga_open { PROJECT } {
 
 proc fpga_close {} {
     global TOOL
-    fpga_debug "fpga_close"
+    fpga_print "closing the project"
     switch $TOOL {
         "ise"     { project close }
         "libero"  { close_project }
@@ -137,7 +136,7 @@ proc fpga_close {} {
 
 proc fpga_part { PART } {
     global TOOL
-    fpga_debug "fpga_part"
+    fpga_print "adding the part '$PART'"
     if {[catch {
         switch $TOOL {
             "ise"     {
@@ -225,7 +224,7 @@ proc fpga_part { PART } {
             }
         }
     } ERRMSG]} {
-        puts "ERROR: there was a problem with the specified PART $PART.\n"
+        puts "ERROR: there was a problem with the specified part '$PART'.\n"
         puts $ERRMSG
         exit $ERR_PART
     }
@@ -233,7 +232,7 @@ proc fpga_part { PART } {
 
 proc fpga_file {FILE {LIB ""}} {
     global TOOL TOP
-    fpga_debug "fpga_file"
+    fpga_print "adding the file '$FILE' ('$LIB')"
     regexp -nocase {\.(\w*)$} $FILE -> ext
     if { $ext == "tcl" } {
         source $FILE
@@ -293,7 +292,7 @@ proc fpga_file {FILE {LIB ""}} {
 
 proc fpga_include { PATH } {
     global TOOL
-    fpga_debug "fpga_include"
+    fpga_print "including the path '$PATH'"
     switch $TOOL {
         "ise"     { project set "Verilog Include Directories" $PATH -process "Synthesize - XST" }
         "libero"  { configure_tool -name {SYNTHESIZE} -params {SYNPLIFY_OPTIONS: set_option -include_path $PATH } }
@@ -304,7 +303,7 @@ proc fpga_include { PATH } {
 
 proc fpga_top { TOP } {
     global TOOL
-    fpga_debug "fpga_top"
+    fpga_print "specifying the top level '$TOP'"
     switch $TOOL {
         "ise"     { project set top $TOP }
         "libero"  {
@@ -318,7 +317,7 @@ proc fpga_top { TOP } {
 
 proc fpga_area_opts {} {
     global TOOL
-    fpga_debug "fpga_area_opts"
+    fpga_print "setting options for 'area' optimization"
     switch $TOOL {
         "ise"     {
             project set "Optimization Goal" "Area"
@@ -344,7 +343,7 @@ proc fpga_area_opts {} {
 
 proc fpga_power_opts {} {
     global TOOL
-    fpga_debug "fpga_power_opts"
+    fpga_print "setting options for 'power' optimization"
     switch $TOOL {
         "ise"     {
             project set "Optimization Goal" "Area"
@@ -375,7 +374,7 @@ proc fpga_power_opts {} {
 
 proc fpga_speed_opts {} {
     global TOOL
-    fpga_debug "fpga_speed_opts"
+    fpga_print "setting options for 'speed' optimization"
     switch $TOOL {
         "ise"     {
             project set "Optimization Goal" "Speed"
@@ -410,7 +409,7 @@ proc fpga_speed_opts {} {
 
 proc fpga_run_syn {} {
     global TOOL
-    fpga_debug "fpga_run_syn"
+    fpga_print "running 'synthesis'"
     switch $TOOL {
         "ise"     {
             process run "Synthesize" -force rerun
@@ -431,7 +430,7 @@ proc fpga_run_syn {} {
 
 proc fpga_run_imp {} {
     global TOOL
-    fpga_debug "fpga_run_imp"
+    fpga_print "running 'implementation'"
     switch $TOOL {
         "ise"     {
             process run "Translate" -force rerun
@@ -456,7 +455,7 @@ proc fpga_run_imp {} {
 
 proc fpga_run_bit {} {
     global TOOL
-    fpga_debug "fpga_run_bit"
+    fpga_print "running 'bitstream generation'"
     switch $TOOL {
         "ise"     {
             process run "Generate Programming File" -force rerun
@@ -479,6 +478,8 @@ proc fpga_run_bit {} {
 # Project Creation
 #
 
+fpga_print "running the Project Creation"
+
 if {[catch {
     fpga_create $PROJECT
     fpga_part $PART
@@ -498,8 +499,10 @@ if {[catch {
 }
 
 #
-# Flow
+# Design Flow
 #
+
+fpga_print "running the Design Flow"
 
 if {[catch {
     fpga_open $PROJECT
@@ -522,3 +525,9 @@ if {[catch {
     puts $ERRMSG
     exit $ERR_FLOW
 }
+
+#
+# End of the script
+#
+
+fpga_print "finishing without errors"
