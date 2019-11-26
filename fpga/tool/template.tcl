@@ -35,7 +35,8 @@ set PROJECT  #PROJECT#
 set PART     #PART#
 set TOP      #TOP#
 set STRATEGY #STRATEGY#
-set TASK     #TASK#
+# TASKS = prj syn imp bit
+set TASKS    [list #TASKS#]
 
 proc fpga_files {} {
 #FILES#
@@ -478,52 +479,54 @@ proc fpga_run_bit {} {
 # Project Creation
 #
 
-fpga_print "running the Project Creation"
-
-if {[catch {
-    fpga_create $PROJECT
-    fpga_part $PART
-    fpga_files
-    fpga_top $TOP
-    switch $STRATEGY {
-        "area"  {fpga_area_opts}
-        "power" {fpga_power_opts}
-        "speed" {fpga_speed_opts}
+if { "prj" in $TASKS } {
+    fpga_print "running the Project Creation"
+    if { [catch {
+        fpga_create $PROJECT
+        fpga_part $PART
+        fpga_files
+        fpga_top $TOP
+        switch $STRATEGY {
+            "area"  {fpga_area_opts}
+            "power" {fpga_power_opts}
+            "speed" {fpga_speed_opts}
+        }
+        fpga_options "project"
+        fpga_close
+    } ERRMSG]} {
+        puts "ERROR: there was a problem creating a new project.\n"
+        puts $ERRMSG
+        exit $ERR_PROJECT
     }
-    fpga_options "project"
-    fpga_close
-} ERRMSG]} {
-    puts "ERROR: there was a problem creating a new project.\n"
-    puts $ERRMSG
-    exit $ERR_PROJECT
 }
 
 #
 # Design Flow
 #
 
-fpga_print "running the Design Flow"
-
-if {[catch {
-    fpga_open $PROJECT
-    fpga_options "preflow"
-    if { $TASK=="syn" || $TASK=="imp" || $TASK=="bit" } {
-        fpga_run_syn
-        fpga_options "postsyn"
+if {"syn" in $TASKS || "imp" in $TASKS || "bit" in $TASKS} {
+    fpga_print "running the Design Flow"
+    if { [catch {
+        fpga_open $PROJECT
+        fpga_options "preflow"
+        if {"syn" in $TASKS} {
+            fpga_run_syn
+            fpga_options "postsyn"
+        }
+        if {"imp" in $TASKS} {
+            fpga_run_imp
+            fpga_options "postimp"
+        }
+        if {"bit" in $TASKS} {
+            fpga_run_bit
+            fpga_options "postbit"
+        }
+        fpga_close
+    } ERRMSG]} {
+        puts "ERROR: there was a problem running the design flow.\n"
+        puts $ERRMSG
+        exit $ERR_FLOW
     }
-    if { $TASK=="imp" || $TASK=="bit" } {
-        fpga_run_imp
-        fpga_options "postimp"
-    }
-    if { $TASK=="bit" } {
-        fpga_run_bit
-        fpga_options "postbit"
-    }
-    fpga_close
-} ERRMSG]} {
-    puts "ERROR: there was a problem running the flow ($TASK).\n"
-    puts $ERRMSG
-    exit $ERR_FLOW
 }
 
 #

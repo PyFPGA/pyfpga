@@ -97,7 +97,7 @@ class Tool:
         check_value(phase, self._PHASES)
         self.options[phase].append(option)
 
-    def _create_gen_script(self, strategy, task):
+    def _create_gen_script(self, strategy, tasks):
         """Create the script for generate execution."""
         template = os.path.join(os.path.dirname(__file__), 'template.tcl')
         tcl = open(template).read()
@@ -107,7 +107,7 @@ class Tool:
         tcl = tcl.replace('#FILES#', "\n".join(self.files))
         tcl = tcl.replace('#TOP#', self.top)
         tcl = tcl.replace('#STRATEGY#', strategy)
-        tcl = tcl.replace('#TASK#', task)
+        tcl = tcl.replace('#TASKS#', tasks)
         tcl = tcl.replace('#PROJECT_OPTS#', "\n".join(self.options['project']))
         tcl = tcl.replace('#PREFLOW_OPTS#', "\n".join(self.options['preflow']))
         tcl = tcl.replace('#POSTSYN_OPTS#', "\n".join(self.options['postsyn']))
@@ -122,7 +122,7 @@ class Tool:
         """Run the FPGA tool."""
         check_value(strategy, self._STRATEGIES)
         check_value(task, self._TASKS)
-        self._create_gen_script(strategy, task)
+        self._create_gen_script(strategy, "prj syn imp bit")
         subprocess.run(self._GEN_COMMAND, shell=True, check=True)
 
     def transfer(self, devtype, position, part, width):
