@@ -242,11 +242,15 @@ proc fpga_file {FILE {LIB "work"}} {
     }
     switch $TOOL {
         "ise" {
-            if { $LIB != "work" } {
-                lib_vhdl new $LIB
-                xfile add $FILE -lib_vhdl $LIB
+            if {$ext == "xcf"} {
+                project set "Synthesis Constraints File" $FILE -process "Synthesize - XST"
             } else {
-                xfile add $FILE
+                if { $LIB != "work" } {
+                    lib_vhdl new $LIB
+                    xfile add $FILE -lib_vhdl $LIB
+                } else {
+                    xfile add $FILE
+                }
             }
         }
         "libero" {
@@ -460,7 +464,7 @@ proc fpga_run_bit {} {
     switch $TOOL {
         "ise"     {
             process run "Generate Programming File" -force rerun
-            file rename $TOP.bit $PROJECT.bit
+            file rename -force $TOP.bit $PROJECT.bit
         }
         "libero"  {
             run_tool -name {GENERATEPROGRAMMINGFILE}
