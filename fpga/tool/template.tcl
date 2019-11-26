@@ -230,9 +230,11 @@ proc fpga_part { PART } {
     }
 }
 
-proc fpga_file {FILE {LIB ""}} {
+proc fpga_file {FILE {LIB "work"}} {
     global TOOL TOP
-    fpga_print "adding the file '$FILE' ('$LIB')"
+    set message "adding the file '$FILE'"
+    if { $LIB != "work" } { append message " ('$LIB')" }
+    fpga_print $message
     regexp -nocase {\.(\w*)$} $FILE -> ext
     if { $ext == "tcl" } {
         source $FILE
@@ -240,7 +242,7 @@ proc fpga_file {FILE {LIB ""}} {
     }
     switch $TOOL {
         "ise" {
-            if { $LIB != "" } {
+            if { $LIB != "work" } {
                 lib_vhdl new $LIB
                 xfile add $FILE -lib_vhdl $LIB
             } else {
@@ -248,7 +250,6 @@ proc fpga_file {FILE {LIB ""}} {
             }
         }
         "libero" {
-            if { $LIB == "" } { set LIB "work" }
             if {$ext == "pdc"} {
                 create_links -io_pdc $FILE
                 build_design_hierarchy
@@ -275,7 +276,7 @@ proc fpga_file {FILE {LIB ""}} {
             } else {
                 set TYPE SOURCE_FILE
             }
-            if { $LIB != "" } {
+            if { $LIB != "work" } {
                 set_global_assignment -name $TYPE $FILE -library $LIB
             } else {
                 set_global_assignment -name $TYPE $FILE
@@ -283,7 +284,7 @@ proc fpga_file {FILE {LIB ""}} {
         }
         "vivado" {
             add_files $FILE
-            if { $LIB != "" } {
+            if { $LIB != "work" } {
                 set_property library $LIB [get_files $FILE]
             }
         }
@@ -454,11 +455,12 @@ proc fpga_run_imp {} {
 }
 
 proc fpga_run_bit {} {
-    global TOOL
+    global TOOL PROJECT TOP
     fpga_print "running 'bitstream generation'"
     switch $TOOL {
         "ise"     {
             process run "Generate Programming File" -force rerun
+            file rename $TOP.bit $PROJECT.bit
         }
         "libero"  {
             run_tool -name {GENERATEPROGRAMMINGFILE}
@@ -468,8 +470,7 @@ proc fpga_run_bit {} {
         }
         "vivado"  {
             open_run impl_1
-            launch_run impl_1 -to_step write_bitstream
-            wait_on_run impl_1
+            write_bitstream -force $PROJECT
         }
     }
 }
