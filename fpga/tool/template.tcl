@@ -417,6 +417,7 @@ proc fpga_run_syn {} {
     fpga_print "running 'synthesis'"
     switch $TOOL {
         "ise"     {
+            project clean
             process run "Synthesize" -force rerun
         }
         "libero"  {
