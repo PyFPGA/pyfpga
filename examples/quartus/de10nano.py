@@ -15,15 +15,16 @@ prj.set_outdir('../../build/de10nano')
 prj.add_files('../hdl/blinking.vhdl', 'examples')
 prj.add_files('../hdl/examples_pkg.vhdl', 'examples')
 prj.add_files('../hdl/top.vhdl')
-prj.add_files('de10nano.tcl')
 prj.set_top('Top')
+prj.add_files('de10nano.sdc')
+prj.add_files('de10nano.tcl')
 
 try:
     prj.generate()
 except Exception as e:
     logging.warning('{} ({})'.format(type(e).__name__, e))
 
-try:
-    prj.transfer('fpga', 2)
-except Exception as e:
-    logging.warning('{} ({})'.format(type(e).__name__, e))
+#try:
+#    prj.transfer('fpga', 2)
+#except Exception as e:
+#    logging.warning('{} ({})'.format(type(e).__name__, e))
