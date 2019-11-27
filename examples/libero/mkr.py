@@ -12,5 +12,6 @@ prj.add_files('../hdl/examples_pkg.vhdl', 'examples')
 prj.add_files('../hdl/top.vhdl')
 prj.set_top('Top')
 prj.add_files('mkr.pdc')
+prj.add_files('mkr.sdc')
 
 prj.generate()
