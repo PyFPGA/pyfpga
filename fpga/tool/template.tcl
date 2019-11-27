@@ -231,9 +231,11 @@ proc fpga_part { PART } {
     }
 }
 
-proc fpga_file {FILE {LIB ""}} {
+proc fpga_file {FILE {LIB "work"}} {
     global TOOL TOP
-    fpga_print "adding the file '$FILE' ('$LIB')"
+    set message "adding the file '$FILE'"
+    if { $LIB != "work" } { append message " ('$LIB')" }
+    fpga_print $message
     regexp -nocase {\.(\w*)$} $FILE -> ext
     if { $ext == "tcl" } {
         source $FILE
@@ -241,27 +243,56 @@ proc fpga_file {FILE {LIB ""}} {
     }
     switch $TOOL {
         "ise" {
-            if { $LIB != "" } {
-                lib_vhdl new $LIB
-                xfile add $FILE -lib_vhdl $LIB
+            if {$ext == "xcf"} {
+                project set "Synthesis Constraints File" $FILE -process "Synthesize - XST"
             } else {
-                xfile add $FILE
+                if { $LIB != "work" } {
+                    lib_vhdl new $LIB
+                    xfile add $FILE -lib_vhdl $LIB
+                } else {
+                    xfile add $FILE
+                }
             }
         }
         "libero" {
-            if { $LIB == "" } { set LIB "work" }
+            global LIBERO_PLACE_CONSTRAINTS
+            global LIBERO_OTHER_CONSTRAINTS
             if {$ext == "pdc"} {
                 create_links -io_pdc $FILE
-                build_design_hierarchy
-                organize_tool_files -tool {PLACEROUTE} -file $FILE -module $TOP  -input_type {constraint}
+                append LIBERO_PLACE_CONSTRAINTS "-file $FILE "
             } elseif {$ext == "sdc"} {
                 create_links -sdc $FILE
-                build_design_hierarchy
-                organize_tool_files -tool {SYNTHESIZE} -file $FILE -module $TOP -input_type {constraint}
-                organize_tool_files -tool {PLACEROUTE} -file $FILE -module $TOP -input_type {constraint}
-                organize_tool_files -tool {VERIFYTIMING} -file $FILE -module $TOP -input_type {constraint}
+                append LIBERO_PLACE_CONSTRAINTS "-file $FILE "
+                append LIBERO_OTHER_CONSTRAINTS "-file $FILE "
             } else {
                 create_links -library $LIB -hdl_source $FILE
+                build_design_hierarchy
+            }
+            # Only the last organize_tool_files for a certain TOOL is taking
+            # into account, and it needs to include all the related files.
+            #
+            # PDC is only used for PLACEROUTE.
+            # SDC is used by ALL (SYNTHESIZE, PLACEROUTE and VERIFYTIMING).
+            #
+            # The strategy is to make a command string with the collected
+            # -file parameters and using eval to execute it as Tcl command.
+            if {$ext == "pdc" || $ext == "sdc"} {
+                if { [info exists LIBERO_OTHER_CONSTRAINTS] } {
+                    set cmd "organize_tool_files -tool {SYNTHESIZE} "
+                    append cmd $LIBERO_OTHER_CONSTRAINTS
+                    append cmd "-module $TOP -input_type {constraint}"
+                    eval $cmd
+                    set cmd "organize_tool_files -tool {VERIFYTIMING} "
+                    append cmd $LIBERO_OTHER_CONSTRAINTS
+                    append cmd "-module $TOP -input_type {constraint}"
+                    eval $cmd
+                }
+                if { [info exists LIBERO_PLACE_CONSTRAINTS] } {
+                    set cmd "organize_tool_files -tool {PLACEROUTE} "
+                    append cmd $LIBERO_PLACE_CONSTRAINTS
+                    append cmd "-module $TOP -input_type {constraint}"
+                    eval $cmd
+                }
             }
         }
         "quartus" {
@@ -276,7 +307,7 @@ proc fpga_file {FILE {LIB ""}} {
             } else {
                 set TYPE SOURCE_FILE
             }
-            if { $LIB != "" } {
+            if { $LIB != "work" } {
                 set_global_assignment -name $TYPE $FILE -library $LIB
             } else {
                 set_global_assignment -name $TYPE $FILE
@@ -284,7 +315,7 @@ proc fpga_file {FILE {LIB ""}} {
         }
         "vivado" {
             add_files $FILE
-            if { $LIB != "" } {
+            if { $LIB != "work" } {
                 set_property library $LIB [get_files $FILE]
             }
         }
@@ -308,7 +339,6 @@ proc fpga_top { TOP } {
     switch $TOOL {
         "ise"     { project set top $TOP }
         "libero"  {
-            build_design_hierarchy
             set_root $TOP
         }
         "quartus" { set_global_assignment -name TOP_LEVEL_ENTITY $TOP }
@@ -413,6 +443,7 @@ proc fpga_run_syn {} {
     fpga_print "running 'synthesis'"
     switch $TOOL {
         "ise"     {
+            project clean
             process run "Synthesize" -force rerun
         }
         "libero"  {
@@ -455,11 +486,12 @@ proc fpga_run_imp {} {
 }
 
 proc fpga_run_bit {} {
-    global TOOL
+    global TOOL PROJECT TOP
     fpga_print "running 'bitstream generation'"
     switch $TOOL {
         "ise"     {
             process run "Generate Programming File" -force rerun
+            file rename -force $TOP.bit $PROJECT.bit
         }
         "libero"  {
             run_tool -name {GENERATEPROGRAMMINGFILE}
@@ -469,11 +501,16 @@ proc fpga_run_bit {} {
         }
         "vivado"  {
             open_run impl_1
-            launch_run impl_1 -to_step write_bitstream
-            wait_on_run impl_1
+            write_bitstream -force $PROJECT
         }
     }
 }
+
+#
+# Start of the script
+#
+
+fpga_print "start of the Tcl script (interpreter $tcl_version)"
 
 #
 # Project Creation
@@ -533,4 +570,4 @@ if {"syn" in $TASKS || "imp" in $TASKS || "bit" in $TASKS} {
 # End of the script
 #
 
-fpga_print "finishing without errors"
+fpga_print "end of the Tcl script"
