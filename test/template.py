@@ -1,4 +1,7 @@
-"""Test for template.tcl."""
+"""Test of the master Tcl file.
+
+Useful to verify the shared code and functionality.
+"""
 
 import sys
 
