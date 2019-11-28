@@ -63,7 +63,7 @@ class Tool:
             'postbit': []
         }
         self.files = []
-        self.set_top('undefined')
+        self.set_top('UNDEFINED')
 
     def get_configs(self):
         """Get Configurations."""
