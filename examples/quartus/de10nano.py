@@ -24,7 +24,7 @@ try:
 except Exception as e:
     logging.warning('{} ({})'.format(type(e).__name__, e))
 
-#try:
-#    prj.transfer('fpga', 2)
-#except Exception as e:
-#    logging.warning('{} ({})'.format(type(e).__name__, e))
+# try:
+#     prj.transfer('fpga', 2)
+# except Exception as e:
+#     logging.warning('{} ({})'.format(type(e).__name__, e))

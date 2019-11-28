@@ -1,12 +1,14 @@
 #!/usr/bin/make
 
+PYDIRS = fpga examples test
+
 all: pep8 pylint
 
 pep8: venv
-	$</bin/pycodestyle fpga examples
+	$</bin/pycodestyle $(PYDIRS)
 
 pylint: venv
-	$</bin/pylint --errors-only fpga examples
+	$</bin/pylint --errors-only fpga
 
 pylint-full: venv
 	$</bin/pylint fpga

@@ -19,7 +19,7 @@ PROJECTS = {
             ['hdl/top.vhdl']
         ],
         'top': 'Top'
-     },
+    },
     'example2': {
         'tool': 'vivado',
         'part': 'xc7k70t-3-fbg484',
@@ -27,7 +27,7 @@ PROJECTS = {
             ['hdl/*.vhdl', 'examples']
         ],
         'top': 'Top'
-     },
+    },
     'example3': {
         'tool': 'quartus',
         'part': '5CEBA2F17A7',
@@ -37,7 +37,7 @@ PROJECTS = {
             ['hdl/top.vhdl', 'examples']
         ],
         'top': 'Top'
-     },
+    },
 }
 
 for project in sorted(PROJECTS.keys()):
@@ -52,5 +52,6 @@ for project in sorted(PROJECTS.keys()):
     PRJ.set_top(PROJECTS[project]['top'])
     try:
         PRJ.generate(task='imp')
-    except:
+    except Exception as e:
         print('There was an error with the project %s' % project)
+        print('{} ({})'.format(type(e).__name__, e))

@@ -21,8 +21,8 @@
 Dummy implementation to test the master Tcl file with tclsh.
 """
 
-
 from fpga.tool import Tool
+
 
 class Tclsh(Tool):
     """Implementation of the class to support Tclsh."""
