@@ -116,7 +116,7 @@ class Project:
         """Add a post bitstream generation OPTION."""
         self.tool.add_option(option, 'postbit')
 
-    def generate(self, strategy='none', task='bit'):
+    def generate(self, strategy='none', to_task='bit', from_task='prj'):
         """Run the FPGA tool.
 
         The valid STRATEGIES are none (default), area, speed and power.
@@ -125,7 +125,7 @@ class Project:
         to finish with the bitstream generation.
         """
         with self._run_in_dir():
-            self.tool.generate(strategy, task)
+            self.tool.generate(strategy, to_task, from_task)
 
     def set_board(self, board):
         """Set the board to use.

@@ -51,7 +51,7 @@ for project in sorted(PROJECTS.keys()):
             PRJ.add_files(file[0])
     PRJ.set_top(PROJECTS[project]['top'])
     try:
-        PRJ.generate(task='imp')
+        PRJ.generate(to_task='imp')
     except Exception as e:
         print('There was an error with the project %s' % project)
         print('{} ({})'.format(type(e).__name__, e))

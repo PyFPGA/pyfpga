@@ -118,11 +118,20 @@ class Tool:
     _STRATEGIES = ['none', 'area', 'speed', 'power']
     _TASKS = ['prj', 'syn', 'imp', 'bit']
 
-    def generate(self, strategy='none', task='bit'):
+    def generate(self, strategy='none', to_task='bit', from_task='prj'):
         """Run the FPGA tool."""
         check_value(strategy, self._STRATEGIES)
-        check_value(task, self._TASKS)
-        self._create_gen_script(strategy, "prj syn imp bit")
+        check_value(to_task, self._TASKS)
+        check_value(from_task, self._TASKS)
+        to_index = self._TASKS.index(to_task)
+        from_index = self._TASKS.index(from_task)
+        if from_index > to_index:
+            raise ValueError(
+                'initial task ({}) cannot be later than the last task ({})'
+                .format(from_task, to_task)
+            )
+        tasks = " ".join(self._TASKS[from_index:to_index+1])
+        self._create_gen_script(strategy, tasks)
         subprocess.run(self._GEN_COMMAND, shell=True, check=True)
 
     def transfer(self, devtype, position, part, width):

@@ -15,7 +15,7 @@ for tool in TOOLS:
     PRJ.add_files('hdl/top.vhdl')
     PRJ.set_top('Top')
     try:
-        PRJ.generate(task='imp')
+        PRJ.generate(to_task='imp')
     except Exception as e:
         print('There was an error running %s' % tool)
         print('{} ({})'.format(type(e).__name__, e))
