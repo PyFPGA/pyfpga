@@ -22,7 +22,10 @@
 #
 # Supported TOOLs: ise, libero, quartus, vivado
 #
-# Note: fpga_ is used to avoid name collisions.
+# Notes:
+# * fpga_ is used to avoid name collisions.
+# * The 'in' operator was introduced by Tcl 8.5, but some Tools uses 8.4,
+#   so 'lsearch' is used to test if a value is in a list.
 #
 
 #
@@ -516,7 +519,7 @@ fpga_print "start of the Tcl script (interpreter $tcl_version)"
 # Project Creation
 #
 
-if { "prj" in $TASKS } {
+if { [lsearch -exact $TASKS "prj"] >= 0 } {
     fpga_print "running the Project Creation"
     if { [catch {
         fpga_create $PROJECT
@@ -541,20 +544,20 @@ if { "prj" in $TASKS } {
 # Design Flow
 #
 
-if {"syn" in $TASKS || "imp" in $TASKS || "bit" in $TASKS} {
+if { [lsearch -regexp $TASKS "syn|imp|bit"] >= 0 } {
     fpga_print "running the Design Flow"
     if { [catch {
         fpga_open $PROJECT
         fpga_options "preflow"
-        if {"syn" in $TASKS} {
+        if { [lsearch -exact $TASKS "syn"] >= 0 } {
             fpga_run_syn
             fpga_options "postsyn"
         }
-        if {"imp" in $TASKS} {
+        if { [lsearch -exact $TASKS "imp"] >= 0 } {
             fpga_run_imp
             fpga_options "postimp"
         }
-        if {"bit" in $TASKS} {
+        if { [lsearch -exact $TASKS "bit"] >= 0 } {
             fpga_run_bit
             fpga_options "postbit"
         }
