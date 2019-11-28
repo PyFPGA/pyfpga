@@ -43,9 +43,9 @@ class Project:
 
     def __init__(self, tool='vivado', project=None):
         """Instantiate the Tool to use."""
-        self.log = logging.getLogger(__name__)
-        self.log.level = logging.INFO
-        self.log.addHandler(logging.NullHandler())
+        self._log = logging.getLogger(__name__)
+        self._log.level = logging.INFO
+        self._log.addHandler(logging.NullHandler())
         if tool == 'ise':
             self.tool = Ise(project)
         elif tool == 'libero':
@@ -58,17 +58,17 @@ class Project:
             self.tool = Tclsh(project)
         else:
             raise NotImplementedError(tool)
-        self.rundir = os.getcwd()
-        self.log.debug('RUNDIR = %s', self.rundir)
-        self.reldir = os.path.dirname(inspect.stack()[-1].filename)
-        self.log.debug('RELDIR = %s', self.reldir)
+        self._rundir = os.getcwd()
+        self._log.debug('RUNDIR = %s', self._rundir)
+        self._reldir = os.path.dirname(inspect.stack()[-1].filename)
+        self._log.debug('RELDIR = %s', self._reldir)
         self.set_outdir('build')
 
     def set_outdir(self, outdir):
         """Set the OUTput DIRectory."""
-        auxdir = os.path.join(self.reldir, outdir)
-        self.outdir = os.path.join(self.rundir, auxdir)
-        self.log.debug('OUTDIR = %s', self.outdir)
+        auxdir = os.path.join(self._reldir, outdir)
+        self.outdir = os.path.join(self._rundir, auxdir)
+        self._log.debug('OUTDIR = %s', self.outdir)
 
     def get_configs(self):
         """Get the Project Configurations."""
@@ -85,11 +85,11 @@ class Project:
         specification, and can contain shell-style wildcards.
         LIB is optional and only useful for VHDL files.
         """
-        pathname = os.path.join(self.reldir, pathname)
-        self.log.debug('PATHNAME = %s', pathname)
+        pathname = os.path.join(self._reldir, pathname)
+        self._log.debug('PATHNAME = %s', pathname)
         files = glob.glob(pathname)
         for file in files:
-            file_abs = os.path.join(self.rundir, file)
+            file_abs = os.path.join(self._rundir, file)
             self.tool.add_file(file_abs, lib)
 
     def set_top(self, toplevel):
@@ -144,9 +144,9 @@ class Project:
         """Run in other directory."""
         try:
             if not os.path.exists(self.outdir):
-                self.log.info('the output directory did not exist, created.')
+                self._log.info('the output directory did not exist, created.')
                 os.makedirs(self.outdir)
             os.chdir(self.outdir)
             yield
         finally:
-            os.chdir(self.rundir)
+            os.chdir(self._rundir)
