@@ -35,11 +35,6 @@ from fpga.tool.vivado import Vivado
 from fpga.tool.tclsh import Tclsh
 
 
-LOG = logging.getLogger(__name__)
-LOG.level = logging.INFO
-LOG.addHandler(logging.NullHandler())
-
-
 TOOLS = ['ise', 'libero', 'quartus', 'vivado']
 
 
@@ -48,6 +43,9 @@ class Project:
 
     def __init__(self, tool='vivado', project=None):
         """Instantiate the Tool to use."""
+        self.log = logging.getLogger(__name__)
+        self.log.level = logging.INFO
+        self.log.addHandler(logging.NullHandler())
         if tool == 'ise':
             self.tool = Ise(project)
         elif tool == 'libero':
@@ -61,16 +59,16 @@ class Project:
         else:
             raise NotImplementedError(tool)
         self.rundir = os.getcwd()
-        LOG.debug('RUNDIR = %s', self.rundir)
+        self.log.debug('RUNDIR = %s', self.rundir)
         self.reldir = os.path.dirname(inspect.stack()[-1].filename)
-        LOG.debug('RELDIR = %s', self.reldir)
+        self.log.debug('RELDIR = %s', self.reldir)
         self.set_outdir('build')
 
     def set_outdir(self, outdir):
         """Set the OUTput DIRectory."""
         auxdir = os.path.join(self.reldir, outdir)
         self.outdir = os.path.join(self.rundir, auxdir)
-        LOG.debug('OUTDIR = %s', self.outdir)
+        self.log.debug('OUTDIR = %s', self.outdir)
 
     def get_configs(self):
         """Get the Project Configurations."""
@@ -88,7 +86,7 @@ class Project:
         LIB is optional and only useful for VHDL files.
         """
         pathname = os.path.join(self.reldir, pathname)
-        LOG.debug('PATHNAME = %s', pathname)
+        self.log.debug('PATHNAME = %s', pathname)
         files = glob.glob(pathname)
         for file in files:
             file_abs = os.path.join(self.rundir, file)
@@ -146,7 +144,7 @@ class Project:
         """Run in other directory."""
         try:
             if not os.path.exists(self.outdir):
-                LOG.info('the output directory did not exist, created.')
+                self.log.info('the output directory did not exist, created.')
                 os.makedirs(self.outdir)
             os.chdir(self.outdir)
             yield
