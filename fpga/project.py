@@ -32,6 +32,7 @@ from fpga.tool.ise import Ise
 from fpga.tool.libero import Libero
 from fpga.tool.quartus import Quartus
 from fpga.tool.vivado import Vivado
+from fpga.tool.tclsh import Tclsh
 
 
 LOG = logging.getLogger(__name__)
@@ -55,6 +56,8 @@ class Project:
             self.tool = Quartus(project)
         elif tool == 'vivado':
             self.tool = Vivado(project)
+        elif tool == 'tclsh':
+            self.tool = Tclsh(project)
         else:
             raise NotImplementedError(tool)
         self.rundir = os.getcwd()
