@@ -18,8 +18,9 @@
 
 """fpga.project
 
-Main Class of PyFPGA, which provides functionalities to create a project,
-generate files and transfer to a Device.
+This module implements the main class of PyFPGA, which provides
+functionalities to create a project, generate a bitstream and transfer it to a
+Device.
 """
 
 import contextlib

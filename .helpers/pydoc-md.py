@@ -37,7 +37,7 @@ def get_classes(module):
 def get_functions(module):
     output = list()
     for name, obj in inspect.getmembers(module, inspect.isroutine):
-        if name.startswith('_'):
+        if name.startswith('_') and name != '__init__':
             continue
         output.append(fheader.format(
             name, inspect.formatargspec(*inspect.getargspec(obj))
