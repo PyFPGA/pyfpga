@@ -1,13 +1,27 @@
 #!/bin/sh
 
-# Check of code
-exec venv/bin/pycodestyle fpga examples test
-exec venv/bin/pylint fpga
+verify() {
+    if [ $? -ne 0 ]; then
+        echo "Fix the errors to proceed the commit."
+        exit 1
+    fi
+}
 
-# Check of trailing whitespaces
-exec git diff --check --cached
+echo "Validating PEP8 compliance ..."
+venv/bin/pycodestyle fpga/ examples/ test/
+verify
 
-# Dod generation
+echo "Running PyLint ..."
+venv/bin/pylint -j 0 --score no fpga
+verify
+
+echo "Updating documentation ..."
 venv/bin/python .helpers/pydoc-md.py fpga.project > doc/api-reference.md
+verify
 git add doc
-git commit -m "Updated auto-generated documentation"
+
+echo "Checking trailing whitespaces ..."
+git diff --check --cached
+verify
+
+echo "The commit can proceed"
