@@ -43,7 +43,7 @@ class Project:
     """Class to manage an FPGA project."""
 
     def __init__(self, tool='vivado', project=None):
-        """Constructor.
+        """Class constructor.
 
         * **tool:** FPGA tool to be used.
         * **project:** project name (the tool name is used if none specified).
@@ -70,7 +70,7 @@ class Project:
         self.set_outdir('build')
 
     def set_outdir(self, outdir):
-        """Set the OUTput DIRectory (where to put the resulting files).
+        """Sets the OUTput DIRectory (where to put the resulting files).
 
         * **outdir:** path to the output directory.
         """
@@ -79,7 +79,7 @@ class Project:
         self._log.debug('OUTDIR = %s', self.outdir)
 
     def get_configs(self):
-        """Get the Project Configurations.
+        """Gets the Project Configurations.
 
         It returns a dict which includes *tool* and *project* names, the
         *extension* of a project file (according to the selected tool) and
@@ -95,11 +95,11 @@ class Project:
         self.tool.set_part(part)
 
     def add_files(self, pathname, lib=None):
-        """Add files to the project.
+        """Adds files to the project (HDLs, TCLs, Constraints).
 
-        PATHNAME must be a string containing an absolute or relative path
-        specification, and can contain shell-style wildcards.
-        LIB is optional and only useful for VHDL files.
+        * **pathname:** a string containing an absolute/relative path
+        specification, and can contain shell-style wildcards (glob compliant).
+        * **lib:** optional library name (only useful with VHDL files).
         """
         pathname = os.path.join(self._reldir, pathname)
         self._log.debug('PATHNAME = %s', pathname)
@@ -109,55 +109,87 @@ class Project:
             self.tool.add_file(file_abs, lib)
 
     def set_top(self, toplevel):
-        """Set the TOP LEVEL of the project."""
+        """Set the top level of the project.
+
+        * **toplevel:** name of the top level entity/module.
+        """
         self.tool.set_top(toplevel)
 
     def add_project_opt(self, option):
-        """Add a project OPTION."""
+        """Adds a project OPTION.
+
+        * **option:** a valid, commonly Tcl, tool option.
+        """
         self.tool.add_option(option, 'project')
 
     def add_preflow_opt(self, option):
-        """Add a pre flow OPTION."""
+        """Adds a pre flow OPTION.
+
+        * **option:** a valid, commonly Tcl, tool option.
+        """
         self.tool.add_option(option, 'preflow')
 
     def add_postsyn_opt(self, option):
-        """Add a post synthesis OPTION."""
+        """Adds a post synthesis OPTION.
+
+        * **option:** a valid, commonly Tcl, tool option.
+        """
         self.tool.add_option(option, 'postsyn')
 
     def add_postimp_opt(self, option):
-        """Add a post implementation OPTION."""
+        """Adds a post implementation OPTION.
+
+        * **option:** a valid, commonly Tcl, tool option.
+        """
         self.tool.add_option(option, 'postimp')
 
     def add_postbit_opt(self, option):
-        """Add a post bitstream generation OPTION."""
+        """Adds a post bitstream generation OPTION.
+
+        * **option:** a valid, commonly Tcl, tool option.
+        """
         self.tool.add_option(option, 'postbit')
 
     def generate(self, strategy='none', to_task='bit', from_task='prj'):
         """Run the FPGA tool.
 
-        The valid STRATEGIES are none (default), area, speed and power.
-        The valid TASKS are prj to only create the project file, syn for also
-        performs the synthesis, imp to add implementation and bit (default)
-        to finish with the bitstream generation.
+        * **strategy:** *none* (default), *area*, *speed* or *power*.
+        * **to_task:** last task.
+        * **from_task:** first task.
+
+        The valid tasks values, in order, are:
+        * *prj* to creates the project file.
+        * *syn* to performs the synthesis.
+        * *imp* to runs implementation.
+        * *bit* to generates the bitstream.
         """
         with self._run_in_dir():
             self.tool.generate(strategy, to_task, from_task)
 
     def set_board(self, board):
-        """Set the board to use.
+        """Sets a development board to have predefined values.
 
-        A BOARD is a dictionary with predefined devices.
+        * **board:** board name.
+
+        **Note:** Not Yet Implemented.
         """
         raise NotImplementedError('set_board')
 
     def transfer(self, devtype='fpga', position=1, part='', width=1):
-        """Transfer a bitstream."""
+        """Transfers the generated bitstream to a device.
+
+        * **devtype:** *fpga* (default) or other valid option
+        (depending on the used tool, it could be *spi*, *bpi, etc).
+        * **position:** position of the device in the JTAG chain.
+        * **part:** name of the memory (when device is not *fpga*).
+        * **width:** bits width of the memory (when device is not *fpga*).
+        """
         with self._run_in_dir():
             self.tool.transfer(devtype, position, part, width)
 
     @contextlib.contextmanager
     def _run_in_dir(self):
-        """Run in other directory."""
+        """Runs the tool in other directory."""
         try:
             if not os.path.exists(self.outdir):
                 self._log.info('the output directory did not exist, created.')
