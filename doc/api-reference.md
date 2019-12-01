@@ -10,81 +10,106 @@ Device.
 
 Class to manage an FPGA project.
 
-### `__init__(self, tool='vivado', project=None)`
+### `__init__(tool='vivado', project=None)`
 
-Constructor.
+Class constructor.
 
 * **tool:** FPGA tool to be used.
 * **project:** project name (the tool name is used if none specified).
 
-### `add_files(self, pathname, lib=None)`
+### `add_files(pathname, lib=None)`
 
-Add files to the project.
+Adds files to the project (HDLs, TCLs, Constraints).
 
-PATHNAME must be a string containing an absolute or relative path
-specification, and can contain shell-style wildcards.
-LIB is optional and only useful for VHDL files.
+* **pathname:** a string containing an absolute/relative path
+specification, and can contain shell-style wildcards (glob compliant).
+* **lib:** optional library name (only useful with VHDL files).
 
-### `add_postbit_opt(self, option)`
+### `add_postbit_opt(option)`
 
-Add a post bitstream generation OPTION.
+Adds a post bitstream generation OPTION.
 
-### `add_postimp_opt(self, option)`
+* **option:** a valid, commonly Tcl, tool option.
 
-Add a post implementation OPTION.
+### `add_postimp_opt(option)`
 
-### `add_postsyn_opt(self, option)`
+Adds a post implementation OPTION.
 
-Add a post synthesis OPTION.
+* **option:** a valid, commonly Tcl, tool option.
 
-### `add_preflow_opt(self, option)`
+### `add_postsyn_opt(option)`
 
-Add a pre flow OPTION.
+Adds a post synthesis OPTION.
 
-### `add_project_opt(self, option)`
+* **option:** a valid, commonly Tcl, tool option.
 
-Add a project OPTION.
+### `add_preflow_opt(option)`
 
-### `generate(self, strategy='none', to_task='bit', from_task='prj')`
+Adds a pre flow OPTION.
+
+* **option:** a valid, commonly Tcl, tool option.
+
+### `add_project_opt(option)`
+
+Adds a project OPTION.
+
+* **option:** a valid, commonly Tcl, tool option.
+
+### `generate(strategy='none', to_task='bit', from_task='prj')`
 
 Run the FPGA tool.
 
-The valid STRATEGIES are none (default), area, speed and power.
-The valid TASKS are prj to only create the project file, syn for also
-performs the synthesis, imp to add implementation and bit (default)
-to finish with the bitstream generation.
+* **strategy:** *none* (default), *area*, *speed* or *power*.
+* **to_task:** last task.
+* **from_task:** first task.
+
+The valid tasks values, in order, are:
+* *prj* to creates the project file.
+* *syn* to performs the synthesis.
+* *imp* to runs implementation.
+* *bit* to generates the bitstream.
 
 ### `get_configs(self)`
 
-Get the Project Configurations.
+Gets the Project Configurations.
 
 It returns a dict which includes *tool* and *project* names, the
 *extension* of a project file (according to the selected tool) and
 the *part* to be used.
 
-### `set_board(self, board)`
+### `set_board(board)`
 
-Set the board to use.
+Sets a development board to have predefined values.
 
-A BOARD is a dictionary with predefined devices.
+* **board:** board name.
 
-### `set_outdir(self, outdir)`
+**Note:** Not Yet Implemented.
 
-Set the OUTput DIRectory (where to put the resulting files).
+### `set_outdir(outdir)`
+
+Sets the OUTput DIRectory (where to put the resulting files).
 
 * **outdir:** path to the output directory.
 
-### `set_part(self, part)`
+### `set_part(part)`
 
 Set the target FPGA part.
 
 * **part:** the FPGA part as specified by the tool.
 
-### `set_top(self, toplevel)`
+### `set_top(toplevel)`
 
-Set the TOP LEVEL of the project.
+Set the top level of the project.
 
-### `transfer(self, devtype='fpga', position=1, part='', width=1)`
+* **toplevel:** name of the top level entity/module.
 
-Transfer a bitstream.
+### `transfer(devtype='fpga', position=1, part='', width=1)`
+
+Transfers the generated bitstream to a device.
+
+* **devtype:** *fpga* (default) or other valid option
+(depending on the used tool, it could be *spi*, *bpi, etc).
+* **position:** position of the device in the JTAG chain.
+* **part:** name of the memory (when device is not *fpga*).
+* **width:** bits width of the memory (when device is not *fpga*).
 
