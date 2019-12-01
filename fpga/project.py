@@ -40,10 +40,14 @@ TOOLS = ['ise', 'libero', 'quartus', 'vivado']
 
 
 class Project:
-    """Manage an FPGA project."""
+    """Class to manage an FPGA project."""
 
     def __init__(self, tool='vivado', project=None):
-        """Instantiate the Tool to use."""
+        """Constructor.
+
+        * **tool:** FPGA tool to be used.
+        * **project:** project name (the tool name is used if none specified).
+        """
         self._log = logging.getLogger(__name__)
         self._log.level = logging.INFO
         self._log.addHandler(logging.NullHandler())
@@ -66,17 +70,28 @@ class Project:
         self.set_outdir('build')
 
     def set_outdir(self, outdir):
-        """Set the OUTput DIRectory."""
+        """Set the OUTput DIRectory (where to put the resulting files).
+
+        * **outdir:** path to the output directory.
+        """
         auxdir = os.path.join(self._reldir, outdir)
         self.outdir = os.path.join(self._rundir, auxdir)
         self._log.debug('OUTDIR = %s', self.outdir)
 
     def get_configs(self):
-        """Get the Project Configurations."""
+        """Get the Project Configurations.
+
+        It returns a dict which includes *tool* and *project* names, the
+        *extension* of a project file (according to the selected tool) and
+        the *part* to be used.
+        """
         return self.tool.get_configs()
 
     def set_part(self, part):
-        """Set the target PART."""
+        """Set the target FPGA part.
+
+        * **part:** the FPGA part as specified by the tool.
+        """
         self.tool.set_part(part)
 
     def add_files(self, pathname, lib=None):

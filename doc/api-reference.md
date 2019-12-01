@@ -2,12 +2,20 @@
 
 fpga.project
 
-Main Class of PyFPGA, which provides functionalities to create a project,
-generate files and transfer to a Device.
+This module implements the main class of PyFPGA, which provides
+functionalities to create a project, generate a bitstream and transfer it to a
+Device.
 
 ## Class Project
 
-Manage an FPGA project.
+Class to manage an FPGA project.
+
+### `__init__(self, tool='vivado', project=None)`
+
+Constructor.
+
+* **tool:** FPGA tool to be used.
+* **project:** project name (the tool name is used if none specified).
 
 ### `add_files(self, pathname, lib=None)`
 
@@ -50,6 +58,10 @@ to finish with the bitstream generation.
 
 Get the Project Configurations.
 
+It returns a dict which includes *tool* and *project* names, the
+*extension* of a project file (according to the selected tool) and
+the *part* to be used.
+
 ### `set_board(self, board)`
 
 Set the board to use.
@@ -58,11 +70,15 @@ A BOARD is a dictionary with predefined devices.
 
 ### `set_outdir(self, outdir)`
 
-Set the OUTput DIRectory.
+Set the OUTput DIRectory (where to put the resulting files).
+
+* **outdir:** path to the output directory.
 
 ### `set_part(self, part)`
 
-Set the target PART.
+Set the target FPGA part.
+
+* **part:** the FPGA part as specified by the tool.
 
 ### `set_top(self, toplevel)`
 
