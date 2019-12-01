@@ -1,7 +1,7 @@
 #!/bin/sh
 
 docfile=doc/api-reference.md
-exec venv/bin/python .helpers/pydoc-md.py fpga.project > $docfile
+venv/bin/python .helpers/pydoc-md.py fpga.project > $docfile
 
-git add $docfile
-git commit -m "Updated auto-generated documentation"
+exec git add $docfile
+exec git commit -m "Updated auto-generated documentation"
