@@ -235,9 +235,7 @@ proc fpga_part { PART } {
 }
 
 proc fpga_file {FILE {LIB "work"}} {
-    global TOOL TOP
-    # Following line is needed to implement Verilog includes/headers
-    set PATH [file dirname $FILE]
+    global TOOL TOP PATH
     set message "adding the file '$FILE'"
     if { $LIB != "work" } { append message " ('$LIB')" }
     fpga_print $message
@@ -245,6 +243,9 @@ proc fpga_file {FILE {LIB "work"}} {
     if { $ext == "tcl" } {
         source $FILE
         return
+    }
+    if { $ext == "h" || $ext == "vh" } {
+        append PATH [file dirname $FILE]
     }
     switch $TOOL {
         "ise" {
@@ -264,7 +265,6 @@ proc fpga_file {FILE {LIB "work"}} {
         "libero" {
             global LIBERO_PLACE_CONSTRAINTS
             global LIBERO_OTHER_CONSTRAINTS
-            global LIBERO_VERILOG_INCLUDES
             if {$ext == "pdc"} {
                 create_links -io_pdc $FILE
                 append LIBERO_PLACE_CONSTRAINTS "-file $FILE "
@@ -275,11 +275,6 @@ proc fpga_file {FILE {LIB "work"}} {
             } else {
                 create_links -library $LIB -hdl_source $FILE
                 build_design_hierarchy
-                # Verilog includes/headers paths are collected and specified
-                # to Synplify after set_root and before the synthesis.
-                if { $ext == "h" || $ext == "vh" } {
-                    append LIBERO_VERILOG_INCLUDES [file dirname $FILE]
-                }
             }
             # Only the last organize_tool_files for a certain TOOL is taking
             # into account, and it needs to include all the related files.
@@ -441,7 +436,7 @@ proc fpga_speed_opts {} {
 }
 
 proc fpga_run_syn {} {
-    global TOOL
+    global TOOL PATH
     fpga_print "running 'synthesis'"
     switch $TOOL {
         "ise"     {
@@ -451,12 +446,9 @@ proc fpga_run_syn {} {
         "libero"  {
             # The specification of -include_path must be done after set_root,
             # and before the synthesis.
-            global LIBERO_VERILOG_INCLUDES
-            if { [info exists LIBERO_VERILOG_INCLUDES] } {
+            if { [info exists PATH] } {
                 set cmd "configure_tool -name {SYNTHESIZE} -params {"
-                append cmd "SYNPLIFY_OPTIONS:set_option -include_path "
-                append cmd $LIBERO_VERILOG_INCLUDES
-                append cmd "}"
+                append cmd "SYNPLIFY_OPTIONS:set_option -include_path $PATH }"
                 eval $cmd
             }
             run_tool -name {SYNTHESIZE}
