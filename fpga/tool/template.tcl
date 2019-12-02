@@ -236,6 +236,8 @@ proc fpga_part { PART } {
 
 proc fpga_file {FILE {LIB "work"}} {
     global TOOL TOP
+    # Following line is needed to implement Verilog includes/headers
+    set PATH [file dirname $FILE]
     set message "adding the file '$FILE'"
     if { $LIB != "work" } { append message " ('$LIB')" }
     fpga_print $message
@@ -248,6 +250,8 @@ proc fpga_file {FILE {LIB "work"}} {
         "ise" {
             if {$ext == "xcf"} {
                 project set "Synthesis Constraints File" $FILE -process "Synthesize - XST"
+            } elseif { $ext == "h" || $ext == "vh" } {
+                project set "Verilog Include Directories" $PATH -process "Synthesize - XST"
             } else {
                 if { $LIB != "work" } {
                     lib_vhdl new $LIB
@@ -329,10 +333,8 @@ proc fpga_include { PATH } {
     global TOOL
     fpga_print "including the path '$PATH'"
     switch $TOOL {
-        "ise"     { project set "Verilog Include Directories" $PATH -process "Synthesize - XST" }
         "libero"  { configure_tool -name {SYNTHESIZE} -params {SYNPLIFY_OPTIONS: set_option -include_path $PATH } }
         "quartus" { set_global_assignment -name SEARCH_PATH $PATH }
-        "vivado"  { set_property include_dirs $PATH [current_fileset] }
     }
 }
 
