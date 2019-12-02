@@ -264,6 +264,7 @@ proc fpga_file {FILE {LIB "work"}} {
         "libero" {
             global LIBERO_PLACE_CONSTRAINTS
             global LIBERO_OTHER_CONSTRAINTS
+            global LIBERO_VERILOG_INCLUDES
             if {$ext == "pdc"} {
                 create_links -io_pdc $FILE
                 append LIBERO_PLACE_CONSTRAINTS "-file $FILE "
@@ -274,6 +275,11 @@ proc fpga_file {FILE {LIB "work"}} {
             } else {
                 create_links -library $LIB -hdl_source $FILE
                 build_design_hierarchy
+                # Verilog includes/headers paths are collected and specified
+                # to Synplify after set_root and before the synthesis.
+                if { $ext == "h" || $ext == "vh" } {
+                    append LIBERO_VERILOG_INCLUDES [file dirname $FILE]
+                }
             }
             # Only the last organize_tool_files for a certain TOOL is taking
             # into account, and it needs to include all the related files.
@@ -331,22 +337,12 @@ proc fpga_file {FILE {LIB "work"}} {
     }
 }
 
-proc fpga_include { PATH } {
-    global TOOL
-    fpga_print "including the path '$PATH'"
-    switch $TOOL {
-        "libero"  { configure_tool -name {SYNTHESIZE} -params {SYNPLIFY_OPTIONS: set_option -include_path $PATH } }
-    }
-}
-
 proc fpga_top { TOP } {
     global TOOL
     fpga_print "specifying the top level '$TOP'"
     switch $TOOL {
         "ise"     { project set top $TOP }
-        "libero"  {
-            set_root $TOP
-        }
+        "libero"  { set_root $TOP }
         "quartus" { set_global_assignment -name TOP_LEVEL_ENTITY $TOP }
         "vivado"  { set_property top $TOP [current_fileset] }
     }
@@ -453,6 +449,16 @@ proc fpga_run_syn {} {
             process run "Synthesize" -force rerun
         }
         "libero"  {
+            # The specification of -include_path must be done after set_root,
+            # and before the synthesis.
+            global LIBERO_VERILOG_INCLUDES
+            if { [info exists LIBERO_VERILOG_INCLUDES] } {
+                set cmd "configure_tool -name {SYNTHESIZE} -params {"
+                append cmd "SYNPLIFY_OPTIONS:set_option -include_path "
+                append cmd $LIBERO_VERILOG_INCLUDES
+                append cmd "}"
+                eval $cmd
+            }
             run_tool -name {SYNTHESIZE}
         }
         "quartus" {
