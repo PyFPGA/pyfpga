@@ -314,7 +314,9 @@ proc fpga_file {FILE {LIB "work"}} {
             } else {
                 set TYPE SOURCE_FILE
             }
-            if { $LIB != "work" } {
+            if { $ext == "h" || $ext == "vh" } {
+                set_global_assignment -name SEARCH_PATH $PATH
+            } elseif { $LIB != "work" } {
                 set_global_assignment -name $TYPE $FILE -library $LIB
             } else {
                 set_global_assignment -name $TYPE $FILE
@@ -334,7 +336,6 @@ proc fpga_include { PATH } {
     fpga_print "including the path '$PATH'"
     switch $TOOL {
         "libero"  { configure_tool -name {SYNTHESIZE} -params {SYNPLIFY_OPTIONS: set_option -include_path $PATH } }
-        "quartus" { set_global_assignment -name SEARCH_PATH $PATH }
     }
 }
 
