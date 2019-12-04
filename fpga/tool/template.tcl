@@ -235,7 +235,7 @@ proc fpga_part { PART } {
 }
 
 proc fpga_file {FILE {LIB "work"}} {
-    global TOOL TOP
+    global TOOL TOP PATH
     set message "adding the file '$FILE'"
     if { $LIB != "work" } { append message " ('$LIB')" }
     fpga_print $message
@@ -244,10 +244,15 @@ proc fpga_file {FILE {LIB "work"}} {
         source $FILE
         return
     }
+    if { $ext == "h" || $ext == "vh" } {
+        append PATH [file dirname $FILE]
+    }
     switch $TOOL {
         "ise" {
             if {$ext == "xcf"} {
                 project set "Synthesis Constraints File" $FILE -process "Synthesize - XST"
+            } elseif { $ext == "h" || $ext == "vh" } {
+                project set "Verilog Include Directories" $PATH -process "Synthesize - XST"
             } else {
                 if { $LIB != "work" } {
                     lib_vhdl new $LIB
@@ -310,7 +315,9 @@ proc fpga_file {FILE {LIB "work"}} {
             } else {
                 set TYPE SOURCE_FILE
             }
-            if { $LIB != "work" } {
+            if { $ext == "h" || $ext == "vh" } {
+                set_global_assignment -name SEARCH_PATH $PATH
+            } elseif { $LIB != "work" } {
                 set_global_assignment -name $TYPE $FILE -library $LIB
             } else {
                 set_global_assignment -name $TYPE $FILE
@@ -325,25 +332,12 @@ proc fpga_file {FILE {LIB "work"}} {
     }
 }
 
-proc fpga_include { PATH } {
-    global TOOL
-    fpga_print "including the path '$PATH'"
-    switch $TOOL {
-        "ise"     { project set "Verilog Include Directories" $PATH -process "Synthesize - XST" }
-        "libero"  { configure_tool -name {SYNTHESIZE} -params {SYNPLIFY_OPTIONS: set_option -include_path $PATH } }
-        "quartus" { set_global_assignment -name SEARCH_PATH $PATH }
-        "vivado"  { set_property include_dirs $PATH [current_fileset] }
-    }
-}
-
 proc fpga_top { TOP } {
     global TOOL
     fpga_print "specifying the top level '$TOP'"
     switch $TOOL {
         "ise"     { project set top $TOP }
-        "libero"  {
-            set_root $TOP
-        }
+        "libero"  { set_root $TOP }
         "quartus" { set_global_assignment -name TOP_LEVEL_ENTITY $TOP }
         "vivado"  { set_property top $TOP [current_fileset] }
     }
@@ -442,7 +436,7 @@ proc fpga_speed_opts {} {
 }
 
 proc fpga_run_syn {} {
-    global TOOL
+    global TOOL PATH
     fpga_print "running 'synthesis'"
     switch $TOOL {
         "ise"     {
@@ -450,6 +444,13 @@ proc fpga_run_syn {} {
             process run "Synthesize" -force rerun
         }
         "libero"  {
+            # The specification of -include_path must be done after set_root,
+            # and before the synthesis.
+            if { [info exists PATH] } {
+                set cmd "configure_tool -name {SYNTHESIZE} -params {"
+                append cmd "SYNPLIFY_OPTIONS:set_option -include_path $PATH }"
+                eval $cmd
+            }
             run_tool -name {SYNTHESIZE}
         }
         "quartus" {
