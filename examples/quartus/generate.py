@@ -1,4 +1,4 @@
-"""DE10Nano example project."""
+"""DE10Nano generate example project."""
 
 import logging
 
@@ -23,8 +23,3 @@ try:
     prj.generate()
 except Exception as e:
     logging.warning('{} ({})'.format(type(e).__name__, e))
-
-# try:
-#     prj.transfer('fpga', 2)
-# except Exception as e:
-#     logging.warning('{} ({})'.format(type(e).__name__, e))

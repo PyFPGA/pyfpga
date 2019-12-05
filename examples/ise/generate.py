@@ -1,4 +1,4 @@
-"""S6Micro example project."""
+"""S6micro generate example project."""
 
 import logging
 
@@ -23,11 +23,3 @@ try:
     prj.generate()
 except Exception as e:
     logging.warning('{} ({})'.format(type(e).__name__, e))
-
-# try:
-#     prj.transfer('fpga')
-#     prj.transfer('detect')
-#     prj.transfer('unlock')
-#     prj.transfer('spi', 1, 'N25Q128', 4)
-# except Exception as e:
-#     logging.warning('{} ({})'.format(type(e).__name__, e))
