@@ -1,4 +1,4 @@
-"""MPF300 example project."""
+"""MPF300 generate example project."""
 
 import logging
 

@@ -1,4 +1,4 @@
-"""Zybo example project."""
+"""Zybo generate example project."""
 
 import logging
 
@@ -22,8 +22,3 @@ try:
     prj.generate()
 except Exception as e:
     logging.warning('{} ({})'.format(type(e).__name__, e))
-
-# try:
-#     prj.transfer('fpga')
-# except Exception as e:
-#     logging.warning('{} ({})'.format(type(e).__name__, e))
