@@ -13,22 +13,25 @@ Features:
 
 ## Support
 
+PyFPGA was developed under a Debian GNU/Linux, but it must run in any other
+POSIX compatible operating system and probably also with a Linux Bash under
+Windows (or maybe PowerSheel? Please let me know if you try).
+
+### Bitstream Generation
+
 ![ISE](https://img.shields.io/badge/ISE-14.7-blue.svg)
-![Libero](https://img.shields.io/badge/Libero&nbsp;Soc-12.2-blue.svg)
-![Quartus](https://img.shields.io/badge/Quartus&nbsp;Prime-19.1-blue.svg)
+![Libero](https://img.shields.io/badge/Libero--Soc-12.2-blue.svg)
+![Quartus](https://img.shields.io/badge/Quartus--Prime-19.1-blue.svg)
 ![Vivado](https://img.shields.io/badge/Vivado-2019.1-blue.svg)
 
-> PyFPGA was developed under a Debian GNU/Linux, but it must run in any other
-> POSIX compatible operating system and probably also with a Linux Bash under
-> Windows (or maybe PowerSheel? Please let me know if you try).
+### Transfer
 
-In all cases, it is implemented at least until the bitstream generation.
-As for the transfer, the supported devices are:
-* ISE: FPGA, SPI and BPI.
-* Quartus, Vivado: FPGA.
-* Libero-SoC: unsupported (I have not a kit were to test).
+![ISE](https://img.shields.io/badge/ISE-FPGA,&nbsp;SPI&nbsp;and&nbsp;BPI-blue.svg)
+![Libero](https://img.shields.io/badge/Libero--Soc-Unsupported&nbsp;(*)-red.svg)
+![Quartus](https://img.shields.io/badge/Quartus--Prime-FPGA-green.svg)
+![Vivado](https://img.shields.io/badge/Vivado-FPGA-green.svg)
 
-> ISE, Quartus and Vivado supports the auto-detection of the Jtag Chain.
+(*) No available kit to test.
 
 ## Installation
 
