@@ -28,6 +28,7 @@ import glob
 import inspect
 import logging
 import os
+import time
 
 from fpga.tool.ise import Ise
 from fpga.tool.libero import Libero
@@ -191,6 +192,7 @@ class Project:
     def _run_in_dir(self):
         """Runs the tool in other directory."""
         try:
+            start = time.time()
             if not os.path.exists(self.outdir):
                 self._log.info('the output directory did not exist, created.')
                 os.makedirs(self.outdir)
@@ -198,3 +200,5 @@ class Project:
             yield
         finally:
             os.chdir(self._rundir)
+            end = time.time()
+            self._log.info('executed in %.3f seconds.', end-start)
