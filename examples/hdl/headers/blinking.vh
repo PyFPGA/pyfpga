@@ -1,0 +1,2 @@
+`define DEFAULT_FREQ 25000000
+`define DEFAULT_SECS 1

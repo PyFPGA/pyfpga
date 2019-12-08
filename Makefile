@@ -1,29 +1,27 @@
 #!/usr/bin/make
 
-PYDIRS = fpga examples test
+VENV=venv
 
-all: pep8 pylint
+all: install-hooks venv-create
 
-pep8: venv
-	$</bin/pycodestyle $(PYDIRS)
-
-pylint: venv
-	$</bin/pylint --errors-only fpga
-
-pylint-full: venv
-	$</bin/pylint fpga
-
-venv:
-	virtualenv $@ --python=python3
-	$@/bin/python3 -m pip install -e .
-	$@/bin/python3 -m pip install pyclean
-	$@/bin/python3 -m pip install pycodestyle
-	$@/bin/python3 -m pip install pylint
+venv-create:
+	virtualenv $(VENV) --python=python3
+	$(VENV)/bin/python3 -m pip install -e .
+	$(VENV)/bin/python3 -m pip install pyclean
+	$(VENV)/bin/python3 -m pip install pycodestyle
+	$(VENV)/bin/python3 -m pip install pylint
 	@rm -fr pyfpga.egg-info
 
 venv-remove:
-	@rm -fr venv
+	@rm -fr $(VENV)
 
-clean: venv
-	$</bin/py3clean fpga
+HOOKS = $(notdir $(basename $(wildcard .helpers/*.sh)))
+
+install-hooks:
+	@$(foreach HOOK,$(HOOKS), echo "* Installing $(HOOK)";\
+		ln -sf ../../.helpers/$(HOOK).sh .git/hooks/$(HOOK);\
+	)
+
+clean: venv-create
+	$(VENV)/bin/py3clean .
 	@rm -fr build
