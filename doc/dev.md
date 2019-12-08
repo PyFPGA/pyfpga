@@ -13,6 +13,9 @@ solve the complete workflow were encapsulated into procedures
 > To add a new Tool, a *case* in the *switch* of each `fpga_*` must be
 > provided.
 
+> This file is compliant with Tcl 8.4 because is the oldest used by a
+> supported FPGA Tool (Xilinx ISE).
+
 ## fpga/tool/*.py
 
 A base class (`__init__.py`) was developed to provides a uniform API to be implemented for each Tool to support.
