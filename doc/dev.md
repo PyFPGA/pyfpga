@@ -1,6 +1,6 @@
 # Notes about the development of PyFPGA
 
-PyFPGA try to be PEP8 compliant.
+PyFPGA uses PEP8 guidelines.
 
 ## fpga/tool/template.tcl
 
@@ -18,7 +18,8 @@ solve the complete workflow were encapsulated into procedures
 
 ## fpga/tool/*.py
 
-A base class (`__init__.py`) was developed to provides a uniform API to be implemented for each Tool to support.
+A base class (`__init__.py`) was developed to provides a uniform API to be
+implemented for each supported Tool.
 Also, validation of values is performed here.
 
 Classes to supports each Tool (`<TOOL>.py`) implements the base class, ideally
@@ -28,3 +29,8 @@ setting a few variables.
 > script, so special methods must be developed, following the proposed API.
 
 ## fpga/project.py
+
+This class implements the Application Programming Interface (API) which is
+employed to manage an FPGA project. It solves high-level things such as
+collect several files using glob, setting and use of an working/output
+directory and time measurement.
