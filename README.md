@@ -3,10 +3,9 @@
 A Python Class and helper scripts to use FPGA development tools in a
 vendor-independent way.
 
-With PyFPGA, you can create a project file, synthesizes, implements and
-generates a bitstream, which you can transfer to a supported device. You can
-create your own Tool, your own Workflow, to use FPGAs as you want, not as
-imposed.
+With PyFPGA you can create a project file, synthesizes, implements, generates
+a bitstream and transfers to a supported device, all in a programmatic way.
+You can create your own FPGA Tool using a workflow tailored to your needs.
 
 Features:
 
