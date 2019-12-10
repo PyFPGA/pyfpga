@@ -4,9 +4,13 @@ You can read the detailed [API reference](api-reference.md) and/or start with
 the [Examples](../examples). In this document, you will find a tutorial about
 basic and advanced uses of PyFPGA.
 
+* [System Setup](#system-setup)
 * [Basic usage](#basic-usage)
 * [Advanced usage](#advanced-usage)
+* [Transfer to a device](#transfer-to-a-device)
 * [Logging capabilities](#logging-capabilities)
+
+## System setup
 
 ## Basic usage
 
@@ -21,7 +25,7 @@ prj = Project('vivado', 'ProjectName')
 Where the first parameter is one of the supported Tools (`ise`, `libero`,
 `quartus`, `vivado`) and the second one is the name of the project.
 
-The default output directory, where files are generated, is created in the
+The default output directory, where files will be generated, is created in the
 same directory that the running script and is called `build`.
 You can optionally change it with:
 
@@ -36,7 +40,11 @@ want to specify a particular one:
 prj.set_part('FPGApart')
 ```
 
-> NOTE: as specified in the used FPGA development Tool.
+> Examples:
+> * Ise: `xc7k160t-3-fbg484`
+> * Libero: `mpf100t-1-fcg484`
+> * Quartus: `10cl120zf780i8g`
+> * Vivado: `xc7k160t-3-fbg484`
 
 Next step is to specify the project files (HDL and Constraints) and the
 top-level name.
@@ -66,7 +74,30 @@ Finally, you must run the files generation:
 prj.generate()
 ```
 
+And wait for the backend Tool to accomplish its task.
+
+See [basic.py](../examples/basic.py) for the full code of a basic example.
+
 ## Advanced usage
+
+TODO:
+```py
+prj.add_project_opt('# PROJECT OPTIONS 1')
+prj.add_project_opt('# PROJECT OPTIONS 2')
+prj.add_preflow_opt('# PRE FLOW OPTIONS')
+prj.add_postsyn_opt('# POST SYN OPTIONS')
+prj.add_postimp_opt('# POST IMP OPTIONS')
+prj.add_postbit_opt('# POST BIT OPTIONS')
+```
+
+TODO: explain `generate` options and exception.
+
+See [advanced.py](../examples/advanced.py) for the full code of an advanced
+example.
+
+## Transfer to a device
+
+TODO: explain `transfer`.
 
 ## Logging capabilities
 
