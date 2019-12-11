@@ -4,13 +4,19 @@ You can read the detailed [API reference](api-reference.md) and/or start with
 the [Examples](../examples). In this document, you will find a tutorial about
 basic and advanced uses of PyFPGA.
 
-* [System Setup](#system-setup)
 * [Basic usage](#basic-usage)
 * [Advanced usage](#advanced-usage)
 * [Transfer to a device](#transfer-to-a-device)
 * [Logging capabilities](#logging-capabilities)
 
-## System setup
+> ATTENTION:
+> PyFPGA assumes that the backend Tool is ready to run.
+> This implies, depending on the operating system, things such as:
+> * Tool installed.
+> * A valid License configured.
+> * Tool available in the system PATH.
+> * In a GNU/Linux: extra packages installed, environment variables assigned
+> and permissions granted on devices (to transfer the bitstream).
 
 ## Basic usage
 
@@ -160,8 +166,8 @@ must be also specified.
 > **Notes:**
 > * In Xilinx, `spi` and `bpi` memories are out of the Jtag chain and are
 programmed through the FPGA. You must specify the FPGA *position*.
-> In a Linux systems, you need to have permission over the device (udev rule,
-be a part of a group, etc).
+> * In a Linux systems, you need to have permission over the device
+> (udev rule, be a part of a group, etc).
 
 The execution of `transfer` finish with an Exception if an error (such as
 command not found) occurs. It could be a good idea to catch the exception
