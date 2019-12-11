@@ -25,6 +25,6 @@ Examples for generate and transfer, where the Constraints files were also
 specified. They works for the specified board (led blinking).
 
 * [ise](ise): Spartan-6 FPGA LX9 MicroBoard (Avnet)
-* [libero](libero): PolarFire FPGA Evaluation Kit (Microsemi)
+* [libero](libero): Digi-Key SmartFusion2 Maker Board (Digi-Key)
 * [quartus](quartus): DE10Nano (Terasic)
 * [vivado](vivado): Zybo (Digilent)

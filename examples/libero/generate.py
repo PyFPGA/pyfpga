@@ -1,4 +1,4 @@
-"""MPF300 generate example project."""
+"""Digi-Key SmartFusion2 Maker Board generate example project."""
 
 import logging
 
