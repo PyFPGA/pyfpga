@@ -61,11 +61,11 @@ prj.add_files('project.sdc')
 prj.set_top('TopName')
 ```
 
-> **NOTEs:**
+> **Notes:**
 > * For some Tools, the order could be a problem. If a complain about
-> something not Found is displayed, try to change the order.
+> something not found is displayed, try changing the order.
 > * For some Tools, the file extension could be a problem. If a file
-> seems unsupported, you can always use project options
+> seems unsupported, you can always use the project options
 > (see [Advanced usage](#advanced-usage)).
 > * A file with the tcl extension will be included with the `source`
 > command. It could be used to have a file with particular additional
@@ -91,16 +91,16 @@ Flow internally performed by PyFPGA.
 If the provided API if not enough or suitable for your project, you can
 specify *options* in different parts of the flow, using:
 
-* `add_project_opt('A text string')` for **Project Options**.
-* `add_preflow_opt('A text string')` for **Pre-flow Options**.
-* `add_postsyn_opt('A text string')` for **Post-syn Options**.
-* `add_postimp_opt('A text string')` for **Post-imp Options**.
-* `add_postbit_opt('A text string')` for **Post-bit Options**.
+* `add_project_opt('A text string')` for *Project options*.
+* `add_preflow_opt('A text string')` for *Pre-flow options*.
+* `add_postsyn_opt('A text string')` for *Post-syn options*.
+* `add_postimp_opt('A text string')` for *Post-imp options*.
+* `add_postbit_opt('A text string')` for *Post-bit options*.
 
-> **NOTEs:**
+> **Notes:**
 > * The text string must be a valid command supported by the used backend.
-> * If more than one command is needed, you can call theses methods
-> several times (will be executed in order).
+> * If more than one command is needed, you can call these methods several
+> times (will be executed in order).
 
 The method `generate` (previously seen at the end of
 [Basic usage](#basic-usage) section) has optional parameters:
@@ -128,14 +128,14 @@ prj.generate(to_task='bit', from_task='syn')
 ```
 
 The execution of `generate` finish with an Exception if an error (such as
-command not found). It could be a good idea to catch the exception and act
-in consequence:
+command not found) occurs. It could be a good idea to catch the exception
+and act in consequence:
 
 ```py
 try:
     prj.generate()
 except Exception as e:
-    logging.warning('{} ({})'.format(type(e).__name__, e))
+    print('{} ({})'.format(type(e).__name__, e))
 ```
 
 See [advanced.py](../examples/advanced.py) for the full code of an advanced
@@ -143,7 +143,39 @@ example.
 
 ## Transfer to a device
 
-TODO: explain `transfer`.
+This method is in charge of run the needed tool to transfer a bitstream to a
+device (commonly an FPGA, but memories are also supported in some cases).
+It has up to four optional parameters:
+
+```py
+transfer(devtype, position, part, width)
+```
+
+Where *devtype* is `fpga` by default but can also be `spi`, `bpi`, etc, if
+supported.
+An integer number can be used to specify the *position* (1) in the Jtag chain.
+When a memory is used as *devtype*, the *part* name and the *width* in bits
+must be also specified.
+
+> **Notes:**
+> * In Xilinx, `spi` and `bpi` memories are out of the Jtag chain and are
+programmed through the FPGA. You must specify the FPGA *position*.
+> In a Linux systems, you need to have permission over the device (udev rule,
+be a part of a group, etc).
+
+The execution of `transfer` finish with an Exception if an error (such as
+command not found) occurs. It could be a good idea to catch the exception
+and act in consequence:
+
+```py
+try:
+    prj.transfer()
+except Exception as e:
+    print('{} ({})'.format(type(e).__name__, e))
+```
+
+See [examples/ise/transfer.py](../examples/ise/transfer.py) for the full code
+of an transfer example.
 
 ## Logging capabilities
 
