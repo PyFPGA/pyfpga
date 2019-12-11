@@ -80,6 +80,8 @@ See [basic.py](../examples/basic.py) for the full code of a basic example.
 
 ## Advanced usage
 
+![Tcl Structure](images/tcl-structure.png)
+
 TODO:
 ```py
 prj.add_project_opt('# PROJECT OPTIONS 1')
