@@ -1,6 +1,11 @@
 # PyFPGA [![License](https://img.shields.io/badge/License-GPL--3.0-orange)](LICENSE)
 
-A Python Class and helper scripts to use FPGA development tools in a vendor-independent way.
+A Python Class and helper scripts to use FPGA development tools in a
+vendor-independent way.
+
+With PyFPGA you can create a project file, synthesizes, implements, generates
+a bitstream and transfers to a supported device, all in a programmatic way.
+You can create your own FPGA Tool using a workflow tailored to your needs.
 
 Features:
 
@@ -38,4 +43,4 @@ Windows (or maybe PowerSheel? Please let me know if you try).
 * From this repository: `pip3 install .`
 
 > The FPGA tool to be used in the backend must be well installed, have the
-> license configured and be available to run from the terminal.
+> license configured and be available to run from a terminal.
