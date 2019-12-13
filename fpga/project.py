@@ -94,6 +94,7 @@ class Project:
         * **part:** the FPGA part as specified by the tool.
         """
         self.tool.set_part(part)
+        self._log.info('part = %s', self.tool.part)
 
     def add_files(self, pathname, lib=None):
         """Adds files to the project (HDLs, TCLs, Constraints).
