@@ -21,6 +21,8 @@
 Implements the support of Libero (Microchip/Microsemi).
 """
 
+import re
+
 from fpga.tool import Tool
 
 _TEMPLATES = {
@@ -50,6 +52,20 @@ class Libero(Tool):
     _TRF_COMMAND = ''
 
     _DEVTYPES = ['fpga']
+
+    def set_part(self, part):
+        try:
+            family, speed, package = re.findall(r'(\w+)-(\w+)-*(\w*)', part)[0]
+            if len(speed) > len(package):
+                speed, package = package, speed
+            if speed == '':
+                speed = 'STD'
+            part = "{}-{}-{}".format(family, speed, package)
+        except IndexError:
+            raise ValueError(
+                'Part must be FAMILY-SPEED-PACKAGE or FAMILY-PACKAGE'
+            )
+        self.part = part
 
     def transfer(self, devtype, position, part, width):
         super().transfer(devtype, position, part, width)

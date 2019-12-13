@@ -22,6 +22,7 @@ Implements the support of ISE (Xilinx).
 """
 
 from glob import glob
+import re
 import subprocess
 
 from fpga.tool import Tool
@@ -93,6 +94,18 @@ class Ise(Tool):
     _TRF_COMMAND = 'impact -batch ise-prog.impact'
 
     _DEVTYPES = ['fpga', 'spi', 'bpi', 'detect', 'unlock']
+
+    def set_part(self, part):
+        try:
+            family, speed, package = re.findall(r'(\w+)-(\w+)-(\w+)', part)[0]
+            if len(speed) > len(package):
+                speed, package = package, speed
+            part = "{}-{}-{}".format(family, speed, package)
+        except IndexError:
+            raise ValueError(
+                'Part must be FAMILY-SPEED-PACKAGE or FAMILY-PACKAGE-SPEED'
+            )
+        self.part = part
 
     def transfer(self, devtype, position, part, width):
         super().transfer(devtype, position, part, width)
