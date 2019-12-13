@@ -218,6 +218,7 @@ proc fpga_part { PART } {
                 } else {
                     puts "The family of the device $DEVICE is $FAMILY."
                 }
+                if { $SPEED == "-STD" } { set SPEED "STD"}
                 set_device -family $FAMILY -die $DEVICE -package $PACKAGE -speed $SPEED
             }
             "quartus" {
