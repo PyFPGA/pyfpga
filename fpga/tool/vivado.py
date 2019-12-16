@@ -27,7 +27,8 @@ import subprocess
 from fpga.tool import Tool
 
 _TEMPLATES = {
-    'fpga': """open_hw
+    'fpga': """\
+if { [ catch { open_hw_manager } ] } { open_hw }
 connect_hw_server
 open_hw_target
 set obj [lindex [get_hw_devices [current_hw_device]] 0]

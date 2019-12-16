@@ -34,3 +34,10 @@ This class implements the Application Programming Interface (API) which is
 employed to manage an FPGA project. It solves high-level things such as
 collect several files using glob, setting and use of an working/output
 directory and time measurement.
+
+## FAQ
+
+* How to deal with deprecated Tcl commands?
+
+From Vivado 2019.1 to 2019.2, `open_hw` changed to `open_hw_manager`:
+```if { [ catch { open_hw_manager } ] } { open_hw }```
