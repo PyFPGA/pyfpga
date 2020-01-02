@@ -28,6 +28,7 @@ import glob
 import inspect
 import logging
 import os
+import re
 import time
 
 from fpga.tool.ise import Ise
@@ -113,9 +114,23 @@ class Project:
     def set_top(self, toplevel):
         """Set the top level of the project.
 
-        * **toplevel:** name of the top level entity/module.
+        * **toplevel:** name or file path of the top level entity/module.
         """
-        self.tool.set_top(toplevel)
+        if os.path.splitext(toplevel)[1]:
+            toplevel = os.path.join(self._reldir, toplevel)
+            if os.path.exists(toplevel):
+                hdl = open(toplevel, 'r').read()
+                top = re.findall(r'module\s+(\w+)', hdl)
+                top.extend(re.findall(r'entity\s+(\w+)', hdl))
+                if len(top) > 0:
+                    self.tool.set_top(top[0])
+                else:
+                    self.tool.set_top('UNDEFINED')
+            else:
+                raise FileNotFoundError(toplevel)
+        else:
+            self.tool.set_top(toplevel)
+        self._log.info('top = %s', self.tool.top)
 
     def add_prefile_opt(self, option):
         """Adds a prefile OPTION.

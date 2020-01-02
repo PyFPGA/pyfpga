@@ -107,7 +107,7 @@ Set the target FPGA part.
 
 Set the top level of the project.
 
-* **toplevel:** name of the top level entity/module.
+* **toplevel:** name or file path of the top level entity/module.
 
 ### `transfer(devtype='fpga', position=1, part='', width=1)`
 

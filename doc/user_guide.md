@@ -71,11 +71,13 @@ prj.set_top('TopName')
 > * For some Tools, the order could be a problem. If a complain about
 > something not found is displayed, try changing the order.
 > * For some Tools, the file extension could be a problem. If a file
-> seems unsupported, you can always use the project options
+> seems unsupported, you can always use the `prefile` or `postprj` options
 > (see [Advanced usage](#advanced-usage)).
 > * A file with the tcl extension will be included with the `source`
 > command. It could be used to have a file with particular additional
 > options.
+> * A relative path to a valid VHDL/Verilog file is also accepted by
+> `set_top`, to automatically extract `TopName`.
 
 Finally, you must run the Design Flow with:
 
