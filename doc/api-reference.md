@@ -37,21 +37,27 @@ Adds a post implementation OPTION.
 
 * **option:** a valid, commonly Tcl, tool option.
 
+### `add_postprj_opt(option)`
+
+Adds a postprj OPTION.
+
+* **option:** a valid, commonly Tcl, tool option.
+
 ### `add_postsyn_opt(option)`
 
 Adds a post synthesis OPTION.
 
 * **option:** a valid, commonly Tcl, tool option.
 
-### `add_preflow_opt(option)`
+### `add_prefile_opt(option)`
 
-Adds a pre flow OPTION.
+Adds a prefile OPTION.
 
 * **option:** a valid, commonly Tcl, tool option.
 
-### `add_project_opt(option)`
+### `add_preflow_opt(option)`
 
-Adds a project OPTION.
+Adds a pre flow OPTION.
 
 * **option:** a valid, commonly Tcl, tool option.
 

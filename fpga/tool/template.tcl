@@ -1,8 +1,8 @@
 #
 # PyFPGA Master Tcl
 #
-# Copyright (C) 2015-2019 INTI
-# Copyright (C) 2015-2019 Rodrigo A. Melo <rmelo@inti.gob.ar>
+# Copyright (C) 2015-2020 INTI
+# Copyright (C) 2015-2020 Rodrigo A. Melo <rmelo@inti.gob.ar>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@ set TOOL     #TOOL#
 set PROJECT  #PROJECT#
 set PART     #PART#
 set TOP      #TOP#
+# STRATEGY = none area power speed
 set STRATEGY #STRATEGY#
 # TASKS = prj syn imp bit
 set TASKS    [list #TASKS#]
@@ -49,8 +50,11 @@ proc fpga_options { PHASE } {
     fpga_print "setting options for the phase '$PHASE'"
     if {[catch {
         switch $PHASE {
-            "project" {
-#PROJECT_OPTS#
+            "prefile" {
+#PREFILE_OPTS#
+            }
+            "postprj" {
+#POSTPRJ_OPTS#
             }
             "preflow" {
 #PREFLOW_OPTS#
@@ -526,6 +530,7 @@ if { [lsearch -exact $TASKS "prj"] >= 0 } {
     if { [catch {
         fpga_create $PROJECT
         fpga_part $PART
+        fpga_options "prefile"
         fpga_files
         fpga_top $TOP
         switch $STRATEGY {
@@ -533,7 +538,7 @@ if { [lsearch -exact $TASKS "prj"] >= 0 } {
             "power" {fpga_power_opts}
             "speed" {fpga_speed_opts}
         }
-        fpga_options "project"
+        fpga_options "postprj"
         fpga_close
     } ERRMSG]} {
         puts "ERROR: there was a problem creating a new project.\n"
