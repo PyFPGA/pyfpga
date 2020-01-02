@@ -97,7 +97,8 @@ Flow internally performed by PyFPGA.
 If the provided API if not enough or suitable for your project, you can
 specify *options* in different parts of the flow, using:
 
-* `add_project_opt('A text string')` for *Project options*.
+* `add_prefile_opt('A text string')` for *Pre-file options*.
+* `add_postprj_opt('A text string')` for *Post-prj options*.
 * `add_preflow_opt('A text string')` for *Pre-flow options*.
 * `add_postsyn_opt('A text string')` for *Post-syn options*.
 * `add_postimp_opt('A text string')` for *Post-imp options*.

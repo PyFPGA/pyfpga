@@ -56,7 +56,8 @@ class Tool:
         self.project = self._TOOL if project is None else project
         self.set_part(self._PART)
         self.options = {
-            'project': [],
+            'prefile': [],
+            'postprj': [],
             'preflow': [],
             'postsyn': [],
             'postimp': [],
@@ -90,7 +91,10 @@ class Tool:
         """Set the TOP LEVEL of the project."""
         self.top = top
 
-    _PHASES = ['project', 'preflow', 'postsyn', 'postimp', 'postbit']
+    _PHASES = [
+        'prefile', 'postprj',
+        'preflow', 'postsyn', 'postimp', 'postbit'
+    ]
 
     def add_option(self, option, phase):
         """Add the specified OPTION in the desired PHASE."""
@@ -108,7 +112,8 @@ class Tool:
         tcl = tcl.replace('#TOP#', self.top)
         tcl = tcl.replace('#STRATEGY#', strategy)
         tcl = tcl.replace('#TASKS#', tasks)
-        tcl = tcl.replace('#PROJECT_OPTS#', "\n".join(self.options['project']))
+        tcl = tcl.replace('#PREFILE_OPTS#', "\n".join(self.options['prefile']))
+        tcl = tcl.replace('#POSTPRJ_OPTS#', "\n".join(self.options['postprj']))
         tcl = tcl.replace('#PREFLOW_OPTS#', "\n".join(self.options['preflow']))
         tcl = tcl.replace('#POSTSYN_OPTS#', "\n".join(self.options['postsyn']))
         tcl = tcl.replace('#POSTIMP_OPTS#', "\n".join(self.options['postimp']))

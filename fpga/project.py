@@ -117,12 +117,19 @@ class Project:
         """
         self.tool.set_top(toplevel)
 
-    def add_project_opt(self, option):
-        """Adds a project OPTION.
+    def add_prefile_opt(self, option):
+        """Adds a prefile OPTION.
 
         * **option:** a valid, commonly Tcl, tool option.
         """
-        self.tool.add_option(option, 'project')
+        self.tool.add_option(option, 'prefile')
+
+    def add_postprj_opt(self, option):
+        """Adds a postprj OPTION.
+
+        * **option:** a valid, commonly Tcl, tool option.
+        """
+        self.tool.add_option(option, 'postprj')
 
     def add_preflow_opt(self, option):
         """Adds a pre flow OPTION.
