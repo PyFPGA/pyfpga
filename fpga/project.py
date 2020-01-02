@@ -110,6 +110,7 @@ class Project:
         for file in files:
             file_abs = os.path.join(self._rundir, file)
             self.tool.add_file(file_abs, lib)
+            self._log.info('file = %s (lib = %s)', file_abs, lib)
 
     def set_top(self, toplevel):
         """Set the top level of the project.
@@ -217,7 +218,7 @@ class Project:
         try:
             start = time.time()
             if not os.path.exists(self.outdir):
-                self._log.info('the output directory did not exist, created.')
+                self._log.debug('the output directory did not exist, created.')
                 os.makedirs(self.outdir)
             os.chdir(self.outdir)
             yield
