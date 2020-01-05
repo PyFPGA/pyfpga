@@ -1,4 +1,5 @@
-`include "blinking.vh"
+`include "freq.vh"
+`include "secs.vh"
 
 module Blinking #(
    parameter FREQ = `DEFAULT_FREQ,
