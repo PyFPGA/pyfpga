@@ -32,7 +32,7 @@ setting a few variables.
 
 This class implements the Application Programming Interface (API) which is
 employed to manage an FPGA project. It solves high-level things such as
-collect several files using glob, setting and use of an working/output
+collect several files using glob, setting and use of a working/output
 directory and time measurement.
 
 ## FAQ
