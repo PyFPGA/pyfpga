@@ -101,8 +101,8 @@ class Project:
 
         * **pathname:** a string containing a relative path specification,
         and can contain shell-style wildcards (glob compliant).
-        * **library:** VHDL library name [default = None].
-        * **included:** Verilog included file [default = False].
+        * **library:** VHDL library name.
+        * **included:** Verilog included file.
 
         Note: **library** and **included** are mutually exclusive.
         """
@@ -180,7 +180,7 @@ class Project:
     def generate(self, strategy='none', to_task='bit', from_task='prj'):
         """Run the FPGA tool.
 
-        * **strategy:** *none* (default), *area*, *speed* or *power*.
+        * **strategy:** *none*, *area*, *speed* or *power*.
         * **to_task:** last task.
         * **from_task:** first task.
 
@@ -205,7 +205,7 @@ class Project:
     def transfer(self, devtype='fpga', position=1, part='', width=1):
         """Transfers the generated bitstream to a device.
 
-        * **devtype:** *fpga* (default) or other valid option
+        * **devtype:** *fpga* or other valid option
         (depending on the used tool, it could be *spi*, *bpi, etc).
         * **position:** position of the device in the JTAG chain.
         * **part:** name of the memory (when device is not *fpga*).
