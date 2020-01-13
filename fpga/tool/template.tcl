@@ -262,6 +262,10 @@ proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
                 xfile add $FILE -lib_vhdl $VALUE
             } elseif { $KEY == "-included" } {
                 # Verilog Included Files are NOT added
+                if { [llength INCLUDED] > 0 } {
+                    project set "Verilog Include Directories" \
+                    [join $INCLUDED "|"] -process "Synthesize - XST"
+                }
             } else {
                 xfile add $FILE
             }
@@ -278,6 +282,7 @@ proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
                 append LIBERO_OTHER_CONSTRAINTS "-file $FILE "
             } else {
                 # Verilog Included Files are ALSO added
+                # They must be specified after set_root (see fpga_top)
                 create_links -library $VALUE -hdl_source $FILE
                 build_design_hierarchy
             }
@@ -324,6 +329,11 @@ proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
                 set_global_assignment -name $TYPE $FILE -library $VALUE
             } elseif { $KEY == "-included" } {
                 # Verilog Included Files are NOT added
+                if { [llength INCLUDED] > 0 } {
+                    foreach INCLUDE $INCLUDED {
+                        set_global_assignment -name SEARCH_PATH $INCLUDE
+                    }
+                }
             } else {
                 set_global_assignment -name $TYPE $FILE
             }
@@ -334,6 +344,9 @@ proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
                 set_property library $VALUE [get_files $FILE]
             } elseif { $KEY == "-included" } {
                 # Verilog Included Files are NOT added
+                if { [llength INCLUDED] > 0 } {
+                    set_property "include_dirs" $INCLUDED [current_fileset]
+                }
             } else {
                 add_files $FILE
             }
@@ -345,34 +358,25 @@ proc fpga_top { TOP } {
     global TOOL
     fpga_print "specifying the top level '$TOP'"
     switch $TOOL {
-        "ise"     { project set top $TOP }
-        "libero"  { set_root $TOP }
-        "quartus" { set_global_assignment -name TOP_LEVEL_ENTITY $TOP }
-        "vivado"  { set_property top $TOP [current_fileset] }
-    }
-    global TOOL INCLUDED
-    if { [llength INCLUDED] > 0 } {
-        switch $TOOL {
-            "ise"     {
-                project set "Verilog Include Directories" \
-                [join $INCLUDED "|"] -process "Synthesize - XST"
-            }
-            "libero"  {
-                # The specification of -include_path must be done after set_root,
-                # and before the synthesis.
+        "ise"     {
+            project set top $TOP
+        }
+        "libero"  {
+            set_root $TOP
+            # Verilog Included files
+            global INCLUDED
+            if { [llength INCLUDED] > 0 } {
                 set PATHS [join $INCLUDED ";"]
                 set cmd "configure_tool -name {SYNTHESIZE} -params {"
                 append cmd "SYNPLIFY_OPTIONS:set_option -include_path \"$PATHS\" }"
                 eval $cmd
             }
-            "quartus" {
-                foreach INCLUDE $INCLUDED {
-                    set_global_assignment -name SEARCH_PATH $INCLUDE
-                }
-            }
-            "vivado"  {
-                set_property "include_dirs" $INCLUDED [current_fileset]
-            }
+        }
+        "quartus" {
+            set_global_assignment -name TOP_LEVEL_ENTITY $TOP
+        }
+        "vivado"  {
+            set_property top $TOP [current_fileset]
         }
     }
 }
