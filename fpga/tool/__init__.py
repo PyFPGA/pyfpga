@@ -1,6 +1,6 @@
 #
-# Copyright (C) 2019 INTI
-# Copyright (C) 2019 Rodrigo A. Melo
+# Copyright (C) 2019-2020 INTI
+# Copyright (C) 2019-2020 Rodrigo A. Melo
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,9 +37,7 @@ def check_value(value, values):
 class Tool:
     """Tool interface.
 
-    It is the basic interface for tool implementations. There are methods that
-    raises a NotImplementedError exception and should be replaced by a tool
-    implementation to provide the needed funcionality.
+    It is the basic interface for tool implementations.
     """
 
     _TOOL = 'UNDEFINED'
@@ -63,6 +61,7 @@ class Tool:
             'postimp': [],
             'postbit': []
         }
+        self.params = []
         self.files = []
         self.set_top('UNDEFINED')
 
@@ -78,6 +77,10 @@ class Tool:
     def set_part(self, part):
         """Set the target PART."""
         self.part = part
+
+    def set_param(self, name, value):
+        """Set a Generic/Parameter Value."""
+        self.params.append('[ %s %s ]' % (name, value))
 
     def add_file(self, file, library=None, included=False):
         """Add a FILE to the project."""
@@ -114,6 +117,7 @@ class Tool:
         tcl = tcl.replace('#TOOL#', self._TOOL)
         tcl = tcl.replace('#PROJECT#', self.project)
         tcl = tcl.replace('#PART#', self.part)
+        tcl = tcl.replace('#PARAMS#', "\n".join(self.params))
         tcl = tcl.replace('#FILES#', "\n".join(self.files))
         tcl = tcl.replace('#TOP#', self.top)
         tcl = tcl.replace('#STRATEGY#', strategy)

@@ -100,6 +100,10 @@ Sets the OUTput DIRectory (where to put the resulting files).
 
 * **outdir:** path to the output directory.
 
+### `set_param(name, value)`
+
+Set a Generic/Parameter Value.
+
 ### `set_part(part)`
 
 Set the target FPGA part.

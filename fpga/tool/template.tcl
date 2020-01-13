@@ -42,6 +42,8 @@ set STRATEGY #STRATEGY#
 # TASKS = prj syn imp bit
 set TASKS    [list #TASKS#]
 
+set PARAMS   [list #PARAMS#]
+
 proc fpga_files {} {
 #FILES#
 }
