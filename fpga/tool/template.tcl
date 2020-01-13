@@ -240,32 +240,30 @@ proc fpga_part { PART } {
 }
 
 proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
-    global TOOL TOP PATH
+    global TOOL TOP INCLUDED
     set message "adding the file '$FILE'"
     if { $KEY == "-library" } { append message " (into the VHDL library '$VALUE')" }
-    if { $KEY == "-included" } { append message " (as a Verilog included file)" }
+    if { $KEY == "-included" } {
+        append message " (as a Verilog included file)"
+        lappend INCLUDED [file dirname $FILE]
+    }
     fpga_print $message
     regexp -nocase {\.(\w*)$} $FILE -> ext
     if { $ext == "tcl" } {
         source $FILE
         return
     }
-    if { $ext == "h" || $ext == "vh" } {
-        append PATH [file dirname $FILE]
-    }
     switch $TOOL {
         "ise" {
             if {$ext == "xcf"} {
                 project set "Synthesis Constraints File" $FILE -process "Synthesize - XST"
-            } elseif { $ext == "h" || $ext == "vh" } {
-                project set "Verilog Include Directories" $PATH -process "Synthesize - XST"
+            } elseif { $KEY == "-library" } {
+                lib_vhdl new $VALUE
+                xfile add $FILE -lib_vhdl $VALUE
+            } elseif { $KEY == "-included" } {
+                # Verilog Included Files are NOT added
             } else {
-                if { $KEY == "-library" } {
-                    lib_vhdl new $VALUE
-                    xfile add $FILE -lib_vhdl $VALUE
-                } else {
-                    xfile add $FILE
-                }
+                xfile add $FILE
             }
         }
         "libero" {
@@ -279,6 +277,7 @@ proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
                 append LIBERO_PLACE_CONSTRAINTS "-file $FILE "
                 append LIBERO_OTHER_CONSTRAINTS "-file $FILE "
             } else {
+                # Verilog Included Files are ALSO added
                 create_links -library $VALUE -hdl_source $FILE
                 build_design_hierarchy
             }
@@ -321,18 +320,22 @@ proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
             } else {
                 set TYPE SOURCE_FILE
             }
-            if { $ext == "h" || $ext == "vh" } {
-                set_global_assignment -name SEARCH_PATH $PATH
-            } elseif { $KEY == "-library" } {
+            if { $KEY == "-library" } {
                 set_global_assignment -name $TYPE $FILE -library $VALUE
+            } elseif { $KEY == "-included" } {
+                # Verilog Included Files are NOT added
             } else {
                 set_global_assignment -name $TYPE $FILE
             }
         }
         "vivado" {
-            add_files $FILE
             if { $KEY == "-library" } {
+                add_files $FILE
                 set_property library $VALUE [get_files $FILE]
+            } elseif { $KEY == "-included" } {
+                # Verilog Included Files are NOT added
+            } else {
+                add_files $FILE
             }
         }
     }
@@ -346,6 +349,31 @@ proc fpga_top { TOP } {
         "libero"  { set_root $TOP }
         "quartus" { set_global_assignment -name TOP_LEVEL_ENTITY $TOP }
         "vivado"  { set_property top $TOP [current_fileset] }
+    }
+    global TOOL INCLUDED
+    if { [llength INCLUDED] > 0 } {
+        switch $TOOL {
+            "ise"     {
+                project set "Verilog Include Directories" \
+                [join $INCLUDED "|"] -process "Synthesize - XST"
+            }
+            "libero"  {
+                # The specification of -include_path must be done after set_root,
+                # and before the synthesis.
+                set PATHS [join $INCLUDED ";"]
+                set cmd "configure_tool -name {SYNTHESIZE} -params {"
+                append cmd "SYNPLIFY_OPTIONS:set_option -include_path \"$PATHS\" }"
+                eval $cmd
+            }
+            "quartus" {
+                foreach INCLUDE $INCLUDED {
+                    set_global_assignment -name SEARCH_PATH $INCLUDE
+                }
+            }
+            "vivado"  {
+                set_property "include_dirs" $INCLUDED [current_fileset]
+            }
+        }
     }
 }
 
@@ -442,7 +470,7 @@ proc fpga_speed_opts {} {
 }
 
 proc fpga_run_syn {} {
-    global TOOL PATH
+    global TOOL
     fpga_print "running 'synthesis'"
     switch $TOOL {
         "ise"     {
@@ -450,13 +478,6 @@ proc fpga_run_syn {} {
             process run "Synthesize" -force rerun
         }
         "libero"  {
-            # The specification of -include_path must be done after set_root,
-            # and before the synthesis.
-            if { [info exists PATH] } {
-                set cmd "configure_tool -name {SYNTHESIZE} -params {"
-                append cmd "SYNPLIFY_OPTIONS:set_option -include_path $PATH }"
-                eval $cmd
-            }
             run_tool -name {SYNTHESIZE}
         }
         "quartus" {
