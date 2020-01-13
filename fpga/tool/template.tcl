@@ -239,10 +239,11 @@ proc fpga_part { PART } {
     }
 }
 
-proc fpga_file {FILE {LIB "work"}} {
+proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
     global TOOL TOP PATH
     set message "adding the file '$FILE'"
-    if { $LIB != "work" } { append message " ('$LIB')" }
+    if { $KEY == "-library" } { append message " (into the VHDL library '$VALUE')" }
+    if { $KEY == "-included" } { append message " (as a Verilog included file)" }
     fpga_print $message
     regexp -nocase {\.(\w*)$} $FILE -> ext
     if { $ext == "tcl" } {
@@ -259,9 +260,9 @@ proc fpga_file {FILE {LIB "work"}} {
             } elseif { $ext == "h" || $ext == "vh" } {
                 project set "Verilog Include Directories" $PATH -process "Synthesize - XST"
             } else {
-                if { $LIB != "work" } {
-                    lib_vhdl new $LIB
-                    xfile add $FILE -lib_vhdl $LIB
+                if { $KEY == "-library" } {
+                    lib_vhdl new $VALUE
+                    xfile add $FILE -lib_vhdl $VALUE
                 } else {
                     xfile add $FILE
                 }
@@ -278,7 +279,7 @@ proc fpga_file {FILE {LIB "work"}} {
                 append LIBERO_PLACE_CONSTRAINTS "-file $FILE "
                 append LIBERO_OTHER_CONSTRAINTS "-file $FILE "
             } else {
-                create_links -library $LIB -hdl_source $FILE
+                create_links -library $VALUE -hdl_source $FILE
                 build_design_hierarchy
             }
             # Only the last organize_tool_files for a certain TOOL is taking
@@ -322,16 +323,16 @@ proc fpga_file {FILE {LIB "work"}} {
             }
             if { $ext == "h" || $ext == "vh" } {
                 set_global_assignment -name SEARCH_PATH $PATH
-            } elseif { $LIB != "work" } {
-                set_global_assignment -name $TYPE $FILE -library $LIB
+            } elseif { $KEY == "-library" } {
+                set_global_assignment -name $TYPE $FILE -library $VALUE
             } else {
                 set_global_assignment -name $TYPE $FILE
             }
         }
         "vivado" {
             add_files $FILE
-            if { $LIB != "work" } {
-                set_property library $LIB [get_files $FILE]
+            if { $KEY == "-library" } {
+                set_property library $VALUE [get_files $FILE]
             }
         }
     }
