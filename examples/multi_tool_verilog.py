@@ -5,12 +5,17 @@ with different tools, to make comparisons. The project name is not important
 and the default devices could be used.
 """
 
+import logging
+
 from fpga.project import Project, TOOLS
+
+logging.basicConfig()
 
 for tool in TOOLS:
     PRJ = Project(tool)
     PRJ.set_outdir('../build/multi-tool-verilog/%s' % tool)
-    PRJ.add_files('hdl/headers/blinking.vh')
+    PRJ.add_files('hdl/headers1/freq.vh', included=True)
+    PRJ.add_files('hdl/headers2/secs.vh', included=True)
     PRJ.add_files('hdl/blinking.v')
     PRJ.add_files('hdl/top.v')
     PRJ.set_top('Top')

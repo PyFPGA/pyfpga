@@ -6,7 +6,11 @@ and the default devices could be used. In this example also the strategies
 are changed between area, power and speed.
 """
 
+import logging
+
 from fpga.project import Project, TOOLS
+
+logging.basicConfig()
 
 for tool in TOOLS:
     PRJ = Project(tool)

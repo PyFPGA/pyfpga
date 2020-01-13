@@ -5,7 +5,11 @@ with different tools, to make comparisons. The project name is not important
 and the default devices could be used.
 """
 
+import logging
+
 from fpga.project import Project, TOOLS
+
+logging.basicConfig()
 
 for tool in TOOLS:
     PRJ = Project(tool)
