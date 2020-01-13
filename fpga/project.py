@@ -95,22 +95,25 @@ class Project:
         * **part:** the FPGA part as specified by the tool.
         """
         self.tool.set_part(part)
-        self._log.info('part = %s', self.tool.part)
 
-    def add_files(self, pathname, lib=None):
+    def add_files(self, pathname, library=None, included=False):
         """Adds files to the project (HDLs, TCLs, Constraints).
 
-        * **pathname:** a string containing an absolute/relative path
-        specification, and can contain shell-style wildcards (glob compliant).
-        * **lib:** optional library name (only useful with VHDL files).
+        * **pathname:** a string containing a relative path specification,
+        and can contain shell-style wildcards (glob compliant).
+        * **library:** VHDL library name [default = None].
+        * **included:** Verilog included file [default = False].
+
+        Note: **library** and **included** are mutually exclusive.
         """
         pathname = os.path.join(self._reldir, pathname)
         self._log.debug('PATHNAME = %s', pathname)
         files = glob.glob(pathname)
+        if len(files) == 0:
+            self._log.warning('add_files: %s not found', pathname)
         for file in files:
             file_abs = os.path.join(self._rundir, file)
-            self.tool.add_file(file_abs, lib)
-            self._log.info('file = %s (lib = %s)', file_abs, lib)
+            self.tool.add_file(file_abs, library, included)
 
     def set_top(self, toplevel):
         """Set the top level of the project.
@@ -131,7 +134,6 @@ class Project:
                 raise FileNotFoundError(toplevel)
         else:
             self.tool.set_top(toplevel)
-        self._log.info('top = %s', self.tool.top)
 
     def add_prefile_opt(self, option):
         """Adds a prefile OPTION.

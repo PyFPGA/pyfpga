@@ -56,10 +56,11 @@ Next step is to specify the project files (HDLs, Constraints, TCLs) and the
 top-level name.
 
 ```py
-# First, we recommend Verilog Header Files (if used)
-prj.add_files('headers/project.vh')
+# We recommend Verilog Included Files first (when used)
+prj.add_files('*.vh', included=True)
 # Then HDL Components/Modules
-prj.add_files('vhdl/*.vhdl', 'OptionalLibraryName')
+prj.add_files('vhdl/*.vhdl', 'LibraryName')
+prj.add_files('vhdl/top.vhdl')
 prj.add_files('verilog/*.v')
 # And finally constraints
 prj.add_files('project.sdc')

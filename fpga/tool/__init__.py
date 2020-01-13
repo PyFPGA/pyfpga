@@ -79,12 +79,18 @@ class Tool:
         """Set the target PART."""
         self.part = part
 
-    def add_file(self, file, lib=None):
+    def add_file(self, file, library=None, included=False):
         """Add a FILE to the project."""
         command = '    '  # indentation
         command += 'fpga_file %s' % file
-        if lib is not None:
-            command += ' %s' % lib
+        if library is not None and included:
+            raise ValueError(
+                'library and included are mutually exclusive arguments'
+            )
+        if library is not None:
+            command += ' -library %s' % library
+        if included:
+            command += ' -included'
         self.files.append(command)
 
     def set_top(self, top):

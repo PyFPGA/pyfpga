@@ -17,13 +17,16 @@ Class constructor.
 * **tool:** FPGA tool to be used.
 * **project:** project name (the tool name is used if none specified).
 
-### `add_files(pathname, lib=None)`
+### `add_files(pathname, library=None, included=False)`
 
 Adds files to the project (HDLs, TCLs, Constraints).
 
-* **pathname:** a string containing an absolute/relative path
-specification, and can contain shell-style wildcards (glob compliant).
-* **lib:** optional library name (only useful with VHDL files).
+* **pathname:** a string containing a relative path specification,
+and can contain shell-style wildcards (glob compliant).
+* **library:** VHDL library name [default = None].
+* **included:** Verilog included file [default = False].
+
+Note: **library** and **included** are mutually exclusive.
 
 ### `add_postbit_opt(option)`
 
