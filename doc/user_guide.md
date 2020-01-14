@@ -100,23 +100,33 @@ Flow internally performed by PyFPGA.
 If the provided API if not enough or suitable for your project, you can
 specify *options* in different parts of the flow, using:
 
-* `add_prefile_opt('A text string')` for *Pre-file options*.
-* `add_postprj_opt('A text string')` for *Post-prj options*.
-* `add_preflow_opt('A text string')` for *Pre-flow options*.
-* `add_postsyn_opt('A text string')` for *Post-syn options*.
-* `add_postimp_opt('A text string')` for *Post-imp options*.
-* `add_postbit_opt('A text string')` for *Post-bit options*.
+```py
+prj.add_prefile_opt('A text string')  # for *Pre-file options*.
+prj.add_postprj_opt('A text string')  # for *Post-prj options*.
+prj.add_preflow_opt('A text string')  # for *Pre-flow options*.
+prj.add_postsyn_opt('A text string')  # for *Post-syn options*.
+prj.add_postimp_opt('A text string')  # for *Post-imp options*.
+prj.add_postbit_opt('A text string')  # for *Post-bit options*.
+```
 
 > **Notes:**
 > * The text string must be a valid command supported by the used backend.
 > * If more than one command is needed, you can call these methods several
 > times (will be executed in order).
 
+The generics/parameters of the project can be optinally changed with:
+
+```py
+prj.set_param('param1', value1)
+...
+prj.set_param('paramN', valueN)
+```
+
 The method `generate` (previously seen at the end of
 [Basic usage](#basic-usage) section) has optional parameters:
 
 ```py
-generate(strategy, to_task, from_task)
+prj.generate(strategy, to_task, from_task)
 ```
 
 The default *strategy* is `none`, but you can apply some optimizations using
@@ -158,7 +168,7 @@ device (commonly an FPGA, but memories are also supported in some cases).
 It has up to four optional parameters:
 
 ```py
-transfer(devtype, position, part, width)
+prj.transfer(devtype, position, part, width)
 ```
 
 Where *devtype* is `fpga` by default but can also be `spi`, `bpi`, etc, if

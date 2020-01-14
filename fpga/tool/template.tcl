@@ -42,6 +42,8 @@ set STRATEGY #STRATEGY#
 # TASKS = prj syn imp bit
 set TASKS    [list #TASKS#]
 
+set PARAMS   [list #PARAMS#]
+
 proc fpga_files {} {
 #FILES#
 }
@@ -239,6 +241,33 @@ proc fpga_part { PART } {
     }
 }
 
+proc fpga_params {} {
+    global TOOL PARAMS
+    if { [llength $PARAMS] == 0 } { return }
+    fpga_print "setting generics/parameters"
+    switch $TOOL {
+        "ise"     {
+            set assigns [list]
+            foreach PARAM $PARAMS { lappend assigns [join $PARAM "="] }
+            project set "Generics, Parameters" "[join $assigns]" -process "Synthesize - XST"
+        }
+        "libero"  {
+            # They must be specified after set_root (see fpga_top)
+        }
+        "quartus" {
+            foreach PARAM $PARAMS {
+                eval "set_parameter -name $PARAM"
+            }
+        }
+        "vivado"  {
+            set assigns [list]
+            foreach PARAM $PARAMS { lappend assigns [join $PARAM "="] }
+            set obj [get_filesets sources_1]
+            set_property "generic" "[join $assigns]" -objects $obj
+        }
+    }
+}
+
 proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
     global TOOL TOP INCLUDED
     set message "adding the file '$FILE'"
@@ -262,7 +291,7 @@ proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
                 xfile add $FILE -lib_vhdl $VALUE
             } elseif { $KEY == "-included" } {
                 # Verilog Included Files are NOT added
-                if { [llength INCLUDED] > 0 } {
+                if { [llength $INCLUDED] > 0 } {
                     project set "Verilog Include Directories" \
                     [join $INCLUDED "|"] -process "Synthesize - XST"
                 }
@@ -329,7 +358,7 @@ proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
                 set_global_assignment -name $TYPE $FILE -library $VALUE
             } elseif { $KEY == "-included" } {
                 # Verilog Included Files are NOT added
-                if { [llength INCLUDED] > 0 } {
+                if { [llength $INCLUDED] > 0 } {
                     foreach INCLUDE $INCLUDED {
                         set_global_assignment -name SEARCH_PATH $INCLUDE
                     }
@@ -344,7 +373,7 @@ proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
                 set_property library $VALUE [get_files $FILE]
             } elseif { $KEY == "-included" } {
                 # Verilog Included Files are NOT added
-                if { [llength INCLUDED] > 0 } {
+                if { [llength $INCLUDED] > 0 } {
                     set_property "include_dirs" $INCLUDED [current_fileset]
                 }
             } else {
@@ -364,13 +393,20 @@ proc fpga_top { TOP } {
         "libero"  {
             set_root $TOP
             # Verilog Included files
-            global INCLUDED
-            if { [llength INCLUDED] > 0 } {
+            global INCLUDED PARAMS
+            set cmd "configure_tool -name {SYNTHESIZE} -params {SYNPLIFY_OPTIONS:"
+            if { [info exists INCLUDED] && [llength $INCLUDED] > 0 } {
                 set PATHS [join $INCLUDED ";"]
-                set cmd "configure_tool -name {SYNTHESIZE} -params {"
-                append cmd "SYNPLIFY_OPTIONS:set_option -include_path \"$PATHS\" }"
-                eval $cmd
+                append cmd "set_option -include_path \"$PATHS\""
+                append cmd "\n"
             }
+            foreach PARAM $PARAMS {
+                set assign [join $PARAM]
+                append cmd "set_option -hdl_param -set \"$assign\""
+                append cmd "\n"
+            }
+            append cmd "}"
+            eval $cmd
         }
         "quartus" {
             set_global_assignment -name TOP_LEVEL_ENTITY $TOP
@@ -557,6 +593,7 @@ if { [lsearch -exact $TASKS "prj"] >= 0 } {
         fpga_create $PROJECT
         fpga_part $PART
         fpga_options "prefile"
+        fpga_params
         fpga_files
         fpga_top $TOP
         switch $STRATEGY {

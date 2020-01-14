@@ -1,6 +1,6 @@
 #
-# Copyright (C) 2019 INTI
-# Copyright (C) 2019 Rodrigo A. Melo
+# Copyright (C) 2019-2020 INTI
+# Copyright (C) 2019-2020 Rodrigo A. Melo
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -95,6 +95,10 @@ class Project:
         * **part:** the FPGA part as specified by the tool.
         """
         self.tool.set_part(part)
+
+    def set_param(self, name, value):
+        """Set a Generic/Parameter Value."""
+        self.tool.set_param(name, value)
 
     def add_files(self, pathname, library=None, included=False):
         """Adds files to the project (HDLs, TCLs, Constraints).
