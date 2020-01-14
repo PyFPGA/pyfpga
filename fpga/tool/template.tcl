@@ -258,7 +258,7 @@ proc fpga_params {} {
         }
         "quartus" {
             foreach PARAM $PARAMS {
-                set_parameter -name [join $PARAM]
+                eval "set_parameter -name $PARAM"
             }
         }
         "vivado"  {
