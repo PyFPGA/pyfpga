@@ -252,9 +252,7 @@ proc fpga_params {} {
             project set "Generics, Parameters" "[join $assigns]" -process "Synthesize - XST"
         }
         "libero"  {
-            foreach PARAM $PARAMS {
-                set_option -hdl_param -set [join $PARAM]
-            }
+            # They must be specified after set_root (see fpga_top)
         }
         "quartus" {
             foreach PARAM $PARAMS {
@@ -395,13 +393,20 @@ proc fpga_top { TOP } {
         "libero"  {
             set_root $TOP
             # Verilog Included files
-            global INCLUDED
-            if { [llength $INCLUDED] > 0 } {
+            global INCLUDED PARAMS
+            set cmd "configure_tool -name {SYNTHESIZE} -params {SYNPLIFY_OPTIONS:"
+            if { [info exists INCLUDED] && [llength $INCLUDED] > 0 } {
                 set PATHS [join $INCLUDED ";"]
-                set cmd "configure_tool -name {SYNTHESIZE} -params {"
-                append cmd "SYNPLIFY_OPTIONS:set_option -include_path \"$PATHS\" }"
-                eval $cmd
+                append cmd "set_option -include_path \"$PATHS\""
+                append cmd "\n"
             }
+            foreach PARAM $PARAMS {
+                set assign [join $PARAM]
+                append cmd "set_option -hdl_param -set \"$assign\""
+                append cmd "\n"
+            }
+            append cmd "}"
+            eval $cmd
         }
         "quartus" {
             set_global_assignment -name TOP_LEVEL_ENTITY $TOP

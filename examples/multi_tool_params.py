@@ -17,7 +17,7 @@ for hdl in ['vhdl', 'verilog']:
         PRJ = Project(tool)
         PRJ.set_param('FREQ', '50000000')
         PRJ.set_param('SECS', '2')
-        PRJ.set_outdir('../build/multi-tool-params/%s' % tool)
+        PRJ.set_outdir('../build/multi-tool-params/%s/%s' % (tool, hdl))
         if hdl == 'vhdl':
             PRJ.add_files('hdl/blinking.vhdl')
         else:
