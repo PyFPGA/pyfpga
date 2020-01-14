@@ -247,9 +247,9 @@ proc fpga_params {} {
     fpga_print "setting generics/parameters"
     switch $TOOL {
         "ise"     {
-            foreach PARAM $PARAMS {
-                project set "Generics, Parameters" [join $PARAM "="] -process "Synthesize - XST"
-            }
+            set assigns [list]
+            foreach PARAM $PARAMS { lappend assigns [join $PARAM "="] }
+            project set "Generics, Parameters" "[join $assigns]" -process "Synthesize - XST"
         }
         "libero"  {
             foreach PARAM $PARAMS {
@@ -262,11 +262,10 @@ proc fpga_params {} {
             }
         }
         "vivado"  {
+            set assigns [list]
+            foreach PARAM $PARAMS { lappend assigns [join $PARAM "="] }
             set obj [get_filesets sources_1]
-            foreach PARAM $PARAMS {
-                set_property "generic" [join $PARAM "="] -objects $obj
-                set_property "vhdl_generic" [join $PARAM "="] -objects $obj
-            }
+            set_property "generic" "[join $assigns]" -objects $obj
         }
     }
 }
