@@ -114,7 +114,7 @@ class Project:
         self._log.debug('PATHNAME = %s', pathname)
         files = glob.glob(pathname)
         if len(files) == 0:
-            self._log.warning('add_files: %s not found', pathname)
+            self._log.warning('add_files: %s not found.', pathname)
         for file in files:
             file_abs = os.path.join(self._rundir, file)
             self.tool.add_file(file_abs, library, included)
@@ -131,7 +131,11 @@ class Project:
                 top = re.findall(r'module\s+(\w+)\s+[#(]', hdl)
                 top.extend(re.findall(r'entity\s+(\w+)\s+is', hdl))
                 if len(top) > 0:
-                    self.tool.set_top(top[0])
+                    self.tool.set_top(top[-1])
+                    if len(top) > 1:
+                        self._log.warning(
+                            'set_top: more than one Top found, last selected.'
+                        )
                 else:
                     self.tool.set_top('UNDEFINED')
             else:
