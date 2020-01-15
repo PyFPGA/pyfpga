@@ -128,8 +128,8 @@ class Project:
             toplevel = os.path.join(self._reldir, toplevel)
             if os.path.exists(toplevel):
                 hdl = open(toplevel, 'r').read()
-                top = re.findall(r'module\s+(\w+)', hdl)
-                top.extend(re.findall(r'entity\s+(\w+)', hdl))
+                top = re.findall(r'module\s+(\w+)\s+[#(]', hdl)
+                top.extend(re.findall(r'entity\s+(\w+)\s+is', hdl))
                 if len(top) > 0:
                     self.tool.set_top(top[0])
                 else:
