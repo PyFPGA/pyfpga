@@ -70,7 +70,6 @@ class Project:
         self._reldir = os.path.dirname(inspect.stack()[-1].filename)
         self._log.debug('RELDIR = %s', self._reldir)
         self.set_outdir('build')
-        self.capture = False
 
     def set_outdir(self, outdir):
         """Sets the OUTput DIRectory (where to put the resulting files).
@@ -186,12 +185,15 @@ class Project:
         """
         self.tool.add_option(option, 'postbit')
 
-    def generate(self, strategy='none', to_task='bit', from_task='prj'):
+    def generate(
+            self, strategy='none', to_task='bit', from_task='prj',
+            capture=False):
         """Run the FPGA tool.
 
         * **strategy:** *none*, *area*, *speed* or *power*.
         * **to_task:** last task.
         * **from_task:** first task.
+        * **capture:** capture STDOUT and STDERR (returned values).
 
         The valid tasks values, in order, are:
         * *prj* to creates the project file.
@@ -200,11 +202,9 @@ class Project:
         * *bit* to generates the bitstream.
         """
         with self._run_in_dir():
-            if self.capture:
+            if capture:
                 self._log.info('The execution messages are being captured.')
-            return self.tool.generate(
-                strategy, to_task, from_task, self.capture
-            )
+            return self.tool.generate(strategy, to_task, from_task, capture)
 
     def set_board(self, board):
         """Sets a development board to have predefined values.
@@ -226,10 +226,6 @@ class Project:
         """
         with self._run_in_dir():
             self.tool.transfer(devtype, position, part, width)
-
-    def set_capture(self, capture=True):
-        """Specifies if STDOUT and STDERR must be captured or not."""
-        self.capture = capture
 
     @contextlib.contextmanager
     def _run_in_dir(self):

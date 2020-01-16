@@ -64,13 +64,14 @@ Adds a pre flow OPTION.
 
 * **option:** a valid, commonly Tcl, tool option.
 
-### `generate(strategy='none', to_task='bit', from_task='prj')`
+### `generate(strategy='none', to_task='bit', from_task='prj', capture=False)`
 
 Run the FPGA tool.
 
 * **strategy:** *none*, *area*, *speed* or *power*.
 * **to_task:** last task.
 * **from_task:** first task.
+* **capture:** capture STDOUT and STDERR (returned values).
 
 The valid tasks values, in order, are:
 * *prj* to creates the project file.
@@ -93,10 +94,6 @@ Sets a development board to have predefined values.
 * **board:** board name.
 
 **Note:** Not Yet Implemented.
-
-### `set_capture(capture=True)`
-
-Specifies if STDOUT and STDERR must be captured or not.
 
 ### `set_outdir(outdir)`
 

@@ -148,11 +148,10 @@ class Tool:
             )
         tasks = " ".join(self._TASKS[from_index:to_index+1])
         self._create_gen_script(strategy, tasks)
-        result = subprocess.run(
+        return subprocess.run(
             self._GEN_COMMAND, shell=True, check=True,
             universal_newlines=True, stdout=capture, stderr=capture
         )
-        return result
 
     def transfer(self, devtype, position, part, width):
         """Transfer a bitstream."""
