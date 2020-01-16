@@ -185,12 +185,15 @@ class Project:
         """
         self.tool.add_option(option, 'postbit')
 
-    def generate(self, strategy='none', to_task='bit', from_task='prj'):
+    def generate(
+            self, strategy='none', to_task='bit', from_task='prj',
+            capture=False):
         """Run the FPGA tool.
 
         * **strategy:** *none*, *area*, *speed* or *power*.
         * **to_task:** last task.
         * **from_task:** first task.
+        * **capture:** capture STDOUT and STDERR (returned values).
 
         The valid tasks values, in order, are:
         * *prj* to creates the project file.
@@ -199,7 +202,9 @@ class Project:
         * *bit* to generates the bitstream.
         """
         with self._run_in_dir():
-            self.tool.generate(strategy, to_task, from_task)
+            if capture:
+                self._log.info('The execution messages are being captured.')
+            return self.tool.generate(strategy, to_task, from_task, capture)
 
     def set_board(self, board):
         """Sets a development board to have predefined values.
@@ -210,7 +215,9 @@ class Project:
         """
         raise NotImplementedError('set_board')
 
-    def transfer(self, devtype='fpga', position=1, part='', width=1):
+    def transfer(
+            self, devtype='fpga', position=1, part='', width=1,
+            capture=False):
         """Transfers the generated bitstream to a device.
 
         * **devtype:** *fpga* or other valid option
@@ -218,21 +225,24 @@ class Project:
         * **position:** position of the device in the JTAG chain.
         * **part:** name of the memory (when device is not *fpga*).
         * **width:** bits width of the memory (when device is not *fpga*).
+        * **capture:** capture STDOUT and STDERR (returned values).
         """
         with self._run_in_dir():
-            self.tool.transfer(devtype, position, part, width)
+            if capture:
+                self._log.info('The execution messages are being captured.')
+            return self.tool.transfer(devtype, position, part, width, capture)
 
     @contextlib.contextmanager
     def _run_in_dir(self):
         """Runs the tool in other directory."""
         try:
-            start = time.time()
             if not os.path.exists(self.outdir):
                 self._log.debug('the output directory did not exist, created.')
                 os.makedirs(self.outdir)
             os.chdir(self.outdir)
+            start = time.time()
             yield
         finally:
-            os.chdir(self._rundir)
             end = time.time()
+            os.chdir(self._rundir)
             self._log.info('executed in %.3f seconds.', end-start)

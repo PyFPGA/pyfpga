@@ -49,7 +49,7 @@ class Tool:
 
     _DEVTYPES = []
 
-    def __init__(self, project=None):
+    def __init__(self, project):
         """Initializes the attributes of the class."""
         self.project = self._TOOL if project is None else project
         self.set_part(self._PART)
@@ -82,7 +82,7 @@ class Tool:
         """Set a Generic/Parameter Value."""
         self.params.append('{ %s %s }' % (name, value))
 
-    def add_file(self, file, library=None, included=False):
+    def add_file(self, file, library, included):
         """Add a FILE to the project."""
         command = '    '  # indentation
         command += 'fpga_file %s' % file
@@ -133,11 +133,12 @@ class Tool:
     _STRATEGIES = ['none', 'area', 'speed', 'power']
     _TASKS = ['prj', 'syn', 'imp', 'bit']
 
-    def generate(self, strategy='none', to_task='bit', from_task='prj'):
+    def generate(self, strategy, to_task, from_task, capture):
         """Run the FPGA tool."""
         check_value(strategy, self._STRATEGIES)
         check_value(to_task, self._TASKS)
         check_value(from_task, self._TASKS)
+        capture = subprocess.PIPE if capture else None
         to_index = self._TASKS.index(to_task)
         from_index = self._TASKS.index(from_task)
         if from_index > to_index:
@@ -147,11 +148,16 @@ class Tool:
             )
         tasks = " ".join(self._TASKS[from_index:to_index+1])
         self._create_gen_script(strategy, tasks)
-        subprocess.run(self._GEN_COMMAND, shell=True, check=True)
+        return subprocess.run(
+            self._GEN_COMMAND, shell=True, check=True,
+            universal_newlines=True, stdout=capture, stderr=capture
+        )
 
-    def transfer(self, devtype, position, part, width):
+    def transfer(self, devtype, position, part, width, capture):
         """Transfer a bitstream."""
+        # pylint: disable-msg=too-many-arguments
         check_value(devtype, self._DEVTYPES)
         check_value(position, range(10))
         isinstance(part, str)
         check_value(width, [1, 2, 4, 8, 16, 32])
+        return subprocess.PIPE if capture else None

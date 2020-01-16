@@ -1,6 +1,6 @@
 #
-# Copyright (C) 2019 INTI
-# Copyright (C) 2019 Rodrigo A. Melo
+# Copyright (C) 2019-2020 INTI
+# Copyright (C) 2019-2020 Rodrigo A. Melo
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -107,8 +107,8 @@ class Ise(Tool):
             )
         self.part = part
 
-    def transfer(self, devtype, position, part, width):
-        super().transfer(devtype, position, part, width)
+    def transfer(self, devtype, position, part, width, capture):
+        capture = super().transfer(devtype, position, part, width, capture)
         temp = _TEMPLATES[devtype]
         if devtype not in ['detect', 'unlock']:
             bitstream = glob('**/*.bit', recursive=True)
@@ -117,4 +117,7 @@ class Ise(Tool):
             temp = temp.replace('#NAME#', part)
             temp = temp.replace('#WIDTH#', str(width))
         open("ise-prog.impact", 'w').write(temp)
-        subprocess.run(self._TRF_COMMAND, shell=True, check=True)
+        return subprocess.run(
+            self._TRF_COMMAND, shell=True, check=True,
+            universal_newlines=True, stdout=capture, stderr=capture
+        )

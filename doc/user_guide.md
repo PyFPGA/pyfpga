@@ -126,7 +126,7 @@ The method `generate` (previously seen at the end of
 [Basic usage](#basic-usage) section) has optional parameters:
 
 ```py
-prj.generate(strategy, to_task, from_task)
+prj.generate(strategy, to_task, from_task, capture)
 ```
 
 The default *strategy* is `none`, but you can apply some optimizations using
@@ -147,6 +147,14 @@ prj.generate(to_task='syn', from_task='prj')
 prj.generate(to_task='bit', from_task='syn')
 ```
 
+In case of *capture*, it is useful to catch execution messages to be
+post-processed or saved to a file:
+```py
+result = prj.generate(capture=True)
+print(result.stdout)
+print(result.stderr)
+```
+
 The execution of `generate` finish with an Exception if an error (such as
 command not found) occurs. It could be a good idea to catch the exception
 and act in consequence:
@@ -165,10 +173,10 @@ example.
 
 This method is in charge of run the needed tool to transfer a bitstream to a
 device (commonly an FPGA, but memories are also supported in some cases).
-It has up to four optional parameters:
+It has up to five optional parameters:
 
 ```py
-prj.transfer(devtype, position, part, width)
+prj.transfer(devtype, position, part, width, capture)
 ```
 
 Where *devtype* is `fpga` by default but can also be `spi`, `bpi`, etc, if
@@ -176,6 +184,13 @@ supported.
 An integer number can be used to specify the *position* (1) in the Jtag chain.
 When a memory is used as *devtype*, the *part* name and the *width* in bits
 must be also specified.
+In case of *capture*, it is useful to catch execution messages to be
+post-processed or saved to a file:
+```py
+result = prj.transfer(capture=True)
+print(result.stdout)
+print(result.stderr)
+```
 
 > **Notes:**
 > * In Xilinx, `spi` and `bpi` memories are out of the Jtag chain and are

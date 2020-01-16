@@ -64,13 +64,14 @@ Adds a pre flow OPTION.
 
 * **option:** a valid, commonly Tcl, tool option.
 
-### `generate(strategy='none', to_task='bit', from_task='prj')`
+### `generate(strategy='none', to_task='bit', from_task='prj', capture=False)`
 
 Run the FPGA tool.
 
 * **strategy:** *none*, *area*, *speed* or *power*.
 * **to_task:** last task.
 * **from_task:** first task.
+* **capture:** capture STDOUT and STDERR (returned values).
 
 The valid tasks values, in order, are:
 * *prj* to creates the project file.
@@ -116,7 +117,7 @@ Set the top level of the project.
 
 * **toplevel:** name or file path of the top level entity/module.
 
-### `transfer(devtype='fpga', position=1, part='', width=1)`
+### `transfer(devtype='fpga', position=1, part='', width=1, capture=False)`
 
 Transfers the generated bitstream to a device.
 
@@ -125,4 +126,5 @@ Transfers the generated bitstream to a device.
 * **position:** position of the device in the JTAG chain.
 * **part:** name of the memory (when device is not *fpga*).
 * **width:** bits width of the memory (when device is not *fpga*).
+* **capture:** capture STDOUT and STDERR (returned values).
 
