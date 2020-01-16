@@ -126,7 +126,7 @@ The method `generate` (previously seen at the end of
 [Basic usage](#basic-usage) section) has optional parameters:
 
 ```py
-prj.generate(strategy, to_task, from_task)
+prj.generate(strategy, to_task, from_task, capture)
 ```
 
 The default *strategy* is `none`, but you can apply some optimizations using
@@ -145,6 +145,14 @@ perform some processing from Python between tasks, using something like:
 prj.generate(to_task='syn', from_task='prj')
 #Some other Python commands here
 prj.generate(to_task='bit', from_task='syn')
+```
+
+In case of *capture*, it is useful to catch execution messages to be
+post-processed or saved to a file:
+```py
+result = prj.generate(capture=True)
+print(result.stdout)
+print(result.stderr)
 ```
 
 The execution of `generate` finish with an Exception if an error (such as
