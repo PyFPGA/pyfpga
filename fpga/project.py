@@ -215,7 +215,9 @@ class Project:
         """
         raise NotImplementedError('set_board')
 
-    def transfer(self, devtype='fpga', position=1, part='', width=1):
+    def transfer(
+            self, devtype='fpga', position=1, part='', width=1,
+            capture=False):
         """Transfers the generated bitstream to a device.
 
         * **devtype:** *fpga* or other valid option
@@ -223,9 +225,12 @@ class Project:
         * **position:** position of the device in the JTAG chain.
         * **part:** name of the memory (when device is not *fpga*).
         * **width:** bits width of the memory (when device is not *fpga*).
+        * **capture:** capture STDOUT and STDERR (returned values).
         """
         with self._run_in_dir():
-            self.tool.transfer(devtype, position, part, width)
+            if capture:
+                self._log.info('The execution messages are being captured.')
+            return self.tool.transfer(devtype, position, part, width, capture)
 
     @contextlib.contextmanager
     def _run_in_dir(self):

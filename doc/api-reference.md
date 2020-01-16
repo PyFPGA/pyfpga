@@ -117,7 +117,7 @@ Set the top level of the project.
 
 * **toplevel:** name or file path of the top level entity/module.
 
-### `transfer(devtype='fpga', position=1, part='', width=1)`
+### `transfer(devtype='fpga', position=1, part='', width=1, capture=False)`
 
 Transfers the generated bitstream to a device.
 
@@ -126,4 +126,5 @@ Transfers the generated bitstream to a device.
 * **position:** position of the device in the JTAG chain.
 * **part:** name of the memory (when device is not *fpga*).
 * **width:** bits width of the memory (when device is not *fpga*).
+* **capture:** capture STDOUT and STDERR (returned values).
 

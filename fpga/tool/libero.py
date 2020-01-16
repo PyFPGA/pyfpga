@@ -1,6 +1,6 @@
 #
-# Copyright (C) 2019 INTI
-# Copyright (C) 2019 Rodrigo A. Melo
+# Copyright (C) 2019-2020 INTI
+# Copyright (C) 2019-2020 Rodrigo A. Melo
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -67,6 +67,6 @@ class Libero(Tool):
             )
         self.part = part
 
-    def transfer(self, devtype, position, part, width):
-        super().transfer(devtype, position, part, width)
+    def transfer(self, devtype, position, part, width, capture):
+        capture = super().transfer(devtype, position, part, width, capture)
         raise NotImplementedError('transfer(libero)')

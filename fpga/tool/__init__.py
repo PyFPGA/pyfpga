@@ -153,9 +153,11 @@ class Tool:
             universal_newlines=True, stdout=capture, stderr=capture
         )
 
-    def transfer(self, devtype, position, part, width):
+    def transfer(self, devtype, position, part, width, capture):
         """Transfer a bitstream."""
+        # pylint: disable-msg=too-many-arguments
         check_value(devtype, self._DEVTYPES)
         check_value(position, range(10))
         isinstance(part, str)
         check_value(width, [1, 2, 4, 8, 16, 32])
+        return subprocess.PIPE if capture else None

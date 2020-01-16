@@ -1,6 +1,6 @@
 #
-# Copyright (C) 2019 INTI
-# Copyright (C) 2019 Rodrigo A. Melo
+# Copyright (C) 2019-2020 INTI
+# Copyright (C) 2019-2020 Rodrigo A. Melo
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -40,8 +40,8 @@ class Quartus(Tool):
 
     _DEVTYPES = ['fpga', 'detect']
 
-    def transfer(self, devtype, position, part, width):
-        super().transfer(devtype, position, part, width)
+    def transfer(self, devtype, position, part, width, capture):
+        capture = super().transfer(devtype, position, part, width, capture)
         result = subprocess.run(
             'jtagconfig', shell=True, check=True,
             stdout=subprocess.PIPE, universal_newlines=True
@@ -53,4 +53,8 @@ class Quartus(Tool):
             bitstream.extend(glob('**/*.pof', recursive=True))
             cable = re.match(r"1\) (.*) \[", result.stdout).groups()[0]
             cmd = self._TRF_COMMAND % (cable, bitstream[0], position)
-            subprocess.run(cmd, shell=True, check=True)
+            result = subprocess.run(
+                cmd, shell=True, check=True,
+                universal_newlines=True, stdout=capture, stderr=capture
+            )
+        return result

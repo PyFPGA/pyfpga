@@ -25,3 +25,12 @@ try:
     print(output.stderr)
 except Exception as e:
     logging.warning('{} ({})'.format(type(e).__name__, e))
+
+try:
+    output = PRJ.transfer(devtype='detect', capture=True)
+    print('### STDOUT:')
+    print(output.stdout)
+    print('### STDERR:')
+    print(output.stderr)
+except Exception as e:
+    logging.warning('{} ({})'.format(type(e).__name__, e))
