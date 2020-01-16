@@ -226,13 +226,13 @@ class Project:
     def _run_in_dir(self):
         """Runs the tool in other directory."""
         try:
-            start = time.time()
             if not os.path.exists(self.outdir):
                 self._log.debug('the output directory did not exist, created.')
                 os.makedirs(self.outdir)
             os.chdir(self.outdir)
+            start = time.time()
             yield
         finally:
-            os.chdir(self._rundir)
             end = time.time()
+            os.chdir(self._rundir)
             self._log.info('executed in %.3f seconds.', end-start)
