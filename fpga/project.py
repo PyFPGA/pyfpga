@@ -70,6 +70,7 @@ class Project:
         self._reldir = os.path.dirname(inspect.stack()[-1].filename)
         self._log.debug('RELDIR = %s', self._reldir)
         self.set_outdir('build')
+        self.capture = False
 
     def set_outdir(self, outdir):
         """Sets the OUTput DIRectory (where to put the resulting files).
@@ -199,7 +200,11 @@ class Project:
         * *bit* to generates the bitstream.
         """
         with self._run_in_dir():
-            return self.tool.generate(strategy, to_task, from_task)
+            if self.capture:
+                self._log.info('The execution messages are being captured.')
+            return self.tool.generate(
+                strategy, to_task, from_task, self.capture
+            )
 
     def set_board(self, board):
         """Sets a development board to have predefined values.
@@ -224,11 +229,7 @@ class Project:
 
     def set_capture(self, capture=True):
         """Specifies if STDOUT and STDERR must be captured or not."""
-        if capture:
-            self._log.info('Configured to capture the execution messages.')
-        else:
-            self._log.info('The execution messages will be not captured.')
-        self.tool.set_capture(capture)
+        self.capture = capture
 
     @contextlib.contextmanager
     def _run_in_dir(self):
