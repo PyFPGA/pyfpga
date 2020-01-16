@@ -199,7 +199,7 @@ class Project:
         * *bit* to generates the bitstream.
         """
         with self._run_in_dir():
-            self.tool.generate(strategy, to_task, from_task)
+            return self.tool.generate(strategy, to_task, from_task)
 
     def set_board(self, board):
         """Sets a development board to have predefined values.
@@ -221,6 +221,14 @@ class Project:
         """
         with self._run_in_dir():
             self.tool.transfer(devtype, position, part, width)
+
+    def set_capture(self, capture=True):
+        """Specifies if STDOUT and STDERR must be captured or not."""
+        if capture:
+            self._log.info('Configured to capture the execution messages.')
+        else:
+            self._log.info('The execution messages will be not captured.')
+        self.tool.set_capture(capture)
 
     @contextlib.contextmanager
     def _run_in_dir(self):

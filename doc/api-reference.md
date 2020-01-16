@@ -94,6 +94,10 @@ Sets a development board to have predefined values.
 
 **Note:** Not Yet Implemented.
 
+### `set_capture(capture=True)`
+
+Specifies if STDOUT and STDERR must be captured or not.
+
 ### `set_outdir(outdir)`
 
 Sets the OUTput DIRectory (where to put the resulting files).
