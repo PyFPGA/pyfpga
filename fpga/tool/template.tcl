@@ -236,7 +236,25 @@ proc fpga_part { PART } {
             "vivado"  {
                 set_property "part" $PART [current_project]
             }
-            "yosys"   { puts "UNSUPPORTED" }
+            "yosys"   {
+                set FAMILY "Unknown"
+                if {[regexp -nocase {xcup} $PART]} {
+                    set FAMILY "xcup"
+                } elseif {[regexp -nocase {xcu} $PART]} {
+                    set FAMILY "xcu"
+                } elseif {[regexp -nocase {xc7} $PART]} {
+                    set FAMILY "xc7"
+                } elseif {[regexp -nocase {xc6v} $PART]} {
+                    set FAMILY "xc6v"
+                } elseif {[regexp -nocase {xc6s} $PART]} {
+                    set FAMILY "xc6s"
+                } elseif {[regexp -nocase {xc5v} $PART]} {
+                    set FAMILY "xc5v"
+                } else {
+                    puts "The family of the part $PART is $FAMILY."
+                }
+                global FAMILY
+            }
         }
     } ERRMSG]} {
         puts "ERROR: there was a problem with the specified part '$PART'.\n"
@@ -385,7 +403,9 @@ proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
                 add_files $FILE
             }
         }
-        "yosys"   { puts "UNSUPORTED" }
+        "yosys"   {
+            read_verilog $FILE
+        }
     }
 }
 
@@ -538,7 +558,22 @@ proc fpga_run_syn {} {
             launch_runs synth_1
             wait_on_run synth_1
         }
-        "yosys"   { puts "UNSUPPORTED" }
+        "yosys"   {
+            global FAMILY TOP
+            if {$FAMILY=="xcup" || $FAMILY=="xcu" || $FAMILY=="xc7"} {
+                synth_xilinx -top $TOP -family $FAMILY
+                write_edif -pvector bra yosys.edif
+                puts "Generated yosys.edif to be used with Vivado"
+            } elseif {$FAMILY=="xc6v" || $FAMILY=="xc6s" || $FAMILY=="xc5v"} {
+                synth_xilinx -top $TOP -family $FAMILY -ise
+                write_edif -pvector bra yosys.edif
+                puts "Generated yosys.edif to be used with ISE"
+            } else {
+                synth_xilinx -top $TOP
+                write_verilog yosys.v
+                puts "Generated yosys.v"
+            }
+        }
     }
 }
 
