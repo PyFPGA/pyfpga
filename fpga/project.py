@@ -34,11 +34,12 @@ import time
 from fpga.tool.ise import Ise
 from fpga.tool.libero import Libero
 from fpga.tool.quartus import Quartus
-from fpga.tool.vivado import Vivado
 from fpga.tool.tclsh import Tclsh
+from fpga.tool.vivado import Vivado
+from fpga.tool.yosys import Yosys
 
 
-TOOLS = ['ise', 'libero', 'quartus', 'vivado']
+TOOLS = ['ise', 'libero', 'quartus', 'vivado', 'yosys']
 
 
 class Project:
@@ -59,10 +60,12 @@ class Project:
             self.tool = Libero(project)
         elif tool == 'quartus':
             self.tool = Quartus(project)
-        elif tool == 'vivado':
-            self.tool = Vivado(project)
         elif tool == 'tclsh':
             self.tool = Tclsh(project)
+        elif tool == 'vivado':
+            self.tool = Vivado(project)
+        elif tool == 'yosys':
+            self.tool = Yosys(project)
         else:
             raise NotImplementedError(tool)
         self._rundir = os.getcwd()

@@ -114,7 +114,7 @@ proc fpga_create { PROJECT } {
             set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
         }
         "vivado"  { create_project -force $PROJECT }
-        "yosys"   { puts "UNUSED" }
+        "yosys"   { yosys -import }
     }
 }
 
@@ -131,7 +131,7 @@ proc fpga_open { PROJECT } {
             project_open -force $PROJECT.qpf
         }
         "vivado"  { open_project $PROJECT }
-        "yosys"   { puts "UNUSED" }
+        "yosys"   { }
     }
 }
 
@@ -143,7 +143,7 @@ proc fpga_close {} {
         "libero"  { close_project }
         "quartus" { project_close }
         "vivado"  { close_project }
-        "yosys"   { puts "UNUSED" }
+        "yosys"   { }
     }
 }
 
@@ -237,6 +237,7 @@ proc fpga_part { PART } {
                 set_property "part" $PART [current_project]
             }
             "yosys"   {
+                global FAMILY
                 set FAMILY "Unknown"
                 if {[regexp -nocase {xcup} $PART]} {
                     set FAMILY "xcup"
@@ -253,7 +254,6 @@ proc fpga_part { PART } {
                 } else {
                     puts "The family of the part $PART is $FAMILY."
                 }
-                global FAMILY
             }
         }
     } ERRMSG]} {
@@ -404,7 +404,11 @@ proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
             }
         }
         "yosys"   {
-            read_verilog $FILE
+            if { $KEY == "-included" } {
+                verilog_defaults -add -I[file dirname $FILE]
+            } else {
+                read_verilog $FILE
+            }
         }
     }
 }
@@ -440,7 +444,7 @@ proc fpga_top { TOP } {
         "vivado"  {
             set_property top $TOP [current_fileset]
         }
-        "yosys"   { puts "UNUSED" }
+        "yosys"   { }
     }
 }
 
@@ -599,7 +603,7 @@ proc fpga_run_imp {} {
             launch_runs impl_1
             wait_on_run impl_1
         }
-        "yosys"   { puts "UNUSED" }
+        "yosys"   { puts "UNSUPPORTED (Yosys only performs Synthesis)" }
     }
 }
 
@@ -621,7 +625,7 @@ proc fpga_run_bit {} {
             open_run impl_1
             write_bitstream -force $PROJECT
         }
-        "yosys"   { puts "UNUSED" }
+        "yosys"   { puts "UNSUPPORTED (Yosys only performs Synthesis)" }
     }
 }
 
