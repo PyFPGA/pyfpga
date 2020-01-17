@@ -28,6 +28,9 @@ Windows (or maybe PowerSheel? Please let me know if you try).
 ![Libero](https://img.shields.io/badge/Libero--Soc-12.2-blue.svg)
 ![Quartus](https://img.shields.io/badge/Quartus--Prime-19.1-blue.svg)
 ![Vivado](https://img.shields.io/badge/Vivado-2019.2-blue.svg)
+![Yosys](https://img.shields.io/badge/Yosys-0.9&nbsp;(*)-green.svg)
+
+(*) Only performs synthesis.
 
 ### Transfer
 
