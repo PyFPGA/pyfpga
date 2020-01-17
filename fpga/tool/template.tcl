@@ -20,7 +20,7 @@
 # Description: Tcl script to create a new project and performs synthesis,
 # implementation and bitstream generation.
 #
-# Supported TOOLs: ise, libero, quartus, vivado
+# Supported TOOLs: ise, libero, quartus, vivado, yosys
 #
 # Notes:
 # * fpga_ is used to avoid name collisions.
@@ -114,6 +114,7 @@ proc fpga_create { PROJECT } {
             set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
         }
         "vivado"  { create_project -force $PROJECT }
+        "yosys"   { puts "UNUSED" }
     }
 }
 
@@ -130,6 +131,7 @@ proc fpga_open { PROJECT } {
             project_open -force $PROJECT.qpf
         }
         "vivado"  { open_project $PROJECT }
+        "yosys"   { puts "UNUSED" }
     }
 }
 
@@ -141,6 +143,7 @@ proc fpga_close {} {
         "libero"  { close_project }
         "quartus" { project_close }
         "vivado"  { close_project }
+        "yosys"   { puts "UNUSED" }
     }
 }
 
@@ -233,6 +236,7 @@ proc fpga_part { PART } {
             "vivado"  {
                 set_property "part" $PART [current_project]
             }
+            "yosys"   { puts "UNSUPPORTED" }
         }
     } ERRMSG]} {
         puts "ERROR: there was a problem with the specified part '$PART'.\n"
@@ -265,6 +269,7 @@ proc fpga_params {} {
             set obj [get_filesets sources_1]
             set_property "generic" "[join $assigns]" -objects $obj
         }
+        "yosys"   { puts "UNSUPPORTED" }
     }
 }
 
@@ -380,6 +385,7 @@ proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
                 add_files $FILE
             }
         }
+        "yosys"   { puts "UNSUPORTED" }
     }
 }
 
@@ -414,6 +420,7 @@ proc fpga_top { TOP } {
         "vivado"  {
             set_property top $TOP [current_fileset]
         }
+        "yosys"   { puts "UNUSED" }
     }
 }
 
@@ -440,6 +447,7 @@ proc fpga_area_opts {} {
             set_property strategy "Area_Explore" $obj
             set_property "steps.opt_design.args.directive" "ExploreArea" $obj
         }
+        "yosys"   { puts "UNSUPPORTED" }
     }
 }
 
@@ -471,6 +479,7 @@ proc fpga_power_opts {} {
             set_property "steps.power_opt_design.is_enabled" "1" $obj
             set_property "steps.phys_opt_design.is_enabled" "1" $obj
         }
+        "yosys"   { puts "UNSUPPORTED" }
     }
 }
 
@@ -506,6 +515,7 @@ proc fpga_speed_opts {} {
             set_property "steps.phys_opt_design.args.directive" "Explore" $obj
             set_property "steps.route_design.args.directive" "Explore" $obj
         }
+        "yosys"   { puts "UNSUPPORTED" }
     }
 }
 
@@ -528,6 +538,7 @@ proc fpga_run_syn {} {
             launch_runs synth_1
             wait_on_run synth_1
         }
+        "yosys"   { puts "UNSUPPORTED" }
     }
 }
 
@@ -553,6 +564,7 @@ proc fpga_run_imp {} {
             launch_runs impl_1
             wait_on_run impl_1
         }
+        "yosys"   { puts "UNUSED" }
     }
 }
 
@@ -574,6 +586,7 @@ proc fpga_run_bit {} {
             open_run impl_1
             write_bitstream -force $PROJECT
         }
+        "yosys"   { puts "UNUSED" }
     }
 }
 
