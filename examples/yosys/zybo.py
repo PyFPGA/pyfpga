@@ -9,6 +9,7 @@ logging.getLogger('fpga.project').level = logging.DEBUG
 
 PART = 'xc7z010-1-clg400'
 OUTDIR = '../../build/yosys-zybo'
+TOP = 'Top'
 
 prj = Project('yosys')
 prj.set_outdir(OUTDIR)
@@ -18,7 +19,7 @@ prj.add_files('../hdl/headers1/freq.vh', included=True)
 prj.add_files('../hdl/headers2/secs.vh', included=True)
 prj.add_files('../hdl/blinking.v')
 prj.add_files('../hdl/top.v')
-prj.set_top('Top')
+prj.set_top(TOP)
 
 try:
     prj.generate(to_task='syn')
@@ -29,10 +30,19 @@ prj = Project('vivado', 'zybo')
 prj.set_outdir(OUTDIR)
 prj.set_part(PART)
 
-prj.add_files('zybo.xdc')
+prj.add_files('../vivado/zybo.xdc')
 prj.add_files(OUTDIR + '/yosys.edif')
+prj.set_top('yosys')
 
 try:
-    prj.generate()
+    prj.generate(to_task='prj')
+    # Synthesis performed by Yosys
+    # prj.add_preflow_opt('set_property design_mode GateLvl [current_fileset]')
+    prj.generate(to_task='bit', from_task='imp')
 except Exception as e:
     logging.warning('{} ({})'.format(type(e).__name__, e))
+
+try:
+    prj.transfer('fpga')
+except Exception as e:
+    print('ERROR: {} ({})'.format(type(e).__name__, e))
