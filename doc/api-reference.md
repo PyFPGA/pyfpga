@@ -17,7 +17,7 @@ Class constructor.
 * **tool:** FPGA tool to be used.
 * **project:** project name (the tool name is used if none specified).
 
-### `add_files(pathname, library=None, included=False)`
+### `add_files(pathname, library=None, included=False, design=False)`
 
 Adds files to the project (HDLs, TCLs, Constraints).
 
@@ -25,8 +25,9 @@ Adds files to the project (HDLs, TCLs, Constraints).
 and can contain shell-style wildcards (glob compliant).
 * **library:** VHDL library name.
 * **included:** Verilog included file.
+* **design:** indicates that is a Block Design.
 
-Note: **library** and **included** are mutually exclusive.
+Note: **library**, **included** and **design** are mutually exclusive.
 
 ### `add_postbit_opt(option)`
 

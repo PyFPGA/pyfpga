@@ -361,7 +361,11 @@ proc fpga_file {FILE {LIBRARY "work"}} {
 
 proc fpga_include {FILE} {
     global TOOL INCLUDED
-    set PATH [file dirname $FILE]
+    if { [file isfile $FILE] } {
+        set PATH [file dirname $FILE]
+    } else {
+        set PATH $FILE
+    }
     lappend INCLUDED $PATH
     fpga_print "setting '$PATH' as a search location"
     switch $TOOL {
@@ -385,6 +389,34 @@ proc fpga_include {FILE} {
         "vivado" {
             # Verilog Included Files are NOT added
             set_property "include_dirs" $INCLUDED [current_fileset]
+        }
+    }
+}
+
+proc fpga_design {FILE} {
+    global TOOL TOP INCLUDED
+    fpga_print "including the block design '$FILE'"
+    switch $TOOL {
+        "ise" {
+            puts "UNSUPPORTED"
+        }
+        "libero" {
+            puts "UNSUPPORTED"
+        }
+        "quartus" {
+            puts "UNSUPPORTED"
+        }
+        "vivado" {
+            if { [info exists INCLUDED] && [llength $INCLUDED] > 0 } {
+                set_property "ip_repo_paths" $INCLUDED [get_filesets sources_1]
+                update_ip_catalog -rebuild
+            }
+            source $FILE
+            set design [get_bd_designs]
+            make_wrapper -force -files [get_files $design.bd] -top -import
+            if { $TOP == "UNDEFINED"} {
+                set TOP ${design}_wrapper
+            }
         }
     }
 }
