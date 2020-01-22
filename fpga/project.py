@@ -109,7 +109,7 @@ class Project:
         * **included:** Verilog included file.
         * **design:** indicates that is a Block Design.
 
-        Note: **library**, **included** and **design** are mutually exclusive.
+        **Note:** the optional parameters are mutually exclusive.
         """
         pathname = os.path.join(self._reldir, pathname)
         self._log.debug('PATHNAME = %s', pathname)

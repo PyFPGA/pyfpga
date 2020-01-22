@@ -27,7 +27,7 @@ and can contain shell-style wildcards (glob compliant).
 * **included:** Verilog included file.
 * **design:** indicates that is a Block Design.
 
-Note: **library**, **included** and **design** are mutually exclusive.
+**Note:** the optional parameters are mutually exclusive.
 
 ### `add_postbit_opt(option)`
 
