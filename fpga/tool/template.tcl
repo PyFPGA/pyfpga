@@ -268,14 +268,10 @@ proc fpga_params {} {
     }
 }
 
-proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
-    global TOOL TOP INCLUDED
+proc fpga_file {FILE {LIBRARY "work"}} {
+    global TOOL TOP
     set message "adding the file '$FILE'"
-    if { $KEY == "-library" } { append message " (into the VHDL library '$VALUE')" }
-    if { $KEY == "-included" } {
-        append message " (as a Verilog included file)"
-        lappend INCLUDED [file dirname $FILE]
-    }
+    if { $LIBRARY != "work" } { append message " (into the VHDL library '$LIBRARY')" }
     fpga_print $message
     regexp -nocase {\.(\w*)$} $FILE -> ext
     if { $ext == "tcl" } {
@@ -286,15 +282,9 @@ proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
         "ise" {
             if {$ext == "xcf"} {
                 project set "Synthesis Constraints File" $FILE -process "Synthesize - XST"
-            } elseif { $KEY == "-library" } {
-                lib_vhdl new $VALUE
-                xfile add $FILE -lib_vhdl $VALUE
-            } elseif { $KEY == "-included" } {
-                # Verilog Included Files are NOT added
-                if { [llength $INCLUDED] > 0 } {
-                    project set "Verilog Include Directories" \
-                    [join $INCLUDED "|"] -process "Synthesize - XST"
-                }
+            } elseif { $LIBRARY != "work" } {
+                lib_vhdl new $LIBRARY
+                xfile add $FILE -lib_vhdl $LIBRARY
             } else {
                 xfile add $FILE
             }
@@ -310,9 +300,7 @@ proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
                 append LIBERO_PLACE_CONSTRAINTS "-file $FILE "
                 append LIBERO_OTHER_CONSTRAINTS "-file $FILE "
             } else {
-                # Verilog Included Files are ALSO added
-                # They must be specified after set_root (see fpga_top)
-                create_links -library $VALUE -hdl_source $FILE
+                create_links -library $LIBRARY -hdl_source $FILE
                 build_design_hierarchy
             }
             # Only the last organize_tool_files for a certain TOOL is taking
@@ -354,31 +342,49 @@ proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
             } else {
                 set TYPE SOURCE_FILE
             }
-            if { $KEY == "-library" } {
-                set_global_assignment -name $TYPE $FILE -library $VALUE
-            } elseif { $KEY == "-included" } {
-                # Verilog Included Files are NOT added
-                if { [llength $INCLUDED] > 0 } {
-                    foreach INCLUDE $INCLUDED {
-                        set_global_assignment -name SEARCH_PATH $INCLUDE
-                    }
-                }
+            if { $LIBRARY != "work" } {
+                set_global_assignment -name $TYPE $FILE -library $LIBRARY
             } else {
                 set_global_assignment -name $TYPE $FILE
             }
         }
         "vivado" {
-            if { $KEY == "-library" } {
+            if { $LIBRARY != "work" } {
                 add_files $FILE
-                set_property library $VALUE [get_files $FILE]
-            } elseif { $KEY == "-included" } {
-                # Verilog Included Files are NOT added
-                if { [llength $INCLUDED] > 0 } {
-                    set_property "include_dirs" $INCLUDED [current_fileset]
-                }
+                set_property library $LIBRARY [get_files $FILE]
             } else {
                 add_files $FILE
             }
+        }
+    }
+}
+
+proc fpga_include {FILE} {
+    global TOOL INCLUDED
+    set PATH [file dirname $FILE]
+    lappend INCLUDED $PATH
+    fpga_print "setting '$PATH' as a search location"
+    switch $TOOL {
+        "ise" {
+            # Verilog Included Files are NOT added
+            project set "Verilog Include Directories" \
+            [join $INCLUDED "|"] -process "Synthesize - XST"
+        }
+        "libero" {
+            # Verilog Included Files are ALSO added
+            # They must be specified after set_root (see fpga_top)
+            create_links -hdl_source $FILE
+            build_design_hierarchy
+        }
+        "quartus" {
+            # Verilog Included Files are NOT added
+            foreach INCLUDE $INCLUDED {
+                set_global_assignment -name SEARCH_PATH $INCLUDE
+            }
+        }
+        "vivado" {
+            # Verilog Included Files are NOT added
+            set_property "include_dirs" $INCLUDED [current_fileset]
         }
     }
 }
