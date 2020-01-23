@@ -50,42 +50,27 @@ proc fpga_files {} {
 
 proc fpga_options { PHASE } {
     fpga_print "setting options for the phase '$PHASE'"
-    if {[catch {
-        switch $PHASE {
-            "prefile" {
+    switch $PHASE {
+        "prefile" {
 #PREFILE_OPTS#
-            }
-            "postprj" {
-#POSTPRJ_OPTS#
-            }
-            "preflow" {
-#PREFLOW_OPTS#
-            }
-            "postsyn" {
-#POSTSYN_OPTS#
-            }
-            "postimp" {
-#POSTIMP_OPTS#
-            }
-            "postbit" {
-#POSTBIT_OPTS#
-            }
         }
-    } ERRMSG]} {
-        puts "ERROR: there was a problem applying your '$PHASE' options.\n"
-        puts $ERRMSG
-        exit $ERR_PHASE
+        "postprj" {
+#POSTPRJ_OPTS#
+        }
+        "preflow" {
+#PREFLOW_OPTS#
+        }
+        "postsyn" {
+#POSTSYN_OPTS#
+        }
+        "postimp" {
+#POSTIMP_OPTS#
+        }
+        "postbit" {
+#POSTBIT_OPTS#
+        }
     }
 }
-
-#
-# Constants
-#
-
-set ERR_PROJECT 1
-set ERR_PART    2
-set ERR_PHASE   3
-set ERR_FLOW    4
 
 #
 # Procedures
@@ -147,97 +132,91 @@ proc fpga_close {} {
 proc fpga_part { PART } {
     global TOOL
     fpga_print "adding the part '$PART'"
-    if {[catch {
-        switch $TOOL {
-            "ise"     {
-                regexp -nocase {(.*)(-.*)-(.*)} $PART -> DEVICE SPEED PACKAGE
-                set FAMILY "Unknown"
-                if {[regexp -nocase {xc7a\d+l} $DEVICE]} {
-                    set FAMILY "artix7l"
-                } elseif {[regexp -nocase {xc7a} $DEVICE]} {
-                    set FAMILY "artix7"
-                } elseif {[regexp -nocase {xc7k\d+l} $DEVICE]} {
-                    set FAMILY "kintex7l"
-                } elseif {[regexp -nocase {xc7k} $DEVICE]} {
-                    set FAMILY "kintex7"
-                } elseif {[regexp -nocase {xc3sd\d+a} $DEVICE]} {
-                    set FAMILY "spartan3adsp"
-                } elseif {[regexp -nocase {xc3s\d+a} $DEVICE]} {
-                    set FAMILY "spartan3a"
-                } elseif {[regexp -nocase {xc3s\d+e} $DEVICE]} {
-                    set FAMILY "spartan3e"
-                } elseif {[regexp -nocase {xc3s} $DEVICE]} {
-                    set FAMILY "spartan3"
-                } elseif {[regexp -nocase {xc6s\d+l} $DEVICE]} {
-                    set FAMILY "spartan6l"
-                } elseif {[regexp -nocase {xc6s} $DEVICE]} {
-                    set FAMILY "spartan6"
-                } elseif {[regexp -nocase {xc4v} $DEVICE]} {
-                    set FAMILY "virtex4"
-                } elseif {[regexp -nocase {xc5v} $DEVICE]} {
-                    set FAMILY "virtex5"
-                } elseif {[regexp -nocase {xc6v\d+l} $DEVICE]} {
-                    set FAMILY "virtex6l"
-                } elseif {[regexp -nocase {xc6v} $DEVICE]} {
-                    set FAMILY "virtex6"
-                } elseif {[regexp -nocase {xc7v\d+l} $DEVICE]} {
-                    set FAMILY "virtex7l"
-                } elseif {[regexp -nocase {xc7v} $DEVICE]} {
-                    set FAMILY "virtex7"
-                } elseif {[regexp -nocase {xc7z} $DEVICE]} {
-                    set FAMILY "zynq"
-                } else {
-                    puts "The family of the device $DEVICE is $FAMILY."
-                }
-                project set family  $FAMILY
-                project set device  $DEVICE
-                project set package $PACKAGE
-                project set speed   $SPEED
+    switch $TOOL {
+        "ise"     {
+            regexp -nocase {(.*)(-.*)-(.*)} $PART -> DEVICE SPEED PACKAGE
+            set FAMILY "Unknown"
+            if {[regexp -nocase {xc7a\d+l} $DEVICE]} {
+                set FAMILY "artix7l"
+            } elseif {[regexp -nocase {xc7a} $DEVICE]} {
+                set FAMILY "artix7"
+            } elseif {[regexp -nocase {xc7k\d+l} $DEVICE]} {
+                set FAMILY "kintex7l"
+            } elseif {[regexp -nocase {xc7k} $DEVICE]} {
+                set FAMILY "kintex7"
+            } elseif {[regexp -nocase {xc3sd\d+a} $DEVICE]} {
+                set FAMILY "spartan3adsp"
+            } elseif {[regexp -nocase {xc3s\d+a} $DEVICE]} {
+                set FAMILY "spartan3a"
+            } elseif {[regexp -nocase {xc3s\d+e} $DEVICE]} {
+                set FAMILY "spartan3e"
+            } elseif {[regexp -nocase {xc3s} $DEVICE]} {
+                set FAMILY "spartan3"
+            } elseif {[regexp -nocase {xc6s\d+l} $DEVICE]} {
+                set FAMILY "spartan6l"
+            } elseif {[regexp -nocase {xc6s} $DEVICE]} {
+                set FAMILY "spartan6"
+            } elseif {[regexp -nocase {xc4v} $DEVICE]} {
+                set FAMILY "virtex4"
+            } elseif {[regexp -nocase {xc5v} $DEVICE]} {
+                set FAMILY "virtex5"
+            } elseif {[regexp -nocase {xc6v\d+l} $DEVICE]} {
+                set FAMILY "virtex6l"
+            } elseif {[regexp -nocase {xc6v} $DEVICE]} {
+                set FAMILY "virtex6"
+            } elseif {[regexp -nocase {xc7v\d+l} $DEVICE]} {
+                set FAMILY "virtex7l"
+            } elseif {[regexp -nocase {xc7v} $DEVICE]} {
+                set FAMILY "virtex7"
+            } elseif {[regexp -nocase {xc7z} $DEVICE]} {
+                set FAMILY "zynq"
+            } else {
+                puts "The family of the device $DEVICE is $FAMILY."
             }
-            "libero"  {
-                regexp -nocase {(.*)(-.*)-(.*)} $PART -> DEVICE SPEED PACKAGE
-                set FAMILY "Unknown"
-                if {[regexp -nocase {m2s} $DEVICE]} {
-                    set FAMILY "SmartFusion2"
-                } elseif {[regexp -nocase {m2gl} $DEVICE]} {
-                    set FAMILY "Igloo2"
-                } elseif {[regexp -nocase {rt4g} $DEVICE]} {
-                    set FAMILY "RTG4"
-                } elseif {[regexp -nocase {mpf} $DEVICE]} {
-                    set FAMILY "PolarFire"
-                } elseif {[regexp -nocase {a2f} $DEVICE]} {
-                    set FAMILY "SmartFusion"
-                } elseif {[regexp -nocase {afs} $DEVICE]} {
-                    set FAMILY "Fusion"
-                } elseif {[regexp -nocase {aglp} $DEVICE]} {
-                    set FAMILY "IGLOO+"
-                } elseif {[regexp -nocase {agle} $DEVICE]} {
-                    set FAMILY "IGLOOE"
-                } elseif {[regexp -nocase {agl} $DEVICE]} {
-                    set FAMILY "IGLOO"
-                } elseif {[regexp -nocase {a3p\d+l} $DEVICE]} {
-                    set FAMILY "ProAsic3L"
-                } elseif {[regexp -nocase {a3pe} $DEVICE]} {
-                    set FAMILY "ProAsic3E"
-                } elseif {[regexp -nocase {a3p} $DEVICE]} {
-                    set FAMILY "ProAsic3"
-                } else {
-                    puts "The family of the device $DEVICE is $FAMILY."
-                }
-                if { $SPEED == "-STD" } { set SPEED "STD"}
-                set_device -family $FAMILY -die $DEVICE -package $PACKAGE -speed $SPEED
-            }
-            "quartus" {
-                set_global_assignment -name DEVICE $PART
-            }
-            "vivado"  {
-                set_property "part" $PART [current_project]
-            }
+            project set family  $FAMILY
+            project set device  $DEVICE
+            project set package $PACKAGE
+            project set speed   $SPEED
         }
-    } ERRMSG]} {
-        puts "ERROR: there was a problem with the specified part '$PART'.\n"
-        puts $ERRMSG
-        exit $ERR_PART
+        "libero"  {
+            regexp -nocase {(.*)(-.*)-(.*)} $PART -> DEVICE SPEED PACKAGE
+            set FAMILY "Unknown"
+            if {[regexp -nocase {m2s} $DEVICE]} {
+                set FAMILY "SmartFusion2"
+            } elseif {[regexp -nocase {m2gl} $DEVICE]} {
+                set FAMILY "Igloo2"
+            } elseif {[regexp -nocase {rt4g} $DEVICE]} {
+                set FAMILY "RTG4"
+            } elseif {[regexp -nocase {mpf} $DEVICE]} {
+                set FAMILY "PolarFire"
+            } elseif {[regexp -nocase {a2f} $DEVICE]} {
+                set FAMILY "SmartFusion"
+            } elseif {[regexp -nocase {afs} $DEVICE]} {
+                set FAMILY "Fusion"
+            } elseif {[regexp -nocase {aglp} $DEVICE]} {
+                set FAMILY "IGLOO+"
+            } elseif {[regexp -nocase {agle} $DEVICE]} {
+                set FAMILY "IGLOOE"
+            } elseif {[regexp -nocase {agl} $DEVICE]} {
+                set FAMILY "IGLOO"
+            } elseif {[regexp -nocase {a3p\d+l} $DEVICE]} {
+                set FAMILY "ProAsic3L"
+            } elseif {[regexp -nocase {a3pe} $DEVICE]} {
+                set FAMILY "ProAsic3E"
+            } elseif {[regexp -nocase {a3p} $DEVICE]} {
+                set FAMILY "ProAsic3"
+            } else {
+                puts "The family of the device $DEVICE is $FAMILY."
+            }
+            if { $SPEED == "-STD" } { set SPEED "STD"}
+            set_device -family $FAMILY -die $DEVICE -package $PACKAGE -speed $SPEED
+        }
+        "quartus" {
+            set_global_assignment -name DEVICE $PART
+        }
+        "vivado"  {
+            set_property "part" $PART [current_project]
+        }
     }
 }
 
@@ -674,9 +653,9 @@ if { [lsearch -exact $TASKS "prj"] >= 0 } {
         fpga_options "postprj"
         fpga_close
     } ERRMSG]} {
-        puts "ERROR: there was a problem creating a new project.\n"
+        puts "ERROR: there was a problem creating a New Project.\n"
         puts $ERRMSG
-        exit $ERR_PROJECT
+        exit 1
     }
 }
 
@@ -703,9 +682,9 @@ if { [lsearch -regexp $TASKS "syn|imp|bit"] >= 0 } {
         }
         fpga_close
     } ERRMSG]} {
-        puts "ERROR: there was a problem running the design flow.\n"
+        puts "ERROR: there was a problem running the Design Flow.\n"
         puts $ERRMSG
-        exit $ERR_FLOW
+        exit 2
     }
 }
 
