@@ -207,6 +207,14 @@ class Project:
                 self._log.info('The execution messages are being captured.')
             return self.tool.generate(strategy, to_task, from_task, capture)
 
+    def export_hardware(self):
+        """Exports files for the development of a Processor System.
+
+        Useful when working with FPGA-SoCs to provide information for the
+        development of the Processor System side.
+        """
+        self.tool.export_hardware()
+
     def set_board(self, board):
         """Sets a development board to have predefined values.
 

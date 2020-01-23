@@ -615,6 +615,38 @@ proc fpga_run_bit {} {
     }
 }
 
+proc fpga_export {} {
+    global TOOL PROJECT
+    fpga_print "exporting the design"
+    switch $TOOL {
+        "ise"     {
+            puts "UNSUPPORTED"
+        }
+        "libero"  {
+            puts "UNSUPPORTED"
+        }
+        "quartus" {
+            puts "UNSUPPORTED"
+        }
+        "vivado"  {
+            if { [ catch {
+                # Vitis
+                write_hw_platform -fixed -force -include_bit \
+                    -file ${PROJECT}.xsa
+                fpga_print "design exported to be used with Vitis"
+            } ] } {
+                # SDK
+                write_hwdef -force -file ${PROJECT}.hwdef
+                write_sysdef -force \
+                    -hwdef [glob -nocomplain *.hwdef] \
+                    -bitfile [glob -nocomplain *.bit] \
+                    -file ${PROJECT}.hdf
+                fpga_print "design exported to be used with the SDK"
+            }
+        }
+    }
+}
+
 #
 # Start of the script
 #

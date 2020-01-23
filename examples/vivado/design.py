@@ -16,18 +16,7 @@ prj.add_files('../hdl/blinking.vhdl')
 prj.add_files('zybo.xdc')
 prj.add_files('design.tcl', design=True)
 
-prj.add_postbit_opt("""
-    if { [ catch {
-        write_hw_platform -fixed -force -include_bit \
-            -file design_1_wrapper.xsa
-    } ] } {
-        write_hwdef -force -file design_1_wrapper.hwdef
-        write_sysdef -force \
-            -hwdef [glob -nocomplain *.hwdef] \
-            -bitfile [glob -nocomplain *.bit] \
-            -file design_1_wrapper.hdf
-    }
-""")
+prj.export_hardware()
 
 try:
     prj.generate()

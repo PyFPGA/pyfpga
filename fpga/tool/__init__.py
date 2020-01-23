@@ -159,6 +159,10 @@ class Tool:
             universal_newlines=True, stdout=capture, stderr=capture
         )
 
+    def export_hardware(self):
+        """Exports files for the development of a Processor System."""
+        self.add_option('fpga_export', 'postbit')
+
     def transfer(self, devtype, position, part, width, capture):
         """Transfer a bitstream."""
         # pylint: disable-msg=too-many-arguments
