@@ -50,42 +50,27 @@ proc fpga_files {} {
 
 proc fpga_options { PHASE } {
     fpga_print "setting options for the phase '$PHASE'"
-    if {[catch {
-        switch $PHASE {
-            "prefile" {
+    switch $PHASE {
+        "prefile" {
 #PREFILE_OPTS#
-            }
-            "postprj" {
-#POSTPRJ_OPTS#
-            }
-            "preflow" {
-#PREFLOW_OPTS#
-            }
-            "postsyn" {
-#POSTSYN_OPTS#
-            }
-            "postimp" {
-#POSTIMP_OPTS#
-            }
-            "postbit" {
-#POSTBIT_OPTS#
-            }
         }
-    } ERRMSG]} {
-        puts "ERROR: there was a problem applying your '$PHASE' options.\n"
-        puts $ERRMSG
-        exit $ERR_PHASE
+        "postprj" {
+#POSTPRJ_OPTS#
+        }
+        "preflow" {
+#PREFLOW_OPTS#
+        }
+        "postsyn" {
+#POSTSYN_OPTS#
+        }
+        "postimp" {
+#POSTIMP_OPTS#
+        }
+        "postbit" {
+#POSTBIT_OPTS#
+        }
     }
 }
-
-#
-# Constants
-#
-
-set ERR_PROJECT 1
-set ERR_PART    2
-set ERR_PHASE   3
-set ERR_FLOW    4
 
 #
 # Procedures
@@ -147,97 +132,91 @@ proc fpga_close {} {
 proc fpga_part { PART } {
     global TOOL
     fpga_print "adding the part '$PART'"
-    if {[catch {
-        switch $TOOL {
-            "ise"     {
-                regexp -nocase {(.*)(-.*)-(.*)} $PART -> DEVICE SPEED PACKAGE
-                set FAMILY "Unknown"
-                if {[regexp -nocase {xc7a\d+l} $DEVICE]} {
-                    set FAMILY "artix7l"
-                } elseif {[regexp -nocase {xc7a} $DEVICE]} {
-                    set FAMILY "artix7"
-                } elseif {[regexp -nocase {xc7k\d+l} $DEVICE]} {
-                    set FAMILY "kintex7l"
-                } elseif {[regexp -nocase {xc7k} $DEVICE]} {
-                    set FAMILY "kintex7"
-                } elseif {[regexp -nocase {xc3sd\d+a} $DEVICE]} {
-                    set FAMILY "spartan3adsp"
-                } elseif {[regexp -nocase {xc3s\d+a} $DEVICE]} {
-                    set FAMILY "spartan3a"
-                } elseif {[regexp -nocase {xc3s\d+e} $DEVICE]} {
-                    set FAMILY "spartan3e"
-                } elseif {[regexp -nocase {xc3s} $DEVICE]} {
-                    set FAMILY "spartan3"
-                } elseif {[regexp -nocase {xc6s\d+l} $DEVICE]} {
-                    set FAMILY "spartan6l"
-                } elseif {[regexp -nocase {xc6s} $DEVICE]} {
-                    set FAMILY "spartan6"
-                } elseif {[regexp -nocase {xc4v} $DEVICE]} {
-                    set FAMILY "virtex4"
-                } elseif {[regexp -nocase {xc5v} $DEVICE]} {
-                    set FAMILY "virtex5"
-                } elseif {[regexp -nocase {xc6v\d+l} $DEVICE]} {
-                    set FAMILY "virtex6l"
-                } elseif {[regexp -nocase {xc6v} $DEVICE]} {
-                    set FAMILY "virtex6"
-                } elseif {[regexp -nocase {xc7v\d+l} $DEVICE]} {
-                    set FAMILY "virtex7l"
-                } elseif {[regexp -nocase {xc7v} $DEVICE]} {
-                    set FAMILY "virtex7"
-                } elseif {[regexp -nocase {xc7z} $DEVICE]} {
-                    set FAMILY "zynq"
-                } else {
-                    puts "The family of the device $DEVICE is $FAMILY."
-                }
-                project set family  $FAMILY
-                project set device  $DEVICE
-                project set package $PACKAGE
-                project set speed   $SPEED
+    switch $TOOL {
+        "ise"     {
+            regexp -nocase {(.*)(-.*)-(.*)} $PART -> DEVICE SPEED PACKAGE
+            set FAMILY "Unknown"
+            if {[regexp -nocase {xc7a\d+l} $DEVICE]} {
+                set FAMILY "artix7l"
+            } elseif {[regexp -nocase {xc7a} $DEVICE]} {
+                set FAMILY "artix7"
+            } elseif {[regexp -nocase {xc7k\d+l} $DEVICE]} {
+                set FAMILY "kintex7l"
+            } elseif {[regexp -nocase {xc7k} $DEVICE]} {
+                set FAMILY "kintex7"
+            } elseif {[regexp -nocase {xc3sd\d+a} $DEVICE]} {
+                set FAMILY "spartan3adsp"
+            } elseif {[regexp -nocase {xc3s\d+a} $DEVICE]} {
+                set FAMILY "spartan3a"
+            } elseif {[regexp -nocase {xc3s\d+e} $DEVICE]} {
+                set FAMILY "spartan3e"
+            } elseif {[regexp -nocase {xc3s} $DEVICE]} {
+                set FAMILY "spartan3"
+            } elseif {[regexp -nocase {xc6s\d+l} $DEVICE]} {
+                set FAMILY "spartan6l"
+            } elseif {[regexp -nocase {xc6s} $DEVICE]} {
+                set FAMILY "spartan6"
+            } elseif {[regexp -nocase {xc4v} $DEVICE]} {
+                set FAMILY "virtex4"
+            } elseif {[regexp -nocase {xc5v} $DEVICE]} {
+                set FAMILY "virtex5"
+            } elseif {[regexp -nocase {xc6v\d+l} $DEVICE]} {
+                set FAMILY "virtex6l"
+            } elseif {[regexp -nocase {xc6v} $DEVICE]} {
+                set FAMILY "virtex6"
+            } elseif {[regexp -nocase {xc7v\d+l} $DEVICE]} {
+                set FAMILY "virtex7l"
+            } elseif {[regexp -nocase {xc7v} $DEVICE]} {
+                set FAMILY "virtex7"
+            } elseif {[regexp -nocase {xc7z} $DEVICE]} {
+                set FAMILY "zynq"
+            } else {
+                puts "The family of the device $DEVICE is $FAMILY."
             }
-            "libero"  {
-                regexp -nocase {(.*)(-.*)-(.*)} $PART -> DEVICE SPEED PACKAGE
-                set FAMILY "Unknown"
-                if {[regexp -nocase {m2s} $DEVICE]} {
-                    set FAMILY "SmartFusion2"
-                } elseif {[regexp -nocase {m2gl} $DEVICE]} {
-                    set FAMILY "Igloo2"
-                } elseif {[regexp -nocase {rt4g} $DEVICE]} {
-                    set FAMILY "RTG4"
-                } elseif {[regexp -nocase {mpf} $DEVICE]} {
-                    set FAMILY "PolarFire"
-                } elseif {[regexp -nocase {a2f} $DEVICE]} {
-                    set FAMILY "SmartFusion"
-                } elseif {[regexp -nocase {afs} $DEVICE]} {
-                    set FAMILY "Fusion"
-                } elseif {[regexp -nocase {aglp} $DEVICE]} {
-                    set FAMILY "IGLOO+"
-                } elseif {[regexp -nocase {agle} $DEVICE]} {
-                    set FAMILY "IGLOOE"
-                } elseif {[regexp -nocase {agl} $DEVICE]} {
-                    set FAMILY "IGLOO"
-                } elseif {[regexp -nocase {a3p\d+l} $DEVICE]} {
-                    set FAMILY "ProAsic3L"
-                } elseif {[regexp -nocase {a3pe} $DEVICE]} {
-                    set FAMILY "ProAsic3E"
-                } elseif {[regexp -nocase {a3p} $DEVICE]} {
-                    set FAMILY "ProAsic3"
-                } else {
-                    puts "The family of the device $DEVICE is $FAMILY."
-                }
-                if { $SPEED == "-STD" } { set SPEED "STD"}
-                set_device -family $FAMILY -die $DEVICE -package $PACKAGE -speed $SPEED
-            }
-            "quartus" {
-                set_global_assignment -name DEVICE $PART
-            }
-            "vivado"  {
-                set_property "part" $PART [current_project]
-            }
+            project set family  $FAMILY
+            project set device  $DEVICE
+            project set package $PACKAGE
+            project set speed   $SPEED
         }
-    } ERRMSG]} {
-        puts "ERROR: there was a problem with the specified part '$PART'.\n"
-        puts $ERRMSG
-        exit $ERR_PART
+        "libero"  {
+            regexp -nocase {(.*)(-.*)-(.*)} $PART -> DEVICE SPEED PACKAGE
+            set FAMILY "Unknown"
+            if {[regexp -nocase {m2s} $DEVICE]} {
+                set FAMILY "SmartFusion2"
+            } elseif {[regexp -nocase {m2gl} $DEVICE]} {
+                set FAMILY "Igloo2"
+            } elseif {[regexp -nocase {rt4g} $DEVICE]} {
+                set FAMILY "RTG4"
+            } elseif {[regexp -nocase {mpf} $DEVICE]} {
+                set FAMILY "PolarFire"
+            } elseif {[regexp -nocase {a2f} $DEVICE]} {
+                set FAMILY "SmartFusion"
+            } elseif {[regexp -nocase {afs} $DEVICE]} {
+                set FAMILY "Fusion"
+            } elseif {[regexp -nocase {aglp} $DEVICE]} {
+                set FAMILY "IGLOO+"
+            } elseif {[regexp -nocase {agle} $DEVICE]} {
+                set FAMILY "IGLOOE"
+            } elseif {[regexp -nocase {agl} $DEVICE]} {
+                set FAMILY "IGLOO"
+            } elseif {[regexp -nocase {a3p\d+l} $DEVICE]} {
+                set FAMILY "ProAsic3L"
+            } elseif {[regexp -nocase {a3pe} $DEVICE]} {
+                set FAMILY "ProAsic3E"
+            } elseif {[regexp -nocase {a3p} $DEVICE]} {
+                set FAMILY "ProAsic3"
+            } else {
+                puts "The family of the device $DEVICE is $FAMILY."
+            }
+            if { $SPEED == "-STD" } { set SPEED "STD"}
+            set_device -family $FAMILY -die $DEVICE -package $PACKAGE -speed $SPEED
+        }
+        "quartus" {
+            set_global_assignment -name DEVICE $PART
+        }
+        "vivado"  {
+            set_property "part" $PART [current_project]
+        }
     }
 }
 
@@ -268,14 +247,10 @@ proc fpga_params {} {
     }
 }
 
-proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
-    global TOOL TOP INCLUDED
+proc fpga_file {FILE {LIBRARY "work"}} {
+    global TOOL TOP
     set message "adding the file '$FILE'"
-    if { $KEY == "-library" } { append message " (into the VHDL library '$VALUE')" }
-    if { $KEY == "-included" } {
-        append message " (as a Verilog included file)"
-        lappend INCLUDED [file dirname $FILE]
-    }
+    if { $LIBRARY != "work" } { append message " (into the VHDL library '$LIBRARY')" }
     fpga_print $message
     regexp -nocase {\.(\w*)$} $FILE -> ext
     if { $ext == "tcl" } {
@@ -286,15 +261,9 @@ proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
         "ise" {
             if {$ext == "xcf"} {
                 project set "Synthesis Constraints File" $FILE -process "Synthesize - XST"
-            } elseif { $KEY == "-library" } {
-                lib_vhdl new $VALUE
-                xfile add $FILE -lib_vhdl $VALUE
-            } elseif { $KEY == "-included" } {
-                # Verilog Included Files are NOT added
-                if { [llength $INCLUDED] > 0 } {
-                    project set "Verilog Include Directories" \
-                    [join $INCLUDED "|"] -process "Synthesize - XST"
-                }
+            } elseif { $LIBRARY != "work" } {
+                lib_vhdl new $LIBRARY
+                xfile add $FILE -lib_vhdl $LIBRARY
             } else {
                 xfile add $FILE
             }
@@ -310,9 +279,7 @@ proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
                 append LIBERO_PLACE_CONSTRAINTS "-file $FILE "
                 append LIBERO_OTHER_CONSTRAINTS "-file $FILE "
             } else {
-                # Verilog Included Files are ALSO added
-                # They must be specified after set_root (see fpga_top)
-                create_links -library $VALUE -hdl_source $FILE
+                create_links -library $LIBRARY -hdl_source $FILE
                 build_design_hierarchy
             }
             # Only the last organize_tool_files for a certain TOOL is taking
@@ -354,30 +321,80 @@ proc fpga_file {FILE {KEY ""} {VALUE "work"}} {
             } else {
                 set TYPE SOURCE_FILE
             }
-            if { $KEY == "-library" } {
-                set_global_assignment -name $TYPE $FILE -library $VALUE
-            } elseif { $KEY == "-included" } {
-                # Verilog Included Files are NOT added
-                if { [llength $INCLUDED] > 0 } {
-                    foreach INCLUDE $INCLUDED {
-                        set_global_assignment -name SEARCH_PATH $INCLUDE
-                    }
-                }
+            if { $LIBRARY != "work" } {
+                set_global_assignment -name $TYPE $FILE -library $LIBRARY
             } else {
                 set_global_assignment -name $TYPE $FILE
             }
         }
         "vivado" {
-            if { $KEY == "-library" } {
+            if { $LIBRARY != "work" } {
                 add_files $FILE
-                set_property library $VALUE [get_files $FILE]
-            } elseif { $KEY == "-included" } {
-                # Verilog Included Files are NOT added
-                if { [llength $INCLUDED] > 0 } {
-                    set_property "include_dirs" $INCLUDED [current_fileset]
-                }
+                set_property library $LIBRARY [get_files $FILE]
             } else {
                 add_files $FILE
+            }
+        }
+    }
+}
+
+proc fpga_include {FILE} {
+    global TOOL INCLUDED
+    if { [file isfile $FILE] } {
+        set PATH [file dirname $FILE]
+    } else {
+        set PATH $FILE
+    }
+    lappend INCLUDED $PATH
+    fpga_print "setting '$PATH' as a search location"
+    switch $TOOL {
+        "ise" {
+            # Verilog Included Files are NOT added
+            project set "Verilog Include Directories" \
+            [join $INCLUDED "|"] -process "Synthesize - XST"
+        }
+        "libero" {
+            # Verilog Included Files are ALSO added
+            # They must be specified after set_root (see fpga_top)
+            create_links -hdl_source $FILE
+            build_design_hierarchy
+        }
+        "quartus" {
+            # Verilog Included Files are NOT added
+            foreach INCLUDE $INCLUDED {
+                set_global_assignment -name SEARCH_PATH $INCLUDE
+            }
+        }
+        "vivado" {
+            # Verilog Included Files are NOT added
+            set_property "include_dirs" $INCLUDED [current_fileset]
+        }
+    }
+}
+
+proc fpga_design {FILE} {
+    global TOOL TOP INCLUDED
+    fpga_print "including the block design '$FILE'"
+    switch $TOOL {
+        "ise" {
+            puts "UNSUPPORTED"
+        }
+        "libero" {
+            puts "UNSUPPORTED"
+        }
+        "quartus" {
+            puts "UNSUPPORTED"
+        }
+        "vivado" {
+            if { [info exists INCLUDED] && [llength $INCLUDED] > 0 } {
+                set_property "ip_repo_paths" $INCLUDED [get_filesets sources_1]
+                update_ip_catalog -rebuild
+            }
+            source $FILE
+            set design [get_bd_designs]
+            make_wrapper -force -files [get_files $design.bd] -top -import
+            if { $TOP == "UNDEFINED"} {
+                set TOP ${design}_wrapper
             }
         }
     }
@@ -577,6 +594,38 @@ proc fpga_run_bit {} {
     }
 }
 
+proc fpga_export {} {
+    global TOOL PROJECT
+    fpga_print "exporting the design"
+    switch $TOOL {
+        "ise"     {
+            puts "UNSUPPORTED"
+        }
+        "libero"  {
+            puts "UNSUPPORTED"
+        }
+        "quartus" {
+            puts "UNSUPPORTED"
+        }
+        "vivado"  {
+            if { [ catch {
+                # Vitis
+                write_hw_platform -fixed -force -include_bit \
+                    -file ${PROJECT}.xsa
+                fpga_print "design exported to be used with Vitis"
+            } ] } {
+                # SDK
+                write_hwdef -force -file ${PROJECT}.hwdef
+                write_sysdef -force \
+                    -hwdef [glob -nocomplain *.hwdef] \
+                    -bitfile [glob -nocomplain *.bit] \
+                    -file ${PROJECT}.hdf
+                fpga_print "design exported to be used with the SDK"
+            }
+        }
+    }
+}
+
 #
 # Start of the script
 #
@@ -604,9 +653,9 @@ if { [lsearch -exact $TASKS "prj"] >= 0 } {
         fpga_options "postprj"
         fpga_close
     } ERRMSG]} {
-        puts "ERROR: there was a problem creating a new project.\n"
+        puts "ERROR: there was a problem creating a New Project.\n"
         puts $ERRMSG
-        exit $ERR_PROJECT
+        exit 1
     }
 }
 
@@ -633,9 +682,9 @@ if { [lsearch -regexp $TASKS "syn|imp|bit"] >= 0 } {
         }
         fpga_close
     } ERRMSG]} {
-        puts "ERROR: there was a problem running the design flow.\n"
+        puts "ERROR: there was a problem running the Design Flow.\n"
         puts $ERRMSG
-        exit $ERR_FLOW
+        exit 2
     }
 }
 

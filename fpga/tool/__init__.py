@@ -82,18 +82,24 @@ class Tool:
         """Set a Generic/Parameter Value."""
         self.params.append('{ %s %s }' % (name, value))
 
-    def add_file(self, file, library, included):
+    def add_file(self, file, library, included, design):
         """Add a FILE to the project."""
-        command = '    '  # indentation
-        command += 'fpga_file %s' % file
-        if library is not None and included:
+        flag = 1 if library is not None else 0
+        flag += 1 if included else 0
+        flag += 1 if design else 0
+        if flag > 1:
             raise ValueError(
                 'library and included are mutually exclusive arguments'
             )
-        if library is not None:
-            command += ' -library %s' % library
+        command = '    '  # indentation
         if included:
-            command += ' -included'
+            command += 'fpga_include %s' % file
+        elif design:
+            command += 'fpga_design %s' % file
+        else:
+            command += 'fpga_file %s' % file
+            if library is not None:
+                command += ' %s' % library
         self.files.append(command)
 
     def set_top(self, top):
@@ -152,6 +158,10 @@ class Tool:
             self._GEN_COMMAND, shell=True, check=True,
             universal_newlines=True, stdout=capture, stderr=capture
         )
+
+    def export_hardware(self):
+        """Exports files for the development of a Processor System."""
+        self.add_option('fpga_export', 'postbit')
 
     def transfer(self, devtype, position, part, width, capture):
         """Transfer a bitstream."""

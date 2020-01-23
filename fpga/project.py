@@ -100,15 +100,16 @@ class Project:
         """Set a Generic/Parameter Value."""
         self.tool.set_param(name, value)
 
-    def add_files(self, pathname, library=None, included=False):
+    def add_files(self, pathname, library=None, included=False, design=False):
         """Adds files to the project (HDLs, TCLs, Constraints).
 
         * **pathname:** a string containing a relative path specification,
         and can contain shell-style wildcards (glob compliant).
         * **library:** VHDL library name.
         * **included:** Verilog included file.
+        * **design:** indicates that is a Block Design.
 
-        Note: **library** and **included** are mutually exclusive.
+        **Note:** the optional parameters are mutually exclusive.
         """
         pathname = os.path.join(self._reldir, pathname)
         self._log.debug('PATHNAME = %s', pathname)
@@ -117,7 +118,7 @@ class Project:
             self._log.warning('add_files: %s not found.', pathname)
         for file in files:
             file_abs = os.path.join(self._rundir, file)
-            self.tool.add_file(file_abs, library, included)
+            self.tool.add_file(file_abs, library, included, design)
 
     def set_top(self, toplevel):
         """Set the top level of the project.
@@ -205,6 +206,14 @@ class Project:
             if capture:
                 self._log.info('The execution messages are being captured.')
             return self.tool.generate(strategy, to_task, from_task, capture)
+
+    def export_hardware(self):
+        """Exports files for the development of a Processor System.
+
+        Useful when working with FPGA-SoCs to provide information for the
+        development of the Processor System side.
+        """
+        self.tool.export_hardware()
 
     def set_board(self, board):
         """Sets a development board to have predefined values.
