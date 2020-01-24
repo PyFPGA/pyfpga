@@ -112,6 +112,22 @@ class Project:
         else:
             self._log.warning('add_design: %s not found.', pathname)
 
+    def add_files(self, pathname, library=None):
+        """Adds files to the project (HDLs, TCLs, Constraints).
+
+        * **pathname:** a string containing a relative path specification,
+        and can contain shell-style wildcards (glob compliant).
+        * **library:** an optional VHDL library name.
+        """
+        pathname = os.path.join(self._reldir, pathname)
+        self._log.debug('PATHNAME = %s', pathname)
+        files = glob.glob(pathname)
+        if len(files) == 0:
+            self._log.warning('add_files: %s not found.', pathname)
+        for file in files:
+            file_abs = os.path.join(self._rundir, file)
+            self.tool.add_file(file_abs, library, False, False)
+
     def add_include(self, pathname):
         """Adds a search path.
 
@@ -130,22 +146,6 @@ class Project:
             self.tool.add_file(pathname, None, True, False)
         else:
             self._log.warning('add_include: %s not found.', pathname)
-
-    def add_files(self, pathname, library=None):
-        """Adds files to the project (HDLs, TCLs, Constraints).
-
-        * **pathname:** a string containing a relative path specification,
-        and can contain shell-style wildcards (glob compliant).
-        * **library:** an optional VHDL library name.
-        """
-        pathname = os.path.join(self._reldir, pathname)
-        self._log.debug('PATHNAME = %s', pathname)
-        files = glob.glob(pathname)
-        if len(files) == 0:
-            self._log.warning('add_files: %s not found.', pathname)
-        for file in files:
-            file_abs = os.path.join(self._rundir, file)
-            self.tool.add_file(file_abs, library, False, False)
 
     def set_top(self, toplevel):
         """Set the top level of the project.
