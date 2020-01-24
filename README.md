@@ -28,7 +28,7 @@ prj = Project('vivado', 'example')
 prj.set_part('xc7z010-1-clg400')
 prj.add_files('location1/*.v')
 prj.add_files('location2/top.v')
-prj.add_files('location3/project.xdc')
+prj.add_files('location3/example.xdc')
 prj.set_top('Top')
 
 # Generate the bitstream running the tool
@@ -43,7 +43,8 @@ More examples into the [User Guide](doc/user_guide.md) and under the
 PyFPGA is a Python 3 package, which was developed under a Debian GNU/Linux.
 It must run in any other POSIX compatible Operating System and probably also
 in a different OS (the problem could be how the backends tools are called,
-please let me know any SUCCESS or FAIL using the [issues](issues) tracker).
+please let me know any SUCCESS or FAIL using the
+[issues](https://gitlab.com/rodrigomelo9/pyfpga/issues) tracker).
 
 ### Bitstream Generation
 
