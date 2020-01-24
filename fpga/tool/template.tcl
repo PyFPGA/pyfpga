@@ -361,7 +361,9 @@ proc fpga_file {FILE {LIBRARY "work"}} {
             }
         }
         "yosys"   {
-            read_verilog $FILE
+            if {$ext == "v" || $ext == "sv"} {
+                read_verilog $FILE
+            }
         }
     }
 }

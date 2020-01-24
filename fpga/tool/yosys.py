@@ -30,3 +30,15 @@ class Yosys(Tool):
     _TOOL = 'yosys'
 
     _GEN_COMMAND = 'yosys -Q yosys.tcl'
+
+    _DEVTYPES = ['fpga']
+
+    def __init__(self, project, backend=None):
+        """Initializes the attributes of the class."""
+        super().__init__(project)
+        if backend == 'ise':
+            print('ise')
+        elif backend == 'vivado':
+            print('vivado')
+        else:
+            print('generic')
