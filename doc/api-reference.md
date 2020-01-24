@@ -17,16 +17,32 @@ Class constructor.
 * **tool:** FPGA tool to be used.
 * **project:** project name (the tool name is used if none specified).
 
-### `add_files(pathname, library=None, included=False)`
+### `add_design(pathname)`
+
+Adds a Block Design.
+
+* **pathname:** a string containing a relative path to a file.
+
+### `add_files(pathname, library=None)`
 
 Adds files to the project (HDLs, TCLs, Constraints).
 
 * **pathname:** a string containing a relative path specification,
 and can contain shell-style wildcards (glob compliant).
-* **library:** VHDL library name.
-* **included:** Verilog included file.
+* **library:** an optional VHDL library name.
 
-Note: **library** and **included** are mutually exclusive.
+### `add_include(pathname)`
+
+Adds a search path.
+
+Useful to specify where to search Verilog Included Files or IP
+repositories.
+
+* **pathname:** a string containing a relative path to a directory
+or a file.
+
+**Note:** generally a directory must be specified, but Libero-SoC
+also needs to add the file when is a Verilog Included File.
 
 ### `add_postbit_opt(option)`
 
@@ -64,6 +80,13 @@ Adds a pre flow OPTION.
 
 * **option:** a valid, commonly Tcl, tool option.
 
+### `export_hardware()`
+
+Exports files for the development of a Processor System.
+
+Useful when working with FPGA-SoCs to provide information for the
+development of the Processor System side.
+
 ### `generate(strategy='none', to_task='bit', from_task='prj', capture=False)`
 
 Run the FPGA tool.
@@ -79,7 +102,7 @@ The valid tasks values, in order, are:
 * *imp* to runs implementation.
 * *bit* to generates the bitstream.
 
-### `get_configs(self)`
+### `get_configs()`
 
 Gets the Project Configurations.
 

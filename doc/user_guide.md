@@ -9,7 +9,7 @@ basic and advanced uses of PyFPGA.
 * [Transfer to a device](#transfer-to-a-device)
 * [Logging capabilities](#logging-capabilities)
 
-> ATTENTION:
+> **ATTENTION:**
 > PyFPGA assumes that the backend Tool is ready to run.
 > This implies, depending on the operating system, things such as:
 > * Tool installed.

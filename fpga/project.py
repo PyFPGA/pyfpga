@@ -103,15 +103,24 @@ class Project:
         """Set a Generic/Parameter Value."""
         self.tool.set_param(name, value)
 
-    def add_files(self, pathname, library=None, included=False):
+    def add_design(self, pathname):
+        """Adds a Block Design.
+
+        * **pathname:** a string containing a relative path to a file.
+        """
+        pathname = os.path.join(self._reldir, pathname)
+        pathname = os.path.join(self._rundir, pathname)
+        if os.path.isfile(pathname):
+            self.tool.add_file(pathname, None, False, True)
+        else:
+            self._log.warning('add_design: %s not found.', pathname)
+
+    def add_files(self, pathname, library=None):
         """Adds files to the project (HDLs, TCLs, Constraints).
 
         * **pathname:** a string containing a relative path specification,
         and can contain shell-style wildcards (glob compliant).
-        * **library:** VHDL library name.
-        * **included:** Verilog included file.
-
-        Note: **library** and **included** are mutually exclusive.
+        * **library:** an optional VHDL library name.
         """
         pathname = os.path.join(self._reldir, pathname)
         self._log.debug('PATHNAME = %s', pathname)
@@ -120,7 +129,26 @@ class Project:
             self._log.warning('add_files: %s not found.', pathname)
         for file in files:
             file_abs = os.path.join(self._rundir, file)
-            self.tool.add_file(file_abs, library, included)
+            self.tool.add_file(file_abs, library, False, False)
+
+    def add_include(self, pathname):
+        """Adds a search path.
+
+        Useful to specify where to search Verilog Included Files or IP
+        repositories.
+
+        * **pathname:** a string containing a relative path to a directory
+        or a file.
+
+        **Note:** generally a directory must be specified, but Libero-SoC
+        also needs to add the file when is a Verilog Included File.
+        """
+        pathname = os.path.join(self._reldir, pathname)
+        pathname = os.path.join(self._rundir, pathname)
+        if os.path.exists(pathname):
+            self.tool.add_file(pathname, None, True, False)
+        else:
+            self._log.warning('add_include: %s not found.', pathname)
 
     def set_top(self, toplevel):
         """Set the top level of the project.
@@ -208,6 +236,14 @@ class Project:
             if capture:
                 self._log.info('The execution messages are being captured.')
             return self.tool.generate(strategy, to_task, from_task, capture)
+
+    def export_hardware(self):
+        """Exports files for the development of a Processor System.
+
+        Useful when working with FPGA-SoCs to provide information for the
+        development of the Processor System side.
+        """
+        self.tool.export_hardware()
 
     def set_board(self, board):
         """Sets a development board to have predefined values.
