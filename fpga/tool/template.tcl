@@ -34,6 +34,8 @@
 
 global TOOL
 set TOOL     #TOOL#
+# To use with Yosys
+set BACKEND  #BACKEND#
 set PROJECT  #PROJECT#
 set PART     #PART#
 set TOP      #TOP#
@@ -174,7 +176,7 @@ proc fpga_part { PART } {
             } elseif {[regexp -nocase {xc7z} $DEVICE]} {
                 set FAMILY "zynq"
             } else {
-                puts "The family of the device $DEVICE is $FAMILY."
+                puts "The family of the device $DEVICE is $FAMILY"
             }
             project set family  $FAMILY
             project set device  $DEVICE
@@ -209,7 +211,7 @@ proc fpga_part { PART } {
             } elseif {[regexp -nocase {a3p} $DEVICE]} {
                 set FAMILY "ProAsic3"
             } else {
-                puts "The family of the device $DEVICE is $FAMILY."
+                puts "The family of the device $DEVICE is $FAMILY"
             }
             if { $SPEED == "-STD" } { set SPEED "STD"}
             set_device -family $FAMILY -die $DEVICE -package $PACKAGE -speed $SPEED
@@ -236,7 +238,7 @@ proc fpga_part { PART } {
             } elseif {[regexp -nocase {xc5v} $PART]} {
                 set FAMILY "xc5v"
             } else {
-                puts "The family of the part $PART is $FAMILY."
+                puts "The family of the part $PART is $FAMILY"
             }
         }
     }
@@ -266,7 +268,7 @@ proc fpga_params {} {
             set obj [get_filesets sources_1]
             set_property "generic" "[join $assigns]" -objects $obj
         }
-        "yosys"   { puts "UNSUPPORTED" }
+        "yosys"   { puts "Not yet implemented" }
     }
 }
 
@@ -491,7 +493,7 @@ proc fpga_area_opts {} {
             set_property strategy "Area_Explore" $obj
             set_property "steps.opt_design.args.directive" "ExploreArea" $obj
         }
-        "yosys"   { puts "UNSUPPORTED" }
+        "yosys"   { puts "Not yet implemented" }
     }
 }
 
@@ -523,7 +525,7 @@ proc fpga_power_opts {} {
             set_property "steps.power_opt_design.is_enabled" "1" $obj
             set_property "steps.phys_opt_design.is_enabled" "1" $obj
         }
-        "yosys"   { puts "UNSUPPORTED" }
+        "yosys"   { puts "Not yet implemented" }
     }
 }
 
@@ -559,7 +561,7 @@ proc fpga_speed_opts {} {
             set_property "steps.phys_opt_design.args.directive" "Explore" $obj
             set_property "steps.route_design.args.directive" "Explore" $obj
         }
-        "yosys"   { puts "UNSUPPORTED" }
+        "yosys"   { puts "Not yet implemented" }
     }
 }
 
@@ -583,19 +585,19 @@ proc fpga_run_syn {} {
             wait_on_run synth_1
         }
         "yosys"   {
-            global FAMILY TOP
-            if {$FAMILY=="xcup" || $FAMILY=="xcu" || $FAMILY=="xc7"} {
+            global BACKEND FAMILY TOP
+            if {$BACKEND == "vivado"} {
                 synth_xilinx -top $TOP -family $FAMILY
                 write_edif -pvector bra yosys.edif
                 puts "Generated yosys.edif to be used with Vivado"
-            } elseif {$FAMILY=="xc6v" || $FAMILY=="xc6s" || $FAMILY=="xc5v"} {
+            } elseif {$BACKEND == "ise"} {
                 synth_xilinx -top $TOP -family $FAMILY -ise
                 write_edif -pvector bra yosys.edif
                 puts "Generated yosys.edif to be used with ISE"
             } else {
-                synth_xilinx -top $TOP
+                synth -top $TOP
                 write_verilog yosys.v
-                puts "Generated yosys.v"
+                puts "Generated yosys.v as a generic synthesis"
             }
         }
     }
@@ -679,7 +681,7 @@ proc fpga_export {} {
             }
         }
         "yosys"   {
-            puts "UNSUPPORTED"
+            puts "UNSUPPORTED (Yosys only performs Synthesis)"
         }
     }
 }
