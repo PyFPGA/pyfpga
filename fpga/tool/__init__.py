@@ -84,13 +84,6 @@ class Tool:
 
     def add_file(self, file, library, included, design):
         """Add a FILE to the project."""
-        flag = 1 if library is not None else 0
-        flag += 1 if included else 0
-        flag += 1 if design else 0
-        if flag > 1:
-            raise ValueError(
-                'library and included are mutually exclusive arguments'
-            )
         command = '    '  # indentation
         if included:
             command += 'fpga_include %s' % file

@@ -16,18 +16,45 @@ Features:
     * Provides reproducibility and repeatability.
     * Consumes fewer system resources.
 
+A simple example of how to use PyFPGA:
+
+```py
+from fpga.project import Project
+
+# Specify the backend tool and an optional project name
+prj = Project('vivado', 'example')
+
+# Set the FPGA, the project files and the top-level name
+prj.set_part('xc7z010-1-clg400')
+prj.add_files('location1/*.v')
+prj.add_files('location2/top.v')
+prj.add_files('location3/example.xdc')
+prj.set_top('Top')
+
+# Generate the bitstream running the tool
+prj.generate()
+```
+
+More examples into the [User Guide](doc/user_guide.md) and under the
+[examples](examples) directory.
+
 ## Support
 
-PyFPGA was developed under a Debian GNU/Linux, but it must run in any other
-POSIX compatible operating system and probably also with a Linux Bash under
-Windows (or maybe PowerSheel? Please let me know if you try).
+PyFPGA is a Python 3 package, which was developed under a Debian GNU/Linux.
+It must run in any other POSIX compatible Operating System and probably also
+in a different OS (the problem could be how the backends tools are called,
+please let me know any SUCCESS or FAIL using the
+[issues](https://gitlab.com/rodrigomelo9/pyfpga/issues) tracker).
 
 ### Bitstream Generation
 
 ![ISE](https://img.shields.io/badge/ISE-14.7-blue.svg)
 ![Libero](https://img.shields.io/badge/Libero--Soc-12.2-blue.svg)
 ![Quartus](https://img.shields.io/badge/Quartus--Prime-19.1-blue.svg)
-![Vivado](https://img.shields.io/badge/Vivado-2019.2-blue.svg)
+![Vivado](https://img.shields.io/badge/Vivado-2019.2&nbsp;(*)-blue.svg)
+
+(*) Also supports Block Designs and export of hardware info to be used from
+SDK/Vitis.
 
 ### Transfer
 
@@ -40,7 +67,14 @@ Windows (or maybe PowerSheel? Please let me know if you try).
 
 ## Installation
 
-* From this repository: `pip3 install .`
+Latest development version from git:
 
-> The FPGA tool to be used in the backend must be well installed, have the
-> license configured and be available to run from a terminal.
+```
+git clone https://gitlab.com/rodrigomelo9/pyfpga.git
+cd pyfpga
+sudo pip install -e .
+```
+
+> With `-e` (`--editable`) your application is installed into site-packages
+> via a kind of symlink, so you do not need to reinstall it after making, for
+> example, a `git pull`.
