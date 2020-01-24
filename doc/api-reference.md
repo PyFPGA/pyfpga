@@ -80,7 +80,7 @@ Adds a pre flow OPTION.
 
 * **option:** a valid, commonly Tcl, tool option.
 
-### `export_hardware(self)`
+### `export_hardware()`
 
 Exports files for the development of a Processor System.
 
@@ -102,7 +102,7 @@ The valid tasks values, in order, are:
 * *imp* to runs implementation.
 * *bit* to generates the bitstream.
 
-### `get_configs(self)`
+### `get_configs()`
 
 Gets the Project Configurations.
 
