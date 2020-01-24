@@ -67,7 +67,7 @@ SDK/Vitis.
 
 ## Installation
 
-* Latest development version from git:
+Latest development version from git:
 
 ```
 git clone https://gitlab.com/rodrigomelo9/pyfpga.git
@@ -75,6 +75,6 @@ cd pyfpga
 sudo pip install -e .
 ```
 
-> * With `-e` (`--editable`) your application is installed into site-packages
+> With `-e` (`--editable`) your application is installed into site-packages
 > via a kind of symlink, so you do not need to reinstall it after making, for
 > example, a `git pull`.
