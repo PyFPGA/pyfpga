@@ -32,10 +32,8 @@
 # Things to tuneup (#SOMETHING#) for each project
 #
 
-global TOOL
 set TOOL     #TOOL#
-# To use with Yosys
-set BACKEND  #BACKEND#
+set SECTOOL  #SECTOOL#
 set PROJECT  #PROJECT#
 set PART     #PART#
 set TOP      #TOP#
@@ -568,7 +566,11 @@ proc fpga_speed_opts {} {
 }
 
 proc fpga_run_syn {} {
-    global TOOL
+    global TOOL SECTOOL
+    if { $SECTOOL == "yosys" } {
+        fpga_print "the synthesis was performed with $SECTOOL"
+        return
+    }
     fpga_print "running 'synthesis'"
     switch $TOOL {
         "ise"     {
@@ -587,12 +589,12 @@ proc fpga_run_syn {} {
             wait_on_run synth_1
         }
         "yosys"   {
-            global BACKEND FAMILY TOP
-            if {$BACKEND == "vivado"} {
+            global FAMILY TOP
+            if {$SECTOOL == "vivado"} {
                 synth_xilinx -top $TOP -family $FAMILY
                 write_edif -pvector bra yosys.edif
                 puts "Generated yosys.edif to be used with Vivado"
-            } elseif {$BACKEND == "ise"} {
+            } elseif {$SECTOOL == "ise"} {
                 synth_xilinx -top $TOP -family $FAMILY -ise
                 write_edif -pvector bra yosys.edif
                 puts "Generated yosys.edif to be used with ISE"
