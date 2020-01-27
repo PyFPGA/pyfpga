@@ -21,6 +21,7 @@
 Defines the interface to be inherited to support a tool.
 """
 
+from glob import glob
 import os.path
 import subprocess
 
@@ -32,6 +33,14 @@ def check_value(value, values):
             '{} is not a valid value ({})'
             .format(value, " ,".join(values))
         )
+
+
+def find_bitstream(ext):
+    """Find a bitstream and raise an exception if not found."""
+    bitstream = glob('**/*.{}'.format(ext), recursive=True)
+    if len(bitstream) == 0:
+        raise FileNotFoundError('BitStream not found')
+    return bitstream[0]
 
 
 class Tool:
@@ -64,6 +73,7 @@ class Tool:
         self.params = []
         self.files = []
         self.set_top('UNDEFINED')
+        self.sectool = None
 
     def get_configs(self):
         """Get Configurations."""
@@ -82,7 +92,7 @@ class Tool:
         """Set a Generic/Parameter Value."""
         self.params.append('{ %s %s }' % (name, value))
 
-    def add_file(self, file, library, included, design):
+    def add_file(self, file, library=None, included=False, design=False):
         """Add a FILE to the project."""
         command = '    '  # indentation
         if included:
@@ -114,6 +124,8 @@ class Tool:
         template = os.path.join(os.path.dirname(__file__), 'template.tcl')
         tcl = open(template).read()
         tcl = tcl.replace('#TOOL#', self._TOOL)
+        if self.sectool is not None:
+            tcl = tcl.replace('#SECTOOL#', self.sectool)
         tcl = tcl.replace('#PROJECT#', self.project)
         tcl = tcl.replace('#PART#', self.part)
         tcl = tcl.replace('#PARAMS#', ' '.join(self.params))

@@ -31,14 +31,8 @@ import os
 import re
 import time
 
-from fpga.tool.ise import Ise
-from fpga.tool.libero import Libero
-from fpga.tool.quartus import Quartus
-from fpga.tool.vivado import Vivado
-from fpga.tool.tclsh import Tclsh
 
-
-TOOLS = ['ise', 'libero', 'quartus', 'vivado']
+TOOLS = ['ise', 'libero', 'quartus', 'vivado', 'yosys']
 
 
 class Project:
@@ -53,16 +47,29 @@ class Project:
         self._log = logging.getLogger(__name__)
         self._log.level = logging.INFO
         self._log.addHandler(logging.NullHandler())
+        # pylint: disable=import-outside-toplevel
         if tool == 'ise':
+            from fpga.tool.ise import Ise
             self.tool = Ise(project)
         elif tool == 'libero':
+            from fpga.tool.libero import Libero
             self.tool = Libero(project)
         elif tool == 'quartus':
+            from fpga.tool.quartus import Quartus
             self.tool = Quartus(project)
-        elif tool == 'vivado':
-            self.tool = Vivado(project)
         elif tool == 'tclsh':
+            from fpga.tool.tclsh import Tclsh
             self.tool = Tclsh(project)
+        elif tool == 'vivado':
+            from fpga.tool.vivado import Vivado
+            self.tool = Vivado(project)
+        elif tool in ['yosys', 'yosys-ise', 'yosys-vivado']:
+            from fpga.tool.yosys import Yosys
+            args = tool.split('-')
+            if len(args) > 1:
+                self.tool = Yosys(project, backend=args[1])
+            else:
+                self.tool = Yosys(project)
         else:
             raise NotImplementedError(tool)
         self._rundir = os.getcwd()
