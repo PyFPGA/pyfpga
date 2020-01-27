@@ -40,7 +40,7 @@ def find_bitstream(ext):
     bitstream = glob('**/*.{}'.format(ext), recursive=True)
     if len(bitstream) == 0:
         raise FileNotFoundError('BitStream not found')
-    return bitstream
+    return bitstream[0]
 
 
 class Tool:
