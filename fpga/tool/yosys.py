@@ -41,10 +41,12 @@ class Yosys(Tool):
             from fpga.tool.ise import Ise
             self.tool = Ise(project)
             self.sectool = 'ise'
+            self.set_part(self.tool.part)
         elif backend == 'vivado':
             from fpga.tool.vivado import Vivado
             self.tool = Vivado(project)
             self.sectool = 'vivado'
+            self.set_part(self.tool.part)
         else:
             self.tool = None
 
