@@ -50,21 +50,27 @@ class Yosys(Tool):
 
     def generate(self, strategy, to_task, from_task, capture):
         """Run the FPGA tool."""
-        super().generate(strategy, 'syn', from_task, capture)
-        # Configuring the backend tool
-        self.tool.sectool = 'yosys'
-        self.tool.part = self.part
-        self.tool.options = self.options
-        for file in self.files:
-            if 'fpga_include' in file:
-                continue
-            if re.match(r'.*\.v$', file):
-                continue
-            self.tool.files.append(file)
-        self.tool.add_file('yosys.edif')
-        self.tool.set_top('Top')
-        # Running the backend tool
-        self.tool.generate(strategy, to_task, from_task, capture)
+        if self.sectool not in ['ise', 'vivado']:
+            super().generate(strategy, to_task, from_task, capture)
+        else:
+            super().generate(strategy, 'syn', from_task, capture)
+            # Configuring the backend tool
+            if self.sectool == 'vivado':
+                self.tool.set_top('yosys')
+            else:
+                self.tool.set_top('Top')
+            self.tool.part = self.part
+            self.tool.options = self.options
+            for file in self.files:
+                if 'fpga_include' in file:
+                    continue
+                if re.match(r'.*\.v$', file):
+                    continue
+                self.tool.files.append(file)
+            self.tool.add_file('yosys.edif')
+            self.tool.sectool = 'yosys'
+            # Running the backend tool
+            self.tool.generate(strategy, to_task, from_task, capture)
 
     def transfer(self, devtype, position, part, width, capture):
         """Transfer a bitstream."""

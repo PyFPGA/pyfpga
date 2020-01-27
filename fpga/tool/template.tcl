@@ -585,6 +585,11 @@ proc fpga_run_syn {} {
             execute_module -tool map
         }
         "vivado"  {
+            if { $SECTOOL == "yosys" } {
+                set_property design_mode GateLvl [current_fileset]
+                fpga_print "the synthesis was performed with Yosys"
+                return
+            }
             reset_run synth_1
             launch_runs synth_1
             wait_on_run synth_1
@@ -609,7 +614,7 @@ proc fpga_run_syn {} {
 }
 
 proc fpga_run_imp {} {
-    global TOOL
+    global TOOL SECTOOL
     fpga_print "running 'implementation'"
     switch $TOOL {
         "ise"     {
@@ -626,7 +631,9 @@ proc fpga_run_imp {} {
             execute_module -tool sta
         }
         "vivado"  {
-            open_run synth_1
+            if {$SECTOOL != "yosys"} {
+                open_run synth_1
+            }
             launch_runs impl_1
             wait_on_run impl_1
         }
