@@ -112,6 +112,8 @@ class Ise(Tool):
         temp = _TEMPLATES[devtype]
         if devtype not in ['detect', 'unlock']:
             bitstream = glob('**/*.bit', recursive=True)
+            if len(bitstream) == 0:
+                raise FileNotFoundError('BitStream not found')
             temp = temp.replace('#BITSTREAM#', bitstream[0])
             temp = temp.replace('#POSITION#', str(position))
             temp = temp.replace('#NAME#', part)

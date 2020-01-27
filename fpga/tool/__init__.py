@@ -64,6 +64,7 @@ class Tool:
         self.params = []
         self.files = []
         self.set_top('UNDEFINED')
+        self.sectool = None
 
     def get_configs(self):
         """Get Configurations."""
@@ -82,7 +83,7 @@ class Tool:
         """Set a Generic/Parameter Value."""
         self.params.append('{ %s %s }' % (name, value))
 
-    def add_file(self, file, library, included, design):
+    def add_file(self, file, library=None, included=False, design=False):
         """Add a FILE to the project."""
         command = '    '  # indentation
         if included:
@@ -114,6 +115,8 @@ class Tool:
         template = os.path.join(os.path.dirname(__file__), 'template.tcl')
         tcl = open(template).read()
         tcl = tcl.replace('#TOOL#', self._TOOL)
+        if self.sectool is not None:
+            tcl = tcl.replace('#SECTOOL#', self.sectool)
         tcl = tcl.replace('#PROJECT#', self.project)
         tcl = tcl.replace('#PART#', self.part)
         tcl = tcl.replace('#PARAMS#', ' '.join(self.params))

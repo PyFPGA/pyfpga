@@ -21,6 +21,8 @@
 Implements the support for Yosys synthesizer.
 """
 
+import re
+
 from fpga.tool import Tool
 
 
@@ -31,14 +33,43 @@ class Yosys(Tool):
 
     _GEN_COMMAND = 'yosys -Q yosys.tcl'
 
-    _DEVTYPES = ['fpga']
-
     def __init__(self, project, backend=None):
         """Initializes the attributes of the class."""
         super().__init__(project)
+        # pylint: disable=import-outside-toplevel
         if backend == 'ise':
-            print('ise')
+            from fpga.tool.ise import Ise
+            self.tool = Ise(project)
+            self.sectool = 'ise'
         elif backend == 'vivado':
-            print('vivado')
+            from fpga.tool.vivado import Vivado
+            self.tool = Vivado(project)
+            self.sectool = 'vivado'
         else:
-            print('generic')
+            self.tool = None
+
+    def generate(self, strategy, to_task, from_task, capture):
+        """Run the FPGA tool."""
+        super().generate(strategy, to_task, from_task, capture)
+        # Configuring the backend tool
+        self.tool.sectool = 'yosys'
+        self.tool.part = self.part
+        self.tool.options = self.options
+        for file in self.files:
+            if 'fpga_include' in file:
+                continue
+            if re.match(r'.*\.v$', file):
+                continue
+            self.tool.files.append(file)
+#        self.tool.add_option(
+#            'project set "Top-Level Source Type" "EDIF"',
+#            'prefile'
+#        )
+        self.tool.add_file('yosys.edif')
+        self.tool.set_top('Top')
+        # Running the backend tool
+        self.tool.generate(strategy, to_task, from_task, capture)
+
+    def transfer(self, devtype, position, part, width, capture):
+        """Transfer a bitstream."""
+        self.tool.transfer(devtype, position, part, width, capture)
