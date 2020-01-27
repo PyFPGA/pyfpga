@@ -21,11 +21,10 @@
 Implements the support of ISE (Xilinx).
 """
 
-from glob import glob
 import re
 import subprocess
 
-from fpga.tool import Tool
+from fpga.tool import Tool, find_bitstream
 
 _TEMPLATES = {
     'fpga': """setMode -bs
@@ -111,10 +110,8 @@ class Ise(Tool):
         capture = super().transfer(devtype, position, part, width, capture)
         temp = _TEMPLATES[devtype]
         if devtype not in ['detect', 'unlock']:
-            bitstream = glob('**/*.bit', recursive=True)
-            if len(bitstream) == 0:
-                raise FileNotFoundError('BitStream not found')
-            temp = temp.replace('#BITSTREAM#', bitstream[0])
+            bitstream = find_bitstream('bit')
+            temp = temp.replace('#BITSTREAM#', bitstream)
             temp = temp.replace('#POSITION#', str(position))
             temp = temp.replace('#NAME#', part)
             temp = temp.replace('#WIDTH#', str(width))

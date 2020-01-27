@@ -21,6 +21,7 @@
 Defines the interface to be inherited to support a tool.
 """
 
+from glob import glob
 import os.path
 import subprocess
 
@@ -32,6 +33,14 @@ def check_value(value, values):
             '{} is not a valid value ({})'
             .format(value, " ,".join(values))
         )
+
+
+def find_bitstream(ext):
+    """Find a bitstream and raise an exception if not found."""
+    bitstream = glob('**/*.{}'.format(ext), recursive=True)
+    if len(bitstream) == 0:
+        raise FileNotFoundError('BitStream not found')
+    return bitstream
 
 
 class Tool:

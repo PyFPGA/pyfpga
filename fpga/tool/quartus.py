@@ -21,11 +21,10 @@
 Implements the support of Quartus (Intel/Altera).
 """
 
-from glob import glob
 import re
 import subprocess
 
-from fpga.tool import Tool
+from fpga.tool import Tool, find_bitstream
 
 
 class Quartus(Tool):
@@ -49,10 +48,11 @@ class Quartus(Tool):
         if devtype == 'detect':
             print(result.stdout)
         else:
-            bitstream = glob('**/*.sof', recursive=True)
-            bitstream.extend(glob('**/*.pof', recursive=True))
+            bitstream = find_bitstream('sof')
+            if len(bitstream) == 0:
+                bitstream = find_bitstream('pof')
             cable = re.match(r"1\) (.*) \[", result.stdout).groups()[0]
-            cmd = self._TRF_COMMAND % (cable, bitstream[0], position)
+            cmd = self._TRF_COMMAND % (cable, bitstream, position)
             result = subprocess.run(
                 cmd, shell=True, check=True,
                 universal_newlines=True, stdout=capture, stderr=capture
