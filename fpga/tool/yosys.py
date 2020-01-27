@@ -50,7 +50,7 @@ class Yosys(Tool):
 
     def generate(self, strategy, to_task, from_task, capture):
         """Run the FPGA tool."""
-        super().generate(strategy, to_task, from_task, capture)
+        super().generate(strategy, 'syn', from_task, capture)
         # Configuring the backend tool
         self.tool.sectool = 'yosys'
         self.tool.part = self.part
@@ -61,10 +61,6 @@ class Yosys(Tool):
             if re.match(r'.*\.v$', file):
                 continue
             self.tool.files.append(file)
-#        self.tool.add_option(
-#            'project set "Top-Level Source Type" "EDIF"',
-#            'prefile'
-#        )
         self.tool.add_file('yosys.edif')
         self.tool.set_top('Top')
         # Running the backend tool

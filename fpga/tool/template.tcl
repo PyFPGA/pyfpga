@@ -567,13 +567,14 @@ proc fpga_speed_opts {} {
 
 proc fpga_run_syn {} {
     global TOOL SECTOOL
-    if { $SECTOOL == "yosys" } {
-        fpga_print "the synthesis was performed with $SECTOOL"
-        return
-    }
     fpga_print "running 'synthesis'"
     switch $TOOL {
         "ise"     {
+            if { $SECTOOL == "yosys" } {
+                project set top_level_module_type "EDIF"
+                fpga_print "the synthesis was performed with Yosys"
+                return
+            }
             project clean
             process run "Synthesize" -force rerun
         }
