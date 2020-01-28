@@ -159,10 +159,12 @@ class Tool:
             )
         tasks = " ".join(self._TASKS[from_index:to_index+1])
         self._create_gen_script(strategy, tasks)
-        return subprocess.run(
+        result = subprocess.run(
             self._GEN_COMMAND, shell=True, check=True,
-            universal_newlines=True, stdout=capture, stderr=capture
+            universal_newlines=True, stdout=capture,
+            stderr=subprocess.STDOUT
         )
+        return result.stdout
 
     def export_hardware(self):
         """Exports files for the development of a Processor System."""

@@ -116,7 +116,9 @@ class Ise(Tool):
             temp = temp.replace('#NAME#', part)
             temp = temp.replace('#WIDTH#', str(width))
         open("ise-prog.impact", 'w').write(temp)
-        return subprocess.run(
+        result = subprocess.run(
             self._TRF_COMMAND, shell=True, check=True,
-            universal_newlines=True, stdout=capture, stderr=capture
+            universal_newlines=True, stdout=capture,
+            stderr=subprocess.STDOUT
         )
+        return result.stdout

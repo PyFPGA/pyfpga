@@ -55,6 +55,7 @@ class Quartus(Tool):
             cmd = self._TRF_COMMAND % (cable, bitstream, position)
             result = subprocess.run(
                 cmd, shell=True, check=True,
-                universal_newlines=True, stdout=capture, stderr=capture
+                universal_newlines=True, stdout=capture,
+                stderr=subprocess.STDOUT
             )
-        return result
+        return result.stdout
