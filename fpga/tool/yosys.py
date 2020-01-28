@@ -60,7 +60,7 @@ class Yosys(Tool):
             if self.sectool == 'vivado':
                 self.tool.set_top('yosys')
             else:
-                self.tool.set_top('Top')
+                self.tool.set_top(self.top)
             self.tool.part = self.part
             self.tool.options = self.options
             for file in self.files:
