@@ -266,7 +266,9 @@ proc fpga_params {} {
             set obj [get_filesets sources_1]
             set_property "generic" "[join $assigns]" -objects $obj
         }
-        "yosys"   { puts "Not yet implemented" }
+        "yosys"   {
+            # They must be specified when top file was already read (see fpga_top)
+        }
     }
 }
 
@@ -466,7 +468,12 @@ proc fpga_top { TOP } {
         "vivado"  {
             set_property top $TOP [current_fileset]
         }
-        "yosys"   { }
+        "yosys"   {
+            global PARAMS
+            set assigns {}
+            foreach PARAM $PARAMS { append assigns "-set $PARAM" }
+            eval "chparam $assigns $TOP"
+        }
     }
 }
 

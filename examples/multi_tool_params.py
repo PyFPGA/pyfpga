@@ -14,6 +14,8 @@ logging.basicConfig()
 
 for hdl in ['vhdl', 'verilog']:
     for tool in TOOLS:
+        if tool == 'yosys' and hdl == 'vhdl':
+            continue
         PRJ = Project(tool)
         PRJ.set_param('FREQ', '50000000')
         PRJ.set_param('SECS', '2')
