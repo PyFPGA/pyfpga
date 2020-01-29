@@ -22,6 +22,7 @@ Implements the support of Quartus (Intel/Altera).
 """
 
 import re
+import subprocess
 
 from fpga.tool import Tool, find_bitstream, run
 
@@ -40,14 +41,18 @@ class Quartus(Tool):
 
     def transfer(self, devtype, position, part, width, capture):
         super().transfer(devtype, position, part, width, capture)
-        result = run('jtagconfig', capture)
+        result = subprocess.run(
+            'jtagconfig', shell=True, check=True,
+            stdout=subprocess.PIPE, universal_newlines=True
+        )
+        result = result.stdout
         if devtype == 'detect':
             print(result)
         else:
             bitstream = find_bitstream('sof')
             if len(bitstream) == 0:
                 bitstream = find_bitstream('pof')
-            cable = re.match(r"1\) (.*) \[", result.stdout).groups()[0]
+            cable = re.match(r"1\) (.*) \[", result).groups()[0]
             cmd = self._TRF_COMMAND % (cable, bitstream, position)
             result = run(cmd, capture)
         return result
