@@ -68,5 +68,5 @@ class Libero(Tool):
         self.part = part
 
     def transfer(self, devtype, position, part, width, capture):
-        capture = super().transfer(devtype, position, part, width, capture)
+        super().transfer(devtype, position, part, width, capture)
         raise NotImplementedError('transfer(libero)')

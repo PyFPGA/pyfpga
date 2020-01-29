@@ -53,27 +53,26 @@ class Yosys(Tool):
     def generate(self, strategy, to_task, from_task, capture):
         """Run the FPGA tool."""
         if self.sectool not in ['ise', 'vivado']:
-            super().generate(strategy, to_task, from_task, capture)
+            return super().generate(strategy, to_task, from_task, capture)
+        # Yosys + supported backend
+        output1 = super().generate(strategy, 'syn', from_task, capture)
+        if self.sectool == 'vivado':
+            self.tool.set_top('yosys')
         else:
-            super().generate(strategy, 'syn', from_task, capture)
-            # Configuring the backend tool
-            if self.sectool == 'vivado':
-                self.tool.set_top('yosys')
-            else:
-                self.tool.set_top(self.top)
-            self.tool.part = self.part
-            self.tool.options = self.options
-            for file in self.files:
-                if 'fpga_include' in file:
-                    continue
-                if re.match(r'.*\.v$', file):
-                    continue
-                self.tool.files.append(file)
-            self.tool.add_file('yosys.edif')
-            self.tool.sectool = 'yosys'
-            # Running the backend tool
-            self.tool.generate(strategy, to_task, from_task, capture)
+            self.tool.set_top(self.top)
+        self.tool.part = self.part
+        self.tool.options = self.options
+        for file in self.files:
+            if 'fpga_include' in file:
+                continue
+            if re.match(r'.*\.v$', file):
+                continue
+            self.tool.files.append(file)
+        self.tool.add_file('yosys.edif')
+        self.tool.sectool = 'yosys'
+        output2 = self.tool.generate(strategy, to_task, from_task, capture)
+        return output1 + output2
 
     def transfer(self, devtype, position, part, width, capture):
         """Transfer a bitstream."""
-        self.tool.transfer(devtype, position, part, width, capture)
+        return self.tool.transfer(devtype, position, part, width, capture)

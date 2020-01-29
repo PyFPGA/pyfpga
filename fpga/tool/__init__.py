@@ -43,6 +43,17 @@ def find_bitstream(ext):
     return bitstream[0]
 
 
+def run(command, capture):
+    """Run a command."""
+    output = subprocess.PIPE if capture else None
+    check = not capture
+    result = subprocess.run(
+        command, shell=True, check=check, universal_newlines=True,
+        stdout=output, stderr=subprocess.STDOUT
+    )
+    return result.stdout
+
+
 class Tool:
     """Tool interface.
 
@@ -149,7 +160,6 @@ class Tool:
         check_value(strategy, self._STRATEGIES)
         check_value(to_task, self._TASKS)
         check_value(from_task, self._TASKS)
-        capture = subprocess.PIPE if capture else None
         to_index = self._TASKS.index(to_task)
         from_index = self._TASKS.index(from_task)
         if from_index > to_index:
@@ -159,10 +169,7 @@ class Tool:
             )
         tasks = " ".join(self._TASKS[from_index:to_index+1])
         self._create_gen_script(strategy, tasks)
-        return subprocess.run(
-            self._GEN_COMMAND, shell=True, check=True,
-            universal_newlines=True, stdout=capture, stderr=capture
-        )
+        return run(self._GEN_COMMAND, capture)
 
     def export_hardware(self):
         """Exports files for the development of a Processor System."""
@@ -175,4 +182,5 @@ class Tool:
         check_value(position, range(10))
         isinstance(part, str)
         check_value(width, [1, 2, 4, 8, 16, 32])
-        return subprocess.PIPE if capture else None
+        # Dummy check to avoid unused-argument (pylint)
+        isinstance(capture, bool)
