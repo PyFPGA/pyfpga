@@ -1,6 +1,6 @@
 #
-# Copyright (C) 2019 INTI
-# Copyright (C) 2019 Rodrigo A. Melo
+# Copyright (C) 2019-2020 INTI
+# Copyright (C) 2019-2020 Rodrigo A. Melo
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,16 +28,11 @@ import glob
 import inspect
 import logging
 import os
+import re
 import time
 
-from fpga.tool.ise import Ise
-from fpga.tool.libero import Libero
-from fpga.tool.quartus import Quartus
-from fpga.tool.vivado import Vivado
-from fpga.tool.tclsh import Tclsh
 
-
-TOOLS = ['ise', 'libero', 'quartus', 'vivado']
+TOOLS = ['ise', 'libero', 'quartus', 'vivado', 'yosys']
 
 
 class Project:
@@ -52,16 +47,29 @@ class Project:
         self._log = logging.getLogger(__name__)
         self._log.level = logging.INFO
         self._log.addHandler(logging.NullHandler())
+        # pylint: disable=import-outside-toplevel
         if tool == 'ise':
+            from fpga.tool.ise import Ise
             self.tool = Ise(project)
         elif tool == 'libero':
+            from fpga.tool.libero import Libero
             self.tool = Libero(project)
         elif tool == 'quartus':
+            from fpga.tool.quartus import Quartus
             self.tool = Quartus(project)
-        elif tool == 'vivado':
-            self.tool = Vivado(project)
         elif tool == 'tclsh':
+            from fpga.tool.tclsh import Tclsh
             self.tool = Tclsh(project)
+        elif tool == 'vivado':
+            from fpga.tool.vivado import Vivado
+            self.tool = Vivado(project)
+        elif tool in ['yosys', 'yosys-ise', 'yosys-vivado']:
+            from fpga.tool.yosys import Yosys
+            args = tool.split('-')
+            if len(args) > 1:
+                self.tool = Yosys(project, backend=args[1])
+            else:
+                self.tool = Yosys(project)
         else:
             raise NotImplementedError(tool)
         self._rundir = os.getcwd()
@@ -94,28 +102,81 @@ class Project:
         * **part:** the FPGA part as specified by the tool.
         """
         self.tool.set_part(part)
-        self._log.info('part = %s', self.tool.part)
 
-    def add_files(self, pathname, lib=None):
+    def set_param(self, name, value):
+        """Set a Generic/Parameter Value."""
+        self.tool.set_param(name, value)
+
+    def add_design(self, pathname):
+        """Adds a Block Design.
+
+        * **pathname:** a string containing a relative path to a file.
+        """
+        pathname = os.path.join(self._reldir, pathname)
+        pathname = os.path.join(self._rundir, pathname)
+        if os.path.isfile(pathname):
+            self.tool.add_file(pathname, None, False, True)
+        else:
+            self._log.warning('add_design: %s not found.', pathname)
+
+    def add_files(self, pathname, library=None):
         """Adds files to the project (HDLs, TCLs, Constraints).
 
-        * **pathname:** a string containing an absolute/relative path
-        specification, and can contain shell-style wildcards (glob compliant).
-        * **lib:** optional library name (only useful with VHDL files).
+        * **pathname:** a string containing a relative path specification,
+        and can contain shell-style wildcards (glob compliant).
+        * **library:** an optional VHDL library name.
         """
         pathname = os.path.join(self._reldir, pathname)
         self._log.debug('PATHNAME = %s', pathname)
         files = glob.glob(pathname)
+        if len(files) == 0:
+            self._log.warning('add_files: %s not found.', pathname)
         for file in files:
             file_abs = os.path.join(self._rundir, file)
-            self.tool.add_file(file_abs, lib)
+            self.tool.add_file(file_abs, library, False, False)
+
+    def add_include(self, pathname):
+        """Adds a search path.
+
+        Useful to specify where to search Verilog Included Files or IP
+        repositories.
+
+        * **pathname:** a string containing a relative path to a directory
+        or a file.
+
+        **Note:** generally a directory must be specified, but Libero-SoC
+        also needs to add the file when is a Verilog Included File.
+        """
+        pathname = os.path.join(self._reldir, pathname)
+        pathname = os.path.join(self._rundir, pathname)
+        if os.path.exists(pathname):
+            self.tool.add_file(pathname, None, True, False)
+        else:
+            self._log.warning('add_include: %s not found.', pathname)
 
     def set_top(self, toplevel):
         """Set the top level of the project.
 
-        * **toplevel:** name of the top level entity/module.
+        * **toplevel:** name or file path of the top level entity/module.
         """
-        self.tool.set_top(toplevel)
+        if os.path.splitext(toplevel)[1]:
+            toplevel = os.path.join(self._reldir, toplevel)
+            if os.path.exists(toplevel):
+                hdl = open(toplevel, 'r').read()
+                top = re.findall(r'module\s+(\w+)\s*[#(]', hdl)
+                top.extend(re.findall(r'entity\s+(\w+)\s+is', hdl))
+                if len(top) > 0:
+                    self.tool.set_top(top[-1])
+                    if len(top) > 1:
+                        self._log.warning(
+                            'set_top: more than one Top found, last selected.'
+                        )
+                else:
+                    self.tool.set_top('UNDEFINED')
+            else:
+                raise FileNotFoundError(toplevel)
+        else:
+            self.tool.set_top(toplevel)
 
     def add_prefile_opt(self, option):
         """Adds a prefile OPTION.
@@ -159,12 +220,15 @@ class Project:
         """
         self.tool.add_option(option, 'postbit')
 
-    def generate(self, strategy='none', to_task='bit', from_task='prj'):
+    def generate(
+            self, strategy='none', to_task='bit', from_task='prj',
+            capture=False):
         """Run the FPGA tool.
 
-        * **strategy:** *none* (default), *area*, *speed* or *power*.
+        * **strategy:** *none*, *area*, *speed* or *power*.
         * **to_task:** last task.
         * **from_task:** first task.
+        * **capture:** capture STDOUT and STDERR (returned values).
 
         The valid tasks values, in order, are:
         * *prj* to creates the project file.
@@ -173,7 +237,17 @@ class Project:
         * *bit* to generates the bitstream.
         """
         with self._run_in_dir():
-            self.tool.generate(strategy, to_task, from_task)
+            if capture:
+                self._log.info('The execution messages are being captured.')
+            return self.tool.generate(strategy, to_task, from_task, capture)
+
+    def export_hardware(self):
+        """Exports files for the development of a Processor System.
+
+        Useful when working with FPGA-SoCs to provide information for the
+        development of the Processor System side.
+        """
+        self.tool.export_hardware()
 
     def set_board(self, board):
         """Sets a development board to have predefined values.
@@ -184,29 +258,34 @@ class Project:
         """
         raise NotImplementedError('set_board')
 
-    def transfer(self, devtype='fpga', position=1, part='', width=1):
+    def transfer(
+            self, devtype='fpga', position=1, part='', width=1,
+            capture=False):
         """Transfers the generated bitstream to a device.
 
-        * **devtype:** *fpga* (default) or other valid option
+        * **devtype:** *fpga* or other valid option
         (depending on the used tool, it could be *spi*, *bpi, etc).
         * **position:** position of the device in the JTAG chain.
         * **part:** name of the memory (when device is not *fpga*).
         * **width:** bits width of the memory (when device is not *fpga*).
+        * **capture:** capture STDOUT and STDERR (returned values).
         """
         with self._run_in_dir():
-            self.tool.transfer(devtype, position, part, width)
+            if capture:
+                self._log.info('The execution messages are being captured.')
+            return self.tool.transfer(devtype, position, part, width, capture)
 
     @contextlib.contextmanager
     def _run_in_dir(self):
         """Runs the tool in other directory."""
         try:
-            start = time.time()
             if not os.path.exists(self.outdir):
-                self._log.info('the output directory did not exist, created.')
+                self._log.debug('the output directory did not exist, created.')
                 os.makedirs(self.outdir)
             os.chdir(self.outdir)
+            start = time.time()
             yield
         finally:
-            os.chdir(self._rundir)
             end = time.time()
+            os.chdir(self._rundir)
             self._log.info('executed in %.3f seconds.', end-start)

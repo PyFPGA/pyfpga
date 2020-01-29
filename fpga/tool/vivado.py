@@ -1,6 +1,6 @@
 #
-# Copyright (C) 2019 INTI
-# Copyright (C) 2019 Rodrigo A. Melo
+# Copyright (C) 2019-2020 INTI
+# Copyright (C) 2019-2020 Rodrigo A. Melo
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,10 +21,7 @@
 Implements the support of Vivado (Xilinx).
 """
 
-from glob import glob
-import subprocess
-
-from fpga.tool import Tool
+from fpga.tool import Tool, find_bitstream, run
 
 _TEMPLATES = {
     'fpga': """\
@@ -55,11 +52,11 @@ class Vivado(Tool):
 
     _DEVTYPES = ['fpga', 'detect']
 
-    def transfer(self, devtype='fpga', position=1, part=None, width=None):
-        super().transfer(devtype, position, part, width)
+    def transfer(self, devtype, position, part, width, capture):
+        super().transfer(devtype, position, part, width, capture)
         temp = _TEMPLATES[devtype]
         if devtype != 'detect':
-            bitstream = glob('**/*.bit', recursive=True)
-            temp = temp.replace('#BITSTREAM#', bitstream[0])
+            bitstream = find_bitstream('bit')
+            temp = temp.replace('#BITSTREAM#', bitstream)
         open("vivado-prog.tcl", 'w').write(temp)
-        subprocess.run(self._TRF_COMMAND, shell=True, check=True)
+        return run(self._TRF_COMMAND, capture)

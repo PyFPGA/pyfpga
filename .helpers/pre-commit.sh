@@ -12,7 +12,7 @@ venv/bin/pycodestyle fpga/ examples/ test/
 verify
 
 echo "Running PyLint ..."
-venv/bin/pylint -j 0 --score no fpga
+venv/bin/pylint -j 0 --score no fpga -d R0913
 verify
 
 echo "Updating documentation ..."

@@ -7,7 +7,11 @@ Typically, you would want to change some files and the top level, sometimes
 the part (if different boards are used) and less probable, maybe the tool.
 """
 
+import logging
+
 from fpga.project import Project
+
+logging.basicConfig()
 
 PROJECTS = {
     'example1': {

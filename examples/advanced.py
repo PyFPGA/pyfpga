@@ -5,6 +5,7 @@ import logging
 from fpga.project import Project
 
 logging.basicConfig()
+logging.getLogger('fpga.project').level = logging.DEBUG
 
 PRJ = Project('vivado', 'advanced')
 PRJ.set_outdir('../build/advanced')

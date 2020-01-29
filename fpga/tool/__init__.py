@@ -1,6 +1,6 @@
 #
-# Copyright (C) 2019 INTI
-# Copyright (C) 2019 Rodrigo A. Melo
+# Copyright (C) 2019-2020 INTI
+# Copyright (C) 2019-2020 Rodrigo A. Melo
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 Defines the interface to be inherited to support a tool.
 """
 
+from glob import glob
 import os.path
 import subprocess
 
@@ -34,12 +35,29 @@ def check_value(value, values):
         )
 
 
+def find_bitstream(ext):
+    """Find a bitstream and raise an exception if not found."""
+    bitstream = glob('**/*.{}'.format(ext), recursive=True)
+    if len(bitstream) == 0:
+        raise FileNotFoundError('BitStream not found')
+    return bitstream[0]
+
+
+def run(command, capture):
+    """Run a command."""
+    output = subprocess.PIPE if capture else None
+    check = not capture
+    result = subprocess.run(
+        command, shell=True, check=check, universal_newlines=True,
+        stdout=output, stderr=subprocess.STDOUT
+    )
+    return result.stdout
+
+
 class Tool:
     """Tool interface.
 
-    It is the basic interface for tool implementations. There are methods that
-    raises a NotImplementedError exception and should be replaced by a tool
-    implementation to provide the needed funcionality.
+    It is the basic interface for tool implementations.
     """
 
     _TOOL = 'UNDEFINED'
@@ -51,7 +69,7 @@ class Tool:
 
     _DEVTYPES = []
 
-    def __init__(self, project=None):
+    def __init__(self, project):
         """Initializes the attributes of the class."""
         self.project = self._TOOL if project is None else project
         self.set_part(self._PART)
@@ -63,8 +81,10 @@ class Tool:
             'postimp': [],
             'postbit': []
         }
+        self.params = []
         self.files = []
         self.set_top('UNDEFINED')
+        self.sectool = None
 
     def get_configs(self):
         """Get Configurations."""
@@ -79,12 +99,21 @@ class Tool:
         """Set the target PART."""
         self.part = part
 
-    def add_file(self, file, lib=None):
+    def set_param(self, name, value):
+        """Set a Generic/Parameter Value."""
+        self.params.append('{ %s %s }' % (name, value))
+
+    def add_file(self, file, library=None, included=False, design=False):
         """Add a FILE to the project."""
         command = '    '  # indentation
-        command += 'fpga_file %s' % file
-        if lib is not None:
-            command += ' %s' % lib
+        if included:
+            command += 'fpga_include %s' % file
+        elif design:
+            command += 'fpga_design %s' % file
+        else:
+            command += 'fpga_file %s' % file
+            if library is not None:
+                command += ' %s' % library
         self.files.append(command)
 
     def set_top(self, top):
@@ -106,24 +135,27 @@ class Tool:
         template = os.path.join(os.path.dirname(__file__), 'template.tcl')
         tcl = open(template).read()
         tcl = tcl.replace('#TOOL#', self._TOOL)
+        if self.sectool is not None:
+            tcl = tcl.replace('#SECTOOL#', self.sectool)
         tcl = tcl.replace('#PROJECT#', self.project)
         tcl = tcl.replace('#PART#', self.part)
-        tcl = tcl.replace('#FILES#', "\n".join(self.files))
+        tcl = tcl.replace('#PARAMS#', ' '.join(self.params))
+        tcl = tcl.replace('#FILES#', '\n'.join(self.files))
         tcl = tcl.replace('#TOP#', self.top)
         tcl = tcl.replace('#STRATEGY#', strategy)
         tcl = tcl.replace('#TASKS#', tasks)
-        tcl = tcl.replace('#PREFILE_OPTS#', "\n".join(self.options['prefile']))
-        tcl = tcl.replace('#POSTPRJ_OPTS#', "\n".join(self.options['postprj']))
-        tcl = tcl.replace('#PREFLOW_OPTS#', "\n".join(self.options['preflow']))
-        tcl = tcl.replace('#POSTSYN_OPTS#', "\n".join(self.options['postsyn']))
-        tcl = tcl.replace('#POSTIMP_OPTS#', "\n".join(self.options['postimp']))
-        tcl = tcl.replace('#POSTBIT_OPTS#', "\n".join(self.options['postbit']))
+        tcl = tcl.replace('#PREFILE_OPTS#', '\n'.join(self.options['prefile']))
+        tcl = tcl.replace('#POSTPRJ_OPTS#', '\n'.join(self.options['postprj']))
+        tcl = tcl.replace('#PREFLOW_OPTS#', '\n'.join(self.options['preflow']))
+        tcl = tcl.replace('#POSTSYN_OPTS#', '\n'.join(self.options['postsyn']))
+        tcl = tcl.replace('#POSTIMP_OPTS#', '\n'.join(self.options['postimp']))
+        tcl = tcl.replace('#POSTBIT_OPTS#', '\n'.join(self.options['postbit']))
         open("%s.tcl" % self._TOOL, 'w').write(tcl)
 
     _STRATEGIES = ['none', 'area', 'speed', 'power']
     _TASKS = ['prj', 'syn', 'imp', 'bit']
 
-    def generate(self, strategy='none', to_task='bit', from_task='prj'):
+    def generate(self, strategy, to_task, from_task, capture):
         """Run the FPGA tool."""
         check_value(strategy, self._STRATEGIES)
         check_value(to_task, self._TASKS)
@@ -137,11 +169,18 @@ class Tool:
             )
         tasks = " ".join(self._TASKS[from_index:to_index+1])
         self._create_gen_script(strategy, tasks)
-        subprocess.run(self._GEN_COMMAND, shell=True, check=True)
+        return run(self._GEN_COMMAND, capture)
 
-    def transfer(self, devtype, position, part, width):
+    def export_hardware(self):
+        """Exports files for the development of a Processor System."""
+        self.add_option('fpga_export', 'postbit')
+
+    def transfer(self, devtype, position, part, width, capture):
         """Transfer a bitstream."""
+        # pylint: disable-msg=too-many-arguments
         check_value(devtype, self._DEVTYPES)
         check_value(position, range(10))
         isinstance(part, str)
         check_value(width, [1, 2, 4, 8, 16, 32])
+        # Dummy check to avoid unused-argument (pylint)
+        isinstance(capture, bool)

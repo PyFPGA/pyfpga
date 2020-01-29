@@ -9,7 +9,7 @@ basic and advanced uses of PyFPGA.
 * [Transfer to a device](#transfer-to-a-device)
 * [Logging capabilities](#logging-capabilities)
 
-> ATTENTION:
+> **ATTENTION:**
 > PyFPGA assumes that the backend Tool is ready to run.
 > This implies, depending on the operating system, things such as:
 > * Tool installed.
@@ -56,10 +56,11 @@ Next step is to specify the project files (HDLs, Constraints, TCLs) and the
 top-level name.
 
 ```py
-# First, we recommend Verilog Header Files (if used)
-prj.add_files('headers/project.vh')
+# We recommend Verilog Included Files first (when used)
+prj.add_files('*.vh', included=True)
 # Then HDL Components/Modules
-prj.add_files('vhdl/*.vhdl', 'OptionalLibraryName')
+prj.add_files('vhdl/*.vhdl', 'LibraryName')
+prj.add_files('vhdl/top.vhdl')
 prj.add_files('verilog/*.v')
 # And finally constraints
 prj.add_files('project.sdc')
@@ -71,11 +72,13 @@ prj.set_top('TopName')
 > * For some Tools, the order could be a problem. If a complain about
 > something not found is displayed, try changing the order.
 > * For some Tools, the file extension could be a problem. If a file
-> seems unsupported, you can always use the project options
+> seems unsupported, you can always use the `prefile` or `postprj` options
 > (see [Advanced usage](#advanced-usage)).
 > * A file with the tcl extension will be included with the `source`
 > command. It could be used to have a file with particular additional
 > options.
+> * A relative path to a valid VHDL/Verilog file is also accepted by
+> `set_top`, to automatically extract `TopName`.
 
 Finally, you must run the Design Flow with:
 
@@ -97,23 +100,33 @@ Flow internally performed by PyFPGA.
 If the provided API if not enough or suitable for your project, you can
 specify *options* in different parts of the flow, using:
 
-* `add_prefile_opt('A text string')` for *Pre-file options*.
-* `add_postprj_opt('A text string')` for *Post-prj options*.
-* `add_preflow_opt('A text string')` for *Pre-flow options*.
-* `add_postsyn_opt('A text string')` for *Post-syn options*.
-* `add_postimp_opt('A text string')` for *Post-imp options*.
-* `add_postbit_opt('A text string')` for *Post-bit options*.
+```py
+prj.add_prefile_opt('A text string')  # for *Pre-file options*.
+prj.add_postprj_opt('A text string')  # for *Post-prj options*.
+prj.add_preflow_opt('A text string')  # for *Pre-flow options*.
+prj.add_postsyn_opt('A text string')  # for *Post-syn options*.
+prj.add_postimp_opt('A text string')  # for *Post-imp options*.
+prj.add_postbit_opt('A text string')  # for *Post-bit options*.
+```
 
 > **Notes:**
 > * The text string must be a valid command supported by the used backend.
 > * If more than one command is needed, you can call these methods several
 > times (will be executed in order).
 
+The generics/parameters of the project can be optinally changed with:
+
+```py
+prj.set_param('param1', value1)
+...
+prj.set_param('paramN', valueN)
+```
+
 The method `generate` (previously seen at the end of
 [Basic usage](#basic-usage) section) has optional parameters:
 
 ```py
-generate(strategy, to_task, from_task)
+prj.generate(strategy, to_task, from_task, capture)
 ```
 
 The default *strategy* is `none`, but you can apply some optimizations using
@@ -134,6 +147,14 @@ prj.generate(to_task='syn', from_task='prj')
 prj.generate(to_task='bit', from_task='syn')
 ```
 
+In case of *capture*, it is useful to catch execution messages to be
+post-processed or saved to a file:
+```py
+result = prj.generate(capture=True)
+print(result.stdout)
+print(result.stderr)
+```
+
 The execution of `generate` finish with an Exception if an error (such as
 command not found) occurs. It could be a good idea to catch the exception
 and act in consequence:
@@ -152,10 +173,10 @@ example.
 
 This method is in charge of run the needed tool to transfer a bitstream to a
 device (commonly an FPGA, but memories are also supported in some cases).
-It has up to four optional parameters:
+It has up to five optional parameters:
 
 ```py
-transfer(devtype, position, part, width)
+prj.transfer(devtype, position, part, width, capture)
 ```
 
 Where *devtype* is `fpga` by default but can also be `spi`, `bpi`, etc, if
@@ -163,6 +184,13 @@ supported.
 An integer number can be used to specify the *position* (1) in the Jtag chain.
 When a memory is used as *devtype*, the *part* name and the *width* in bits
 must be also specified.
+In case of *capture*, it is useful to catch execution messages to be
+post-processed or saved to a file:
+```py
+result = prj.transfer(capture=True)
+print(result.stdout)
+print(result.stderr)
+```
 
 > **Notes:**
 > * In Xilinx, `spi` and `bpi` memories are out of the Jtag chain and are

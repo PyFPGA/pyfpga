@@ -1,6 +1,6 @@
 #
-# Copyright (C) 2019 INTI
-# Copyright (C) 2019 Rodrigo A. Melo
+# Copyright (C) 2019-2020 INTI
+# Copyright (C) 2019-2020 Rodrigo A. Melo
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,11 +21,10 @@
 Implements the support of Quartus (Intel/Altera).
 """
 
-from glob import glob
 import re
 import subprocess
 
-from fpga.tool import Tool
+from fpga.tool import Tool, find_bitstream, run
 
 
 class Quartus(Tool):
@@ -40,17 +39,20 @@ class Quartus(Tool):
 
     _DEVTYPES = ['fpga', 'detect']
 
-    def transfer(self, devtype, position, part, width):
-        super().transfer(devtype, position, part, width)
+    def transfer(self, devtype, position, part, width, capture):
+        super().transfer(devtype, position, part, width, capture)
         result = subprocess.run(
             'jtagconfig', shell=True, check=True,
             stdout=subprocess.PIPE, universal_newlines=True
         )
+        result = result.stdout
         if devtype == 'detect':
-            print(result.stdout)
+            print(result)
         else:
-            bitstream = glob('**/*.sof', recursive=True)
-            bitstream.extend(glob('**/*.pof', recursive=True))
-            cable = re.match(r"1\) (.*) \[", result.stdout).groups()[0]
-            cmd = self._TRF_COMMAND % (cable, bitstream[0], position)
-            subprocess.run(cmd, shell=True, check=True)
+            bitstream = find_bitstream('sof')
+            if len(bitstream) == 0:
+                bitstream = find_bitstream('pof')
+            cable = re.match(r"1\) (.*) \[", result).groups()[0]
+            cmd = self._TRF_COMMAND % (cable, bitstream, position)
+            result = run(cmd, capture)
+        return result

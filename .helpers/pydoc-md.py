@@ -40,7 +40,7 @@ def get_functions(module):
         if name.startswith('_') and name != '__init__':
             continue
         args = inspect.formatargspec(*inspect.getargspec(obj))
-        args = args.replace('self, ', '')
+        args = args.replace('self, ', '').replace('(self)', '()')
         output.append(fheader.format(name, args))
         if inspect.getdoc(obj):
             output.append('{}\n'.format(inspect.getdoc(obj)))
