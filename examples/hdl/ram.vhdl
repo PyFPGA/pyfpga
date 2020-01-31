@@ -30,7 +30,7 @@ architecture RTL of ram is
         return mem;
     end function;
 
-    signal ram : mem_t := init("memory.dat");
+    signal ram : mem_t := init("data/memory.dat");
 begin
     memory:
     process(clk_i)

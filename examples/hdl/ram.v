@@ -10,7 +10,7 @@ module ram (
 
 reg [31:0] ram [0:63];
 
-initial $readmemb("memory.dat",ram);
+initial $readmemb("data/memory.dat",ram);
 
 always @(posedge clk_i) begin
     if (we_i)
