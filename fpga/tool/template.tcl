@@ -583,7 +583,7 @@ proc fpga_run_syn {} {
                 return
             }
             project clean
-            process run "Synthesize" -force rerun
+            process run "Synthesize"
         }
         "libero"  {
             run_tool -name {SYNTHESIZE}
@@ -625,9 +625,9 @@ proc fpga_run_imp {} {
     fpga_print "running 'implementation'"
     switch $TOOL {
         "ise"     {
-            process run "Translate" -force rerun
-            process run "Map" -force rerun
-            process run "Place & Route" -force rerun
+            process run "Translate"
+            process run "Map"
+            process run "Place & Route"
         }
         "libero"  {
             run_tool -name {PLACEROUTE}
@@ -653,7 +653,7 @@ proc fpga_run_bit {} {
     fpga_print "running 'bitstream generation'"
     switch $TOOL {
         "ise"     {
-            process run "Generate Programming File" -force rerun
+            process run "Generate Programming File"
             file rename -force $TOP.bit $PROJECT.bit
         }
         "libero"  {
