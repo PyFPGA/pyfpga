@@ -221,11 +221,11 @@ class Project:
         self.tool.add_option(option, 'postbit')
 
     def generate(
-            self, strategy='none', to_task='bit', from_task='prj',
+            self, strategy='default', to_task='bit', from_task='prj',
             capture=False):
         """Run the FPGA tool.
 
-        * **strategy:** *none*, *area*, *speed* or *power*.
+        * **strategy:** *default*, *area*, *speed* or *power*.
         * **to_task:** last task.
         * **from_task:** first task.
         * **capture:** capture STDOUT and STDERR (returned values).

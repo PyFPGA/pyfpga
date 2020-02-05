@@ -129,9 +129,9 @@ The method `generate` (previously seen at the end of
 prj.generate(strategy, to_task, from_task, capture)
 ```
 
-The default *strategy* is `none`, but you can apply some optimizations using
-`area`, `power` or `speed`. At this point you are selecting if apply or not
-certain commands.
+The initial value of *strategy* is `default`, but you can apply some
+optimizations using `area`, `power` or `speed`. At this point you are
+selecting if apply or not certain commands.
 
 In case of *to_task* and *from_taks* (with default values `bit` and `prj`),
 you are selecting the first and last task to execute when `generate` is

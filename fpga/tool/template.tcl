@@ -37,7 +37,7 @@ set SECTOOL  #SECTOOL#
 set PROJECT  #PROJECT#
 set PART     #PART#
 set TOP      #TOP#
-# STRATEGY = none area power speed
+# STRATEGY = default area power speed
 set STRATEGY #STRATEGY#
 # TASKS = prj syn imp bit
 set TASKS    [list #TASKS#]

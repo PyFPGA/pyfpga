@@ -87,11 +87,11 @@ Exports files for the development of a Processor System.
 Useful when working with FPGA-SoCs to provide information for the
 development of the Processor System side.
 
-### `generate(strategy='none', to_task='bit', from_task='prj', capture=False)`
+### `generate(strategy='default', to_task='bit', from_task='prj', capture=False)`
 
 Run the FPGA tool.
 
-* **strategy:** *none*, *area*, *speed* or *power*.
+* **strategy:** *default*, *area*, *speed* or *power*.
 * **to_task:** last task.
 * **from_task:** first task.
 * **capture:** capture STDOUT and STDERR (returned values).

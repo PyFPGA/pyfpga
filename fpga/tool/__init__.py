@@ -152,7 +152,7 @@ class Tool:
         tcl = tcl.replace('#POSTBIT_OPTS#', '\n'.join(self.options['postbit']))
         open("%s.tcl" % self._TOOL, 'w').write(tcl)
 
-    _STRATEGIES = ['none', 'area', 'speed', 'power']
+    _STRATEGIES = ['default', 'area', 'speed', 'power']
     _TASKS = ['prj', 'syn', 'imp', 'bit']
 
     def generate(self, strategy, to_task, from_task, capture):
