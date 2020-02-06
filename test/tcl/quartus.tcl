@@ -1,11 +1,13 @@
-package require ::quartus::project
-project_new $PROJECT -overwrite
+package require ::quartus::flow
 
-set_global_assignment -name DEVICE $PART
+project_new example -overwrite
 
-set_global_assignment -name VERILOG_FILE $FILE
+set_global_assignment -name DEVICE 5CSEBA6U23I7
 
-set_global_assignment -name TOP_LEVEL_ENTITY $TOP
+set_global_assignment -name VHDL_FILE ../../examples/hdl/blinking.vhdl
+source ../../examples/quartus/de10nano.tcl
+
+set_global_assignment -name TOP_LEVEL_ENTITY Blinking
 
 execute_module -tool map
 

@@ -1,13 +1,14 @@
-project new $PROJECT.xise
+project new example.xise
 
-project set family  $FAMILY
-project set device  $DEVICE
-project set package $PACKAGE
-project set speed   $SPEED
+project set family  spartan6
+project set device  xc6slx9
+project set package csg324
+project set speed   -2
 
-xfile add $FILE
+xfile add ../../examples/hdl/blinking.vhdl
+xfile add ../../examples/ise/s6micro.ucf
 
-project set top $TOP
+project set top Blinking
 
 process run "Synthesize" -force rerun
 
