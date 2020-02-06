@@ -2,7 +2,6 @@
 
 ## General purpose examples
 
-* [basic.py](basic.py): almost a minimal example.
 * [advanced.py](advanced.py): logging capabilities, setting of options and
 exception catch are used.
 * [capture.py](capture.py): the execution messages are captured.
