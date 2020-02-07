@@ -18,9 +18,9 @@ PROJECTS = {
         'tool': 'vivado',
         'part': 'xc7s6cpga196-2',
         'files': [
-            ['hdl/blinking.vhdl', 'examples'],
-            ['hdl/examples_pkg.vhdl', 'examples'],
-            ['hdl/top.vhdl']
+            ['../hdl/blinking.vhdl', 'examples'],
+            ['../hdl/examples_pkg.vhdl', 'examples'],
+            ['../hdl/top.vhdl']
         ],
         'top': 'Top'
     },
@@ -28,7 +28,7 @@ PROJECTS = {
         'tool': 'vivado',
         'part': 'xc7k70t-3-fbg484',
         'files': [
-            ['hdl/*.vhdl', 'examples']
+            ['../hdl/*.vhdl', 'examples']
         ],
         'top': 'Top'
     },
@@ -36,9 +36,9 @@ PROJECTS = {
         'tool': 'quartus',
         'part': '5CEBA2F17A7',
         'files': [
-            ['hdl/blinking.vhdl', 'examples'],
-            ['hdl/examples_pkg.vhdl', 'examples'],
-            ['hdl/top.vhdl', 'examples']
+            ['../hdl/blinking.vhdl', 'examples'],
+            ['../hdl/examples_pkg.vhdl', 'examples'],
+            ['../hdl/top.vhdl', 'examples']
         ],
         'top': 'Top'
     },
@@ -46,7 +46,7 @@ PROJECTS = {
 
 for project in sorted(PROJECTS.keys()):
     PRJ = Project(PROJECTS[project]['tool'], project)
-    PRJ.set_outdir('../build/multi-project/%s' % project)
+    PRJ.set_outdir('../../build/multi/projects/%s' % project)
     PRJ.set_part(PROJECTS[project]['part'])
     for file in PROJECTS[project]['files']:
         if len(file) > 1:

@@ -15,17 +15,18 @@ logging.basicConfig()
 for hdl in ['vhdl', 'verilog']:
     for tool in TOOLS:
         if tool == 'yosys' and hdl == 'vhdl':
+            print("The combination Yosys + VHDL was skipped")
             continue
         PRJ = Project(tool)
         PRJ.set_param('FREQ', '50000000')
         PRJ.set_param('SECS', '2')
-        PRJ.set_outdir('../build/multi-tool-params/%s/%s' % (tool, hdl))
+        PRJ.set_outdir('../../build/multi/params/%s/%s' % (tool, hdl))
         if hdl == 'vhdl':
-            PRJ.add_files('hdl/blinking.vhdl')
+            PRJ.add_files('../hdl/blinking.vhdl')
         else:
-            PRJ.add_include('hdl/headers1/freq.vh')
-            PRJ.add_include('hdl/headers2/secs.vh')
-            PRJ.add_files('hdl/blinking.v')
+            PRJ.add_include('../hdl/headers1/freq.vh')
+            PRJ.add_include('../hdl/headers2/secs.vh')
+            PRJ.add_files('../hdl/blinking.v')
         PRJ.set_top('Blinking')
         try:
             PRJ.generate(to_task='syn')
