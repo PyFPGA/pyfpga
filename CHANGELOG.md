@@ -4,18 +4,18 @@
 
 * FPGA Helpers switched to be a Python package which provides an API to manage projects
 * Supported FPGA EDA Tools:
-    - Ise and Vivado from Xilinx
+    - ISE and Vivado from Xilinx
     - Quartus Prime from Intel/Altera
     - Libero-SoC from Microsemi
-    - Yosys (as a generic synthesizer or combined with ISE and Vivado)
+    - Yosys (as a generic synthesizer, or combined with ISE or Vivado)
 * The API provides:
     - A constructor where the TOOL must be specified and an optional PROJECT NAME can be provided
-      (TOOL is used as default)
+      (TOOL is used by default)
     - A method to set the target device PART (default values per TOOL are provided)
     - A method to add multiple HDL, Constraint and Tcl files to the project (in case of VHDL an
       optional PACKAGE NAME can be specified)
     - A method to specify the TOP-LEVEL (NAME or FILE)
-    - A method to specify the OUTPUT directory (build by default)
+    - A method to specify a different OUTPUT directory (build by default)
     - Methods to generate a bitstream and transfer it to a device (running the selected EDA Tool)
     - A method to add Verilog Included File directories
     - Methods to add Tcl options in six different parts of the Flow (workaround for not yet
@@ -32,7 +32,7 @@
     - General-purpose (advanced and capture)
     - Multi-purpose (memory, parameters, projects, strategies, verilog and vhdl)
     - Specific of each Tool where Constraint files are included (for the boards s6micro, mkr,
-      de10nano and zybo respectively)
+      de10nano and zybo)
 * Testing:
     - Examples are used to test the correct Tool behaviour
     - The PART specification is particularly tested for ISE and Libero
