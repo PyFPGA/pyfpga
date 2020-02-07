@@ -1,4 +1,4 @@
-# Notes about the development of PyFPGA
+# Development Notes
 
 PyFPGA uses PEP8 guidelines.
 
