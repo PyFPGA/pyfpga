@@ -12,9 +12,6 @@ logging.basicConfig()
 
 for hdl in ['vhdl', 'verilog']:
     for tool in TOOLS:
-        if tool == 'yosys':
-            print("Yosys skipped until Pull Request aproved")
-            continue
         if tool == 'yosys' and hdl == 'vhdl':
             print("The combination Yosys + VHDL was skipped")
             continue
