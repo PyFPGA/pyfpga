@@ -1,20 +1,17 @@
 # PyFPGA [![License](https://img.shields.io/badge/License-GPL--3.0-orange)](LICENSE)
 
-A Python Class and helper scripts to use FPGA development tools in a
-vendor-independent way.
+A Python Class to use FPGA development tools in a vendor-independent way.
 
-With PyFPGA you can create a project file, synthesizes, implements, generates
-a bitstream and transfers to a supported device, all in a programmatic way.
-You can create your own FPGA Tool using a workflow tailored to your needs.
-
-Features:
+With PyFPGA you can create a project file, synthesizes, implements, generates a bitstream and
+transfers it to a supported device, all in a programmatic way. You can create your own FPGA Tool
+using a workflow tailored to your needs, with the following advantages:
 
 * Provides a vendor-independent experience.
-* Has the advantages to using Python as the programming language.
-* The workflow is solved from the command-line, which have extra advantages:
-    * Is friendly with *Version Control Systems* and *Continuous Integration*.
-    * Provides reproducibility and repeatability.
-    * Consumes fewer system resources.
+* Uses Python as the programming language.
+* The workflow is solved from the command-line, which:
+    - Is friendly with *Version Control Systems* and *Continuous Integration*.
+    - Provides reproducibility and repeatability.
+    - Consumes fewer system resources.
 
 A simple example of how to use PyFPGA:
 
@@ -35,16 +32,28 @@ prj.set_top('Top')
 prj.generate()
 ```
 
-More examples into the [User Guide](doc/user_guide.md) and under the
-[examples](examples) directory.
+> More examples into the [User Guide](doc/user_guide.md) and under the [examples](examples)
+> directory.
+
+The API implemented by the `Project class` provides:
+* A constructor where the TOOL must be specified and an optional PROJECT NAME can be specified
+* Methods to set the target device PART, to add multiple HDL, Constraint and Tcl files to the
+  project (in case of VHDL an optional PACKAGE NAME can be specified) and to specify the TOP-LEVEL
+* Method to specify a different OUTPUT directory or get some project configurations
+* Methods to generate a bitstream and transfer it to a device (running the selected EDA Tool)
+* A method to add Verilog Included File directories
+* Methods to add Tcl options in six different parts of the Flow (workaround for not yet
+  implemented features)
+* Optional logging capabilities which include the display of the Tool Execution Time
+* Methods to specify where to search an ip-repo, add a block design and export the hardware
+  (Only supported for Xilinx Vivado)
 
 ## Support
 
 PyFPGA is a Python 3 package, which was developed under a Debian GNU/Linux.
-It must run in any other POSIX compatible Operating System and probably also
-in a different OS (the problem could be how the backends tools are called,
-please let me know any SUCCESS or FAIL using the
-[issues](https://gitlab.com/rodrigomelo9/pyfpga/issues) tracker).
+It must run in any other POSIX compatible Operating System and probably also in a different OS
+(the problem could be how the backends tools are called, please let me know any SUCCESS or FAIL
+using the [issues](https://gitlab.com/rodrigomelo9/pyfpga/issues) tracker).
 
 ### Bitstream Generation
 
@@ -52,9 +61,11 @@ please let me know any SUCCESS or FAIL using the
 ![Libero](https://img.shields.io/badge/Libero--Soc-12.2-blue.svg)
 ![Quartus](https://img.shields.io/badge/Quartus--Prime-19.1-blue.svg)
 ![Vivado](https://img.shields.io/badge/Vivado-2019.2&nbsp;(*)-blue.svg)
+![Yosys](https://img.shields.io/badge/Yosys-0.9&nbsp;dev&nbsp;(**)-orange.svg)
 
-(*) Also supports Block Designs and export of hardware info to be used from
-SDK/Vitis.
+(*) Also supports Block Designs and export of hardware info to be used from SDK/Vitis.
+(**) Yosys only performs synthesis. Can be used with ISE/Vivado to run implementation and
+bitstream generation.
 
 ### Transfer
 
@@ -75,6 +86,5 @@ cd pyfpga
 sudo pip install -e .
 ```
 
-> With `-e` (`--editable`) your application is installed into site-packages
-> via a kind of symlink, so you do not need to reinstall it after making, for
-> example, a `git pull`.
+> With `-e` (`--editable`) your application is installed into site-packages via a kind of symlink,
+> so you do not need to reinstall it after making, for example, a `git pull`.
