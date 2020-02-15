@@ -1,4 +1,4 @@
-# PyFPGA [![License](https://img.shields.io/badge/License-GPL--3.0-orange)](LICENSE)
+# PyFPGA [![License](https://img.shields.io/badge/License-GPL--3.0-darkgreen)](LICENSE)
 
 A Python Class to use FPGA development tools in a vendor-independent way.
 
@@ -41,7 +41,10 @@ The API implemented by the `Project class` provides:
   project (in case of VHDL an optional PACKAGE NAME can be specified) and to specify the TOP-LEVEL
 * Method to specify a different OUTPUT directory or get some project configurations
 * Methods to generate a bitstream and transfer it to a device (running the selected EDA Tool)
+* The capability of specifying an optimization strategy (area, power or speed) when the bitstream
+  is generated
 * A method to add Verilog Included File directories
+* A method to specify generics/parameters values
 * Methods to add Tcl options in six different parts of the Flow (workaround for not yet
   implemented features)
 * Optional logging capabilities which include the display of the Tool Execution Time
