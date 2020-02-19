@@ -1,12 +1,15 @@
 # PyFPGA examples
 
-## General purpose examples
+## General-purpose examples
+
+The general-purpose examples present some features, regardless of the selected
+tool or device.
 
 * [advanced.py](advanced.py): logging capabilities, setting of options and
 exception catch are used.
 * [capture.py](capture.py): the execution messages are captured.
 
-## Specific Tool examples
+## Tool-specific examples
 
 Led blinking examples where a Bitstream is generated and transfer to a
 supported board. It shows the inclusion of Constraints files.
@@ -16,7 +19,7 @@ supported board. It shows the inclusion of Constraints files.
 * [quartus](quartus): DE10Nano (Terasic)
 * [vivado](vivado): Zybo (Digilent)
 
-## Multi purpose examples
+## Multi-project examples
 
 Examples where more than a project is solved in the same script.
 

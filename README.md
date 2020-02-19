@@ -36,10 +36,10 @@ prj.generate()
 > directory.
 
 The API implemented by the `Project class` provides:
-* A constructor where the TOOL must be specified and an optional PROJECT NAME can be specified
+* A constructor where the TOOL must be specified and an optional PROJECT NAME can be indicated
 * Methods to set the target device PART, to add multiple HDL, Constraint and Tcl files to the
   project (in case of VHDL an optional PACKAGE NAME can be specified) and to specify the TOP-LEVEL
-* Method to specify a different OUTPUT directory or get some project configurations
+* Methods to specify a different OUTPUT directory or get some project configurations
 * Methods to generate a bitstream and transfer it to a device (running the selected EDA Tool)
 * The capability of specifying an optimization strategy (area, power or speed) when the bitstream
   is generated
@@ -49,7 +49,7 @@ The API implemented by the `Project class` provides:
   implemented features)
 * Optional logging capabilities which include the display of the Tool Execution Time
 * Methods to specify where to search an ip-repo, add a block design and export the hardware
-  (Only supported for Xilinx Vivado)
+  (only supported for Vivado)
 
 ## Support
 
