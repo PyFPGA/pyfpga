@@ -45,7 +45,7 @@ The API implemented by the `Project class` provides:
   is generated
 * A method to add Verilog Included File directories
 * A method to specify generics/parameters values
-* Methods to add Tcl options in six different parts of the Flow (workaround for not yet
+* Methods to add Tcl commands in up to six different parts of the Flow (workaround for not yet
   implemented features)
 * Optional logging capabilities which include the display of the Tool Execution Time
 * Methods to specify where to search an ip-repo, add a block design and export the hardware

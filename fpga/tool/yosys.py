@@ -61,7 +61,7 @@ class Yosys(Tool):
         else:
             self.tool.set_top(self.top)
         self.tool.part = self.part
-        self.tool.options = self.options
+        self.tool.cmds = self.cmds
         for file in self.files:
             if 'fpga_include' in file:
                 continue

@@ -178,47 +178,47 @@ class Project:
         else:
             self.tool.set_top(toplevel)
 
-    def add_prefile_opt(self, option):
-        """Adds a prefile OPTION.
+    def add_prefile_cmd(self, command):
+        """Adds a prefile COMMAND.
 
-        * **option:** a valid, commonly Tcl, tool option.
+        * **command:** a valid, commonly Tcl, tool command.
         """
-        self.tool.add_option(option, 'prefile')
+        self.tool.add_command(command, 'prefile')
 
-    def add_postprj_opt(self, option):
-        """Adds a postprj OPTION.
+    def add_postprj_cmd(self, command):
+        """Adds a postprj COMMAND.
 
-        * **option:** a valid, commonly Tcl, tool option.
+        * **command:** a valid, commonly Tcl, tool command.
         """
-        self.tool.add_option(option, 'postprj')
+        self.tool.add_command(command, 'postprj')
 
-    def add_preflow_opt(self, option):
-        """Adds a pre flow OPTION.
+    def add_preflow_cmd(self, command):
+        """Adds a pre flow COMMAND.
 
-        * **option:** a valid, commonly Tcl, tool option.
+        * **command:** a valid, commonly Tcl, tool command.
         """
-        self.tool.add_option(option, 'preflow')
+        self.tool.add_command(command, 'preflow')
 
-    def add_postsyn_opt(self, option):
-        """Adds a post synthesis OPTION.
+    def add_postsyn_cmd(self, command):
+        """Adds a post synthesis COMMAND.
 
-        * **option:** a valid, commonly Tcl, tool option.
+        * **command:** a valid, commonly Tcl, tool command.
         """
-        self.tool.add_option(option, 'postsyn')
+        self.tool.add_command(command, 'postsyn')
 
-    def add_postimp_opt(self, option):
-        """Adds a post implementation OPTION.
+    def add_postimp_cmd(self, command):
+        """Adds a post implementation COMMAND.
 
-        * **option:** a valid, commonly Tcl, tool option.
+        * **command:** a valid, commonly Tcl, tool command.
         """
-        self.tool.add_option(option, 'postimp')
+        self.tool.add_command(command, 'postimp')
 
-    def add_postbit_opt(self, option):
-        """Adds a post bitstream generation OPTION.
+    def add_postbit_cmd(self, command):
+        """Adds a post bitstream generation COMMAND.
 
-        * **option:** a valid, commonly Tcl, tool option.
+        * **command:** a valid, commonly Tcl, tool command.
         """
-        self.tool.add_option(option, 'postbit')
+        self.tool.add_command(command, 'postbit')
 
     def generate(
             self, strategy='default', to_task='bit', from_task='prj',
