@@ -5,9 +5,9 @@
 The general-purpose examples present some features, regardless of the selected
 tool or device.
 
-* [advanced.py](advanced.py): logging capabilities, setting of options and
-exception catch are used.
-* [capture.py](capture.py): the execution messages are captured.
+* [boilerplate.py](boilerplate.py): an example where almost all the
+capabilities of the Project class are used, to be employed as starting point.
+* [capture.py](capture.py): it shows how to capture the execution messages.
 
 ## Tool-specific examples
 
