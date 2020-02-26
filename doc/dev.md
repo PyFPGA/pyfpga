@@ -2,6 +2,9 @@
 
 PyFPGA uses PEP8 guidelines.
 
+![PyFPGA components](images/schema.png)
+*Overview of the main PyFPGA components and its relationship*
+
 ## fpga/tool/template.tcl
 
 Many (all?) FPGA development Tools provides a Tcl (Tool Command Language)

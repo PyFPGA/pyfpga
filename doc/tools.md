@@ -5,7 +5,8 @@ Tools         | Vendor    | Version | Tcl | Comment
 ISE           | Xilinx    | 14.7    | 8.4 | Discontinued in 2013
 Libero-SoC    | Microsemi | 12.2    | 8.5 | Important changes in version 12.0 (2019)
 Quartus Prime | Intel     | 19.1    | 8.6 | Known as Quartus II until version 15.0 (2015)
-Vivado        | Xilinx    | 2019.1  | 8.5 | It replaced ISE
+Vivado        | Xilinx    | 2019.1  | 8.5 | Introduced in 2012, it superseded ISE
+Yosys         |           | 0.9-dev | 8.6 | The open-source synthesizer
 
 Notes:
 * ISE supports devices starting from Spartan 3/Virtex 4 until some first members of the 7 series.
