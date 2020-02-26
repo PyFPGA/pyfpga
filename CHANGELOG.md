@@ -1,6 +1,6 @@
 # Changelog
 
-## [v0.1.0] - 2020-02-??
+## [v0.1.0] - 2020-02-29
 
 * FPGA Helpers switched to be a Python package which provides an API to manage projects
 * Supported FPGA EDA Tools:
@@ -32,9 +32,10 @@
 * Documentation:
     - User Guide
     - API Reference
-    - Development Notes
+    - Development notes
+    - Tools notes
 * Examples:
-    - General-purpose (advanced and capture)
+    - General-purpose (boilerplate and capture)
     - Multi-purpose (memory, parameters, projects, strategies, verilog and vhdl)
     - Specific of each Tool where Constraint files are included (for the boards s6micro, mkr,
       de10nano and zybo)
