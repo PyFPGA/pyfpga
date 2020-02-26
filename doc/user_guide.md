@@ -20,75 +20,70 @@ basic and advanced uses of PyFPGA.
 
 ## Basic usage
 
-First step is to import and instantiate the `Project` *class*:
+The first steps are import and instantiate the `Project` *class*, specifying
+the tool to use and, optionally, the project name. By default, the directory
+where files are generated is called `build` and is located in the same place
+that the script, but another name and location can be specified.
 
 ```py
 from fpga.project import Project
 
-prj = Project('vivado', 'ProjectName')
+prj = Project('vivado', 'projectName')
+prj.set_outdir('../temp')
 ```
 
-Where the first parameter is one of the supported Tools (`ise`, `libero`,
-`quartus`, `vivado`) and the second one is the name of the project.
+> The supported tool names are: `ise`, `libero`, `quartus`, `vivado`,
+> `yosys`, `yosys-ise` and `yosys-vivado`.
 
-The default output directory, where files will be generated, is created in the
-same directory that the running script and is called `build`.
-You can optionally change it with:
-
-```py
-prj.set_outdir('NewOutputDir')
-```
-
-You can use the default FPGA part for a quick test, but generally, you will
-want to specify a particular one:
+Next, the FPGA part, the project files and the top-level name must be
+specified. The file addition allows specifying one or more HDL, constraint or
+Tcl files, using glob internally, which makes available the use of wildcards.
+The path to their location must be relative to the script, and there is an
+optional parameter to indicate if it is a member of a VHDL package.
 
 ```py
-prj.set_part('FPGApart')
-```
+prj.set_part('xc7k160t-3-fbg484')
 
-> Examples:
-> * Ise: `xc7k160t-3-fbg484`
-> * Libero: `mpf100t-1-fcg484`
-> * Quartus: `10cl120zf780i8g`
-> * Vivado: `xc7k160t-3-fbg484`
+prj.add_files('hdl/blinking.vhdl', 'examples')
+prj.add_files('hdl/examples_pkg.vhdl', 'examples')
+prj.add_files('hdl/top.vhdl')
 
-Next step is to specify the project files (HDLs, Constraints, TCLs) and the
-top-level name.
-
-```py
-# We recommend Verilog Included Files first (when used)
-prj.add_files('*.vh', included=True)
-# Then HDL Components/Modules
-prj.add_files('vhdl/*.vhdl', 'LibraryName')
-prj.add_files('vhdl/top.vhdl')
-prj.add_files('verilog/*.v')
-# And finally constraints
-prj.add_files('project.sdc')
-...
-prj.set_top('TopName')
+prj.set_top('Top')
 ```
 
 > **Notes:**
-> * For some Tools, the order could be a problem. If a complain about
-> something not found is displayed, try changing the order.
-> * For some Tools, the file extension could be a problem. If a file
-> seems unsupported, you can always use the `prefile` or `postprj` commands
-> (see [Advanced usage](#advanced-usage)).
-> * A file with the tcl extension will be included with the `source`
-> command. It could be used to have a file with particular additional
-> commands.
+> * You can use the default FPGA part for a quick test, but generally, you
+> will want to specify a particular one. Examples:
+>     * Ise: `xc7k160t-3-fbg484`
+>     * Libero: `mpf100t-1-fcg484`
+>     * Quartus: `10cl120zf780i8g`
+>     * Vivado: `xc7k160t-3-fbg484`
+> * For some Tools, the files order could be a problem.
+> If a complain about something not found is displayed, try changing the
+> order.
+> If a file seems unsupported, you can always use the `prefile` or `postprj`
+> commands (see [Advanced usage](#advanced-usage)).
+> * A file with the tcl extension will be included with the `source` command.
+> It could be used to have a file with particular additional options.
 > * A relative path to a valid VHDL/Verilog file is also accepted by
-> `set_top`, to automatically extract `TopName`.
+> `set_top`, to automatically extract the top-level name.
+> * In case of Verilog, `add_include` can be used to specify where to search
+> included files.
 
-Finally, you must run the Design Flow with:
+Finally, you must run the bitstream generation or its transfer. Both of them
+are time-consuming tasks, performed by a backend tool, which could fail.
+Exceptions are raised in such cases, that should be ideally caught to avoid
+abnormal program termination.
 
 ```py
-prj.generate()
+try:
+    prj.generate()
+    prj.transfer()
+except Exception as e:
+    print('{} ({})'.format(type(e).__name__, e))
 ```
 
 And wait for the backend Tool to accomplish its task.
-
-See [basic.py](../examples/basic.py) for the full code of a basic example.
 
 ## Advanced usage
 
@@ -151,23 +146,8 @@ In case of *capture*, it is useful to catch execution messages to be
 post-processed or saved to a file:
 ```py
 result = prj.generate(capture=True)
-print(result.stdout)
-print(result.stderr)
+print(result)
 ```
-
-The execution of `generate` finish with an Exception if an error (such as
-command not found) occurs. It could be a good idea to catch the exception
-and act in consequence:
-
-```py
-try:
-    prj.generate()
-except Exception as e:
-    print('{} ({})'.format(type(e).__name__, e))
-```
-
-See [advanced.py](../examples/advanced.py) for the full code of an advanced
-example.
 
 ## Transfer to a device
 
@@ -180,37 +160,16 @@ prj.transfer(devtype, position, part, width, capture)
 ```
 
 Where *devtype* is `fpga` by default but can also be `spi`, `bpi`, etc, if
-supported.
-An integer number can be used to specify the *position* (1) in the Jtag chain.
-When a memory is used as *devtype*, the *part* name and the *width* in bits
-must be also specified.
-In case of *capture*, it is useful to catch execution messages to be
-post-processed or saved to a file:
-```py
-result = prj.transfer(capture=True)
-print(result.stdout)
-print(result.stderr)
-```
+supported. An integer number can be used to specify the *position* (1) in the
+Jtag chain. When a memory is used as *devtype*, the *part* name and the
+*width* in bits must be also specified. In case of *capture*, it is useful to
+catch execution messages to be post-processed or saved to a file.
 
 > **Notes:**
 > * In Xilinx, `spi` and `bpi` memories are out of the Jtag chain and are
 programmed through the FPGA. You must specify the FPGA *position*.
 > * In a Linux systems, you need to have permission over the device
 > (udev rule, be a part of a group, etc).
-
-The execution of `transfer` finish with an Exception if an error (such as
-command not found) occurs. It could be a good idea to catch the exception
-and act in consequence:
-
-```py
-try:
-    prj.transfer()
-except Exception as e:
-    print('{} ({})'.format(type(e).__name__, e))
-```
-
-See [examples/ise/transfer.py](../examples/ise/transfer.py) for the full code
-of an transfer example.
 
 ## Logging capabilities
 
