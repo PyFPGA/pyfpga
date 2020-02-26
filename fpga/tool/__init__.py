@@ -73,7 +73,7 @@ class Tool:
         """Initializes the attributes of the class."""
         self.project = self._TOOL if project is None else project
         self.set_part(self._PART)
-        self.options = {
+        self.cmds = {
             'prefile': [],
             'postprj': [],
             'preflow': [],
@@ -125,10 +125,10 @@ class Tool:
         'preflow', 'postsyn', 'postimp', 'postbit'
     ]
 
-    def add_option(self, option, phase):
-        """Add the specified OPTION in the desired PHASE."""
+    def add_command(self, command, phase):
+        """Add the specified COMMAND in the desired PHASE."""
         check_value(phase, self._PHASES)
-        self.options[phase].append(option)
+        self.cmds[phase].append(command)
 
     def _create_gen_script(self, strategy, tasks):
         """Create the script for generate execution."""
@@ -144,12 +144,12 @@ class Tool:
         tcl = tcl.replace('#TOP#', self.top)
         tcl = tcl.replace('#STRATEGY#', strategy)
         tcl = tcl.replace('#TASKS#', tasks)
-        tcl = tcl.replace('#PREFILE_OPTS#', '\n'.join(self.options['prefile']))
-        tcl = tcl.replace('#POSTPRJ_OPTS#', '\n'.join(self.options['postprj']))
-        tcl = tcl.replace('#PREFLOW_OPTS#', '\n'.join(self.options['preflow']))
-        tcl = tcl.replace('#POSTSYN_OPTS#', '\n'.join(self.options['postsyn']))
-        tcl = tcl.replace('#POSTIMP_OPTS#', '\n'.join(self.options['postimp']))
-        tcl = tcl.replace('#POSTBIT_OPTS#', '\n'.join(self.options['postbit']))
+        tcl = tcl.replace('#PREFILE_CMDS#', '\n'.join(self.cmds['prefile']))
+        tcl = tcl.replace('#POSTPRJ_CMDS#', '\n'.join(self.cmds['postprj']))
+        tcl = tcl.replace('#PREFLOW_CMDS#', '\n'.join(self.cmds['preflow']))
+        tcl = tcl.replace('#POSTSYN_CMDS#', '\n'.join(self.cmds['postsyn']))
+        tcl = tcl.replace('#POSTIMP_CMDS#', '\n'.join(self.cmds['postimp']))
+        tcl = tcl.replace('#POSTBIT_CMDS#', '\n'.join(self.cmds['postbit']))
         open("%s.tcl" % self._TOOL, 'w').write(tcl)
 
     _STRATEGIES = ['default', 'area', 'speed', 'power']
@@ -173,7 +173,7 @@ class Tool:
 
     def export_hardware(self):
         """Exports files for the development of a Processor System."""
-        self.add_option('fpga_export', 'postbit')
+        self.add_command('fpga_export', 'postbit')
 
     def transfer(self, devtype, position, part, width, capture):
         """Transfer a bitstream."""

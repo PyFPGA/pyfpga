@@ -48,26 +48,26 @@ proc fpga_files {} {
 #FILES#
 }
 
-proc fpga_options { PHASE } {
-    fpga_print "setting options for the phase '$PHASE'"
+proc fpga_commands { PHASE } {
+    fpga_print "setting commands for the phase '$PHASE'"
     switch $PHASE {
         "prefile" {
-#PREFILE_OPTS#
+#PREFILE_CMDS#
         }
         "postprj" {
-#POSTPRJ_OPTS#
+#POSTPRJ_CMDS#
         }
         "preflow" {
-#PREFLOW_OPTS#
+#PREFLOW_CMDS#
         }
         "postsyn" {
-#POSTSYN_OPTS#
+#POSTSYN_CMDS#
         }
         "postimp" {
-#POSTIMP_OPTS#
+#POSTIMP_CMDS#
         }
         "postbit" {
-#POSTBIT_OPTS#
+#POSTBIT_CMDS#
         }
     }
 }
@@ -477,7 +477,7 @@ proc fpga_top { TOP } {
     }
 }
 
-proc fpga_area_opts {} {
+proc fpga_area {} {
     global TOOL
     fpga_print "setting options for 'area' optimization"
     switch $TOOL {
@@ -504,7 +504,7 @@ proc fpga_area_opts {} {
     }
 }
 
-proc fpga_power_opts {} {
+proc fpga_power {} {
     global TOOL
     fpga_print "setting options for 'power' optimization"
     switch $TOOL {
@@ -536,7 +536,7 @@ proc fpga_power_opts {} {
     }
 }
 
-proc fpga_speed_opts {} {
+proc fpga_speed {} {
     global TOOL
     fpga_print "setting options for 'speed' optimization"
     switch $TOOL {
@@ -720,16 +720,16 @@ if { [lsearch -exact $TASKS "prj"] >= 0 } {
     if { [catch {
         fpga_create $PROJECT
         fpga_part $PART
-        fpga_options "prefile"
+        fpga_commands "prefile"
         fpga_params
         fpga_files
         fpga_top $TOP
         switch $STRATEGY {
-            "area"  {fpga_area_opts}
-            "power" {fpga_power_opts}
-            "speed" {fpga_speed_opts}
+            "area"  {fpga_area}
+            "power" {fpga_power}
+            "speed" {fpga_speed}
         }
-        fpga_options "postprj"
+        fpga_commands "postprj"
         fpga_close
     } ERRMSG]} {
         puts "ERROR: there was a problem creating a New Project.\n"
@@ -746,18 +746,18 @@ if { [lsearch -regexp $TASKS "syn|imp|bit"] >= 0 } {
     fpga_print "running the Design Flow"
     if { [catch {
         fpga_open $PROJECT
-        fpga_options "preflow"
+        fpga_commands "preflow"
         if { [lsearch -exact $TASKS "syn"] >= 0 } {
             fpga_run_syn
-            fpga_options "postsyn"
+            fpga_commands "postsyn"
         }
         if { [lsearch -exact $TASKS "imp"] >= 0 } {
             fpga_run_imp
-            fpga_options "postimp"
+            fpga_commands "postimp"
         }
         if { [lsearch -exact $TASKS "bit"] >= 0 } {
             fpga_run_bit
-            fpga_options "postbit"
+            fpga_commands "postbit"
         }
         fpga_close
     } ERRMSG]} {

@@ -44,41 +44,41 @@ or a file.
 **Note:** generally a directory must be specified, but Libero-SoC
 also needs to add the file when is a Verilog Included File.
 
-### `add_postbit_opt(option)`
+### `add_postbit_cmd(command)`
 
-Adds a post bitstream generation OPTION.
+Adds a post bitstream generation COMMAND.
 
-* **option:** a valid, commonly Tcl, tool option.
+* **command:** a valid, commonly Tcl, tool command.
 
-### `add_postimp_opt(option)`
+### `add_postimp_cmd(command)`
 
-Adds a post implementation OPTION.
+Adds a post implementation COMMAND.
 
-* **option:** a valid, commonly Tcl, tool option.
+* **command:** a valid, commonly Tcl, tool command.
 
-### `add_postprj_opt(option)`
+### `add_postprj_cmd(command)`
 
-Adds a postprj OPTION.
+Adds a postprj COMMAND.
 
-* **option:** a valid, commonly Tcl, tool option.
+* **command:** a valid, commonly Tcl, tool command.
 
-### `add_postsyn_opt(option)`
+### `add_postsyn_cmd(command)`
 
-Adds a post synthesis OPTION.
+Adds a post synthesis COMMAND.
 
-* **option:** a valid, commonly Tcl, tool option.
+* **command:** a valid, commonly Tcl, tool command.
 
-### `add_prefile_opt(option)`
+### `add_prefile_cmd(command)`
 
-Adds a prefile OPTION.
+Adds a prefile COMMAND.
 
-* **option:** a valid, commonly Tcl, tool option.
+* **command:** a valid, commonly Tcl, tool command.
 
-### `add_preflow_opt(option)`
+### `add_preflow_cmd(command)`
 
-Adds a pre flow OPTION.
+Adds a pre flow COMMAND.
 
-* **option:** a valid, commonly Tcl, tool option.
+* **command:** a valid, commonly Tcl, tool command.
 
 ### `export_hardware()`
 

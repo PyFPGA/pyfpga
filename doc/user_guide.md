@@ -72,11 +72,11 @@ prj.set_top('TopName')
 > * For some Tools, the order could be a problem. If a complain about
 > something not found is displayed, try changing the order.
 > * For some Tools, the file extension could be a problem. If a file
-> seems unsupported, you can always use the `prefile` or `postprj` options
+> seems unsupported, you can always use the `prefile` or `postprj` commands
 > (see [Advanced usage](#advanced-usage)).
 > * A file with the tcl extension will be included with the `source`
 > command. It could be used to have a file with particular additional
-> options.
+> commands.
 > * A relative path to a valid VHDL/Verilog file is also accepted by
 > `set_top`, to automatically extract `TopName`.
 
@@ -98,15 +98,15 @@ Flow internally performed by PyFPGA.
 ![Tcl Structure](images/tcl-structure.png)
 
 If the provided API if not enough or suitable for your project, you can
-specify *options* in different parts of the flow, using:
+specify additional *commands* in different parts of the flow, using:
 
 ```py
-prj.add_prefile_opt('A text string')  # for *Pre-file options*.
-prj.add_postprj_opt('A text string')  # for *Post-prj options*.
-prj.add_preflow_opt('A text string')  # for *Pre-flow options*.
-prj.add_postsyn_opt('A text string')  # for *Post-syn options*.
-prj.add_postimp_opt('A text string')  # for *Post-imp options*.
-prj.add_postbit_opt('A text string')  # for *Post-bit options*.
+prj.add_prefile_cmd('A text string')  # for *Pre-file commands*.
+prj.add_postprj_cmd('A text string')  # for *Post-prj commands*.
+prj.add_preflow_cmd('A text string')  # for *Pre-flow commands*.
+prj.add_postsyn_cmd('A text string')  # for *Post-syn commands*.
+prj.add_postimp_cmd('A text string')  # for *Post-imp commands*.
+prj.add_postbit_cmd('A text string')  # for *Post-bit commands*.
 ```
 
 > **Notes:**
@@ -139,7 +139,7 @@ invoqued. The order and available tasks are `prj`, `syn`, `imp` and `bit`.
 It can be useful in at least two cases:
 * Maybe you created a file project with the GUI of the Tool and only want to
 run the Design Flow, so you can use: `generate(to_task='bit', from_task='syn')`
-* Methods to insert particular options are provided, but you would want to
+* Methods to insert particular commands are provided, but you would want to
 perform some processing from Python between tasks, using something like:
 ```py
 prj.generate(to_task='syn', from_task='prj')
