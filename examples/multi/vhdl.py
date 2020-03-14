@@ -12,8 +12,8 @@ from fpga.project import Project, TOOLS
 logging.basicConfig()
 
 for tool in TOOLS:
-    if tool == 'yosys' and hdl == 'vhdl':
-        print("The combination Yosys + VHDL was skipped")
+    if tool == 'yosys':
+        print("VHDL is not supported by Yosys yet, skipped")
         continue
     PRJ = Project(tool)
     PRJ.set_outdir('../../build/multi/vhdl/%s' % tool)
