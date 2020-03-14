@@ -30,7 +30,7 @@ PHASES = ['prefile', 'postprj', 'preflow', 'postsyn', 'postimp', 'postbit']
 
 STRATEGIES = ['default', 'area', 'speed', 'power']
 
-TASKS = ['prj', 'syn', 'imp', 'bit', 'cln']
+TASKS = ['prj', 'syn', 'imp', 'bit']
 
 
 def check_value(value, values):

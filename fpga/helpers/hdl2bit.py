@@ -22,9 +22,30 @@ A CLI helper utility to go from FPGA design files to a bitstream.
 """
 
 import argparse
-import os
+import logging
 
 from fpga import __version__ as version
+from fpga.tool import TASKS, STRATEGIES
+from fpga.project import Project, TOOLS, COMBINED_TOOLS
+
+logging.basicConfig()
+logging.getLogger('fpga.project').level = logging.INFO
+
+EPILOGUE = """
+Notes:
+* PATH and FILE must be relative to the execution directory.
+* The default PART name and how to specify it depends on the selected TOOL.
+* More than one '--file', '--include' or '--param' arguments can be specified.
+
+Supported values of arguments with choices:
+* TOOL = {}
+* TASK = {}
+* STRATEGY = {}
+""".format(
+    " | ".join(TOOLS + COMBINED_TOOLS),
+    " | ".join(TASKS[1:len(TASKS)]),
+    " | ".join(STRATEGIES)
+)
 
 
 def main():
@@ -33,7 +54,9 @@ def main():
     # Parsing the command-line.
 
     parser = argparse.ArgumentParser(
-        description=__doc__
+        description=__doc__,
+        epilog=EPILOGUE,
+        formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
     parser.add_argument(
@@ -42,7 +65,106 @@ def main():
         version='v{}'.format(version)
     )
 
+    parser.add_argument(
+        'top',
+        metavar='FILE',
+        help='a top-level file'
+    )
+
+    parser.add_argument(
+        '-t', '--tool',
+        metavar='TOOL',
+        default='vivado',
+        choices=TOOLS+COMBINED_TOOLS,
+        help='backend tool to be used [vivado]'
+    )
+
+    parser.add_argument(
+        '-o', '--outdir',
+        metavar='PATH',
+        default='temp',
+        help='where to generate files [temp]'
+    )
+
+    parser.add_argument(
+        '-p', '--part',
+        metavar='PART',
+        help='the target device'
+    )
+
+    parser.add_argument(
+        '-f', '--file',
+        metavar='FILE[,PACKAGE]',
+        action='append',
+        help='add a design file (specifying an optional VHDL package)'
+    )
+
+    parser.add_argument(
+        '-i', '--include',
+        metavar='PATH',
+        action='append',
+        help='specify where to search Verilog included files'
+    )
+
+    parser.add_argument(
+        '--param',
+        metavar=('PARAMETER', 'VALUE'),
+        action='append',
+        nargs=2,
+        help='set the value of a generic/parameter of the top-level'
+    )
+
+    parser.add_argument(
+        '--strategy',
+        metavar='STRATEGY',
+        choices=STRATEGIES,
+        default=STRATEGIES[0],
+        help='strategy to apply [{}]'.format(STRATEGIES[0])
+    )
+
+    parser.add_argument(
+        '--task',
+        metavar='TASK',
+        choices=TASKS[1:len(TASKS)],
+        default='bit',
+        help='task to perform [{}]'.format('bit')
+    )
+
     args = parser.parse_args()
+
+    # Solving with PyFPGA
+
+    prj = Project(args.tool, relative_to_script=False)
+    prj.set_outdir(args.outdir)
+
+    if args.part is not None:
+        prj.set_part(args.part)
+
+    if args.include is not None:
+        for include in args.include:
+            prj.add_include(include)
+
+    if args.file is not None:
+        for file in args.file:
+            file = file.split(',')
+            if len(file) > 1:
+                prj.add_files(file[0], file[1])
+            else:
+                prj.add_files(file[0])
+
+    if args.param is not None:
+        for param in args.param:
+            prj.set_param(param[0], param[1])
+
+    prj.add_files(args.top)
+    prj.set_top(args.top)
+
+    # pylint: disable=broad-except
+    # pylint: disable=invalid-name
+    try:
+        prj.generate(args.strategy, args.task)
+    except Exception as e:
+        logging.warning('%s (%s)', type(e).__name__, e)
 
 
 if __name__ == "__main__":
