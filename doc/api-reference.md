@@ -10,12 +10,14 @@ Device.
 
 Class to manage an FPGA project.
 
-### `__init__(tool='vivado', project=None)`
+### `__init__(tool='vivado', project=None, relative_to_script=True)`
 
 Class constructor.
 
 * **tool:** FPGA tool to be used.
 * **project:** project name (the tool name is used if none specified).
+* **relative_to_script:** specifies if the files/directories are
+relative to the script or the execution directory.
 
 ### `add_design(pathname)`
 

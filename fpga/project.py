@@ -34,15 +34,19 @@ import time
 
 TOOLS = ['ise', 'libero', 'quartus', 'vivado', 'yosys']
 
+COMBINED_TOOLS = ['yosys-ise', 'yosys-vivado']
+
 
 class Project:
     """Class to manage an FPGA project."""
 
-    def __init__(self, tool='vivado', project=None):
+    def __init__(self, tool='vivado', project=None, relative_to_script=True):
         """Class constructor.
 
         * **tool:** FPGA tool to be used.
         * **project:** project name (the tool name is used if none specified).
+        * **relative_to_script:** specifies if the files/directories are
+        relative to the script or the execution directory.
         """
         self._log = logging.getLogger(__name__)
         self._log.level = logging.INFO
@@ -74,8 +78,13 @@ class Project:
             raise NotImplementedError(tool)
         self._rundir = os.getcwd()
         self._log.debug('RUNDIR = %s', self._rundir)
-        self._reldir = os.path.dirname(inspect.stack()[-1].filename)
+        if relative_to_script:
+            self._reldir = os.path.dirname(inspect.stack()[-1].filename)
+        else:
+            self._reldir = ''
         self._log.debug('RELDIR = %s', self._reldir)
+        self._absdir = os.path.join(self._rundir, self._reldir)
+        self._log.debug('ABSDIR = %s', self._absdir)
         self.set_outdir('build')
 
     def set_outdir(self, outdir):
@@ -83,8 +92,7 @@ class Project:
 
         * **outdir:** path to the output directory.
         """
-        auxdir = os.path.join(self._reldir, outdir)
-        self.outdir = os.path.join(self._rundir, auxdir)
+        self.outdir = os.path.join(self._absdir, outdir)
         self._log.debug('OUTDIR = %s', self.outdir)
 
     def get_configs(self):
@@ -112,8 +120,7 @@ class Project:
 
         * **pathname:** a string containing a relative path to a file.
         """
-        pathname = os.path.join(self._reldir, pathname)
-        pathname = os.path.join(self._rundir, pathname)
+        pathname = os.path.join(self._absdir, pathname)
         if os.path.isfile(pathname):
             self.tool.add_file(pathname, None, False, True)
         else:
@@ -126,14 +133,13 @@ class Project:
         and can contain shell-style wildcards (glob compliant).
         * **library:** an optional VHDL library name.
         """
-        pathname = os.path.join(self._reldir, pathname)
+        pathname = os.path.join(self._absdir, pathname)
         self._log.debug('PATHNAME = %s', pathname)
         files = glob.glob(pathname)
         if len(files) == 0:
             self._log.warning('add_files: %s not found.', pathname)
         for file in files:
-            file_abs = os.path.join(self._rundir, file)
-            self.tool.add_file(file_abs, library, False, False)
+            self.tool.add_file(file, library, False, False)
 
     def add_include(self, pathname):
         """Adds a search path.
@@ -147,8 +153,7 @@ class Project:
         **Note:** generally a directory must be specified, but Libero-SoC
         also needs to add the file when is a Verilog Included File.
         """
-        pathname = os.path.join(self._reldir, pathname)
-        pathname = os.path.join(self._rundir, pathname)
+        pathname = os.path.join(self._absdir, pathname)
         if os.path.exists(pathname):
             self.tool.add_file(pathname, None, True, False)
         else:
@@ -160,7 +165,7 @@ class Project:
         * **toplevel:** name or file path of the top level entity/module.
         """
         if os.path.splitext(toplevel)[1]:
-            toplevel = os.path.join(self._reldir, toplevel)
+            toplevel = os.path.join(self._absdir, toplevel)
             if os.path.exists(toplevel):
                 hdl = open(toplevel, 'r').read()
                 top = re.findall(r'module\s+(\w+)\s*[#(]', hdl)
