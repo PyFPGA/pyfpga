@@ -22,9 +22,16 @@ A CLI helper utility to deal with a vendor FPGA Project file.
 """
 
 import argparse
+import logging
 import os
+import sys
 
 from fpga import __version__ as version
+from fpga.tool import TASKS
+from fpga.project import Project
+
+logging.basicConfig()
+logging.getLogger('fpga.project').level = logging.INFO
 
 
 def main():
@@ -42,7 +49,60 @@ def main():
         version='v{}'.format(version)
     )
 
+    parser.add_argument(
+        'project',
+        metavar='FILE',
+        help='a vendor project file'
+    )
+
+    parser.add_argument(
+        '--task',
+        metavar='TASK',
+        choices=TASKS[1:len(TASKS)],
+        default='bit',
+        help='task to perform [{}] ({})'.format(
+            'bit', " | ".join(TASKS[1:len(TASKS)])
+        )
+    )
+
     args = parser.parse_args()
+
+    # Detecting a Project file
+
+    tool_per_ext = {
+        '.xise': 'ise',
+        '.prjx': 'libero',
+        '.qpf': 'quartus',
+        '.xpr': 'vivado'
+    }
+
+    if not os.path.exists(args.project):
+        sys.exit('Project file not found.')
+
+    outdir = os.path.dirname(args.project)
+    project, extension = os.path.splitext(args.project)
+    project = os.path.basename(project)
+
+    tool = ''
+    if extension in tool_per_ext:
+        tool = tool_per_ext[extension]
+        print('{} Project file found.'.format(tool))
+    else:
+        sys.exit('Unknown Project file extension.')
+
+    # Solving with PyFPGA
+
+    prj = Project(tool, project=project, relative_to_script=False)
+    prj.set_outdir(outdir)
+
+    prj.set_top(project)
+
+    # pylint: disable=broad-except
+    # pylint: disable=invalid-name
+    try:
+        prj.generate('default', args.task, 'syn')
+    except Exception as e:
+        logging.warning('%s (%s)', type(e).__name__, e)
 
 
 if __name__ == "__main__":

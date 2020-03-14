@@ -1,8 +1,8 @@
 #!/usr/bin/make
 
-all: vhdl verilog
+all: hdl2bit-vhdl hdl2bit-verilog prj2bit
 
-vhdl:
+hdl2bit-vhdl:
 	../../venv/bin/python3 ../../fpga/helpers/hdl2bit.py \
 	--outdir ../../build/helpers \
 	--tool ise \
@@ -10,7 +10,7 @@ vhdl:
 	--task syn \
 	../../examples/hdl/top.vhdl
 
-verilog:
+hdl2bit-verilog:
 	../../venv/bin/python3 ../../fpga/helpers/hdl2bit.py \
 	--outdir ../../build/helpers \
 	--tool ise \
@@ -19,6 +19,13 @@ verilog:
 	-f ../../examples/hdl/blinking.v \
 	--task syn \
 	../../examples/hdl/top.v
+
+prj2bit:
+	mkdir -p ../../build/helpers
+	touch ../../build/helpers/test.xise
+	../../venv/bin/python3 ../../fpga/helpers/prj2bit.py \
+	--task syn \
+	../../build/helpers/test.xise
 
 clean:
 	rm -fr ../../build/helpers
