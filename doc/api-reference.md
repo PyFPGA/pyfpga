@@ -82,6 +82,10 @@ Adds a pre flow COMMAND.
 
 * **command:** a valid, commonly Tcl, tool command.
 
+### `clean()`
+
+Clean the generated project files.
+
 ### `export_hardware()`
 
 Exports files for the development of a Processor System.

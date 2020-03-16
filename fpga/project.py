@@ -280,6 +280,11 @@ class Project:
                 self._log.info('The execution messages are being captured.')
             return self.tool.transfer(devtype, position, part, width, capture)
 
+    def clean(self):
+        """Clean the generated project files."""
+        with self._run_in_dir():
+            self._log.info('Cleaning the generated project files.')
+
     @contextlib.contextmanager
     def _run_in_dir(self):
         """Runs the tool in other directory."""

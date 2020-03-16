@@ -32,15 +32,15 @@ logging.basicConfig()
 logging.getLogger('fpga.project').level = logging.INFO
 
 EPILOGUE = """
-Notes:
-* PATH and FILE must be relative to the execution directory.
-* The default PART name and how to specify it depends on the selected TOOL.
-* More than one '--file', '--include' or '--param' arguments can be specified.
-
 Supported values of arguments with choices:
 * TOOL = {}
 * TASK = {}
 * STRATEGY = {}
+
+Notes:
+* PATH and FILE must be relative to the execution directory.
+* The default PART name and how to specify it depends on the selected TOOL.
+* More than one '--file', '--include' or '--param' arguments can be specified.
 """.format(
     " | ".join(TOOLS + COMBINED_TOOLS),
     " | ".join(TASKS[1:len(TASKS)]),
@@ -67,7 +67,7 @@ def main():
 
     parser.add_argument(
         'top',
-        metavar='FILE',
+        metavar='TOPFILE',
         help='a top-level file'
     )
 
@@ -108,7 +108,7 @@ def main():
 
     parser.add_argument(
         '--param',
-        metavar=('PARAMETER', 'VALUE'),
+        metavar=('GENERIC/PARAMETER', 'VALUE'),
         action='append',
         nargs=2,
         help='set the value of a generic/parameter of the top-level'
@@ -123,7 +123,7 @@ def main():
     )
 
     parser.add_argument(
-        '--task',
+        '--run',
         metavar='TASK',
         choices=TASKS[1:len(TASKS)],
         default='bit',
@@ -162,7 +162,7 @@ def main():
     # pylint: disable=broad-except
     # pylint: disable=invalid-name
     try:
-        prj.generate(args.strategy, args.task)
+        prj.generate(args.strategy, args.run)
     except Exception as e:
         logging.warning('%s (%s)', type(e).__name__, e)
 

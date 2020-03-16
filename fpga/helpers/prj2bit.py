@@ -51,18 +51,24 @@ def main():
 
     parser.add_argument(
         'project',
-        metavar='FILE',
+        metavar='PRJFILE',
         help='a vendor project file'
     )
 
     parser.add_argument(
-        '--task',
+        '--run',
         metavar='TASK',
         choices=TASKS[1:len(TASKS)],
         default='bit',
         help='task to perform [{}] ({})'.format(
             'bit', " | ".join(TASKS[1:len(TASKS)])
         )
+    )
+
+    parser.add_argument(
+        '--clean',
+        action='store_true',
+        help='clean the generated project files'
     )
 
     args = parser.parse_args()
@@ -100,7 +106,10 @@ def main():
     # pylint: disable=broad-except
     # pylint: disable=invalid-name
     try:
-        prj.generate('default', args.task, 'syn')
+        if args.clean:
+            prj.clean()
+        else:
+            prj.generate('default', args.run, 'syn')
     except Exception as e:
         logging.warning('%s (%s)', type(e).__name__, e)
 
