@@ -22,8 +22,9 @@ Defines the interface to be inherited to support a tool.
 """
 
 from glob import glob
-import os.path
+import os
 import subprocess
+from shutil import rmtree
 
 
 PHASES = ['prefile', 'postprj', 'preflow', 'postsyn', 'postimp', 'postbit']
@@ -75,6 +76,8 @@ class Tool:
     _TRF_COMMAND = 'UNDEFINED'
 
     _DEVTYPES = []
+
+    _GENERATED = []
 
     def __init__(self, project):
         """Initializes the attributes of the class."""
@@ -183,3 +186,13 @@ class Tool:
         check_value(width, [1, 2, 4, 8, 16, 32])
         # Dummy check to avoid unused-argument (pylint)
         isinstance(capture, bool)
+
+    def clean(self):
+        """Clean the generated project files."""
+        for path in self._GENERATED:
+            elements = glob(path)
+            for element in elements:
+                if os.path.isfile(element):
+                    os.remove(element)
+                else:
+                    rmtree(element)

@@ -52,6 +52,13 @@ class Vivado(Tool):
 
     _DEVTYPES = ['fpga', 'detect']
 
+    _GENERATED = [
+        # directories
+        '*.cache', '*.hw', '*.ip_user_files', '*.runs', '*.sim', '.Xil',
+        # files
+        '*.bit', '*.jou', '*.log', '*.rpt', '*.tcl', 'vivado_*.zip'
+    ]
+
     def transfer(self, devtype, position, part, width, capture):
         super().transfer(devtype, position, part, width, capture)
         temp = _TEMPLATES[devtype]

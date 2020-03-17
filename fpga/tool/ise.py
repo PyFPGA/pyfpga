@@ -93,6 +93,27 @@ class Ise(Tool):
 
     _DEVTYPES = ['fpga', 'spi', 'bpi', 'detect', 'unlock']
 
+    _GENERATED = [
+        # directories
+        'iseconfig', '_ngo', 'xlnx_auto_0_xdb', '_xmsgs', 'xst',
+        # files
+        '*.bgn', '*.bld', '*.bit',
+        '*.cmd_log', '*.csv',
+        '*.drc',
+        '*.gise',
+        '*.html',
+        '*.log', '*.lso',
+        '*.map', '*.mrp',
+        '*.ncd', '*.ngc', '*.ngd', '*.ngm', '*.ngr',
+        '*.pad', '*.par', '*.pcf', '*.prj', '*.ptwx',
+        '*.stx', '*.syr',
+        '*.tcl', '*.twr', '*.twx',
+        '*.unroutes', '*.ut',
+        '*.txt',
+        '*.xml', '*.xpi', '*.xrpt', '*.xst', '*.xwbt',
+        '_impact*'
+    ]
+
     def set_part(self, part):
         try:
             family, speed, package = re.findall(r'(\w+)-(\w+)-(\w+)', part)[0]

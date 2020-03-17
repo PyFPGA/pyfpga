@@ -282,8 +282,9 @@ class Project:
 
     def clean(self):
         """Clean the generated project files."""
+        self._log.info('Cleaning the generated project files.')
         with self._run_in_dir():
-            self._log.info('Cleaning the generated project files.')
+            self.tool.clean()
 
     @contextlib.contextmanager
     def _run_in_dir(self):
