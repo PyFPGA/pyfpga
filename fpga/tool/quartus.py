@@ -39,6 +39,14 @@ class Quartus(Tool):
 
     _DEVTYPES = ['fpga', 'detect']
 
+    _GENERATED = [
+        # directories
+        'db', 'incremental_db', 'output_files',
+        # files
+        '*.done', '*.jdi', '*.log', '*.pin', '*.qws', '*.rpt', '*.smsg',
+        '*.sld', '*.sof', '*.sop', '*.summary', '*.txt', 'quartus.tcl'
+    ]
+
     def transfer(self, devtype, position, part, width, capture):
         super().transfer(devtype, position, part, width, capture)
         result = subprocess.run(

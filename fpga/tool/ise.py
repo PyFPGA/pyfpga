@@ -107,11 +107,12 @@ class Ise(Tool):
         '*.ncd', '*.ngc', '*.ngd', '*.ngm', '*.ngr',
         '*.pad', '*.par', '*.pcf', '*.prj', '*.ptwx',
         '*.stx', '*.syr',
-        '*.tcl', '*.twr', '*.twx',
+        '*.twr', '*.twx',
         '*.unroutes', '*.ut',
         '*.txt',
         '*.xml', '*.xpi', '*.xrpt', '*.xst', '*.xwbt',
-        '_impact*'
+        '_impact*',
+        'ise.tcl'
     ]
 
     def set_part(self, part):

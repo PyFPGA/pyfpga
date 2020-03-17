@@ -53,6 +53,10 @@ class Libero(Tool):
 
     _DEVTYPES = ['fpga']
 
+    _GENERATED = [
+        'libero.tcl'
+    ]
+
     def set_part(self, part):
         try:
             family, speed, package = re.findall(r'(\w+)-(\w+)-*(\w*)', part)[0]

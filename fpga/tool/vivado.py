@@ -56,7 +56,8 @@ class Vivado(Tool):
         # directories
         '*.cache', '*.hw', '*.ip_user_files', '*.runs', '*.sim', '.Xil',
         # files
-        '*.bit', '*.jou', '*.log', '*.rpt', '*.tcl', 'vivado_*.zip'
+        '*.bit', '*.jou', '*.log', '*.rpt', 'vivado_*.zip',
+        'vivado.tcl'
     ]
 
     def transfer(self, devtype, position, part, width, capture):
