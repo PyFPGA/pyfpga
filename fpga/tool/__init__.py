@@ -33,6 +33,8 @@ STRATEGIES = ['default', 'area', 'speed', 'power']
 
 TASKS = ['prj', 'syn', 'imp', 'bit']
 
+MEMWIDTHS = [1, 2, 4, 8, 16, 32]
+
 
 def check_value(value, values):
     """Check if VALUE is included in VALUES."""
@@ -183,7 +185,7 @@ class Tool:
         check_value(devtype, self._DEVTYPES)
         check_value(position, range(10))
         isinstance(part, str)
-        check_value(width, [1, 2, 4, 8, 16, 32])
+        check_value(width, MEMWIDTHS)
         # Dummy check to avoid unused-argument (pylint)
         isinstance(capture, bool)
 

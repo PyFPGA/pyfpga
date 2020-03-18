@@ -25,8 +25,8 @@ import argparse
 import logging
 
 from fpga import __version__ as version
-from fpga.tool import TASKS, STRATEGIES
 from fpga.project import Project, TOOLS, COMBINED_TOOLS
+from fpga.tool import TASKS, STRATEGIES
 
 logging.basicConfig()
 logging.getLogger('fpga.project').level = logging.INFO

@@ -27,8 +27,8 @@ import os
 import sys
 
 from fpga import __version__ as version
-from fpga.tool import TASKS
 from fpga.project import Project
+from fpga.tool import TASKS
 
 logging.basicConfig()
 logging.getLogger('fpga.project').level = logging.INFO

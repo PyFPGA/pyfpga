@@ -22,9 +22,31 @@ A CLI helper utility to transfer a bitstream to a supported device.
 """
 
 import argparse
-import os
+import logging
 
 from fpga import __version__ as version
+from fpga.project import Project, TOOLS, COMBINED_TOOLS
+from fpga.tool import MEMWIDTHS
+
+
+DEVS = ['fpga', 'spi', 'bpi']
+POSITIONS = range(1, 9)
+ACTIONS = ['program', 'detect', 'unlock']
+
+EPILOGUE = """
+Supported values of arguments with choices:
+* TOOL = {}
+* DEVTYPE = {}
+* POSITIONS = {}
+* MEMWIDTH = {}
+* ACTION = {}
+""".format(
+    " | ".join(TOOLS + COMBINED_TOOLS),
+    " | ".join(DEVS),
+    " | ".join(str(x) for x in POSITIONS),
+    " | ".join(str(x) for x in MEMWIDTHS),
+    " | ".join(ACTIONS)
+)
 
 
 def main():
@@ -33,13 +55,76 @@ def main():
     # Parsing the command-line.
 
     parser = argparse.ArgumentParser(
-        description=__doc__
+        description=__doc__,
+        epilog=EPILOGUE,
+        formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
     parser.add_argument(
         '-v', '--version',
         action='version',
         version='v{}'.format(version)
+    )
+
+    parser.add_argument(
+        'bit',
+        metavar='BITFILE',
+        help='a bitstream file'
+    )
+
+    parser.add_argument(
+        '-t', '--tool',
+        metavar='TOOL',
+        default='vivado',
+        choices=TOOLS+COMBINED_TOOLS,
+        help='backend tool to be used [vivado]'
+    )
+
+    parser.add_argument(
+        '-o', '--outdir',
+        metavar='PATH',
+        default='temp',
+        help='where to generate files [temp]'
+    )
+
+    parser.add_argument(
+        '-d', '--device',
+        metavar='DEVTYPE',
+        choices=DEVS,
+        default=DEVS[0],
+        help='the target device type [{}]'.format(DEVS[0])
+    )
+
+    parser.add_argument(
+        '-p', '--position',
+        metavar='POSITION',
+        choices=POSITIONS,
+        type=int,
+        default=1,
+        help='the device position into the JTAG chain [1]'
+    )
+
+    parser.add_argument(
+        '-m', '--memname',
+        metavar='MEMNAME',
+        help='memory name if spi or bpi selected'
+    )
+
+    parser.add_argument(
+        '-w', '--width',
+        metavar='MEMWIDTH',
+        choices=MEMWIDTHS,
+        type=int,
+        default=1,
+        help='memory width if spi or bpi selected [1]'
+    )
+
+    parser.add_argument(
+        '--run',
+        metavar='ACTION',
+        choices=ACTIONS,
+        default=ACTIONS[0],
+        help='action to perform [{}]'.format(ACTIONS[0])
     )
 
     args = parser.parse_args()
