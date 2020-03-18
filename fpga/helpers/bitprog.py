@@ -108,6 +108,7 @@ def main():
     parser.add_argument(
         '-m', '--memname',
         metavar='MEMNAME',
+        default='',
         help='memory name if spi or bpi selected'
     )
 
@@ -137,6 +138,7 @@ def main():
 
     if args.run == 'program':
         devtype = args.device
+        prj.set_bitstream(args.bit)
     elif args.run == 'detect':
         devtype = 'detect'
     else:  # args.run == 'unlock'
