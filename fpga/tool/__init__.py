@@ -45,14 +45,6 @@ def check_value(value, values):
         )
 
 
-def find_bitstream(ext):
-    """Find a bitstream and raise an exception if not found."""
-    bitstream = glob('**/*.{}'.format(ext), recursive=True)
-    if len(bitstream) == 0:
-        raise FileNotFoundError('BitStream not found')
-    return bitstream[0]
-
-
 def run(command, capture):
     """Run a command."""
     output = subprocess.PIPE if capture else None
@@ -62,6 +54,8 @@ def run(command, capture):
         stdout=output, stderr=subprocess.STDOUT
     )
     return result.stdout
+
+# pylint: disable-msg=too-many-instance-attributes
 
 
 class Tool:
@@ -76,6 +70,8 @@ class Tool:
 
     _GEN_COMMAND = 'UNDEFINED'
     _TRF_COMMAND = 'UNDEFINED'
+
+    _BIT_EXT = []
 
     _DEVTYPES = []
 
@@ -97,6 +93,7 @@ class Tool:
         self.files = []
         self.set_top('UNDEFINED')
         self.sectool = None
+        self.bitstream = None
 
     def get_configs(self):
         """Get Configurations."""
@@ -179,6 +176,10 @@ class Tool:
         """Exports files for the development of a Processor System."""
         self.add_command('fpga_export', 'postbit')
 
+    def set_bitstream(self, path):
+        """Set the bitstream file to transfer."""
+        self.bitstream = path
+
     def transfer(self, devtype, position, part, width, capture):
         """Transfer a bitstream."""
         # pylint: disable-msg=too-many-arguments
@@ -188,6 +189,14 @@ class Tool:
         check_value(width, MEMWIDTHS)
         # Dummy check to avoid unused-argument (pylint)
         isinstance(capture, bool)
+        # Bitstream autodiscovery
+        if not self.bitstream and devtype not in ['detect', 'unlock']:
+            bitstream = []
+            for ext in self._BIT_EXT:
+                bitstream.extend(glob('**/*.{}'.format(ext), recursive=True))
+            if len(bitstream) == 0:
+                raise FileNotFoundError('BitStream not found')
+            self.bitstream = bitstream[0]
 
     def clean(self):
         """Clean the generated project files."""

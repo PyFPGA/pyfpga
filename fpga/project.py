@@ -263,6 +263,16 @@ class Project:
         """
         raise NotImplementedError('set_board')
 
+    def set_bitstream(self, path):
+        """Set the bitstream file to transfer.
+
+        * **path:** path to the bitstream file.
+        """
+        path = os.path.join(self._absdir, path)
+        if not os.path.exists(path):
+            raise FileNotFoundError(path)
+        self.tool.set_bitstream(path)
+
     def transfer(
             self, devtype='fpga', position=1, part='', width=1,
             capture=False):

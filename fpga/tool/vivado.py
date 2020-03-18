@@ -21,7 +21,7 @@
 Implements the support of Vivado (Xilinx).
 """
 
-from fpga.tool import Tool, find_bitstream, run
+from fpga.tool import Tool, run
 
 _TEMPLATES = {
     'fpga': """\
@@ -51,6 +51,7 @@ class Vivado(Tool):
     _GEN_COMMAND = 'vivado -mode batch -notrace -quiet -source vivado.tcl'
     _TRF_COMMAND = 'vivado -mode batch -notrace -quiet -source vivado-prog.tcl'
 
+    _BIT_EXT = ['bit']
     _DEVTYPES = ['fpga', 'detect']
 
     _GENERATED = [
@@ -65,7 +66,6 @@ class Vivado(Tool):
         super().transfer(devtype, position, part, width, capture)
         temp = _TEMPLATES[devtype]
         if devtype != 'detect':
-            bitstream = find_bitstream('bit')
-            temp = temp.replace('#BITSTREAM#', bitstream)
+            temp = temp.replace('#BITSTREAM#', self.bitstream)
         open("vivado-prog.tcl", 'w').write(temp)
         return run(self._TRF_COMMAND, capture)

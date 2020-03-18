@@ -23,7 +23,7 @@ Implements the support of ISE (Xilinx).
 
 import re
 
-from fpga.tool import Tool, find_bitstream, run
+from fpga.tool import Tool, run
 
 _TEMPLATES = {
     'fpga': """setMode -bs
@@ -91,6 +91,7 @@ class Ise(Tool):
     _GEN_COMMAND = 'xtclsh ise.tcl'
     _TRF_COMMAND = 'impact -batch ise-prog.impact'
 
+    _BIT_EXT = ['bit']
     _DEVTYPES = ['fpga', 'spi', 'bpi', 'detect', 'unlock']
 
     _GENERATED = [
@@ -131,8 +132,7 @@ class Ise(Tool):
         super().transfer(devtype, position, part, width, capture)
         temp = _TEMPLATES[devtype]
         if devtype not in ['detect', 'unlock']:
-            bitstream = find_bitstream('bit')
-            temp = temp.replace('#BITSTREAM#', bitstream)
+            temp = temp.replace('#BITSTREAM#', self.bitstream)
             temp = temp.replace('#POSITION#', str(position))
             temp = temp.replace('#NAME#', part)
             temp = temp.replace('#WIDTH#', str(width))

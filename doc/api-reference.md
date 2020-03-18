@@ -116,6 +116,12 @@ It returns a dict which includes *tool* and *project* names, the
 *extension* of a project file (according to the selected tool) and
 the *part* to be used.
 
+### `set_bitstream(path)`
+
+Set the bitstream file to transfer.
+
+* **path:** path to the bitstream file.
+
 ### `set_board(board)`
 
 Sets a development board to have predefined values.
