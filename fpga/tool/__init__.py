@@ -40,8 +40,8 @@ def check_value(value, values):
     """Check if VALUE is included in VALUES."""
     if value not in values:
         raise ValueError(
-            '{} is not a valid value ({})'
-            .format(value, " ,".join(values))
+            '{} is not a valid value [{}]'
+            .format(value, ", ".join(values))
         )
 
 

@@ -30,7 +30,7 @@ from fpga.tool import MEMWIDTHS
 
 
 DEVS = ['fpga', 'spi', 'bpi']
-POSITIONS = range(1, 9)
+POSITIONS = range(1, 10)
 ACTIONS = ['program', 'detect', 'unlock']
 
 EPILOGUE = """
@@ -69,6 +69,7 @@ def main():
     parser.add_argument(
         'bit',
         metavar='BITFILE',
+        nargs='?',
         help='a bitstream file'
     )
 
@@ -128,6 +129,25 @@ def main():
     )
 
     args = parser.parse_args()
+
+    # Solving with PyFPGA
+
+    prj = Project(args.tool, relative_to_script=False)
+    prj.set_outdir(args.outdir)
+
+    if args.run == 'program':
+        devtype = args.device
+    elif args.run == 'detect':
+        devtype = 'detect'
+    else:  # args.run == 'unlock'
+        devtype = 'unlock'
+
+    # pylint: disable=broad-except
+    # pylint: disable=invalid-name
+    try:
+        prj.transfer(devtype, args.position, args.memname, args.width)
+    except Exception as e:
+        logging.warning('%s (%s)', type(e).__name__, e)
 
 
 if __name__ == "__main__":
