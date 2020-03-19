@@ -22,25 +22,27 @@ Defines the interface to be inherited to support a tool.
 """
 
 from glob import glob
-import os.path
+import os
 import subprocess
+from shutil import rmtree
+
+
+PHASES = ['prefile', 'postprj', 'preflow', 'postsyn', 'postimp', 'postbit']
+
+STRATEGIES = ['default', 'area', 'speed', 'power']
+
+TASKS = ['prj', 'syn', 'imp', 'bit']
+
+MEMWIDTHS = [1, 2, 4, 8, 16, 32]
 
 
 def check_value(value, values):
     """Check if VALUE is included in VALUES."""
     if value not in values:
         raise ValueError(
-            '{} is not a valid value ({})'
-            .format(value, " ,".join(values))
+            '{} is not a valid value [{}]'
+            .format(value, ", ".join(values))
         )
-
-
-def find_bitstream(ext):
-    """Find a bitstream and raise an exception if not found."""
-    bitstream = glob('**/*.{}'.format(ext), recursive=True)
-    if len(bitstream) == 0:
-        raise FileNotFoundError('BitStream not found')
-    return bitstream[0]
 
 
 def run(command, capture):
@@ -52,6 +54,8 @@ def run(command, capture):
         stdout=output, stderr=subprocess.STDOUT
     )
     return result.stdout
+
+# pylint: disable-msg=too-many-instance-attributes
 
 
 class Tool:
@@ -67,7 +71,11 @@ class Tool:
     _GEN_COMMAND = 'UNDEFINED'
     _TRF_COMMAND = 'UNDEFINED'
 
+    _BIT_EXT = []
+
     _DEVTYPES = []
+
+    _GENERATED = []
 
     def __init__(self, project):
         """Initializes the attributes of the class."""
@@ -85,6 +93,7 @@ class Tool:
         self.files = []
         self.set_top('UNDEFINED')
         self.sectool = None
+        self.bitstream = None
 
     def get_configs(self):
         """Get Configurations."""
@@ -120,14 +129,9 @@ class Tool:
         """Set the TOP LEVEL of the project."""
         self.top = top
 
-    _PHASES = [
-        'prefile', 'postprj',
-        'preflow', 'postsyn', 'postimp', 'postbit'
-    ]
-
     def add_command(self, command, phase):
         """Add the specified COMMAND in the desired PHASE."""
-        check_value(phase, self._PHASES)
+        check_value(phase, PHASES)
         self.cmds[phase].append(command)
 
     def _create_gen_script(self, strategy, tasks):
@@ -152,22 +156,19 @@ class Tool:
         tcl = tcl.replace('#POSTBIT_CMDS#', '\n'.join(self.cmds['postbit']))
         open("%s.tcl" % self._TOOL, 'w').write(tcl)
 
-    _STRATEGIES = ['default', 'area', 'speed', 'power']
-    _TASKS = ['prj', 'syn', 'imp', 'bit']
-
     def generate(self, strategy, to_task, from_task, capture):
         """Run the FPGA tool."""
-        check_value(strategy, self._STRATEGIES)
-        check_value(to_task, self._TASKS)
-        check_value(from_task, self._TASKS)
-        to_index = self._TASKS.index(to_task)
-        from_index = self._TASKS.index(from_task)
+        check_value(strategy, STRATEGIES)
+        check_value(to_task, TASKS)
+        check_value(from_task, TASKS)
+        to_index = TASKS.index(to_task)
+        from_index = TASKS.index(from_task)
         if from_index > to_index:
             raise ValueError(
                 'initial task ({}) cannot be later than the last task ({})'
                 .format(from_task, to_task)
             )
-        tasks = " ".join(self._TASKS[from_index:to_index+1])
+        tasks = " ".join(TASKS[from_index:to_index+1])
         self._create_gen_script(strategy, tasks)
         return run(self._GEN_COMMAND, capture)
 
@@ -175,12 +176,34 @@ class Tool:
         """Exports files for the development of a Processor System."""
         self.add_command('fpga_export', 'postbit')
 
+    def set_bitstream(self, path):
+        """Set the bitstream file to transfer."""
+        self.bitstream = path
+
     def transfer(self, devtype, position, part, width, capture):
         """Transfer a bitstream."""
         # pylint: disable-msg=too-many-arguments
         check_value(devtype, self._DEVTYPES)
         check_value(position, range(10))
         isinstance(part, str)
-        check_value(width, [1, 2, 4, 8, 16, 32])
+        check_value(width, MEMWIDTHS)
         # Dummy check to avoid unused-argument (pylint)
         isinstance(capture, bool)
+        # Bitstream autodiscovery
+        if not self.bitstream and devtype not in ['detect', 'unlock']:
+            bitstream = []
+            for ext in self._BIT_EXT:
+                bitstream.extend(glob('**/*.{}'.format(ext), recursive=True))
+            if len(bitstream) == 0:
+                raise FileNotFoundError('BitStream not found')
+            self.bitstream = bitstream[0]
+
+    def clean(self):
+        """Clean the generated project files."""
+        for path in self._GENERATED:
+            elements = glob(path)
+            for element in elements:
+                if os.path.isfile(element):
+                    os.remove(element)
+                else:
+                    rmtree(element)

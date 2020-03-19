@@ -51,7 +51,12 @@ class Libero(Tool):
     _GEN_COMMAND = 'libero SCRIPT:libero.tcl'
     _TRF_COMMAND = ''
 
+    _BIT_EXT = []
     _DEVTYPES = ['fpga']
+
+    _GENERATED = [
+        'libero.tcl'
+    ]
 
     def set_part(self, part):
         try:

@@ -10,12 +10,14 @@ Device.
 
 Class to manage an FPGA project.
 
-### `__init__(tool='vivado', project=None)`
+### `__init__(tool='vivado', project=None, relative_to_script=True)`
 
 Class constructor.
 
 * **tool:** FPGA tool to be used.
 * **project:** project name (the tool name is used if none specified).
+* **relative_to_script:** specifies if the files/directories are
+relative to the script or the execution directory.
 
 ### `add_design(pathname)`
 
@@ -80,6 +82,10 @@ Adds a pre flow COMMAND.
 
 * **command:** a valid, commonly Tcl, tool command.
 
+### `clean()`
+
+Clean the generated project files.
+
 ### `export_hardware()`
 
 Exports files for the development of a Processor System.
@@ -109,6 +115,12 @@ Gets the Project Configurations.
 It returns a dict which includes *tool* and *project* names, the
 *extension* of a project file (according to the selected tool) and
 the *part* to be used.
+
+### `set_bitstream(path)`
+
+Set the bitstream file to transfer.
+
+* **path:** path to the bitstream file.
 
 ### `set_board(board)`
 

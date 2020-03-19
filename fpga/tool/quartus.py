@@ -24,7 +24,7 @@ Implements the support of Quartus (Intel/Altera).
 import re
 import subprocess
 
-from fpga.tool import Tool, find_bitstream, run
+from fpga.tool import Tool, run
 
 
 class Quartus(Tool):
@@ -37,7 +37,16 @@ class Quartus(Tool):
     _GEN_COMMAND = 'quartus_sh --script quartus.tcl'
     _TRF_COMMAND = 'quartus_pgm -c %s --mode jtag -o "p;%s@%s"'
 
+    _BIT_EXT = ['sof', 'pof']
     _DEVTYPES = ['fpga', 'detect']
+
+    _GENERATED = [
+        # directories
+        'db', 'incremental_db', 'output_files',
+        # files
+        '*.done', '*.jdi', '*.log', '*.pin', '*.qws', '*.rpt', '*.smsg',
+        '*.sld', '*.sof', '*.sop', '*.summary', '*.txt', 'quartus.tcl'
+    ]
 
     def transfer(self, devtype, position, part, width, capture):
         super().transfer(devtype, position, part, width, capture)
@@ -49,10 +58,7 @@ class Quartus(Tool):
         if devtype == 'detect':
             print(result)
         else:
-            bitstream = find_bitstream('sof')
-            if len(bitstream) == 0:
-                bitstream = find_bitstream('pof')
             cable = re.match(r"1\) (.*) \[", result).groups()[0]
-            cmd = self._TRF_COMMAND % (cable, bitstream, position)
+            cmd = self._TRF_COMMAND % (cable, self.bitstream, position)
             result = run(cmd, capture)
         return result

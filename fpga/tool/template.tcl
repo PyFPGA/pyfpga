@@ -654,7 +654,7 @@ proc fpga_run_bit {} {
     switch $TOOL {
         "ise"     {
             process run "Generate Programming File"
-            file rename -force $TOP.bit $PROJECT.bit
+            catch { file rename -force $TOP.bit $PROJECT.bit }
         }
         "libero"  {
             run_tool -name {GENERATEPROGRAMMINGFILE}

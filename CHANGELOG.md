@@ -1,5 +1,23 @@
 # Changelog
 
+## [v0.2.0] - dev
+
+* Added CLI helper utilities:
+    - hdl2bit: to go from FPGA design files to a bitstream.
+    - prj2bit: to deal with a vendor FPGA Project file.
+    - bitprog: to transfer a bitstream to a supported device
+* Improves into the API classes:
+    - Added relative_to_script to the Project class constructor.
+    - Added the methods set_bitstream and clean.
+    - Simplified code related to absolute and relative directories.
+    - Exported some useful lists into the Tool class.
+* Examples:
+    - Fixed a small problem into examples/multi/vhdl.py.
+* Testing:
+    - Added some tests for the new CLI utilities.
+    - Added vendor project files to test prj2bit.
+    - Added a Makefile to run some examples as a test.
+
 ## [v0.1.0] - 2020-02-29
 
 * FPGA Helpers switched to be a Python package which provides an API to manage projects
