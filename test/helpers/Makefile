@@ -7,7 +7,7 @@ hdl2bit-vhdl:
 	--outdir ../../build/helpers \
 	--tool ise \
 	-f ../../examples/hdl/*.vhdl,examples \
-	--task syn \
+	--run syn \
 	../../examples/hdl/top.vhdl
 
 hdl2bit-verilog:
@@ -17,14 +17,14 @@ hdl2bit-verilog:
 	-i ../../examples/hdl/headers1 \
 	-i ../../examples/hdl/headers2 \
 	-f ../../examples/hdl/blinking.v \
-	--task syn \
+	--run syn \
 	../../examples/hdl/top.v
 
 prj2bit:
 	mkdir -p ../../build/helpers
 	touch ../../build/helpers/test.xise
 	../../venv/bin/python3 ../../fpga/helpers/prj2bit.py \
-	--task syn \
+	--run syn \
 	../../build/helpers/test.xise
 
 clean:
