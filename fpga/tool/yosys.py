@@ -55,23 +55,27 @@ class Yosys(Tool):
         if self.sectool not in ['ise', 'vivado']:
             return super().generate(strategy, to_task, from_task, capture)
         # Yosys + supported backend
-        output1 = super().generate(strategy, 'syn', from_task, capture)
-        if self.sectool == 'vivado':
-            self.tool.set_top('yosys')
-        else:
-            self.tool.set_top(self.top)
-        self.tool.part = self.part
-        self.tool.cmds = self.cmds
-        for file in self.files:
-            if 'fpga_include' in file:
-                continue
-            if re.match(r'.*\.v$', file):
-                continue
-            self.tool.files.append(file)
-        self.tool.add_file('yosys.edif')
-        self.tool.sectool = 'yosys'
-        output2 = self.tool.generate(strategy, to_task, from_task, capture)
-        return output1 + output2
+        output1 = None
+        output2 = None
+        if from_task in ['prj', 'syn'] and to_task != 'prj':
+            output1 = super().generate(strategy, 'syn', from_task, capture)
+        if to_task in ['imp', 'bit']:
+            if self.sectool == 'vivado':
+                self.tool.set_top('yosys')
+            else:
+                self.tool.set_top(self.top)
+            self.tool.part = self.part
+            self.tool.cmds = self.cmds
+            for file in self.files:
+                if 'fpga_include' in file:
+                    continue
+                if re.match(r'.*\.v$', file):
+                    continue
+                self.tool.files.append(file)
+            self.tool.add_file('yosys.edif')
+            self.tool.sectool = 'yosys'
+            output2 = self.tool.generate(strategy, to_task, from_task, capture)
+        return str(output1) + str(output2)
 
     def transfer(self, devtype, position, part, width, capture):
         """Transfer a bitstream."""

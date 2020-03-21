@@ -2,3 +2,4 @@ build
 ignore*
 venv
 __pycache__
+*.egg-info

@@ -425,10 +425,9 @@ proc fpga_design {FILE} {
                 update_ip_catalog -rebuild
             }
             source $FILE
-            set design [get_bd_designs]
-            make_wrapper -force -files [get_files $design.bd] -top -import
+            make_wrapper -force -files [get_files design_1.bd] -top -import
             if { $TOP == "UNDEFINED"} {
-                set TOP ${design}_wrapper
+                set TOP design_1_wrapper
             }
         }
         "yosys"   {
