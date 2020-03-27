@@ -81,7 +81,7 @@ bitstream generation.
 
 ## Installation
 
-Latest development version from git:
+To install a local clone of the repository:
 
 ```
 git clone https://gitlab.com/rodrigomelo9/pyfpga.git
@@ -91,3 +91,9 @@ sudo pip install -e .
 
 > With `-e` (`--editable`) your application is installed into site-packages via a kind of symlink,
 > so you do not need to reinstall it after making, for example, a `git pull`.
+
+To install from the online repository:
+
+```
+pip install -e 'git+https://gitlab.com/rodrigomelo9/pyfpga#egg=pyfpga'
+```
