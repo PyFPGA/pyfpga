@@ -168,7 +168,12 @@ class Project:
             toplevel = os.path.join(self._absdir, toplevel)
             if os.path.exists(toplevel):
                 hdl = open(toplevel, 'r').read()
-                top = re.findall(r'module\s+(\w+)\s*[#(]', hdl)
+                # Removing comments, newlines and carriage-returns
+                hdl = re.sub(r'--.*[$\n]|\/\/.*[$\n]', '', hdl)
+                hdl = hdl.replace('\n', '').replace('\r', '')
+                hdl = re.sub(r'\/\*.*\*\/', '', hdl)
+                # Finding modules/entities
+                top = re.findall(r'module\s+(\w+)\s*[#(;]', hdl)
                 top.extend(re.findall(r'entity\s+(\w+)\s+is', hdl))
                 if len(top) > 0:
                     self.tool.set_top(top[-1])
