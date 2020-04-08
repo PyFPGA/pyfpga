@@ -10,6 +10,7 @@ venv-create:
 	$(VENV)/bin/python3 -m pip install pyclean
 	$(VENV)/bin/python3 -m pip install pycodestyle
 	$(VENV)/bin/python3 -m pip install pylint
+	$(VENV)/bin/python3 -m pip install pytest
 	@rm -fr pyfpga.egg-info
 
 venv-remove:
