@@ -58,21 +58,21 @@
   <FileSets Version="1" Minor="31">
     <FileSet Name="sources_1" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1">
       <Filter Type="Srcs"/>
-      <File Path="$PPRDIR/../../examples/hdl/blinking.vhdl">
+      <File Path="$PPRDIR/../../hdl/blinking.vhdl">
         <FileInfo>
           <Attr Name="Library" Val="examples"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../examples/hdl/examples_pkg.vhdl">
+      <File Path="$PPRDIR/../../hdl/examples_pkg.vhdl">
         <FileInfo>
           <Attr Name="Library" Val="examples"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../examples/hdl/top.vhdl">
+      <File Path="$PPRDIR/../../hdl/top.vhdl">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>

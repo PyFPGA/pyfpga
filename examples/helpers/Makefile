@@ -6,19 +6,19 @@ hdl2bit-vhdl:
 	../../venv/bin/python3 ../../fpga/helpers/hdl2bit.py \
 	--outdir ../../build/helpers \
 	--tool ise \
-	-f ../../examples/hdl/*.vhdl,examples \
+	-f ../../hdl/*.vhdl,examples \
 	--run syn \
-	../../examples/hdl/top.vhdl
+	../../hdl/top.vhdl
 
 hdl2bit-verilog:
 	../../venv/bin/python3 ../../fpga/helpers/hdl2bit.py \
 	--outdir ../../build/helpers \
 	--tool ise \
-	-i ../../examples/hdl/headers1 \
-	-i ../../examples/hdl/headers2 \
-	-f ../../examples/hdl/blinking.v \
+	-i ../../hdl/headers1 \
+	-i ../../hdl/headers2 \
+	-f ../../hdl/blinking.v \
 	--run syn \
-	../../examples/hdl/top.v
+	../../hdl/top.v
 
 prj2bit:
 	mkdir -p ../../build/helpers

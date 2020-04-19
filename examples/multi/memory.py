@@ -18,9 +18,9 @@ for hdl in ['vhdl', 'verilog']:
         PRJ = Project(tool)
         PRJ.set_outdir('../../build/multi/memory/%s/%s' % (tool, hdl))
         if hdl == 'vhdl':
-            PRJ.add_files('../hdl/ram.vhdl')
+            PRJ.add_files('../../hdl/ram.vhdl')
         else:
-            PRJ.add_files('../hdl/ram.v')
+            PRJ.add_files('../../hdl/ram.v')
         PRJ.set_top('ram')
         try:
             PRJ.generate(to_task='syn')

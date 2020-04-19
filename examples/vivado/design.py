@@ -12,7 +12,7 @@ prj.set_part('xc7z010-1-clg400')
 
 prj.set_outdir('../../build/zybo-design')
 
-prj.add_files('../hdl/blinking.vhdl')
+prj.add_files('../../hdl/blinking.vhdl')
 prj.add_files('zybo.xdc')
 prj.add_design('design.tcl')
 

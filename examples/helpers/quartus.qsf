@@ -15,9 +15,9 @@ set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name TCL_SCRIPT_FILE ../../examples/quartus/de10nano.tcl
 set_global_assignment -name SDC_FILE ../../examples/quartus/de10nano.sdc
-set_global_assignment -name VHDL_FILE ../../examples/hdl/top.vhdl
-set_global_assignment -name VHDL_FILE ../../examples/hdl/examples_pkg.vhdl -library examples
-set_global_assignment -name VHDL_FILE ../../examples/hdl/blinking.vhdl -library examples
+set_global_assignment -name VHDL_FILE ../../hdl/top.vhdl
+set_global_assignment -name VHDL_FILE ../../hdl/examples_pkg.vhdl -library examples
+set_global_assignment -name VHDL_FILE ../../hdl/blinking.vhdl -library examples
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
