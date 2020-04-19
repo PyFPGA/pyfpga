@@ -8,8 +8,7 @@ general:
 	$(PYTHON) capture.py
 
 specific:
-	$(PYTHON) ise/generate.py
-	$(PYTHON) ise/transfer.py
+	$(PYTHON) ise/ise.py --action all
 	$(PYTHON) libero/generate.py
 	$(PYTHON) quartus/generate.py
 	$(PYTHON) quartus/transfer.py
