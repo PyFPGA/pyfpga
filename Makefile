@@ -23,6 +23,8 @@ install-hooks:
 		ln -sf ../../.helpers/$(HOOK).sh .git/hooks/$(HOOK);\
 	)
 
-clean: venv-create
-	$(VENV)/bin/py3clean .
-	@rm -fr build
+clean:
+	@$(VENV)/bin/py3clean .
+	@rm -fr build .pytest_cache
+
+clean-all: clean venv-remove
