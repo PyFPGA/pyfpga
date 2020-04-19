@@ -1,4 +1,4 @@
-"""ISE example project."""
+"""Quartus example project."""
 
 import argparse
 import logging
@@ -14,17 +14,17 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-prj = Project('ise')
-prj.set_part('XC6SLX9-2-CSG324')
+prj = Project('quartus')
+prj.set_part('5CSEBA6U23I7')
 
-prj.set_outdir('../../build/ise')
+prj.set_outdir('../../build/quartus')
 
 prj.add_files('../../hdl/blinking.vhdl', 'examples')
 prj.add_files('../../hdl/examples_pkg.vhdl', 'examples')
 prj.add_files('../../hdl/top.vhdl')
 prj.set_top('Top')
-prj.add_files('s6micro.xcf')
-prj.add_files('s6micro.ucf')
+prj.add_files('de10nano.sdc')
+prj.add_files('de10nano.tcl')
 
 if args.action in ['generate', 'all']:
     try:
@@ -34,9 +34,6 @@ if args.action in ['generate', 'all']:
 
 if args.action in ['transfer', 'all']:
     try:
-        prj.transfer('fpga')
-        #  prj.transfer('detect')
-        #  prj.transfer('unlock')
-        #  prj.transfer('spi', 1, 'N25Q128', 4)
+        prj.transfer('fpga', 2)
     except Exception as e:
         logging.warning('ERROR: {} ({})'.format(type(e).__name__, e))

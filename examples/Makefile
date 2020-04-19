@@ -9,13 +9,13 @@ general:
 
 specific:
 	$(PYTHON) ise/ise.py --action all
-	$(PYTHON) libero/generate.py
-	$(PYTHON) quartus/generate.py
-	$(PYTHON) quartus/transfer.py
+	$(PYTHON) libero/libero.py --action all
+	$(PYTHON) quartus/quartus.py --action all
 	$(PYTHON) vivado/design.py
-	$(PYTHON) vivado/generate.py
-	$(PYTHON) vivado/transfer.py
+	$(PYTHON) vivado/vivado.py --action all
 	$(PYTHON) yosys/generic.py
+	$(PYTHON) yosys/ise.py --action all
+	$(PYTHON) yosys/vivado.py --action all
 
 multi:
 	$(PYTHON) multi/memory.py
