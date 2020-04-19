@@ -5,8 +5,8 @@ project set device  xc6slx9
 project set package csg324
 project set speed   -2
 
-xfile add ../../hdl/blinking.vhdl
-xfile add ../../examples/ise/s6micro.ucf
+xfile add ../hdl/blinking.vhdl
+xfile add ../examples/ise/s6micro.ucf
 
 project set top Blinking
 
