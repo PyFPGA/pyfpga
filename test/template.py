@@ -12,10 +12,10 @@ prj.set_outdir('../build/tclsh')
 
 tasks = ['prj', 'syn', 'imp', 'bit']
 
-prj.add_include('../examples/hdl/headers1/freq.vh')
-prj.add_files('../examples/hdl/blinking.v')
-prj.add_files('../examples/hdl/blinking.vhdl')
-prj.add_files('../examples/hdl/blinking.vhdl', 'examples')
+prj.add_include('../hdl/headers1/freq.vh')
+prj.add_files('../hdl/blinking.v')
+prj.add_files('../hdl/blinking.vhdl')
+prj.add_files('../hdl/blinking.vhdl', 'examples')
 
 for i in range(0, 4):
     for j in range(i, 4):

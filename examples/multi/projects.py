@@ -18,23 +18,26 @@ PROJECTS = {
         'tool': 'vivado',
         'part': 'xc7k70t-3-fbg484',
         'files': [
-            ('../hdl/blinking.vhdl', 'examples'),
-            ('../hdl/examples_pkg.vhdl', 'examples'),
-            '../hdl/top.vhdl'
+            ('../../hdl/blinking.vhdl', 'examples'),
+            ('../../hdl/examples_pkg.vhdl', 'examples'),
+            '../../hdl/top.vhdl'
         ],
         'top': 'Top'
     },
     'ise-prj': {
         'tool': 'ise',
         'part': 'xc6slx9-2-csg324',
-        'files': ['../hdl/blinking.vhdl'],
+        'files': ['../../hdl/blinking.vhdl'],
         'top': 'Blinking'
     },
     'quartus-prj': {
         'tool': 'quartus',
         'part': '5CEBA2F17A7',
-        'includes': ['../hdl/headers1/freq.vh', '../hdl/headers2/secs.vh'],
-        'files': ['../hdl/blinking.v', '../hdl/top.v'],
+        'includes': [
+            '../../hdl/headers1/freq.vh',
+            '../../hdl/headers2/secs.vh'
+        ],
+        'files': ['../../hdl/blinking.v', '../../hdl/top.v'],
         'top': 'Top'
     },
 }

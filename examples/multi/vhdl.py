@@ -17,9 +17,9 @@ for tool in TOOLS:
         continue
     PRJ = Project(tool)
     PRJ.set_outdir('../../build/multi/vhdl/%s' % tool)
-    PRJ.add_files('../hdl/blinking.vhdl', 'examples')
-    PRJ.add_files('../hdl/examples_pkg.vhdl', 'examples')
-    PRJ.add_files('../hdl/top.vhdl')
+    PRJ.add_files('../../hdl/blinking.vhdl', 'examples')
+    PRJ.add_files('../../hdl/examples_pkg.vhdl', 'examples')
+    PRJ.add_files('../../hdl/top.vhdl')
     PRJ.set_top('Top')
     try:
         PRJ.generate(to_task='syn')

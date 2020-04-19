@@ -2,7 +2,7 @@ new_project -name example -location libero -hdl {VHDL} -family {SmartFusion2}
 
 set_device -family SmartFusion2 -die M2S010 -package tq144 -speed -1
 
-create_links -hdl_source ../../examples/hdl/blinking.vhdl
+create_links -hdl_source ../../hdl/blinking.vhdl
 create_links -io_pdc ../../examples/libero/mkr.pdc
 build_design_hierarchy
 
