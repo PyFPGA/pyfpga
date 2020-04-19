@@ -23,9 +23,9 @@ def test_names():
 
 def test_files():
     prj = Project()
-    prj.set_top(get_pathfile('top.vhdl'))
+    prj.set_top(get_pathfile('../hdl/fakes/top.vhdl'))
     assert prj.tool.top == "Top1"
-    prj.set_top(get_pathfile('top.v'))
+    prj.set_top(get_pathfile('../hdl/fakes/top.v'))
     assert prj.tool.top == "Top1"
-    prj.set_top(get_pathfile('../../README.md'))
+    prj.set_top(get_pathfile('../README.md'))
     assert prj.tool.top == "UNDEFINED"
