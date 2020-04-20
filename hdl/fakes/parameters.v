@@ -19,24 +19,24 @@ module Params #(
          $display("The boolean is not True");
          $finish;
       end
-      if (INT != 92) begin
-         $display("The integer is not 92");
+      if (INT != 255) begin
+         $display("The integer is not 255");
          $finish;
       end
       if (LOG != 1) begin
          $display("The std_logic is not '1'");
          $finish;
       end
-      if (VEC != 8'b11001100) begin
-         $display("The std_logic_vector is not 11001100");
+      if (VEC != 8'b11111111) begin
+         $display("The std_logic_vector is not 11111111");
          $finish;
       end
       if (STR != "WXYZ") begin
          $display("The string is not WXYZ");
          $finish;
       end
-      if (REA != 1.0) begin
-         $display("The real is not 1.0");
+      if (REA != 1.1) begin
+         $display("The real is not 1.1");
          $finish;
       end
    end
@@ -46,6 +46,6 @@ module Params #(
    assign log_o = LOG;
    assign vec_o = VEC;
    assign str_o = (STR=="WXYZ") ? 1'b1 : 1'b0;
-   assign rea_o = (REA==1.0) ? 1'b1 : 1'b0;
+   assign rea_o = (REA==1.1) ? 1'b1 : 1'b0;
 
 endmodule

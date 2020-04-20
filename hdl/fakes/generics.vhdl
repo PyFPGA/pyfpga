@@ -25,17 +25,17 @@ architecture RTL of Params is
 begin
 
    assert BOO=True       report "The boolean is not True" severity failure;
-   assert INT=92         report "The integer is not 92" severity failure;
+   assert INT=255        report "The integer is not 255" severity failure;
    assert LOG='1'        report "The std_logic is not '1'" severity failure;
-   assert VEC="11001100" report "The std_logic_vector is not 11001100" severity failure;
+   assert VEC="11111111" report "The std_logic_vector is not 11111111" severity failure;
    assert STR="WXYZ"     report "The string is not WXYZ" severity failure;
-   assert REA=1.0        report "The real is not 1.0" severity failure;
+   assert REA=1.1        report "The real is not 1.1" severity failure;
 
    boo_o <= '1' when BOO else '0';
    int_o <= std_logic_vector(to_unsigned(INT, 8));
    log_o <= LOG;
    vec_o <= VEC;
    str_o <= '1' when STR="WXYZ" else '0';
-   rea_o <= '1' when REA=1.0 else '0';
+   rea_o <= '1' when REA=1.1 else '0';
 
 end architecture RTL;

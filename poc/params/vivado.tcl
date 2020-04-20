@@ -8,7 +8,7 @@ set_property "part" xc7z010-1-clg400 [current_project]
 
 add_files ../../hdl/fakes/parameters.v
 set_property top Params [current_fileset]
-set_property "generic" "BOO=1 INT=92 LOG=1'b1 VEC=8'b11001100 STR=WXYZ REA=1.0" -objects [get_filesets sources_1]
+set_property "generic" "BOO=1 INT=255 LOG=1'b1 VEC=8'b11111111 STR=WXYZ REA=1.1" -objects [get_filesets sources_1]
 
 reset_run synth_1
 launch_runs synth_1
@@ -19,8 +19,8 @@ remove_files [get_files]
 
 add_files ../../hdl/fakes/generics.vhdl
 set_property top Params [current_fileset]
-# TODO: add REA=1.0 (possible?)
-set_property "generic" "BOO=true INT=92 LOG=1'b1 VEC=8'b11001100 STR=WXYZ" -objects [get_filesets sources_1]
+# TODO: add REA=1.1 (possible?)
+set_property "generic" "BOO=true INT=255 LOG=1'b1 VEC=8'b11111111 STR=WXYZ" -objects [get_filesets sources_1]
 
 reset_run synth_1
 launch_runs synth_1
