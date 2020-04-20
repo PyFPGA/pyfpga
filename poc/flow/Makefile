@@ -28,6 +28,6 @@ clean:
 	*.rpt *.done *.summary *.jdi *.pin *.qpf *.qsf *.sld *.sof db \
 	incremental_db
 	# vivado
-	rm -fr *.bit *.cache *.hw *.runs *.xpr *.jou
+	rm -fr *.bit *.cache *.hw *.runs *.xpr *.jou *.ip_user_files
 	# General
 	rm -fr *.html *.log *.txt *.xml
