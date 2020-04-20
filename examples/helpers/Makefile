@@ -1,31 +1,33 @@
 #!/usr/bin/make
 
+PYTHON = ../../venv/bin/python3
+BLDDIR = ../../build/helpers
+HLPDIR = ../../fpga/helpers
+HDLDIR = ../../hdl
+
 all: hdl2bit-vhdl hdl2bit-verilog prj2bit
 
 hdl2bit-vhdl:
-	../../venv/bin/python3 ../../fpga/helpers/hdl2bit.py \
-	--outdir ../../build/helpers \
-	--tool ise \
-	-f ../../hdl/*.vhdl,examples \
-	--run syn \
-	../../hdl/top.vhdl
+	$(PYTHON) $(HLPDIR)/hdl2bit.py \
+	--outdir $(BLDDIR) \
+	--tool ise --run syn \
+	-f $(HDLDIR)/*.vhdl,examples $(HDLDIR)/top.vhdl
 
 hdl2bit-verilog:
-	../../venv/bin/python3 ../../fpga/helpers/hdl2bit.py \
-	--outdir ../../build/helpers \
-	--tool ise \
-	-i ../../hdl/headers1 \
-	-i ../../hdl/headers2 \
-	-f ../../hdl/blinking.v \
-	--run syn \
-	../../hdl/top.v
+	$(PYTHON) $(HLPDIR)/hdl2bit.py \
+	--outdir $(BLDDIR) \
+	--tool ise --run syn \
+	-i $(HDLDIR)/headers1 -i $(HDLDIR)/headers2 \
+	-f $(HDLDIR)/blinking.v $(HDLDIR)/top.v
 
 prj2bit:
-	mkdir -p ../../build/helpers
-	touch ../../build/helpers/test.xise
-	../../venv/bin/python3 ../../fpga/helpers/prj2bit.py \
-	--run syn \
-	../../build/helpers/test.xise
+	mkdir -p $(BLDDIR)
+	cp ise.xise quartus.qpf vivado.xpr $(BLDDIR)
+	$(PYTHON) $(HLPDIR)/prj2bit.py --run syn $(BLDDIR)/ise.xise
+	$(PYTHON) $(HLPDIR)/prj2bit.py --run syn $(BLDDIR)/quartus.qpf
+	$(PYTHON) $(HLPDIR)/prj2bit.py --run syn $(BLDDIR)/vivado.xpr
 
 clean:
-	rm -fr ../../build/helpers
+	$(PYTHON) $(HLPDIR)/prj2bit.py --clean $(BLDDIR)/ise.xise
+	$(PYTHON) $(HLPDIR)/prj2bit.py --clean $(BLDDIR)/quartus.qpf
+	$(PYTHON) $(HLPDIR)/prj2bit.py --clean $(BLDDIR)/vivado.xpr
