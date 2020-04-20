@@ -7,12 +7,12 @@ project set speed   -2
 
 xfile add ../../hdl/fakes/parameters.v
 project set top Params
-project set "Generics, Parameters" "INT=1 REA=1.5 LOG=1'b1 VEC=8'b11001100 STR=\"WXYZ\"" -process "Synthesize - XST"
+project set "Generics, Parameters" "BOO=True INT=92 LOG=1 VEC=204 STR=\"WXYZ\" REA=1.0" -process "Synthesize - XST"
 process run "Synthesize" -force rerun
 
 xfile add ../../hdl/fakes/generics.vhdl
 project set top Params
-project set "Generics, Parameters" "INT=1 REA=1.5 LOG='1' VEC=\"11001100\" STR=\"WXYZ\"" -process "Synthesize - XST"
+project set "Generics, Parameters" "BOO=True INT=92 LOG='1' VEC=\"11001100\" STR=\"WXYZ\" REA=1.0" -process "Synthesize - XST"
 process run "Synthesize" -force rerun
 
 project close
