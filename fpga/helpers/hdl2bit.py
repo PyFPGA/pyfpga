@@ -167,7 +167,7 @@ def main():
         if exception.returncode == 127:
             logging.error('the backend EDA tool was not found.')
         else:
-            sys.exit('%s (%s)', type(e).__name__, e)
+            sys.exit('{} ({})'.format(type(exception).__name__, exception))
 
 
 if __name__ == "__main__":
