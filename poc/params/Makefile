@@ -1,6 +1,6 @@
 #!/usr/bin/make
 
-all: ise libero quartus vivado
+all: ise quartus vivado
 
 ise:
 	xtclsh ise.tcl
