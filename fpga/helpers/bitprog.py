@@ -23,11 +23,15 @@ A CLI helper utility to transfer a bitstream to a supported device.
 
 import argparse
 import logging
+from subprocess import CalledProcessError
+import sys
 
 from fpga import __version__ as version
 from fpga.project import Project, TOOLS, COMBINED_TOOLS
 from fpga.tool import MEMWIDTHS
 
+logging.basicConfig()
+logging.getLogger('fpga.project').level = logging.INFO
 
 DEVS = ['fpga', 'spi', 'bpi']
 POSITIONS = range(1, 10)
@@ -144,12 +148,13 @@ def main():
     else:  # args.run == 'unlock'
         devtype = 'unlock'
 
-    # pylint: disable=broad-except
-    # pylint: disable=invalid-name
     try:
         prj.transfer(devtype, args.position, args.memname, args.width)
-    except Exception as e:
-        logging.warning('%s (%s)', type(e).__name__, e)
+    except CalledProcessError as exception:
+        if exception.returncode == 127:
+            logging.error('the backend EDA tool was not found.')
+        else:
+            sys.exit('%s (%s)', type(e).__name__, e)
 
 
 if __name__ == "__main__":

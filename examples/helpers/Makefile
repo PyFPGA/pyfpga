@@ -1,18 +1,22 @@
 #!/usr/bin/make
 
-all: hdl2bit-vhdl hdl2bit-verilog prj2bit
+PYTHON = ../../venv/bin/python3
+OUTDIR = ../../build/helpers
+HLPDIR = ../../fpga/helpers
+
+all: hdl2bit-vhdl hdl2bit-verilog prj2bit bitprog
 
 hdl2bit-vhdl:
-	../../venv/bin/python3 ../../fpga/helpers/hdl2bit.py \
-	--outdir ../../build/helpers \
+	$(PYTHON) $(HLPDIR)/hdl2bit.py \
+	--outdir $(OUTDIR) \
 	--tool ise \
 	-f ../../hdl/*.vhdl,examples \
 	--run syn \
 	../../hdl/top.vhdl
 
 hdl2bit-verilog:
-	../../venv/bin/python3 ../../fpga/helpers/hdl2bit.py \
-	--outdir ../../build/helpers \
+	$(PYTHON) $(HLPDIR)/hdl2bit.py \
+	--outdir $(OUTDIR) \
 	--tool ise \
 	-i ../../hdl/headers1 \
 	-i ../../hdl/headers2 \
@@ -21,11 +25,18 @@ hdl2bit-verilog:
 	../../hdl/top.v
 
 prj2bit:
-	mkdir -p ../../build/helpers
-	touch ../../build/helpers/test.xise
-	../../venv/bin/python3 ../../fpga/helpers/prj2bit.py \
+	mkdir -p $(OUTDIR)
+	touch $(OUTDIR)/test.xise
+	$(PYTHON) $(HLPDIR)/prj2bit.py \
 	--run syn \
-	../../build/helpers/test.xise
+	$(OUTDIR)/test.xise
+
+bitprog:
+	$(PYTHON) $(HLPDIR)/bitprog.py \
+	--outdir $(OUTDIR) \
+	--tool ise \
+	-d fpga -p 2 \
+	../../README.md
 
 clean:
-	rm -fr ../../build/helpers
+	rm -fr $(OUTDIR)

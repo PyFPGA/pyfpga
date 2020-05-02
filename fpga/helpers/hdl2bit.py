@@ -23,6 +23,8 @@ A CLI helper utility to go from FPGA design files to a bitstream.
 
 import argparse
 import logging
+from subprocess import CalledProcessError
+import sys
 
 from fpga import __version__ as version
 from fpga.project import Project, TOOLS, COMBINED_TOOLS
@@ -159,12 +161,13 @@ def main():
     prj.add_files(args.top)
     prj.set_top(args.top)
 
-    # pylint: disable=broad-except
-    # pylint: disable=invalid-name
     try:
         prj.generate(args.strategy, args.run)
-    except Exception as e:
-        logging.warning('%s (%s)', type(e).__name__, e)
+    except CalledProcessError as exception:
+        if exception.returncode == 127:
+            logging.error('the backend EDA tool was not found.')
+        else:
+            sys.exit('%s (%s)', type(e).__name__, e)
 
 
 if __name__ == "__main__":
