@@ -24,6 +24,7 @@ A CLI helper utility to deal with a vendor FPGA Project file.
 import argparse
 import logging
 import os
+from subprocess import CalledProcessError
 import sys
 
 from fpga import __version__ as version
@@ -103,15 +104,16 @@ def main():
 
     prj.set_top(project)
 
-    # pylint: disable=broad-except
-    # pylint: disable=invalid-name
     try:
         if args.clean:
             prj.clean()
         else:
             prj.generate('default', args.run, 'syn')
-    except Exception as e:
-        logging.warning('%s (%s)', type(e).__name__, e)
+    except CalledProcessError as exception:
+        if exception.returncode == 127:
+            logging.error('the backend EDA tool was not found.')
+        else:
+            sys.exit('{} ({})'.format(type(exception).__name__, exception))
 
 
 if __name__ == "__main__":
