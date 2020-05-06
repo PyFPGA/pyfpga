@@ -18,6 +18,7 @@ specific:
 	$(PYTHON) yosys/generic.py
 	$(PYTHON) yosys/ise.py --action all
 	$(PYTHON) yosys/vivado.py --action all
+	$(PYTHON) ghdl/generic.py
 
 multi:
 	$(PYTHON) multi/memory.py

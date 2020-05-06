@@ -32,7 +32,7 @@ import re
 import time
 
 
-TOOLS = ['ise', 'libero', 'quartus', 'vivado', 'yosys']
+TOOLS = ['ghdl', 'ise', 'libero', 'quartus', 'vivado', 'yosys']
 
 COMBINED_TOOLS = ['yosys-ise', 'yosys-vivado']
 
@@ -52,7 +52,10 @@ class Project:
         self._log.level = logging.INFO
         self._log.addHandler(logging.NullHandler())
         # pylint: disable=import-outside-toplevel
-        if tool == 'ise':
+        if tool == 'ghdl':
+            from fpga.tool.ghdl import Ghdl
+            self.tool = Ghdl(project)
+        elif tool == 'ise':
             from fpga.tool.ise import Ise
             self.tool = Ise(project)
         elif tool == 'libero':
