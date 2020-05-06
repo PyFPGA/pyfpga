@@ -2,6 +2,8 @@
 
 PYTHON = ../venv/bin/python3
 
+.PHONY: multi
+
 all: general specific multi
 
 general:
