@@ -21,7 +21,7 @@
 Implements the support for Yosys synthesizer.
 """
 
-import re
+import os
 
 from fpga.tool import Tool
 
@@ -69,7 +69,7 @@ class Yosys(Tool):
             for file in self.files:
                 if 'fpga_include' in file:
                     continue
-                if re.match(r'.*\.v$', file):
+                if os.path.splitext(file)[1] in ['.v', '.vhd', '.vhdl']:
                     continue
                 self.tool.files.append(file)
             self.tool.add_file('yosys.edif')
