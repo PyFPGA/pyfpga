@@ -2,6 +2,9 @@
 
 all: ise quartus vivado
 
+ghdl:
+	bash ghdl.sh
+
 ise:
 	xtclsh ise.tcl
 
@@ -15,6 +18,8 @@ vivado:
 	vivado -mode batch -notrace -quiet -source vivado.tcl
 
 clean:
+	# ghdl
+	rm -fr *.cf
 	# ise
 	rm -fr \
 	*.bgn *.bit *.bld *.cmd_log *.drc *.lso *.ncd *.ngc *.ngd *.ngr      \
