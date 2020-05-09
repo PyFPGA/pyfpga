@@ -44,8 +44,8 @@ class Ghdl(Tool):
         # GHDL flow is based on commands only
         if len(self.files) > 0:
             command = ';'.join(self.files) + ';'
-        command += 'ghdl --synth {} {} > ghdl.vhdl'.format(
-            self._FLAGS, self.top
+        command += 'ghdl --synth {} {} > {}.vhdl'.format(
+            self._FLAGS, self.top, self.project
         )
         # print(command)
         return run(command, capture)
