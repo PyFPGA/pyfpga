@@ -2,8 +2,8 @@ create_project -force example
 
 set_property "part" xc7z010-1-clg400 [current_project]
 
-add_files ../hdl/blinking.vhdl
-add_files ../examples/vivado/zybo.xdc
+add_files ../../hdl/blinking.vhdl
+add_files ../../examples/vivado/zybo.xdc
 
 set_property top Blinking [current_fileset]
 
