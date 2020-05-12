@@ -19,7 +19,7 @@ architecture RTL of ram is
     type mem_t is array (0 to 63) of bit_vector(31 downto 0);
 
     impure function init(filename : in string) return mem_t is
-        file     fh  : text is in filename;
+        file     fh  : text is filename;
         variable l   : line;
         variable mem : mem_t;
     begin
