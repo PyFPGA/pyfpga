@@ -1,6 +1,12 @@
 #!/usr/bin/make
 
-all: ise libero quartus vivado
+all:
+
+ghdl:
+	bash ghdl.sh
+
+ghdl-yosys:
+	bash ghdl-yosys.sh
 
 ise:
 	xtclsh ise.tcl
@@ -15,6 +21,8 @@ vivado:
 	vivado -mode batch -notrace -quiet -source vivado.tcl
 
 clean:
+	# ghdl
+	rm -fr *.cf *.edif
 	# ise
 	rm -fr \
 	*.bgn *.bit *.bld *.cmd_log *.drc *.lso *.ncd *.ngc *.ngd *.ngr      \
