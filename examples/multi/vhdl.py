@@ -13,7 +13,6 @@ logging.basicConfig()
 
 for tool in TOOLS:
     if tool == 'yosys':
-        print("VHDL is not supported by Yosys yet, skipped")
         continue
     PRJ = Project(tool)
     PRJ.set_outdir('../../build/multi/vhdl/%s' % tool)
