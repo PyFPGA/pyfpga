@@ -116,7 +116,6 @@ proc fpga_open { PROJECT } {
             project_open -force $PROJECT.qpf
         }
         "vivado"  { open_project $PROJECT }
-        "yosys"   { }
     }
 }
 
@@ -128,7 +127,6 @@ proc fpga_close {} {
         "libero"  { close_project }
         "quartus" { project_close }
         "vivado"  { close_project }
-        "yosys"   { }
     }
 }
 
@@ -362,7 +360,7 @@ proc fpga_file {FILE {LIBRARY "work"}} {
         }
         "yosys"   {
             if {$ext == "v" || $ext == "sv"} {
-                read_verilog $FILE
+                read_verilog -defer $FILE
             }
         }
     }
@@ -410,15 +408,6 @@ proc fpga_design {FILE} {
     global TOOL TOP INCLUDED
     fpga_print "including the block design '$FILE'"
     switch $TOOL {
-        "ise" {
-            puts "UNSUPPORTED"
-        }
-        "libero" {
-            puts "UNSUPPORTED"
-        }
-        "quartus" {
-            puts "UNSUPPORTED"
-        }
         "vivado" {
             if { [info exists INCLUDED] && [llength $INCLUDED] > 0 } {
                 set_property "ip_repo_paths" $INCLUDED [get_filesets sources_1]
@@ -430,9 +419,7 @@ proc fpga_design {FILE} {
                 set TOP design_1_wrapper
             }
         }
-        "yosys"   {
-            puts "UNSUPPORTED"
-        }
+        default  { puts "UNSUPPORTED by '$TOOL'" }
     }
 }
 
@@ -499,7 +486,7 @@ proc fpga_area {} {
             set_property strategy "Area_Explore" $obj
             set_property "steps.opt_design.args.directive" "ExploreArea" $obj
         }
-        "yosys"   { puts "Not yet implemented" }
+        default  { puts "UNSUPPORTED by '$TOOL'" }
     }
 }
 
@@ -531,7 +518,7 @@ proc fpga_power {} {
             set_property "steps.power_opt_design.is_enabled" "1" $obj
             set_property "steps.phys_opt_design.is_enabled" "1" $obj
         }
-        "yosys"   { puts "Not yet implemented" }
+        default  { puts "UNSUPPORTED by '$TOOL'" }
     }
 }
 
@@ -567,7 +554,7 @@ proc fpga_speed {} {
             set_property "steps.phys_opt_design.args.directive" "Explore" $obj
             set_property "steps.route_design.args.directive" "Explore" $obj
         }
-        "yosys"   { puts "Not yet implemented" }
+        default  { puts "UNSUPPORTED by '$TOOL'" }
     }
 }
 
@@ -616,6 +603,7 @@ proc fpga_run_syn {} {
                 puts "Generated yosys.v as a generic synthesis"
             }
         }
+        default  { puts "UNSUPPORTED by '$TOOL'" }
     }
 }
 
@@ -643,7 +631,7 @@ proc fpga_run_imp {} {
             launch_runs impl_1
             wait_on_run impl_1
         }
-        "yosys"   { puts "UNSUPPORTED (Yosys only performs Synthesis)" }
+        default  { puts "UNSUPPORTED by '$TOOL'" }
     }
 }
 
@@ -665,7 +653,7 @@ proc fpga_run_bit {} {
             open_run impl_1
             write_bitstream -force $PROJECT
         }
-        "yosys"   { puts "UNSUPPORTED (Yosys only performs Synthesis)" }
+        default  { puts "UNSUPPORTED by '$TOOL'" }
     }
 }
 
@@ -673,15 +661,6 @@ proc fpga_export {} {
     global TOOL PROJECT
     fpga_print "exporting the design"
     switch $TOOL {
-        "ise"     {
-            puts "UNSUPPORTED"
-        }
-        "libero"  {
-            puts "UNSUPPORTED"
-        }
-        "quartus" {
-            puts "UNSUPPORTED"
-        }
         "vivado"  {
             if { [ catch {
                 # Vitis
@@ -698,9 +677,7 @@ proc fpga_export {} {
                 fpga_print "design exported to be used with the SDK"
             }
         }
-        "yosys"   {
-            puts "UNSUPPORTED (Yosys only performs Synthesis)"
-        }
+        default  { puts "UNSUPPORTED by '$TOOL'" }
     }
 }
 
