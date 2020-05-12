@@ -240,36 +240,6 @@ proc fpga_part { PART } {
     }
 }
 
-proc fpga_params {} {
-    global TOOL PARAMS
-    if { [llength $PARAMS] == 0 } { return }
-    fpga_print "setting generics/parameters"
-    switch $TOOL {
-        "ise"     {
-            set assigns [list]
-            foreach PARAM $PARAMS { lappend assigns [join $PARAM "="] }
-            project set "Generics, Parameters" "[join $assigns]" -process "Synthesize - XST"
-        }
-        "libero"  {
-            # They must be specified after set_root (see fpga_top)
-        }
-        "quartus" {
-            foreach PARAM $PARAMS {
-                eval "set_parameter -name $PARAM"
-            }
-        }
-        "vivado"  {
-            set assigns [list]
-            foreach PARAM $PARAMS { lappend assigns [join $PARAM "="] }
-            set obj [get_filesets sources_1]
-            set_property "generic" "[join $assigns]" -objects $obj
-        }
-        "yosys"   {
-            # They must be specified when top file was already read (see fpga_top)
-        }
-    }
-}
-
 proc fpga_file {FILE {LIBRARY "work"}} {
     global TOOL TOP
     set message "adding the file '$FILE'"
@@ -455,7 +425,37 @@ proc fpga_top { TOP } {
             set_property top $TOP [current_fileset]
         }
         "yosys"   {
-            global PARAMS
+            # -top is specified when the synth command is invoked
+        }
+    }
+}
+
+proc fpga_params {} {
+    global TOOL PARAMS
+    if { [llength $PARAMS] == 0 } { return }
+    fpga_print "setting generics/parameters"
+    switch $TOOL {
+        "ise"     {
+            set assigns [list]
+            foreach PARAM $PARAMS { lappend assigns [join $PARAM "="] }
+            project set "Generics, Parameters" "[join $assigns]" -process "Synthesize - XST"
+        }
+        "libero"  {
+            # They must be specified after set_root (see fpga_top)
+        }
+        "quartus" {
+            foreach PARAM $PARAMS {
+                eval "set_parameter -name $PARAM"
+            }
+        }
+        "vivado"  {
+            set assigns [list]
+            foreach PARAM $PARAMS { lappend assigns [join $PARAM "="] }
+            set obj [get_filesets sources_1]
+            set_property "generic" "[join $assigns]" -objects $obj
+        }
+        "yosys"   {
+            global TOP
             set assigns {}
             foreach PARAM $PARAMS { append assigns "-set $PARAM" }
             eval "chparam $assigns $TOP"
@@ -697,9 +697,9 @@ if { [lsearch -exact $TASKS "prj"] >= 0 } {
         fpga_create $PROJECT
         fpga_part $PART
         fpga_commands "prefile"
-        fpga_params
         fpga_files
         fpga_top $TOP
+        fpga_params
         switch $STRATEGY {
             "area"  {fpga_area}
             "power" {fpga_power}
