@@ -20,6 +20,9 @@ libero:
 vivado:
 	vivado -mode batch -notrace -quiet -source vivado.tcl
 
+yosys:
+	bash yosys.sh
+
 clean:
 	# ghdl
 	rm -fr *.cf *.edif
