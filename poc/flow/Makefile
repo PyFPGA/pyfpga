@@ -2,11 +2,16 @@
 
 all:
 
+DOCKER_CMD=docker run --rm -it -v $$HOME:$$HOME -w $$PWD ghdl/synth:beta
+
+docker-update:
+	docker pull ghdl/synth:beta
+
 ghdl:
-	bash ghdl.sh
+	$(DOCKER_CMD) bash ghdl.sh
 
 ghdl-yosys:
-	bash ghdl-yosys.sh
+	$(DOCKER_CMD) bash ghdl-yosys.sh
 
 ise:
 	xtclsh ise.tcl
@@ -21,10 +26,10 @@ vivado:
 	vivado -mode batch -notrace -quiet -source vivado.tcl
 
 yosys:
-	bash yosys.sh
+	$(DOCKER_CMD) bash yosys.sh
 
 clean:
-	# ghdl
+	# ghdl and yosys
 	rm -fr *.cf *.edif
 	# ise
 	rm -fr \

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FLAGS="-fsynopsys -fexplicit -frelaxed --std=08"
+FLAGS="--std=08 -fsynopsys -fexplicit -frelaxed"
 
 ghdl -a $FLAGS --work=examples ../../hdl/blinking.vhdl
 ghdl -a $FLAGS --work=examples ../../hdl/examples_pkg.vhdl
