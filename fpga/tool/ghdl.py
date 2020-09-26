@@ -31,7 +31,7 @@ class Ghdl(Tool):
 
     _GENERATED = ['*.cf']
 
-    _FLAGS = '-fsynopsys -fexplicit -frelaxed --std=08'
+    _FLAGS = '--std=08 -fsynopsys -fexplicit -frelaxed'
 
     def add_file(self, file, library=None, included=False, design=False):
         command = 'ghdl -a {} '.format(self._FLAGS)
