@@ -20,7 +20,7 @@
 # Description: Tcl script to create a new project and performs synthesis,
 # implementation and bitstream generation.
 #
-# Supported TOOLs: ise, libero, quartus, vivado, yosys
+# Supported TOOLs: ise, libero, quartus, vivado
 #
 # Notes:
 # * fpga_ is used to avoid name collisions.
@@ -33,7 +33,7 @@
 #
 
 set TOOL     #TOOL#
-set SECTOOL  #SECTOOL#
+set PRESYNTH #PRESYNTH#
 set PROJECT  #PROJECT#
 set PART     #PART#
 set TOP      #TOP#
@@ -99,7 +99,6 @@ proc fpga_create { PROJECT } {
             set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
         }
         "vivado"  { create_project -force $PROJECT }
-        "yosys"   { yosys -import }
     }
 }
 
@@ -218,25 +217,6 @@ proc fpga_part { PART } {
         "vivado"  {
             set_property "part" $PART [current_project]
         }
-        "yosys"   {
-            global FAMILY
-            set FAMILY "Unknown"
-            if {[regexp -nocase {xcup} $PART]} {
-                set FAMILY "xcup"
-            } elseif {[regexp -nocase {xcu} $PART]} {
-                set FAMILY "xcu"
-            } elseif {[regexp -nocase {xc7} $PART]} {
-                set FAMILY "xc7"
-            } elseif {[regexp -nocase {xc6v} $PART]} {
-                set FAMILY "xc6v"
-            } elseif {[regexp -nocase {xc6s} $PART]} {
-                set FAMILY "xc6s"
-            } elseif {[regexp -nocase {xc5v} $PART]} {
-                set FAMILY "xc5v"
-            } else {
-                puts "The family of the part $PART is $FAMILY"
-            }
-        }
     }
 }
 
@@ -328,11 +308,6 @@ proc fpga_file {FILE {LIBRARY "work"}} {
                 add_files $FILE
             }
         }
-        "yosys"   {
-            if {$ext == "v" || $ext == "sv"} {
-                read_verilog -defer $FILE
-            }
-        }
     }
 }
 
@@ -366,10 +341,6 @@ proc fpga_include {FILE} {
         "vivado" {
             # Verilog Included Files are NOT added
             set_property "include_dirs" $INCLUDED [current_fileset]
-        }
-        "yosys"   {
-            # Verilog Included Files are NOT added
-            verilog_defaults -add -I[file dirname $FILE]
         }
     }
 }
@@ -424,9 +395,6 @@ proc fpga_top { TOP } {
         "vivado"  {
             set_property top $TOP [current_fileset]
         }
-        "yosys"   {
-            # -top is specified when the synth command is invoked
-        }
     }
 }
 
@@ -453,12 +421,6 @@ proc fpga_params {} {
             foreach PARAM $PARAMS { lappend assigns [join $PARAM "="] }
             set obj [get_filesets sources_1]
             set_property "generic" "[join $assigns]" -objects $obj
-        }
-        "yosys"   {
-            global TOP
-            set assigns {}
-            foreach PARAM $PARAMS { append assigns "-set $PARAM" }
-            eval "chparam $assigns $TOP"
         }
     }
 }
@@ -559,17 +521,16 @@ proc fpga_speed {} {
 }
 
 proc fpga_run_syn {} {
-    global TOOL SECTOOL
+    global TOOL PRESYNTH
     fpga_print "running 'synthesis'"
     switch $TOOL {
         "ise"     {
-            if { $SECTOOL == "yosys" } {
+            if { $PRESYNTH == "True" } {
                 project set top_level_module_type "EDIF"
-                fpga_print "the synthesis was performed with Yosys"
-                return
+            } else {
+                project clean
+                process run "Synthesize"
             }
-            project clean
-            process run "Synthesize"
         }
         "libero"  {
             run_tool -name {SYNTHESIZE}
@@ -578,29 +539,12 @@ proc fpga_run_syn {} {
             execute_module -tool map
         }
         "vivado"  {
-            if { $SECTOOL == "yosys" } {
+            if { $PRESYNTH == "True" } {
                 set_property design_mode GateLvl [current_fileset]
-                fpga_print "the synthesis was performed with Yosys"
-                return
-            }
-            reset_run synth_1
-            launch_runs synth_1
-            wait_on_run synth_1
-        }
-        "yosys"   {
-            global FAMILY TOP
-            if {$SECTOOL == "vivado"} {
-                synth_xilinx -top $TOP -family $FAMILY
-                write_edif -pvector bra yosys.edif
-                puts "Generated yosys.edif to be used with Vivado"
-            } elseif {$SECTOOL == "ise"} {
-                synth_xilinx -top $TOP -family $FAMILY -ise
-                write_edif -pvector bra yosys.edif
-                puts "Generated yosys.edif to be used with ISE"
             } else {
-                synth -top $TOP
-                write_verilog yosys.v
-                puts "Generated yosys.v as a generic synthesis"
+                reset_run synth_1
+                launch_runs synth_1
+                wait_on_run synth_1
             }
         }
         default  { puts "UNSUPPORTED by '$TOOL'" }
@@ -608,7 +552,7 @@ proc fpga_run_syn {} {
 }
 
 proc fpga_run_imp {} {
-    global TOOL SECTOOL
+    global TOOL PRESYNTH
     fpga_print "running 'implementation'"
     switch $TOOL {
         "ise"     {
@@ -625,7 +569,7 @@ proc fpga_run_imp {} {
             execute_module -tool sta
         }
         "vivado"  {
-            if {$SECTOOL != "yosys"} {
+            if {$PRESYNTH == "False"} {
                 open_run synth_1
             }
             launch_runs impl_1
