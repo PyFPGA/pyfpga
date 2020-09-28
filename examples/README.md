@@ -19,7 +19,7 @@ supported board. It shows the inclusion of Constraints files.
 * [quartus](quartus): DE10Nano (Terasic)
 * [vivado](vivado): Zybo (Digilent)
 * [yosys](yosys):
-  * Synthesized VHDL (`ghdl-yosys.py`) or Verilog (`yosys.py`)
+  * Synthesized with Yosys (using `ghdl-yosys-plugin` for VHDL)
   * Spartan-6 FPGA LX9 MicroBoard (`ise.py`)
   * Zybo (`vivado.py`)
 

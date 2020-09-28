@@ -3,9 +3,9 @@
 The Zybo related things are the FPGA part and the constraints file.
 Modify them to make this example compatible with another board.
 
-* `generat.py` generates a bitstream based on VHDL files.
-* `transfer.py` points to the same output directory than `generate.py` and allows to transfer the bitstream to the board.
-* `design.py` generates the bitstream based on a Vivado Block design.
+* `python3 vivado.py` generates a bitstream based on VHDL files.
+* `python3 vivado.py --action transfer` to transfer the generated bitstream to the board.
+* `python3 design.py` generates the bitstream based on a Vivado Block design.
 
 ## How to get a compatible Vivado Block Design
 
