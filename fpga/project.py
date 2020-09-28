@@ -55,9 +55,10 @@ class Project:
         if tool == 'ghdl':
             from fpga.tool.ghdl import Ghdl
             self.tool = Ghdl(project)
-        elif tool == 'ise':
+        elif tool in ['ise', 'yosys-ise']:
             from fpga.tool.ise import Ise
-            self.tool = Ise(project)
+            args = tool.split('-')
+            self.tool = Ise(project, args[0] if len(args) > 1 else '')
         elif tool == 'libero':
             from fpga.tool.libero import Libero
             self.tool = Libero(project)
@@ -67,15 +68,11 @@ class Project:
         elif tool == 'tclsh':
             from fpga.tool.tclsh import Tclsh
             self.tool = Tclsh(project)
-        elif tool == 'vivado':
+        elif tool in ['vivado', 'yosys-vivado']:
             from fpga.tool.vivado import Vivado
             self.tool = Vivado(project)
-        elif tool in ['yosys', 'yosys-ise', 'yosys-vivado']:
+        elif tool == 'yosys':
             from fpga.tool.yosys import Yosys
-            # args = tool.split('-')
-            # if len(args) > 1:
-            #     self.tool = Yosys(project, backend=args[1])
-            # else:
             self.tool = Yosys(project)
         else:
             raise NotImplementedError(tool)

@@ -25,6 +25,20 @@ import os
 
 from fpga.tool import Tool
 
+
+def get_family(part):
+    """Get the Family name from the specified part name."""
+    families = [
+        # From <YOSYS>/techlibs/xilinx/synth_xilinx.cc
+        'xcup', 'xcu', 'xc7', 'xc6s', 'xc6v', 'xc5v', 'xc4v', 'xc3sda',
+        'xc3sa', 'xc3se', 'xc3s', 'xc2vp', 'xc2v', 'xcve', 'xcv'
+    ]
+    for family in families:
+        if part.lower().startswith(family):
+            return family
+    return 'UNKNOWN'
+
+
 _TEMPLATE = """\
 #!/bin/bash
 
@@ -94,33 +108,12 @@ class Yosys(Tool):
             params.append('chparam -set {} {} {}').format(
                 param[0], param[1], self.top
             )
-        # synth and write command
-#            global FAMILY
-#            set FAMILY "Unknown"
-#            if {[regexp -nocase {xcup} $PART]} {
-#                set FAMILY "xcup"
-#            } elseif {[regexp -nocase {xcu} $PART]} {
-#                set FAMILY "xcu"
-#            } elseif {[regexp -nocase {xc7} $PART]} {
-#                set FAMILY "xc7"
-#            } elseif {[regexp -nocase {xc6v} $PART]} {
-#                set FAMILY "xc6v"
-#            } elseif {[regexp -nocase {xc6s} $PART]} {
-#                set FAMILY "xc6s"
-#            } elseif {[regexp -nocase {xc5v} $PART]} {
-#                set FAMILY "xc5v"
-#            } else {
-#                puts "The family of the part $PART is $FAMILY"
-#            }
-        family = 'xc7'
-        if self.output == 'edif-vivado':
-            synth = 'synth_xilinx -top {} -family {}'.format(
-                self.top, family
-            )
-            write = 'write_edif -pvector bra {}.edif'.format(self.project)
-        elif self.output == 'edif-ise':
-            synth = 'synth_xilinx -top {} -family {} --ise'.format(
-                self.top, family
+        # synth and write
+        if self.output in ['edif-vivado', 'edif-ise']:
+            synth = 'synth_xilinx -top {} -family {} {}'.format(
+                self.top,
+                get_family(self.part),
+                '-ise' if self.output == 'edif-ise' else ''
             )
             write = 'write_edif -pvector bra {}.edif'.format(self.project)
         else:
