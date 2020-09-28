@@ -14,12 +14,13 @@ capabilities of the Project class are used, to be employed as starting point.
 Led blinking examples where a Bitstream is generated and transfer to a
 supported board. It shows the inclusion of Constraints files.
 
+* [ghdl](ghdl): VHDL synthesis with GDHL (`--synth`)
 * [ise](ise): Spartan-6 FPGA LX9 MicroBoard (Avnet)
 * [libero](libero): Digi-Key SmartFusion2 Maker Board (Digi-Key)
 * [quartus](quartus): DE10Nano (Terasic)
 * [vivado](vivado): Zybo (Digilent)
 * [yosys](yosys):
-  * Synthesized with Yosys (using `ghdl-yosys-plugin` for VHDL)
+  * Verilog synthesis with Yosys (using `ghdl-yosys-plugin` for VHDL)
   * Spartan-6 FPGA LX9 MicroBoard (`ise.py`)
   * Zybo (`vivado.py`)
 
