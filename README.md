@@ -1,5 +1,12 @@
 # PyFPGA [![License](https://img.shields.io/badge/License-GPL--3.0-darkgreen)](LICENSE)
 
+![GDHL](https://img.shields.io/badge/GHDL-1.0&nbsp;dev-lightblue.svg)
+![ISE](https://img.shields.io/badge/ISE-14.7-blue.svg)
+![Libero](https://img.shields.io/badge/Libero--Soc-12.2-blue.svg)
+![Quartus](https://img.shields.io/badge/Quartus--Prime-19.1-blue.svg)
+![Vivado](https://img.shields.io/badge/Vivado-2019.2-blue.svg)
+![Yosys](https://img.shields.io/badge/Yosys-0.9&nbsp;dev-lightblue.svg)
+
 A Python Class to use FPGA development tools in a vendor-independent way.
 
 With PyFPGA you can create a project file, synthesizes, implements, generates a bitstream and
@@ -58,26 +65,13 @@ It must run in any other POSIX compatible Operating System and probably also in 
 (the problem could be how the backends tools are called, please let me know any SUCCESS or FAIL
 using the [issues](https://gitlab.com/rodrigomelo9/pyfpga/issues) tracker).
 
-### Bitstream Generation
-
-![ISE](https://img.shields.io/badge/ISE-14.7-blue.svg)
-![Libero](https://img.shields.io/badge/Libero--Soc-12.2-blue.svg)
-![Quartus](https://img.shields.io/badge/Quartus--Prime-19.1-blue.svg)
-![Vivado](https://img.shields.io/badge/Vivado-2019.2&nbsp;(*)-blue.svg)
-![Yosys](https://img.shields.io/badge/Yosys-0.9&nbsp;dev&nbsp;(**)-orange.svg)
-
-(*) Also supports Block Designs and export of hardware info to be used from SDK/Vitis.
-(**) Yosys only performs synthesis. Can be used with ISE/Vivado to run implementation and
-bitstream generation.
-
-### Transfer
-
-![ISE](https://img.shields.io/badge/ISE-FPGA,&nbsp;SPI&nbsp;and&nbsp;BPI-blue.svg)
-![Libero](https://img.shields.io/badge/Libero--Soc-Unsupported&nbsp;(*)-red.svg)
-![Quartus](https://img.shields.io/badge/Quartus--Prime-FPGA-green.svg)
-![Vivado](https://img.shields.io/badge/Vivado-FPGA-green.svg)
-
-(*) No available kit to test.
+* The whole development flow, from reading HDL and constraint sources to produce a bitstream, can
+be performed with ISE and Vivado (Xilinx), Quarts Prime (Intel) and Libero-SoC (Microsemi).
+* ISE (Impact) can be used to programming FPGAs, BPIs and SPIs memories. Vivado and Quartus can be
+used to transfer a bitstream to FPGAs.
+* GDHL (`--synth`) can be used to convert VHDL sources into a synthesized VHDL.
+* Yosys cab be used to convert Verilog and VHDL (using `ghdl-yosys-plugin`) sources into a
+synthetized Verilog. Also, ISE and Vivado are supported as backend tools to generate a bitstream.
 
 ## Installation
 
@@ -95,5 +89,5 @@ sudo pip install -e .
 To install from the online repository:
 
 ```
-pip install -e 'git+https://gitlab.com/rodrigomelo9/pyfpga#egg=pyfpga'
+pip install 'git+https://gitlab.com/rodrigomelo9/pyfpga#egg=pyfpga'
 ```

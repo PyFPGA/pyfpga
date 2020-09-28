@@ -12,6 +12,8 @@ from fpga.project import Project, TOOLS
 logging.basicConfig()
 
 for tool in TOOLS:
+    if tool == 'ghdl':
+        continue
     PRJ = Project(tool)
     PRJ.set_outdir('../../build/multi/verilog/%s' % tool)
     PRJ.add_include('../../hdl/headers1/freq.vh')

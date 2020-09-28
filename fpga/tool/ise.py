@@ -21,6 +21,7 @@
 Implements the support of ISE (Xilinx).
 """
 
+import os
 import re
 
 from fpga.tool import Tool, run
@@ -116,6 +117,14 @@ class Ise(Tool):
         'ise.tcl'
     ]
 
+    def __init__(self, project, frontend=None):
+        super().__init__(project)
+        # pylint: disable=import-outside-toplevel
+        if frontend == 'yosys':
+            from fpga.tool.yosys import Yosys
+            self.tool = Yosys(self.project, 'edif-ise')
+            self.presynth = True
+
     def set_part(self, part):
         try:
             family, speed, package = re.findall(r'(\w+)-(\w+)-(\w+)', part)[0]
@@ -127,6 +136,29 @@ class Ise(Tool):
                 'Part must be FAMILY-SPEED-PACKAGE or FAMILY-PACKAGE-SPEED'
             )
         self.part = part
+
+    def set_param(self, name, value):
+        if self.presynth:
+            self.tool.set_param(name, value)
+        else:
+            super().set_param(name, value)
+
+    def add_file(self, file, library=None, included=False, design=False):
+        ext = os.path.splitext(file)[1]
+        if self.presynth and ext in ['.v', '.sv', '.vh', '.vhd', '.vhdl']:
+            self.tool.add_file(file, library, included, design)
+        elif not design:
+            super().add_file(file, library, included, design)
+
+    def generate(self, strategy, to_task, from_task, capture):
+        if self.presynth and from_task == 'prj':
+            self.tool.set_part(self.part)
+            self.tool.set_top(self.top)
+            output1 = self.tool.generate(strategy, 'syn', 'prj', capture)
+            self.add_file('{}.edif'.format(self.project))
+            output2 = super().generate(strategy, to_task, from_task, capture)
+            return str(output1) + str(output2)
+        return super().generate(strategy, to_task, from_task, capture)
 
     def transfer(self, devtype, position, part, width, capture):
         super().transfer(devtype, position, part, width, capture)

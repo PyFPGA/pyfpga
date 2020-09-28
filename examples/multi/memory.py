@@ -13,7 +13,8 @@ logging.basicConfig()
 for hdl in ['vhdl', 'verilog']:
     for tool in TOOLS:
         if tool == 'yosys' and hdl == 'vhdl':
-            print("The combination Yosys + VHDL was skipped")
+            continue
+        if tool == 'ghdl' and hdl == 'verilog':
             continue
         PRJ = Project(tool)
         PRJ.set_outdir('../../build/multi/memory/%s/%s' % (tool, hdl))

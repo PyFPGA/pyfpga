@@ -1,6 +1,17 @@
 #!/usr/bin/make
 
-all: ise libero quartus vivado
+all:
+
+DOCKER_CMD=docker run --rm -it -v $$HOME:$$HOME -w $$PWD ghdl/synth:beta
+
+docker-update:
+	docker pull ghdl/synth:beta
+
+ghdl:
+	$(DOCKER_CMD) bash ghdl.sh
+
+ghdl-yosys:
+	$(DOCKER_CMD) bash ghdl-yosys.sh
 
 ise:
 	xtclsh ise.tcl
@@ -14,7 +25,12 @@ libero:
 vivado:
 	vivado -mode batch -notrace -quiet -source vivado.tcl
 
+yosys:
+	$(DOCKER_CMD) bash yosys.sh
+
 clean:
+	# ghdl and yosys
+	rm -fr *.cf *.edif
 	# ise
 	rm -fr \
 	*.bgn *.bit *.bld *.cmd_log *.drc *.lso *.ncd *.ngc *.ngd *.ngr      \
