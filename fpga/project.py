@@ -57,8 +57,7 @@ class Project:
             self.tool = Ghdl(project)
         elif tool in ['ise', 'yosys-ise']:
             from fpga.tool.ise import Ise
-            args = tool.split('-')
-            self.tool = Ise(project, args[0] if len(args) > 1 else '')
+            self.tool = Ise(project, 'yosys' if 'yosys' in tool else '')
         elif tool == 'libero':
             from fpga.tool.libero import Libero
             self.tool = Libero(project)
@@ -70,7 +69,7 @@ class Project:
             self.tool = Tclsh(project)
         elif tool in ['vivado', 'yosys-vivado']:
             from fpga.tool.vivado import Vivado
-            self.tool = Vivado(project)
+            self.tool = Vivado(project, 'yosys' if 'yosys' in tool else '')
         elif tool == 'yosys':
             from fpga.tool.yosys import Yosys
             self.tool = Yosys(project)
