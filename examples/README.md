@@ -18,6 +18,10 @@ supported board. It shows the inclusion of Constraints files.
 * [libero](libero): Digi-Key SmartFusion2 Maker Board (Digi-Key)
 * [quartus](quartus): DE10Nano (Terasic)
 * [vivado](vivado): Zybo (Digilent)
+* [yosys](yosys):
+  * Synthesized VHDL (`ghdl-yosys.py`) or Verilog (`yosys.py`)
+  * Spartan-6 FPGA LX9 MicroBoard (`ise.py`)
+  * Zybo (`vivado.py`)
 
 ## Multi-project examples
 
