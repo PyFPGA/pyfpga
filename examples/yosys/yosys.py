@@ -1,4 +1,4 @@
-"""Generic Yosys example project."""
+"""Yosys example project."""
 
 import logging
 

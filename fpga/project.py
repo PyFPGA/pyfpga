@@ -72,11 +72,11 @@ class Project:
             self.tool = Vivado(project)
         elif tool in ['yosys', 'yosys-ise', 'yosys-vivado']:
             from fpga.tool.yosys import Yosys
-            args = tool.split('-')
-            if len(args) > 1:
-                self.tool = Yosys(project, backend=args[1])
-            else:
-                self.tool = Yosys(project)
+            # args = tool.split('-')
+            # if len(args) > 1:
+            #     self.tool = Yosys(project, backend=args[1])
+            # else:
+            self.tool = Yosys(project)
         else:
             raise NotImplementedError(tool)
         self._rundir = os.getcwd()

@@ -25,58 +25,114 @@ import os
 
 from fpga.tool import Tool
 
+_TEMPLATE = """\
+#!/bin/bash
+
+FLAGS="--std=08 -fsynopsys -fexplicit -frelaxed"
+
+{vhdls}
+
+yosys -Q {module} -p '
+{verilogs};
+{params};
+{synth};
+{write}
+'
+"""
+
 
 class Yosys(Tool):
     """Implementation of the class to support Yosys."""
 
     _TOOL = 'yosys'
 
-    _GEN_COMMAND = 'yosys -Q yosys.tcl'
+    _DOCKER = "docker run --rm -v $HOME:$HOME -w $PWD ghdl/synth:beta"
+    _GEN_COMMAND = '{} bash yosys.sh'.format(_DOCKER)
 
-    def __init__(self, project, backend=None):
-        """Initializes the attributes of the class."""
+    _GENERATED = ['*.cf']
+
+    def __init__(self, project, output='verilog'):
         super().__init__(project)
-        # pylint: disable=import-outside-toplevel
-        if backend == 'ise':
-            from fpga.tool.ise import Ise
-            self.tool = Ise(project)
-            self.sectool = 'ise'
-            self.set_part(self.tool.part)
-        elif backend == 'vivado':
-            from fpga.tool.vivado import Vivado
-            self.tool = Vivado(project)
-            self.sectool = 'vivado'
-            self.set_part(self.tool.part)
-        else:
-            self.tool = None
+        self.output = output
+        self.includes = []
 
-    def generate(self, strategy, to_task, from_task, capture):
-        """Run the FPGA tool."""
-        if self.sectool not in ['ise', 'vivado']:
-            return super().generate(strategy, to_task, from_task, capture)
-        # Yosys + supported backend
-        output1 = None
-        output2 = None
-        if from_task in ['prj', 'syn'] and to_task != 'prj':
-            output1 = super().generate(strategy, 'syn', from_task, capture)
-        if to_task in ['imp', 'bit']:
-            if self.sectool == 'vivado':
-                self.tool.set_top('yosys')
+    def set_param(self, name, value):
+        """Set a Generic/Parameter Value."""
+        self.params.append([name, value])
+
+    def add_file(self, file, library=None, included=False, design=False):
+        if included:
+            self.includes.append(file)
+        elif not design:
+            self.files.append([file, library])
+
+    def _create_gen_script(self, strategy, tasks):
+        # Verilog includes
+        verilogs = []
+        for include in self.includes:
+            dirname = os.path.dirname(include)
+            verilogs.append('verilog_defaults -add -I{}'.format(dirname))
+        vhdls = []
+        # Files
+        for file in self.files:
+            # VHDL (GHDL)
+            if os.path.splitext(file[0])[1] in ['.vhd', '.vhdl']:
+                lib = ''
+                if file[1] is not None:
+                    lib = '--work={}'.format(file[1])
+                vhdls.append('ghdl -a $FLAGS {} {}'.format(lib, file[0]))
+            # Verilog (Yosys)
+            if os.path.splitext(file[0])[1] == 'sv':
+                verilogs.append('read_verilog -sv -defer {}'.format(file[0]))
             else:
-                self.tool.set_top(self.top)
-            self.tool.part = self.part
-            self.tool.cmds = self.cmds
-            for file in self.files:
-                if 'fpga_include' in file:
-                    continue
-                if os.path.splitext(file)[1] in ['.v', '.vhd', '.vhdl']:
-                    continue
-                self.tool.files.append(file)
-            self.tool.add_file('yosys.edif')
-            self.tool.sectool = 'yosys'
-            output2 = self.tool.generate(strategy, to_task, from_task, capture)
-        return str(output1) + str(output2)
-
-    def transfer(self, devtype, position, part, width, capture):
-        """Transfer a bitstream."""
-        return self.tool.transfer(devtype, position, part, width, capture)
+                verilogs.append('read_verilog -defer {}'.format(file[0]))
+        if len(vhdls) > 0:
+            verilogs = ['ghdl \'"$FLAGS"\' {}'.format(self.top)]
+        # Parameters
+        params = []
+        for param in self.params:
+            params.append('chparam -set {} {} {}').format(
+                param[0], param[1], self.top
+            )
+        # synth and write command
+#            global FAMILY
+#            set FAMILY "Unknown"
+#            if {[regexp -nocase {xcup} $PART]} {
+#                set FAMILY "xcup"
+#            } elseif {[regexp -nocase {xcu} $PART]} {
+#                set FAMILY "xcu"
+#            } elseif {[regexp -nocase {xc7} $PART]} {
+#                set FAMILY "xc7"
+#            } elseif {[regexp -nocase {xc6v} $PART]} {
+#                set FAMILY "xc6v"
+#            } elseif {[regexp -nocase {xc6s} $PART]} {
+#                set FAMILY "xc6s"
+#            } elseif {[regexp -nocase {xc5v} $PART]} {
+#                set FAMILY "xc5v"
+#            } else {
+#                puts "The family of the part $PART is $FAMILY"
+#            }
+        family = 'xc7'
+        if self.output == 'edif-vivado':
+            synth = 'synth_xilinx -top {} -family {}'.format(
+                self.top, family
+            )
+            write = 'write_edif -pvector bra {}.edif'.format(self.project)
+        elif self.output == 'edif-ise':
+            synth = 'synth_xilinx -top {} -family {} --ise'.format(
+                self.top, family
+            )
+            write = 'write_edif -pvector bra {}.edif'.format(self.project)
+        else:
+            synth = 'synth -top {}'.format(self.top)
+            write = 'write_verilog {}.v'.format(self.project)
+        # Write script
+        text = _TEMPLATE.format(
+            vhdls='\n'.join(vhdls),
+            module='-m ghdl' if len(vhdls) > 0 else '',
+            verilogs=';\n'.join(verilogs),
+            params=';\n'.join(params),
+            synth=synth,
+            write=write
+        )
+        open("%s.sh" % self._TOOL, 'w').write(text)
