@@ -32,7 +32,7 @@ prj = Project('vivado', 'example')
 prj.set_part('xc7z010-1-clg400')
 prj.add_files('location1/*.v')
 prj.add_files('location2/top.v')
-prj.add_files('location3/example.xdc')
+prj.add_files('location3/example.xdc')  # Vivado implementation constraints
 prj.set_top('Top')
 
 # Generate the bitstream running the tool
@@ -73,20 +73,16 @@ used to transfer a bitstream to FPGAs.
 * Yosys cab be used to convert Verilog and VHDL (using `ghdl-yosys-plugin`) sources into a
 synthetized Verilog. Also, ISE and Vivado are supported as backend tools to generate a bitstream.
 
+**Notes:**
+* GHDL and Yosys are supported trough the `ghdl/synth:beta` Docker image from the
+[ghdl/docker](https://github.com/ghdl/docker) project, so Docker must be
+[installed](https://docs.docker.com/install).
+* ISE, Libero-Soc, Quartus Prime and Vivado, must be ready to be executed from the terminal
+(installed and well configured).
+
 ## Installation
 
-To install a local clone of the repository:
-
-```
-git clone https://gitlab.com/rodrigomelo9/pyfpga.git
-cd pyfpga
-sudo pip install -e .
-```
-
-> With `-e` (`--editable`) your application is installed into site-packages via a kind of symlink,
-> so you do not need to reinstall it after making, for example, a `git pull`.
-
-To install from the online repository:
+PyFPGA Python 3.5+ and can be installed from the online repository with:
 
 ```
 pip install 'git+https://gitlab.com/rodrigomelo9/pyfpga#egg=pyfpga'

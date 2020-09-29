@@ -1,5 +1,16 @@
 # Development Notes
 
+To install a local clone of the repository (for development):
+
+```
+git clone https://gitlab.com/rodrigomelo9/pyfpga.git
+cd pyfpga
+sudo pip install -e .
+```
+
+> With `-e` (`--editable`) your application is installed into site-packages
+> via a kind of symlink, so you do not need to reinstall it after changes.
+
 PyFPGA uses PEP8 guidelines.
 
 The following is an overview of the main PyFPGA components and its
