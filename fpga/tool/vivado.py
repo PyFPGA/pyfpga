@@ -82,11 +82,11 @@ class Vivado(Tool):
         ext = os.path.splitext(file)[1]
         if self.presynth and ext in ['.v', '.sv', '.vh', '.vhd', '.vhdl']:
             self.tool.add_file(file, library, included, design)
-        elif not design:
+        else:
             super().add_file(file, library, included, design)
 
     def generate(self, strategy, to_task, from_task, capture):
-        if self.presynth and from_task == 'prj':
+        if self.presynth and from_task in ['prj', 'syn']:
             self.tool.set_part(self.part)
             self.tool.set_top(self.top)
             output1 = self.tool.generate(strategy, 'syn', 'prj', capture)
