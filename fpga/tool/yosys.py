@@ -47,10 +47,10 @@ FLAGS="--std=08 -fsynopsys -fexplicit -frelaxed"
 {vhdls}
 
 yosys -Q {module} -p '
+{includes};
 {verilogs};
 {params};
-{synth};
-{write}
+{actions}
 '
 """
 
@@ -82,12 +82,13 @@ class Yosys(Tool):
 
     def _create_gen_script(self, strategy, tasks):
         # Verilog includes
-        verilogs = []
+        includes = []
         for include in self.includes:
             dirname = os.path.dirname(include)
-            verilogs.append('verilog_defaults -add -I{}'.format(dirname))
-        vhdls = []
+            includes.append('verilog_defaults -add -I{}'.format(dirname))
         # Files
+        verilogs = []
+        vhdls = []
         for file in self.files:
             # VHDL (GHDL)
             if os.path.splitext(file[0])[1] in ['.vhd', '.vhdl']:
@@ -109,23 +110,28 @@ class Yosys(Tool):
                 param[0], param[1], self.top
             )
         # synth and write
+        actions = []
         if self.output in ['edif-vivado', 'edif-ise']:
-            synth = 'synth_xilinx -top {} -family {} {}'.format(
+            actions.append('synth_xilinx -top {} -family {} {}'.format(
                 self.top,
                 get_family(self.part),
                 '-ise' if self.output == 'edif-ise' else ''
-            )
-            write = 'write_edif -pvector bra {}.edif'.format(self.project)
+            ))
+            actions.append('write_edif -pvector bra {}.edif'.format(
+                self.project
+            ))
+        elif self.output == 'verilog-nosynth':
+            actions.append('write_verilog {}.v'.format(self.project))
         else:
-            synth = 'synth -top {}'.format(self.top)
-            write = 'write_verilog {}.v'.format(self.project)
+            actions.append('synth -top {}'.format(self.top))
+            actions.append('write_verilog {}.v'.format(self.project))
         # Write script
         text = _TEMPLATE.format(
             vhdls='\n'.join(vhdls),
             module='-m ghdl' if len(vhdls) > 0 else '',
+            includes=';\n'.join(includes),
             verilogs=';\n'.join(verilogs),
             params=';\n'.join(params),
-            synth=synth,
-            write=write
+            actions=';\n'.join(actions)
         )
         open("%s.sh" % self._TOOL, 'w').write(text)
