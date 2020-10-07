@@ -36,6 +36,25 @@ def get_family(part):
     for family in families:
         if part.lower().startswith(family):
             return family
+    families = [
+        # From <nextpnr>/ice40/main.cc
+        'lp384', 'lp1k', 'lp4k', 'lp8k',
+        'hx1k', 'hx4k', 'hx8k',
+        'up3k', 'up5k',
+        'u1k', 'u2k', 'u4k'
+    ]
+    for family in families:
+        if part.lower().startswith(family):
+            return 'ice40'
+    families = [
+        # From <nextpnr>/ecp5/main.cc
+        '12k', '25k', '45k', '85k',
+        'um-25k', 'um-45k', 'um-85k',
+        'um5g-25k', 'um5g-45k', 'um5g-85k'
+    ]
+    for family in families:
+        if part.lower().startswith(family):
+            return 'ecp5'
     return 'UNKNOWN'
 
 
@@ -63,7 +82,7 @@ class Yosys(Tool):
     _DOCKER = "docker run --rm -v $HOME:$HOME -w $PWD ghdl/synth:beta"
     _GEN_COMMAND = '{} bash yosys.sh'.format(_DOCKER)
 
-    _GENERATED = ['*.cf']
+    _GENERATED = ['*.cf', '*.edif', '*.json']
 
     def __init__(self, project, output='verilog'):
         super().__init__(project)
@@ -118,6 +137,12 @@ class Yosys(Tool):
                 '-ise' if self.output == 'edif-ise' else ''
             ))
             actions.append('write_edif -pvector bra {}.edif'.format(
+                self.project
+            ))
+        elif self.output in ['json-ice40', 'json-ecp5']:
+            actions.append('synth_{} -top {} -json {}.json'.format(
+                get_family(self.part),
+                self.top,
                 self.project
             ))
         elif self.output == 'verilog-nosynth':

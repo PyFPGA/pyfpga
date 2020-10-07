@@ -28,7 +28,7 @@ _TEMPLATE = """\
 
 FLAGS="--std=08 -fsynopsys -fexplicit -frelaxed"
 
-{files}
+{vhdls}
 
 ghdl --synth $FLAGS {top} > {project}.vhdl
 """
@@ -54,7 +54,7 @@ class Ghdl(Tool):
             lib = '--work={}'.format(file[1]) if file[1] is not None else ''
             files.append('ghdl -a $FLAGS {} {}'.format(lib, file[0]))
         text = _TEMPLATE.format(
-            files='\n'.join(files),
+            vhdls='\n'.join(files),
             top=self.top,
             project=self.project
         )
