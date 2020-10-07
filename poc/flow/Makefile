@@ -7,14 +7,11 @@ DOCKER_CMD=docker run --rm -it -v $$HOME:$$HOME -w $$PWD ghdl/synth:beta
 docker-update:
 	docker pull ghdl/synth:beta
 
-ghdl:
-	$(DOCKER_CMD) bash ghdl.sh
-
-ghdl-yosys:
-	$(DOCKER_CMD) bash ghdl-yosys.sh
-
 ise:
 	xtclsh ise.tcl
+
+openflow:
+	bash openflow.sh
 
 quartus:
 	quartus_sh --script quartus.tcl
@@ -24,9 +21,6 @@ libero:
 
 vivado:
 	vivado -mode batch -notrace -quiet -source vivado.tcl
-
-yosys:
-	$(DOCKER_CMD) bash yosys.sh
 
 clean:
 	# ghdl and yosys
