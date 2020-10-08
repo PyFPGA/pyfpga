@@ -69,7 +69,7 @@ class Vivado(Tool):
         # pylint: disable=import-outside-toplevel
         if frontend == 'yosys':
             from fpga.tool.yosys import Yosys
-            self.tool = Yosys(self.project, 'edif-vivado')
+            self.tool = Yosys(self.project, 'vivado')
             self.presynth = True
 
     def set_param(self, name, value):

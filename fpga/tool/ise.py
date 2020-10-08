@@ -122,7 +122,7 @@ class Ise(Tool):
         # pylint: disable=import-outside-toplevel
         if frontend == 'yosys':
             from fpga.tool.yosys import Yosys
-            self.tool = Yosys(self.project, 'edif-ise')
+            self.tool = Yosys(self.project, 'ise')
             self.presynth = True
 
     def set_part(self, part):

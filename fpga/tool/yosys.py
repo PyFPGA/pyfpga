@@ -58,35 +58,18 @@ def get_family(part):
     return 'UNKNOWN'
 
 
-_TEMPLATE = """\
-#!/bin/bash
-
-FLAGS="--std=08 -fsynopsys -fexplicit -frelaxed"
-
-{vhdls}
-
-yosys -Q {module} -p '
-{includes};
-{verilogs};
-{params};
-{actions}
-'
-"""
-
-
 class Yosys(Tool):
     """Implementation of the class to support Yosys."""
 
     _TOOL = 'yosys'
 
-    _DOCKER = "docker run --rm -v $HOME:$HOME -w $PWD ghdl/synth:beta"
-    _GEN_COMMAND = '{} bash yosys.sh'.format(_DOCKER)
+    _GEN_COMMAND = 'bash yosys.sh'
 
     _GENERATED = ['*.cf', '*.edif', '*.json']
 
-    def __init__(self, project, output='verilog'):
+    def __init__(self, project, backend='verilog'):
         super().__init__(project)
-        self.output = output
+        self.backend = backend
         self.includes = []
 
     def set_param(self, name, value):
@@ -121,42 +104,28 @@ class Yosys(Tool):
             else:
                 verilogs.append('read_verilog -defer {}'.format(file[0]))
         if len(vhdls) > 0:
-            verilogs = ['ghdl \'"$FLAGS"\' {}'.format(self.top)]
+            verilogs = ['ghdl $FLAGS {}'.format(self.top)]
         # Parameters
         params = []
         for param in self.params:
             params.append('chparam -set {} {} {}').format(
                 param[0], param[1], self.top
             )
-        # synth and write
-        actions = []
-        if self.output in ['edif-vivado', 'edif-ise']:
-            actions.append('synth_xilinx -top {} -family {} {}'.format(
-                self.top,
-                get_family(self.part),
-                '-ise' if self.output == 'edif-ise' else ''
-            ))
-            actions.append('write_edif -pvector bra {}.edif'.format(
-                self.project
-            ))
-        elif self.output in ['json-ice40', 'json-ecp5']:
-            actions.append('synth_{} -top {} -json {}.json'.format(
-                get_family(self.part),
-                self.top,
-                self.project
-            ))
-        elif self.output == 'verilog-nosynth':
-            actions.append('write_verilog {}.v'.format(self.project))
-        else:
-            actions.append('synth -top {}'.format(self.top))
-            actions.append('write_verilog {}.v'.format(self.project))
-        # Write script
-        text = _TEMPLATE.format(
-            vhdls='\n'.join(vhdls),
-            module='-m ghdl' if len(vhdls) > 0 else '',
-            includes=';\n'.join(includes),
-            verilogs=';\n'.join(verilogs),
-            params=';\n'.join(params),
-            actions=';\n'.join(actions)
+        # Script creation
+        template = os.path.join(os.path.dirname(__file__), 'template.sh')
+        text = open(template).read()
+        text = text.format(
+            backend=self.backend,
+            device='',
+            includes='\\\n'+'\n'.join(includes),
+            family=get_family(self.part),
+            package='',
+            params='\\\n'+'\n'.join(params),
+            project=self.project,
+            tasks='syn',
+            tool=self._TOOL,
+            top=self.top,
+            verilogs='\\\n'+'\n'.join(verilogs),
+            vhdls='\\\n'+'\n'.join(vhdls)
         )
         open("%s.sh" % self._TOOL, 'w').write(text)

@@ -43,6 +43,7 @@ class Ghdl(Tool):
         for file in self.files:
             lib = '--work={}'.format(file[1]) if file[1] is not None else ''
             files.append('ghdl -a $FLAGS {} {}'.format(lib, file[0]))
+        # Script creation
         template = os.path.join(os.path.dirname(__file__), 'template.sh')
         text = open(template).read()
         text = text.format(

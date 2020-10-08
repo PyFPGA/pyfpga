@@ -47,6 +47,9 @@ TASKS="{tasks}"
 
 DOCKER="docker run --rm -v $HOME:$HOME -w $PWD"
 
+MODULE=
+[ -n "$VHDLS" ] && MODULE="-m ghdl"
+
 ###############################################################################
 # Synthesis
 ###############################################################################
@@ -83,11 +86,9 @@ elif [[ $BACKEND == "nextpnr" ]]; then
 elif [[ $BACKEND == "verilog-nosynth" ]]; then
     WRITE="write_verilog $PROJECT.v"
 else
-    SYTNH="synth -top $TOP"
+    SYNTH="synth -top $TOP"
     WRITE="write_verilog $PROJECT.v"
 fi
-
-if [ -n "$VHDLS" ]; then MODULE="-m ghdl"; else MODULE=; fi
 
 $DOCKER ghdl/synth:beta /bin/bash -c "
 $VHDLS
