@@ -21,17 +21,8 @@
 Implements the support for GHDL synthesizer.
 """
 
+import os
 from fpga.tool import Tool
-
-_TEMPLATE = """\
-#!/bin/bash
-
-FLAGS="--std=08 -fsynopsys -fexplicit -frelaxed"
-
-{vhdls}
-
-ghdl --synth $FLAGS {top} > {project}.vhdl
-"""
 
 
 class Ghdl(Tool):
@@ -39,8 +30,7 @@ class Ghdl(Tool):
 
     _TOOL = 'ghdl'
 
-    _DOCKER = "docker run --rm -v $HOME:$HOME -w $PWD ghdl/synth:beta"
-    _GEN_COMMAND = '{} bash ghdl.sh'.format(_DOCKER)
+    _GEN_COMMAND = 'bash ghdl.sh'
 
     _GENERATED = ['*.cf']
 
@@ -53,9 +43,20 @@ class Ghdl(Tool):
         for file in self.files:
             lib = '--work={}'.format(file[1]) if file[1] is not None else ''
             files.append('ghdl -a $FLAGS {} {}'.format(lib, file[0]))
-        text = _TEMPLATE.format(
-            vhdls='\n'.join(files),
+        template = os.path.join(os.path.dirname(__file__), 'template.sh')
+        text = open(template).read()
+        text = text.format(
+            backend='',
+            device='',
+            includes='',
+            family='',
+            package='',
+            params='',
+            project=self.project,
+            tasks='syn',
+            tool=self._TOOL,
             top=self.top,
-            project=self.project
+            verilogs='',
+            vhdls='\\\n'+'\n'.join(files)
         )
         open("%s.sh" % self._TOOL, 'w').write(text)

@@ -15,7 +15,7 @@ setup(
     author_email='rodrigomelo9@gmail.com',
     license='GPLv3',
     url='https://gitlab.com/rodrigomelo9/pyfpga',
-    package_data={'': ['tool/*.tcl']},
+    package_data={'': ['tool/*.sh', 'tool/*.tcl']},
     packages=find_packages(),
     entry_points={
         'console_scripts': [
