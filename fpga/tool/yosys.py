@@ -116,6 +116,7 @@ class Yosys(Tool):
         text = open(template).read()
         text = text.format(
             backend=self.backend,
+            constraints='',
             device='',
             includes='\\\n'+'\n'.join(includes),
             family=get_family(self.part),

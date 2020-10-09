@@ -48,6 +48,7 @@ class Ghdl(Tool):
         text = open(template).read()
         text = text.format(
             backend='',
+            constraints='',
             device='',
             includes='',
             family='',

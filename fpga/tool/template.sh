@@ -1,7 +1,5 @@
 #!/bin/bash
 #
-# PyFPGA Master Bash Script for the open-source flow
-#
 # Copyright (C) 2020 Rodrigo A. Melo
 #
 # This program is free software: you can redistribute it and/or modify
@@ -37,6 +35,7 @@ FLAGS="--std=08 -fsynopsys -fexplicit -frelaxed"
 VHDLS="{vhdls}"
 INCLUDES="{includes}"
 VERILOGS="{verilogs}"
+CONSTRAINTS="{constraints}"
 
 # taks = prj syn imp bit
 TASKS="{tasks}"
@@ -99,5 +98,57 @@ $PARAMS;
 $SYNTH;
 $WRITE
 '"
+
+fi
+
+###############################################################################
+# Place and Route
+###############################################################################
+
+if [[ $TASKS == *"imp"* ]]; then
+
+INPUT="--json $PROJECT.json"
+if [[ $FAMILY == "ice40" ]]; then
+    CONSTRAINT="--pcf $CONSTRAINTS"
+    OUTPUT="--asc $PROJECT.asc"
+else
+    CONSTRAINT="--lpf $CONSTRAINTS"
+    OUTPUT="--textcfg $PROJECT.config"
+fi
+
+$DOCKER ghdl/synth:nextpnr-$FAMILY /bin/bash -c "
+nextpnr-$FAMILY --$DEVICE --package $PACKAGE $CONSTRAINT $INPUT $OUTPUT
+"
+
+[ $FAMILY == "ice40" ] && $DOCKER ghdl/synth:icestorm /bin/bash -c "
+icetime -d $DEVICE -mtr $PROJECT.rpt $PROJECT.asc
+"
+
+fi
+
+###############################################################################
+# Bitstream generation
+###############################################################################
+
+#######################################
+# icestorm
+#######################################
+
+if [[ $TASKS == *"bit"* && $FAMILY == "ice40" ]]; then
+
+$DOCKER ghdl/synth:icestorm /bin/bash -c "
+icepack $PROJECT.asc $PROJECT.bit
+"
+fi
+
+#######################################
+# Trellis
+#######################################
+
+if [[ $TASKS == *"bit"* && $FAMILY == "ecp5" ]]; then
+
+$DOCKER ghdl/synth:trellis /bin/bash -c "
+ecppack --svf $PROJECT.svf $PROJECT.config $PROJECT.bit
+"
 
 fi
