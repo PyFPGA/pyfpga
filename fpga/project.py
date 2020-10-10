@@ -61,6 +61,9 @@ class Project:
         elif tool == 'libero':
             from fpga.tool.libero import Libero
             self.tool = Libero(project)
+        elif tool == 'openflow':
+            from fpga.tool.openflow import Openflow
+            self.tool = Openflow(project)
         elif tool == 'quartus':
             from fpga.tool.quartus import Quartus
             self.tool = Quartus(project)

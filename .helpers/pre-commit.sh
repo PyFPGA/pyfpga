@@ -6,7 +6,7 @@ echo "Validating PEP8 compliance ..."
 venv/bin/pycodestyle fpga/ examples/ test/
 
 echo "Running PyLint ..."
-venv/bin/pylint -j 0 --score no fpga -d R0913
+venv/bin/pylint -j 0 --score no fpga -d too-many-arguments
 
 echo "Updating documentation ..."
 venv/bin/python .helpers/pydoc-md.py fpga.project > doc/api-reference.md

@@ -49,9 +49,13 @@ DOCKER="docker run --rm -v $HOME:$HOME -w $PWD"
 MODULE=
 [ -n "$VHDLS" ] && MODULE="-m ghdl"
 
+function print () {{ tput setaf 6; echo ">>> PyFPGA ($TOOL): $1"; tput sgr0; }}
+
 ###############################################################################
 # Synthesis
 ###############################################################################
+
+[[ $TASKS == *"syn"* ]] && print "running 'synthesis'"
 
 #######################################
 # GHDL
@@ -105,6 +109,8 @@ fi
 # Place and Route
 ###############################################################################
 
+[[ $TASKS == *"imp"* ]] && print "running 'implementation'"
+
 if [[ $TASKS == *"imp"* ]]; then
 
 INPUT="--json $PROJECT.json"
@@ -129,6 +135,8 @@ fi
 ###############################################################################
 # Bitstream generation
 ###############################################################################
+
+[[ $TASKS == *"bit"* ]] && print "running 'bitstream generation'"
 
 #######################################
 # icestorm
