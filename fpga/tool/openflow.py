@@ -18,7 +18,7 @@
 
 """fpga.tool.openflow
 
-Implements the support for the open-source flow.
+Implements the support of the open-source tools.
 """
 
 import os
@@ -63,7 +63,7 @@ class Openflow(Tool):
 
     _GENERATED = ['*.cf', '*.edif', '*.json']
 
-    def __init__(self, project, backend='verilog'):
+    def __init__(self, project, backend='nextpnr'):
         super().__init__(project)
         self.backend = backend
         self.includes = []
@@ -98,9 +98,9 @@ class Openflow(Tool):
                     lib = '--work={}'.format(file[1])
                 vhdls.append('ghdl -a $FLAGS {} {}'.format(lib, file[0]))
             # Verilog (Yosys)
-            elif ext == 'sv':
+            elif ext == '.sv':
                 verilogs.append('read_verilog -sv -defer {}'.format(file[0]))
-            elif ext == 'v':
+            elif ext == '.v':
                 verilogs.append('read_verilog -defer {}'.format(file[0]))
             else:
                 constraints.append(file[0])
@@ -114,12 +114,16 @@ class Openflow(Tool):
             )
         # Device and Package
         device, package = self.part.split('-')
+        if device.endswith('4k'):
+            # See http://www.clifford.at/icestorm/
+            device = device.replace('4', '8')
+            package += ":4k"
         # Script creation
         template = os.path.join(os.path.dirname(__file__), 'template.sh')
         text = open(template).read()
         text = text.format(
             backend=self.backend,
-            constraints=constraints,
+            constraints='\\\n'+'\n'.join(constraints),
             device=device,
             includes='\\\n'+'\n'.join(includes),
             family=get_family(self.part),

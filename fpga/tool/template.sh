@@ -44,24 +44,28 @@ TASKS="{tasks}"
 # Support
 ###############################################################################
 
+set -e
+
 DOCKER="docker run --rm -v $HOME:$HOME -w $PWD"
 
 MODULE=
 [ -n "$VHDLS" ] && MODULE="-m ghdl"
 
-function print () {{ tput setaf 6; echo ">>> PyFPGA ($TOOL): $1"; tput sgr0; }}
+function print () {{
+    tput setaf 6; echo ">>> PyFPGA (openflow - $1): $2"; tput sgr0;
+}}
 
 ###############################################################################
 # Synthesis
 ###############################################################################
-
-[[ $TASKS == *"syn"* ]] && print "running 'synthesis'"
 
 #######################################
 # GHDL
 #######################################
 
 if [[ $TASKS == *"syn"* && $TOOL == "ghdl" ]]; then
+
+print "ghdl" "running 'synthesis'"
 
 $DOCKER ghdl/synth:beta /bin/bash -c "
 $VHDLS
@@ -75,6 +79,8 @@ fi
 #######################################
 
 if [[ $TASKS == *"syn"* && $TOOL == "yosys" ]]; then
+
+print "yosys" "running 'synthesis'"
 
 SYNTH=
 WRITE=
@@ -109,9 +115,9 @@ fi
 # Place and Route
 ###############################################################################
 
-[[ $TASKS == *"imp"* ]] && print "running 'implementation'"
-
 if [[ $TASKS == *"imp"* ]]; then
+
+print "nextpnr-$FAMILY" "running 'implementation'"
 
 INPUT="--json $PROJECT.json"
 if [[ $FAMILY == "ice40" ]]; then
@@ -136,13 +142,13 @@ fi
 # Bitstream generation
 ###############################################################################
 
-[[ $TASKS == *"bit"* ]] && print "running 'bitstream generation'"
-
 #######################################
 # icestorm
 #######################################
 
 if [[ $TASKS == *"bit"* && $FAMILY == "ice40" ]]; then
+
+print "icepack" "running 'bitstream generation'"
 
 $DOCKER ghdl/synth:icestorm /bin/bash -c "
 icepack $PROJECT.asc $PROJECT.bit
@@ -154,6 +160,8 @@ fi
 #######################################
 
 if [[ $TASKS == *"bit"* && $FAMILY == "ecp5" ]]; then
+
+print "eccpack" "running 'bitstream generation'"
 
 $DOCKER ghdl/synth:trellis /bin/bash -c "
 ecppack --svf $PROJECT.svf $PROJECT.config $PROJECT.bit
