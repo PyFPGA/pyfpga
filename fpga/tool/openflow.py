@@ -55,17 +55,21 @@ def get_family(part):
 
 
 class Openflow(Tool):
-    """Implementation of the class to support Yosys."""
+    """Implementation of the class to support the open-source tools."""
 
-    _TOOL = 'yosys'
+    _TOOL = 'openflow'
 
-    _GEN_COMMAND = 'bash yosys.sh'
+    _GEN_COMMAND = 'bash {}.sh'.format(_TOOL)
 
-    _GENERATED = ['*.cf', '*.edif', '*.json']
+    _GENERATED = [
+        '*.asc', '*.bit', '*.cf', '*.config', '*.edif', '*.json', '*.rpt',
+        '*.svf'
+    ]
 
-    def __init__(self, project, backend='nextpnr'):
+    def __init__(self, project):
         super().__init__(project)
-        self.backend = backend
+        self.backend = 'nextpnr'
+        self.frontend = 'yosys'
         self.includes = []
 
     def set_param(self, name, value):
@@ -112,12 +116,16 @@ class Openflow(Tool):
             params.append('chparam -set {} {} {}').format(
                 param[0], param[1], self.top
             )
-        # Device and Package
-        device, package = self.part.split('-')
-        if device.endswith('4k'):
-            # See http://www.clifford.at/icestorm/
-            device = device.replace('4', '8')
-            package += ":4k"
+        # Family, Device and Package
+        family = get_family(self.part)
+        device = None
+        package = None
+        if family in ['ice40', 'ecp5']:
+            device, package = self.part.split('-')
+            if device.endswith('4k'):
+                # See http://www.clifford.at/icestorm/
+                device = device.replace('4', '8')
+                package += ":4k"
         # Script creation
         template = os.path.join(os.path.dirname(__file__), 'template.sh')
         text = open(template).read()
@@ -126,12 +134,12 @@ class Openflow(Tool):
             constraints='\\\n'+'\n'.join(constraints),
             device=device,
             includes='\\\n'+'\n'.join(includes),
-            family=get_family(self.part),
+            family=family,
             package=package,
             params='\\\n'+'\n'.join(params),
             project=self.project,
             tasks=tasks,
-            tool=self._TOOL,
+            tool=self.frontend,
             top=self.top,
             verilogs='\\\n'+'\n'.join(verilogs),
             vhdls='\\\n'+'\n'.join(vhdls)

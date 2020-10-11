@@ -52,7 +52,7 @@ MODULE=
 [ -n "$VHDLS" ] && MODULE="-m ghdl"
 
 function print () {{
-    tput setaf 6; echo ">>> PyFPGA (openflow - $1): $2"; tput sgr0;
+    tput setaf 6; echo ">>> PyFPGA ($1): $2"; tput sgr0;
 }}
 
 ###############################################################################

@@ -21,112 +21,21 @@
 Implements the support for Yosys synthesizer.
 """
 
-import os
-
-from fpga.tool import Tool
+from fpga.tool.openflow import Openflow
 
 
-def get_family(part):
-    """Get the Family name from the specified part name."""
-    families = [
-        # From <YOSYS>/techlibs/xilinx/synth_xilinx.cc
-        'xcup', 'xcu', 'xc7', 'xc6s', 'xc6v', 'xc5v', 'xc4v', 'xc3sda',
-        'xc3sa', 'xc3se', 'xc3s', 'xc2vp', 'xc2v', 'xcve', 'xcv'
-    ]
-    for family in families:
-        if part.lower().startswith(family):
-            return family
-    families = [
-        # From <nextpnr>/ice40/main.cc
-        'lp384', 'lp1k', 'lp4k', 'lp8k',
-        'hx1k', 'hx4k', 'hx8k',
-        'up3k', 'up5k',
-        'u1k', 'u2k', 'u4k'
-    ]
-    for family in families:
-        if part.lower().startswith(family):
-            return 'ice40'
-    families = [
-        # From <nextpnr>/ecp5/main.cc
-        '12k', '25k', '45k', '85k',
-        'um-25k', 'um-45k', 'um-85k',
-        'um5g-25k', 'um5g-45k', 'um5g-85k'
-    ]
-    for family in families:
-        if part.lower().startswith(family):
-            return 'ecp5'
-    return 'UNKNOWN'
-
-
-class Yosys(Tool):
+class Yosys(Openflow):
     """Implementation of the class to support Yosys."""
 
     _TOOL = 'yosys'
 
-    _GEN_COMMAND = 'bash yosys.sh'
+    _GEN_COMMAND = 'bash {}.sh'.format(_TOOL)
 
     _GENERATED = ['*.cf', '*.edif', '*.json']
 
     def __init__(self, project, backend='verilog'):
         super().__init__(project)
         self.backend = backend
-        self.includes = []
 
-    def set_param(self, name, value):
-        """Set a Generic/Parameter Value."""
-        self.params.append([name, value])
-
-    def add_file(self, file, library=None, included=False, design=False):
-        if included:
-            self.includes.append(file)
-        elif not design:
-            self.files.append([file, library])
-
-    def _create_gen_script(self, strategy, tasks):
-        # Verilog includes
-        includes = []
-        for include in self.includes:
-            dirname = os.path.dirname(include)
-            includes.append('verilog_defaults -add -I{}'.format(dirname))
-        # Files
-        verilogs = []
-        vhdls = []
-        for file in self.files:
-            # VHDL (GHDL)
-            if os.path.splitext(file[0])[1] in ['.vhd', '.vhdl']:
-                lib = ''
-                if file[1] is not None:
-                    lib = '--work={}'.format(file[1])
-                vhdls.append('ghdl -a $FLAGS {} {}'.format(lib, file[0]))
-            # Verilog (Yosys)
-            if os.path.splitext(file[0])[1] == 'sv':
-                verilogs.append('read_verilog -sv -defer {}'.format(file[0]))
-            else:
-                verilogs.append('read_verilog -defer {}'.format(file[0]))
-        if len(vhdls) > 0:
-            verilogs = ['ghdl $FLAGS {}'.format(self.top)]
-        # Parameters
-        params = []
-        for param in self.params:
-            params.append('chparam -set {} {} {}').format(
-                param[0], param[1], self.top
-            )
-        # Script creation
-        template = os.path.join(os.path.dirname(__file__), 'template.sh')
-        text = open(template).read()
-        text = text.format(
-            backend=self.backend,
-            constraints='',
-            device='',
-            includes='\\\n'+'\n'.join(includes),
-            family=get_family(self.part),
-            package='',
-            params='\\\n'+'\n'.join(params),
-            project=self.project,
-            tasks='syn',
-            tool=self._TOOL,
-            top=self.top,
-            verilogs='\\\n'+'\n'.join(verilogs),
-            vhdls='\\\n'+'\n'.join(vhdls)
-        )
-        open("%s.sh" % self._TOOL, 'w').write(text)
+    def generate(self, strategy, to_task, from_task, capture):
+        return super().generate(strategy, 'syn', 'syn', capture)
