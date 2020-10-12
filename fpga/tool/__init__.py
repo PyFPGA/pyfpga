@@ -55,8 +55,6 @@ def run(command, capture):
     )
     return result.stdout
 
-# pylint: disable-msg=too-many-instance-attributes
-
 
 class Tool:
     """Tool interface.
@@ -181,12 +179,10 @@ class Tool:
 
     def transfer(self, devtype, position, part, width, capture):
         """Transfer a bitstream."""
-        # pylint: disable-msg=too-many-arguments
         check_value(devtype, self._DEVTYPES)
         check_value(position, range(10))
         isinstance(part, str)
         check_value(width, MEMWIDTHS)
-        # Dummy check to avoid unused-argument (pylint)
         isinstance(capture, bool)
         # Bitstream autodiscovery
         if not self.bitstream and devtype not in ['detect', 'unlock']:

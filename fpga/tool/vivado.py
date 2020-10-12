@@ -66,7 +66,6 @@ class Vivado(Tool):
 
     def __init__(self, project, frontend=None):
         super().__init__(project)
-        # pylint: disable=import-outside-toplevel
         if frontend == 'yosys':
             from fpga.tool.yosys import Yosys
             self.tool = Yosys(self.project, 'vivado')

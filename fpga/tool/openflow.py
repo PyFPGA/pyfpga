@@ -83,7 +83,6 @@ class Openflow(Tool):
             self.files.append([file, library])
 
     def _create_gen_script(self, strategy, tasks):
-        # pylint: disable=too-many-locals
         # Verilog includes
         includes = []
         for include in self.includes:

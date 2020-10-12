@@ -51,7 +51,6 @@ class Project:
         self._log = logging.getLogger(__name__)
         self._log.level = logging.INFO
         self._log.addHandler(logging.NullHandler())
-        # pylint: disable=import-outside-toplevel
         if tool == 'ghdl':
             from fpga.tool.ghdl import Ghdl
             self.tool = Ghdl(project)

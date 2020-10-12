@@ -1,0 +1,13 @@
+[MASTER]
+ignore=ignore
+jobs=0
+suggestion-mode=yes
+
+[REPORTS]
+score=no
+
+[MESSAGES CONTROL]
+disable=import-outside-toplevel,
+        too-many-arguments,
+        too-many-instance-attributes,
+        too-many-locals
