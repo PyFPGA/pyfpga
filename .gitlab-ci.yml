@@ -24,7 +24,7 @@ lint:
     - pip install pycodestyle
     - pip install pylint
     - pycodestyle fpga examples test
-    - pylint -j 0 --score no -d too-many-arguments fpga
+    - pylint fpga
     - git diff --check --cached
 
 test:

@@ -7,7 +7,9 @@ suggestion-mode=yes
 score=no
 
 [MESSAGES CONTROL]
-disable=import-outside-toplevel,
+disable=duplicate-code,
+        import-outside-toplevel,
+        raise-missing-from,
         too-many-arguments,
         too-many-instance-attributes,
         too-many-locals
