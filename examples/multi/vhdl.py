@@ -2,7 +2,7 @@
 
 The main idea of a multi-vendor project is to implements the same HDL code
 with different tools, to make comparisons. The project name is not important
-and the default devices could be used.
+and the default devices are used.
 """
 
 import logging
@@ -12,8 +12,6 @@ from fpga.project import Project, TOOLS
 logging.basicConfig()
 
 for tool in TOOLS:
-    if tool == 'yosys':
-        continue
     PRJ = Project(tool)
     PRJ.set_outdir('../../build/multi/vhdl/%s' % tool)
     PRJ.add_files('../../hdl/blinking.vhdl', 'examples')

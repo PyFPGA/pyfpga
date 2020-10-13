@@ -12,8 +12,6 @@ logging.basicConfig()
 
 for hdl in ['vhdl', 'verilog']:
     for tool in TOOLS:
-        if tool == 'yosys' and hdl == 'vhdl':
-            continue
         if tool == 'ghdl' and hdl == 'verilog':
             continue
         PRJ = Project(tool)

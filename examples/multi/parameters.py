@@ -2,7 +2,7 @@
 
 The main idea of a multi-vendor project is to implements the same HDL code
 with different tools, to make comparisons. The project name is not important
-and the default devices could be used. In this example, VHDL and Verilog
+and the default devices are used. In this example, VHDL and Verilog
 files are synthesized changing the value of its generics/parameters.
 """
 
@@ -14,8 +14,6 @@ logging.basicConfig()
 
 for hdl in ['vhdl', 'verilog']:
     for tool in TOOLS:
-        if tool == 'yosys' and hdl == 'vhdl':
-            continue
         if tool == 'ghdl' and hdl == 'verilog':
             continue
         PRJ = Project(tool)
