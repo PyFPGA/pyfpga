@@ -21,41 +21,21 @@
 Implements the support for GHDL synthesizer.
 """
 
-from fpga.tool import Tool
-
-_TEMPLATE = """\
-#!/bin/bash
-
-FLAGS="--std=08 -fsynopsys -fexplicit -frelaxed"
-
-{files}
-
-ghdl --synth $FLAGS {top} > {project}.vhdl
-"""
+from fpga.tool.openflow import Openflow
 
 
-class Ghdl(Tool):
+class Ghdl(Openflow):
     """Implementation of the class to support GHDL."""
 
     _TOOL = 'ghdl'
 
-    _DOCKER = "docker run --rm -v $HOME:$HOME -w $PWD ghdl/synth:beta"
-    _GEN_COMMAND = '{} bash ghdl.sh'.format(_DOCKER)
+    _GEN_COMMAND = 'bash {}.sh'.format(_TOOL)
 
     _GENERATED = ['*.cf']
 
-    def add_file(self, file, library=None, included=False, design=False):
-        if not included and not design:
-            self.files.append([file, library])
+    def __init__(self, project):
+        super().__init__(project)
+        self.frontend = 'ghdl'
 
-    def _create_gen_script(self, strategy, tasks):
-        files = []
-        for file in self.files:
-            lib = '--work={}'.format(file[1]) if file[1] is not None else ''
-            files.append('ghdl -a $FLAGS {} {}'.format(lib, file[0]))
-        text = _TEMPLATE.format(
-            files='\n'.join(files),
-            top=self.top,
-            project=self.project
-        )
-        open("%s.sh" % self._TOOL, 'w').write(text)
+    def generate(self, strategy, to_task, from_task, capture):
+        return super().generate(strategy, 'syn', 'syn', capture)

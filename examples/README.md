@@ -17,6 +17,9 @@ supported board. It shows the inclusion of Constraints files.
 * [ghdl](ghdl): VHDL synthesis with GDHL (`--synth`)
 * [ise](ise): Spartan-6 FPGA LX9 MicroBoard (Avnet)
 * [libero](libero): Digi-Key SmartFusion2 Maker Board (Digi-Key)
+* [openflow](openflow):
+  * EDU-CIAA-FPGA (`icestorm.py`)
+  * OrangeCrab-r0.2 (`prjtrellis.py`)
 * [quartus](quartus): DE10Nano (Terasic)
 * [vivado](vivado): Zybo (Digilent)
 * [yosys](yosys):

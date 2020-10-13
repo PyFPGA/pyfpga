@@ -32,8 +32,8 @@ prj = Project('vivado', 'projectName')
 prj.set_outdir('../temp')
 ```
 
-> The supported tool names are: `ghdl`, `ise`, `libero`, `quartus`, `vivado`,
-> `yosys`, `yosys-ise` and `yosys-vivado`.
+> The supported tool names are: `ghdl`, `ise`, `libero`, `openflow`, `quartus`,
+> `vivado`, `yosys`, `yosys-ise` and `yosys-vivado`.
 
 Next, the FPGA part, the project files and the top-level name must be
 specified. The file addition allows specifying one or more HDL, constraint or

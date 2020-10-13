@@ -2,7 +2,7 @@
 # PyFPGA Master Tcl
 #
 # Copyright (C) 2015-2020 INTI
-# Copyright (C) 2015-2020 Rodrigo A. Melo <rmelo@inti.gob.ar>
+# Copyright (C) 2015-2020 Rodrigo A. Melo
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

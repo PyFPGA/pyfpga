@@ -51,7 +51,6 @@ class Project:
         self._log = logging.getLogger(__name__)
         self._log.level = logging.INFO
         self._log.addHandler(logging.NullHandler())
-        # pylint: disable=import-outside-toplevel
         if tool == 'ghdl':
             from fpga.tool.ghdl import Ghdl
             self.tool = Ghdl(project)
@@ -61,6 +60,9 @@ class Project:
         elif tool == 'libero':
             from fpga.tool.libero import Libero
             self.tool = Libero(project)
+        elif tool == 'openflow':
+            from fpga.tool.openflow import Openflow
+            self.tool = Openflow(project)
         elif tool == 'quartus':
             from fpga.tool.quartus import Quartus
             self.tool = Quartus(project)
@@ -120,6 +122,7 @@ class Project:
         * **pathname:** a string containing a relative path to a file.
         """
         pathname = os.path.join(self._absdir, pathname)
+        pathname = os.path.normpath(pathname)
         if os.path.isfile(pathname):
             self.tool.add_file(pathname, None, False, True)
         else:
@@ -133,6 +136,7 @@ class Project:
         * **library:** an optional VHDL library name.
         """
         pathname = os.path.join(self._absdir, pathname)
+        pathname = os.path.normpath(pathname)
         self._log.debug('PATHNAME = %s', pathname)
         files = glob.glob(pathname)
         if len(files) == 0:
@@ -153,6 +157,7 @@ class Project:
         also needs to add the file when is a Verilog Included File.
         """
         pathname = os.path.join(self._absdir, pathname)
+        pathname = os.path.normpath(pathname)
         if os.path.exists(pathname):
             self.tool.add_file(pathname, None, True, False)
         else:
@@ -165,6 +170,7 @@ class Project:
         """
         if os.path.splitext(toplevel)[1]:
             toplevel = os.path.join(self._absdir, toplevel)
+            toplevel = os.path.normpath(toplevel)
             if os.path.exists(toplevel):
                 hdl = open(toplevel, 'r').read()
                 # Removing comments, newlines and carriage-returns
