@@ -33,6 +33,24 @@ Adds files to the project (HDLs, TCLs, Constraints).
 and can contain shell-style wildcards (glob compliant).
 * **library:** an optional VHDL library name.
 
+### `add_hook(phase, hook)`
+
+Adds a hook in the specified phase.
+
+A hook is a place that allows you to insert customized programming.
+
+The valid **phase** values are:
+* *prefile* to add options needed to find files.
+* *postprj* to add project related options.
+* *preflow* to change options previous to run the flow.
+* *postsyn* to perform an action between *syn* and *imp*.
+* *postimp* to perform an action between *imp* and *bit*.
+* *postbit* to perform an action after *bit*.
+
+The *hook* is a string representing a tool specific command.
+**WARNING:** using a hook, you will be probably broken the vendor
+independence.
+
 ### `add_include(pathname)`
 
 Adds a search path.
@@ -45,42 +63,6 @@ or a file.
 
 **Note:** generally a directory must be specified, but Libero-SoC
 also needs to add the file when is a Verilog Included File.
-
-### `add_postbit_cmd(command)`
-
-Adds a post bitstream generation COMMAND.
-
-* **command:** a valid, commonly Tcl, tool command.
-
-### `add_postimp_cmd(command)`
-
-Adds a post implementation COMMAND.
-
-* **command:** a valid, commonly Tcl, tool command.
-
-### `add_postprj_cmd(command)`
-
-Adds a postprj COMMAND.
-
-* **command:** a valid, commonly Tcl, tool command.
-
-### `add_postsyn_cmd(command)`
-
-Adds a post synthesis COMMAND.
-
-* **command:** a valid, commonly Tcl, tool command.
-
-### `add_prefile_cmd(command)`
-
-Adds a prefile COMMAND.
-
-* **command:** a valid, commonly Tcl, tool command.
-
-### `add_preflow_cmd(command)`
-
-Adds a pre flow COMMAND.
-
-* **command:** a valid, commonly Tcl, tool command.
 
 ### `clean()`
 

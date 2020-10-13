@@ -56,6 +56,7 @@ prj.set_top('Top')
 > will want to specify a particular one. Examples:
 >     * Ise: `xc7k160t-3-fbg484`
 >     * Libero: `mpf100t-1-fcg484`
+>     * Openflow: `hx8k-ct256`
 >     * Quartus: `10cl120zf780i8g`
 >     * Vivado: `xc7k160t-3-fbg484`
 > * For some Tools, the files order could be a problem.
@@ -93,23 +94,20 @@ Flow internally performed by PyFPGA.
 ![Tcl Structure](images/tcl-structure.png)
 
 If the provided API if not enough or suitable for your project, you can
-specify additional *commands* in different parts of the flow, using:
+specify additional *hooks* in different parts of the flow, using:
 
 ```py
-prj.add_prefile_cmd('A text string')  # for *Pre-file commands*.
-prj.add_postprj_cmd('A text string')  # for *Post-prj commands*.
-prj.add_preflow_cmd('A text string')  # for *Pre-flow commands*.
-prj.add_postsyn_cmd('A text string')  # for *Post-syn commands*.
-prj.add_postimp_cmd('A text string')  # for *Post-imp commands*.
-prj.add_postbit_cmd('A text string')  # for *Post-bit commands*.
+prj.add_hook(phase, hook)
 ```
 
 > **Notes:**
-> * The text string must be a valid command supported by the used backend.
-> * If more than one command is needed, you can call these methods several
-> times (will be executed in order).
+> * Valid vaues for *phase* are `prefile`, `postprj`, `preflow`, `postsyn`,
+> `postimp` and `postbit`.
+> * The *hook* string must be a valid command (supported by the used tool).
+> * If more than one *hook* is needed in the same *phase*, you can call this
+> method several times (the commands will be executed in order).
 
-The generics/parameters of the project can be optinally changed with:
+The generics/parameters of the project can be optionally changed with:
 
 ```py
 prj.set_param('param1', value1)

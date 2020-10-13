@@ -193,47 +193,24 @@ class Project:
         else:
             self.tool.set_top(toplevel)
 
-    def add_prefile_cmd(self, command):
-        """Adds a prefile COMMAND.
+    def add_hook(self, phase, hook):
+        """Adds a hook in the specified phase.
 
-        * **command:** a valid, commonly Tcl, tool command.
+        A hook is a place that allows you to insert customized programming.
+
+        The valid **phase** values are:
+        * *prefile* to add options needed to find files.
+        * *postprj* to add project related options.
+        * *preflow* to change options previous to run the flow.
+        * *postsyn* to perform an action between *syn* and *imp*.
+        * *postimp* to perform an action between *imp* and *bit*.
+        * *postbit* to perform an action after *bit*.
+
+        The *hook* is a string representing a tool specific command.
+        **WARNING:** using a hook, you will be probably broken the vendor
+        independence.
         """
-        self.tool.add_command(command, 'prefile')
-
-    def add_postprj_cmd(self, command):
-        """Adds a postprj COMMAND.
-
-        * **command:** a valid, commonly Tcl, tool command.
-        """
-        self.tool.add_command(command, 'postprj')
-
-    def add_preflow_cmd(self, command):
-        """Adds a pre flow COMMAND.
-
-        * **command:** a valid, commonly Tcl, tool command.
-        """
-        self.tool.add_command(command, 'preflow')
-
-    def add_postsyn_cmd(self, command):
-        """Adds a post synthesis COMMAND.
-
-        * **command:** a valid, commonly Tcl, tool command.
-        """
-        self.tool.add_command(command, 'postsyn')
-
-    def add_postimp_cmd(self, command):
-        """Adds a post implementation COMMAND.
-
-        * **command:** a valid, commonly Tcl, tool command.
-        """
-        self.tool.add_command(command, 'postimp')
-
-    def add_postbit_cmd(self, command):
-        """Adds a post bitstream generation COMMAND.
-
-        * **command:** a valid, commonly Tcl, tool command.
-        """
-        self.tool.add_command(command, 'postbit')
+        self.tool.add_command(hook, phase)
 
     def generate(
             self, strategy='default', to_task='bit', from_task='prj',
