@@ -23,7 +23,7 @@ Implements the support of the open-source tools.
 
 import os
 
-from fpga.tool import Tool
+from fpga.tool import Tool, run
 
 
 def get_family(part):
@@ -60,6 +60,10 @@ class Openflow(Tool):
     _TOOL = 'openflow'
 
     _GEN_COMMAND = 'bash {}.sh'.format(_TOOL)
+    _TRF_COMMAND = 'bash openprog.sh'
+
+    _BIT_EXT = ['bit']
+    _DEVTYPES = ['fpga']
 
     _GENERATED = [
         '*.asc', '*.bit', '*.cf', '*.config', '*.edif', '*.json', '*.rpt',
@@ -144,3 +148,15 @@ class Openflow(Tool):
             vhdls='\\\n'+'\n'.join(vhdls)
         )
         open("%s.sh" % self._TOOL, 'w').write(text)
+
+    def transfer(self, devtype, position, part, width, capture):
+        super().transfer(devtype, position, part, width, capture)
+        family = get_family(self.part)
+        template = os.path.join(os.path.dirname(__file__), 'openprog.sh')
+        text = open(template).read()
+        text = text.format(
+            family=family,
+            project=self.project
+        )
+        open("openprog.sh", 'w').write(text)
+        return run(self._TRF_COMMAND, capture)

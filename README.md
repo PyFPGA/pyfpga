@@ -72,8 +72,9 @@ using the [issues](https://gitlab.com/rodrigomelo9/pyfpga/issues) tracker).
 * The whole development flow, from reading HDL and constraint sources to produce a bitstream, can
 be performed with ISE and Vivado (Xilinx), Quarts Prime (Intel), Libero-SoC (Microsemi) and
 open-source tools.
-* ISE (Impact) can be used to programming FPGAs, BPIs and SPIs memories. Vivado and Quartus can be
-used to transfer a bitstream to FPGAs.
+* ISE (Impact) can be used to programming FPGAs, BPIs and SPIs memories. Vivado, Quartus and
+iceprog (IceStorm, for ice40 devices) can be used to programming FPGAs. Libero-SoC and
+prjtrellis programming is not yet supported.
 * GDHL (`--synth`) can be used to convert VHDL sources into a synthesized VHDL.
 * Yosys cab be used to convert Verilog and VHDL (using `ghdl-yosys-plugin`) sources into a
 synthetized Verilog. Also, ISE and Vivado are supported as backend tools to generate a bitstream.

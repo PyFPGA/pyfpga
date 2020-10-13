@@ -5,6 +5,7 @@
 * Additional supported FPGA EDA Tools:
     - GHDL --synth: synthesizes VHDL sources.
     - ghdl-yosys-plugin: add VHDL support to Yosys.
+    - Openflow: Yosys + nextpnr + icestrom/prjtrellis.
 * Added CLI helper utilities:
     - hdl2bit: to go from FPGA design files to a bitstream.
     - prj2bit: to deal with a vendor FPGA Project file.
@@ -18,6 +19,7 @@
     - Improved examples with the addition of command-line arguments.
     - Added a GHDL example.
     - Added examples using VHDL with Yosys (through `ghdl-yosys-plugin`).
+    - Added Openflow examples.
     - Fixed a small problem into examples/multi/vhdl.py.
 * Testing:
     - Added some tests for the new CLI utilities.
