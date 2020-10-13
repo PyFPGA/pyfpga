@@ -32,7 +32,7 @@ import re
 import time
 
 
-TOOLS = ['ghdl', 'ise', 'libero', 'quartus', 'vivado', 'yosys']
+TOOLS = ['ghdl', 'ise', 'libero', 'openflow', 'quartus', 'vivado', 'yosys']
 
 COMBINED_TOOLS = ['yosys-ise', 'yosys-vivado']
 

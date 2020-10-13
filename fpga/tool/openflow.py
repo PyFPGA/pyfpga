@@ -58,6 +58,7 @@ class Openflow(Tool):
     """Implementation of the class to support the open-source tools."""
 
     _TOOL = 'openflow'
+    _PART = 'hx8k-ct256'
 
     _GEN_COMMAND = 'bash {}.sh'.format(_TOOL)
     _TRF_COMMAND = 'bash openprog.sh'
