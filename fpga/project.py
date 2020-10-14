@@ -193,7 +193,7 @@ class Project:
         else:
             self.tool.set_top(toplevel)
 
-    def add_hook(self, phase, hook):
+    def add_hook(self, hook, phase='postprj'):
         """Adds a hook in the specified phase.
 
         A hook is a place that allows you to insert customized programming.
@@ -207,10 +207,11 @@ class Project:
         * *postbit* to perform an action after *bit*.
 
         The *hook* is a string representing a tool specific command.
+
         **WARNING:** using a hook, you will be probably broken the vendor
         independence.
         """
-        self.tool.add_hook(phase, hook)
+        self.tool.add_hook(hook, phase)
 
     def generate(
             self, strategy='default', to_task='bit', from_task='prj',

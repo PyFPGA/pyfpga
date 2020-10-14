@@ -127,7 +127,7 @@ class Tool:
         """Set the TOP LEVEL of the project."""
         self.top = top
 
-    def add_hook(self, phase, hook):
+    def add_hook(self, hook, phase):
         """Add the specified *hook* in the desired *phase*."""
         check_value(phase, PHASES)
         self.cmds[phase].append(hook)
@@ -171,7 +171,7 @@ class Tool:
 
     def export_hardware(self):
         """Exports files for the development of a Processor System."""
-        self.add_hook('postbit', 'fpga_export')
+        self.add_hook('fpga_export', 'postbit')
 
     def set_bitstream(self, path):
         """Set the bitstream file to transfer."""

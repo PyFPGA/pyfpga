@@ -97,7 +97,7 @@ If the provided API if not enough or suitable for your project, you can
 specify additional *hooks* in different parts of the flow, using:
 
 ```py
-prj.add_hook(phase, hook)
+prj.add_hook(hook, phase)
 ```
 
 > **Notes:**
