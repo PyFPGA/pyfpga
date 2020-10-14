@@ -127,10 +127,10 @@ class Tool:
         """Set the TOP LEVEL of the project."""
         self.top = top
 
-    def add_command(self, command, phase):
-        """Add the specified COMMAND in the desired PHASE."""
+    def add_hook(self, phase, hook):
+        """Add the specified *hook* in the desired *phase*."""
         check_value(phase, PHASES)
-        self.cmds[phase].append(command)
+        self.cmds[phase].append(hook)
 
     def _create_gen_script(self, strategy, tasks):
         """Create the script for generate execution."""
@@ -171,7 +171,7 @@ class Tool:
 
     def export_hardware(self):
         """Exports files for the development of a Processor System."""
-        self.add_command('fpga_export', 'postbit')
+        self.add_hook('postbit', 'fpga_export')
 
     def set_bitstream(self, path):
         """Set the bitstream file to transfer."""

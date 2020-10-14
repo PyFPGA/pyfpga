@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <office:document xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:presentation="urn:oasis:names:tc:opendocument:xmlns:presentation:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:smil="urn:oasis:names:tc:opendocument:xmlns:smil-compatible:1.0" xmlns:anim="urn:oasis:names:tc:opendocument:xmlns:animation:1.0" xmlns:rpt="http://openoffice.org/2005/report" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:officeooo="http://openoffice.org/2009/office" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:drawooo="http://openoffice.org/2010/draw" xmlns:calcext="urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0" xmlns:loext="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0" xmlns:css3t="http://www.w3.org/TR/css3-text/" office:version="1.2" office:mimetype="application/vnd.oasis.opendocument.graphics">
- <office:meta><meta:initial-creator>Rodrigo Melo</meta:initial-creator><meta:creation-date>2019-12-11T11:17:02.117891147</meta:creation-date><dc:date>2020-05-12T15:43:16.369642359</dc:date><meta:editing-duration>PT4H38M38S</meta:editing-duration><meta:editing-cycles>56</meta:editing-cycles><meta:generator>LibreOffice/5.2.7.2$Linux_X86_64 LibreOffice_project/20m0$Build-2</meta:generator><meta:document-statistic meta:object-count="24"/></office:meta>
+ <office:meta><meta:initial-creator>Rodrigo Melo</meta:initial-creator><meta:creation-date>2019-12-11T11:17:02.117891147</meta:creation-date><dc:date>2020-10-13T21:03:34.668720106</dc:date><meta:editing-duration>PT4H45M57S</meta:editing-duration><meta:editing-cycles>58</meta:editing-cycles><meta:generator>LibreOffice/6.1.5.2$Linux_X86_64 LibreOffice_project/10$Build-2</meta:generator><meta:document-statistic meta:object-count="31"/></office:meta>
  <office:settings>
   <config:config-item-set config:name="ooo:view-settings">
-   <config:config-item config:name="VisibleAreaTop" config:type="int">-4224</config:config-item>
-   <config:config-item config:name="VisibleAreaLeft" config:type="int">-607</config:config-item>
-   <config:config-item config:name="VisibleAreaWidth" config:type="int">31091</config:config-item>
-   <config:config-item config:name="VisibleAreaHeight" config:type="int">20143</config:config-item>
+   <config:config-item config:name="VisibleAreaTop" config:type="int">2552</config:config-item>
+   <config:config-item config:name="VisibleAreaLeft" config:type="int">-529</config:config-item>
+   <config:config-item config:name="VisibleAreaWidth" config:type="int">31781</config:config-item>
+   <config:config-item config:name="VisibleAreaHeight" config:type="int">15813</config:config-item>
    <config:config-item-map-indexed config:name="Views">
     <config:config-item-map-entry>
      <config:config-item config:name="ViewId" config:type="string">view1</config:config-item>
@@ -35,10 +35,10 @@
      <config:config-item config:name="IsClickChangeRotation" config:type="boolean">true</config:config-item>
      <config:config-item config:name="SlidesPerRow" config:type="short">4</config:config-item>
      <config:config-item config:name="EditMode" config:type="int">0</config:config-item>
-     <config:config-item config:name="VisibleAreaTop" config:type="int">-2858</config:config-item>
-     <config:config-item config:name="VisibleAreaLeft" config:type="int">-2611</config:config-item>
-     <config:config-item config:name="VisibleAreaWidth" config:type="int">35949</config:config-item>
-     <config:config-item config:name="VisibleAreaHeight" config:type="int">17852</config:config-item>
+     <config:config-item config:name="VisibleAreaTop" config:type="int">2552</config:config-item>
+     <config:config-item config:name="VisibleAreaLeft" config:type="int">-529</config:config-item>
+     <config:config-item config:name="VisibleAreaWidth" config:type="int">31782</config:config-item>
+     <config:config-item config:name="VisibleAreaHeight" config:type="int">15814</config:config-item>
      <config:config-item config:name="GridCoarseWidth" config:type="int">1000</config:config-item>
      <config:config-item config:name="GridCoarseHeight" config:type="int">1000</config:config-item>
      <config:config-item config:name="GridFineWidth" config:type="int">100</config:config-item>
@@ -50,15 +50,16 @@
      <config:config-item config:name="IsAngleSnapEnabled" config:type="boolean">false</config:config-item>
      <config:config-item config:name="SnapAngle" config:type="int">1500</config:config-item>
      <config:config-item config:name="ZoomOnPage" config:type="boolean">false</config:config-item>
+     <config:config-item config:name="AnchoredTextOverflowLegacy" config:type="boolean">false</config:config-item>
     </config:config-item-map-entry>
    </config:config-item-map-indexed>
   </config:config-item-set>
   <config:config-item-set config:name="ooo:configuration-settings">
    <config:config-item config:name="ApplyUserData" config:type="boolean">true</config:config-item>
-   <config:config-item config:name="BitmapTableURL" config:type="string">$(inst)/share/palette%3B$(user)/config/standard.sob</config:config-item>
+   <config:config-item config:name="BitmapTableURL" config:type="string">$(brandbaseurl)/share/palette%3B$(user)/config/standard.sob</config:config-item>
    <config:config-item config:name="CharacterCompressionType" config:type="short">0</config:config-item>
-   <config:config-item config:name="ColorTableURL" config:type="string">$(inst)/share/palette%3B$(user)/config/standard.soc</config:config-item>
-   <config:config-item config:name="DashTableURL" config:type="string">$(inst)/share/palette%3B$(user)/config/standard.sod</config:config-item>
+   <config:config-item config:name="ColorTableURL" config:type="string">$(brandbaseurl)/share/palette%3B$(user)/config/standard.soc</config:config-item>
+   <config:config-item config:name="DashTableURL" config:type="string">$(brandbaseurl)/share/palette%3B$(user)/config/standard.sod</config:config-item>
    <config:config-item config:name="DefaultTabStop" config:type="int">1250</config:config-item>
    <config:config-item config:name="EmbedFonts" config:type="boolean">false</config:config-item>
    <config:config-item-map-indexed config:name="ForbiddenCharacters">
@@ -70,8 +71,8 @@
      <config:config-item config:name="EndLine" config:type="string"/>
     </config:config-item-map-entry>
    </config:config-item-map-indexed>
-   <config:config-item config:name="GradientTableURL" config:type="string">$(inst)/share/palette%3B$(user)/config/standard.sog</config:config-item>
-   <config:config-item config:name="HatchTableURL" config:type="string">$(inst)/share/palette%3B$(user)/config/standard.soh</config:config-item>
+   <config:config-item config:name="GradientTableURL" config:type="string">$(brandbaseurl)/share/palette%3B$(user)/config/standard.sog</config:config-item>
+   <config:config-item config:name="HatchTableURL" config:type="string">$(brandbaseurl)/share/palette%3B$(user)/config/standard.soh</config:config-item>
    <config:config-item config:name="IsKernAsianPunctuation" config:type="boolean">false</config:config-item>
    <config:config-item config:name="IsPrintBooklet" config:type="boolean">false</config:config-item>
    <config:config-item config:name="IsPrintBookletBack" config:type="boolean">true</config:config-item>
@@ -82,7 +83,7 @@
    <config:config-item config:name="IsPrintPageName" config:type="boolean">false</config:config-item>
    <config:config-item config:name="IsPrintTilePage" config:type="boolean">false</config:config-item>
    <config:config-item config:name="IsPrintTime" config:type="boolean">false</config:config-item>
-   <config:config-item config:name="LineEndTableURL" config:type="string">$(inst)/share/palette%3B$(user)/config/standard.soe</config:config-item>
+   <config:config-item config:name="LineEndTableURL" config:type="string">$(brandbaseurl)/share/palette%3B$(user)/config/standard.soe</config:config-item>
    <config:config-item config:name="LoadReadonly" config:type="boolean">false</config:config-item>
    <config:config-item config:name="MeasureUnit" config:type="short">3</config:config-item>
    <config:config-item config:name="PageNumberFormat" config:type="int">4</config:config-item>
@@ -90,6 +91,7 @@
    <config:config-item config:name="PrintQuality" config:type="int">0</config:config-item>
    <config:config-item config:name="PrinterIndependentLayout" config:type="string">low-resolution</config:config-item>
    <config:config-item config:name="PrinterName" config:type="string"/>
+   <config:config-item config:name="PrinterPaperFromSetup" config:type="boolean">false</config:config-item>
    <config:config-item config:name="PrinterSetup" config:type="base64Binary"/>
    <config:config-item config:name="SaveVersionOnClose" config:type="boolean">false</config:config-item>
    <config:config-item config:name="ScaleDenominator" config:type="int">1</config:config-item>
@@ -107,6 +109,8 @@
  <office:font-face-decls>
   <style:font-face style:name="Liberation Sans" svg:font-family="&apos;Liberation Sans&apos;" style:font-family-generic="roman" style:font-pitch="variable"/>
   <style:font-face style:name="Liberation Serif" svg:font-family="&apos;Liberation Serif&apos;" style:font-family-generic="roman" style:font-pitch="variable"/>
+  <style:font-face style:name="Noto Sans" svg:font-family="&apos;Noto Sans&apos;" style:font-family-generic="roman" style:font-pitch="variable"/>
+  <style:font-face style:name="AR PL KaitiM GB" svg:font-family="&apos;AR PL KaitiM GB&apos;" style:font-family-generic="system" style:font-pitch="variable"/>
   <style:font-face style:name="AR PL SungtiL GB" svg:font-family="&apos;AR PL SungtiL GB&apos;" style:font-family-generic="system" style:font-pitch="variable"/>
   <style:font-face style:name="DejaVu Sans" svg:font-family="&apos;DejaVu Sans&apos;" style:font-family-generic="system" style:font-pitch="variable"/>
   <style:font-face style:name="FreeSans" svg:font-family="FreeSans" style:font-family-generic="system" style:font-pitch="variable"/>
@@ -128,10 +132,15 @@
   <draw:gradient draw:name="Gradient_20_31" draw:display-name="Gradient 31" draw:style="linear" draw:start-color="#ccffff" draw:end-color="#aecf00" draw:start-intensity="100%" draw:end-intensity="100%" draw:angle="0" draw:border="0%"/>
   <draw:gradient draw:name="Gradient_20_32" draw:display-name="Gradient 32" draw:style="linear" draw:start-color="#ccffff" draw:end-color="#ccffff" draw:start-intensity="100%" draw:end-intensity="100%" draw:angle="0" draw:border="0%"/>
   <draw:gradient draw:name="Gradient_20_33" draw:display-name="Gradient 33" draw:style="linear" draw:start-color="#ccffff" draw:end-color="#ffff99" draw:start-intensity="100%" draw:end-intensity="100%" draw:angle="0" draw:border="0%"/>
+  <draw:gradient draw:name="Rellenado_20_amarillo" draw:display-name="Rellenado amarillo" draw:style="linear" draw:start-color="#ffde59" draw:end-color="#b47804" draw:start-intensity="100%" draw:end-intensity="100%" draw:angle="300" draw:border="0%"/>
+  <draw:gradient draw:name="Rellenado_20_azul" draw:display-name="Rellenado azul" draw:style="linear" draw:start-color="#729fcf" draw:end-color="#355269" draw:start-intensity="100%" draw:end-intensity="100%" draw:angle="300" draw:border="0%"/>
+  <draw:gradient draw:name="Rellenado_20_rojo" draw:display-name="Rellenado rojo" draw:style="linear" draw:start-color="#ff6d6d" draw:end-color="#c9211e" draw:start-intensity="100%" draw:end-intensity="100%" draw:angle="300" draw:border="0%"/>
+  <draw:gradient draw:name="Rellenado_20_verde" draw:display-name="Rellenado verde" draw:style="linear" draw:start-color="#77bc65" draw:end-color="#127622" draw:start-intensity="100%" draw:end-intensity="100%" draw:angle="300" draw:border="0%"/>
   <draw:hatch draw:name="Black_20_0_20_Degrees" draw:display-name="Black 0 Degrees" draw:style="single" draw:color="#000000" draw:distance="0.102cm" draw:rotation="0"/>
   <draw:hatch draw:name="Red_20_Crossed_20_0_20_Degrees" draw:display-name="Red Crossed 0 Degrees" draw:style="double" draw:color="#800000" draw:distance="0.076cm" draw:rotation="900"/>
   <draw:marker draw:name="Arrow" svg:viewBox="0 0 20 30" svg:d="M10 0l-10 30h20z"/>
   <draw:marker draw:name="Fin_20_de_20_línea_20_1" draw:display-name="Fin de línea 1" svg:viewBox="0 0 1131 902" svg:d="M564 0l-564 902h1131z"/>
+  <draw:marker draw:name="Fin_20_de_20_línea_20_2" draw:display-name="Fin de línea 2" svg:viewBox="0 0 1131 2256" svg:d="M1127 2120l-449-2006-9-42-25-39-38-25-38-8-43 8-38 25-25 39-9 42-449 2006v13l-4 9 9 42 25 38 38 25 42 9h903l42-9 38-25 26-38 8-42v-9z"/>
   <draw:stroke-dash draw:name="Dash_20_1" draw:display-name="Dash 1" draw:style="rect" draw:dots1="1" draw:dots1-length="0.02cm" draw:dots2="1" draw:dots2-length="0.02cm" draw:distance="0.02cm"/>
   <draw:stroke-dash draw:name="Fine_20_Dashed" draw:display-name="Fine Dashed" draw:style="rect" draw:dots1="1" draw:dots1-length="197%" draw:distance="197%"/>
   <draw:stroke-dash draw:name="Line_20_Style_20_9" draw:display-name="Line Style 9" draw:style="rect" draw:dots1="1" draw:dots1-length="197%" draw:distance="120%"/>
@@ -139,7 +148,7 @@
   <draw:stroke-dash draw:name="Ultrafine_20_Dashed" draw:display-name="Ultrafine Dashed" draw:style="rect" draw:dots1="1" draw:dots1-length="0.051cm" draw:dots2="1" draw:dots2-length="0.051cm" draw:distance="0.051cm"/>
   <style:default-style style:family="graphic">
    <style:graphic-properties svg:stroke-color="#3465a4" draw:fill-color="#729fcf" fo:wrap-option="no-wrap"/>
-   <style:paragraph-properties style:text-autospace="ideograph-alpha" style:punctuation-wrap="simple" style:line-break="strict" style:writing-mode="lr-tb" style:font-independent-line-spacing="false">
+   <style:paragraph-properties style:text-autospace="ideograph-alpha" style:punctuation-wrap="simple" style:line-break="strict" style:font-independent-line-spacing="false">
     <style:tab-stops/>
    </style:paragraph-properties>
    <style:text-properties style:use-window-font-color="true" style:font-name="Liberation Serif" fo:font-size="24pt" fo:language="es" fo:country="AR" style:font-name-asian="DejaVu Sans" style:font-size-asian="24pt" style:language-asian="zh" style:country-asian="CN" style:font-name-complex="DejaVu Sans" style:font-size-complex="24pt" style:language-complex="hi" style:country-complex="IN"/>
@@ -189,16 +198,10 @@
      </text:list-level-style-bullet>
     </text:list-style>
    </style:graphic-properties>
-   <style:paragraph-properties fo:margin-left="0cm" fo:margin-right="0cm" fo:margin-top="0cm" fo:margin-bottom="0cm" fo:line-height="100%" fo:text-indent="0cm" style:writing-mode="lr-tb">
+   <style:paragraph-properties fo:margin-left="0cm" fo:margin-right="0cm" fo:margin-top="0cm" fo:margin-bottom="0cm" fo:line-height="100%" fo:text-indent="0cm">
     <style:tab-stops/>
    </style:paragraph-properties>
    <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Sans" fo:font-family="&apos;Liberation Sans&apos;" style:font-family-generic="roman" style:font-pitch="variable" fo:font-size="18pt" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:letter-kerning="true" style:font-name-asian="AR PL SungtiL GB" style:font-family-asian="&apos;AR PL SungtiL GB&apos;" style:font-family-generic-asian="system" style:font-pitch-asian="variable" style:font-size-asian="18pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="FreeSans" style:font-family-complex="FreeSans" style:font-family-generic-complex="system" style:font-pitch-complex="variable" style:font-size-complex="18pt" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
-  </style:style>
-  <style:style style:name="objectwitharrow" style:family="graphic" style:parent-style-name="standard">
-   <style:graphic-properties draw:stroke="solid" svg:stroke-width="0.15cm" svg:stroke-color="#000000" draw:marker-start="Arrow" draw:marker-start-width="0.7cm" draw:marker-start-center="true" draw:marker-end-width="0.3cm"/>
-  </style:style>
-  <style:style style:name="objectwithshadow" style:family="graphic" style:parent-style-name="standard">
-   <style:graphic-properties draw:shadow="visible" draw:shadow-offset-x="0.2cm" draw:shadow-offset-y="0.2cm" draw:shadow-color="#808080"/>
   </style:style>
   <style:style style:name="objectwithoutfill" style:family="graphic" style:parent-style-name="standard">
    <style:graphic-properties svg:stroke-color="#000000" draw:fill="none"/>
@@ -208,6 +211,65 @@
   </style:style>
   <style:style style:name="text" style:family="graphic" style:parent-style-name="standard">
    <style:graphic-properties draw:stroke="none" draw:fill="none"/>
+  </style:style>
+  <style:style style:name="title" style:family="graphic" style:parent-style-name="standard">
+   <style:graphic-properties draw:stroke="none" draw:fill="none"/>
+   <style:text-properties fo:font-size="44pt"/>
+  </style:style>
+  <style:style style:name="headline" style:family="graphic" style:parent-style-name="standard">
+   <style:graphic-properties draw:stroke="none" draw:fill="none"/>
+   <style:paragraph-properties fo:margin-top="0.42cm" fo:margin-bottom="0.21cm"/>
+   <style:text-properties fo:font-size="24pt"/>
+  </style:style>
+  <style:style style:name="measure" style:family="graphic" style:parent-style-name="standard">
+   <style:graphic-properties draw:stroke="solid" svg:stroke-color="#000000" draw:marker-start="Arrow" draw:marker-start-width="0.2cm" draw:marker-end="Arrow" draw:marker-end-width="0.2cm" draw:fill="none" draw:show-unit="true"/>
+   <style:text-properties fo:font-size="12pt"/>
+  </style:style>
+  <style:style style:name="Filled" style:family="graphic">
+   <style:graphic-properties svg:stroke-color="#000000" draw:fill="solid" draw:fill-color="#ffffff"/>
+   <style:text-properties style:font-name="Noto Sans" fo:font-family="&apos;Noto Sans&apos;" style:font-family-generic="roman" style:font-pitch="variable" fo:font-size="14pt" fo:font-weight="bold"/>
+  </style:style>
+  <style:style style:name="Filled_20_Blue" style:display-name="Filled Blue" style:family="graphic" style:parent-style-name="Filled">
+   <style:graphic-properties draw:stroke="none" draw:fill="gradient" draw:fill-gradient-name="Rellenado_20_azul"/>
+   <style:text-properties fo:color="#ffffff" style:font-name="Noto Sans" fo:font-family="&apos;Noto Sans&apos;" style:font-family-generic="roman" style:font-pitch="variable" fo:font-size="14pt" fo:font-weight="bold"/>
+  </style:style>
+  <style:style style:name="Filled_20_Green" style:display-name="Filled Green" style:family="graphic" style:parent-style-name="Filled">
+   <style:graphic-properties draw:stroke="none" draw:fill="gradient" draw:fill-gradient-name="Rellenado_20_verde"/>
+   <style:text-properties fo:color="#ffffff" style:font-name="Noto Sans" fo:font-family="&apos;Noto Sans&apos;" style:font-family-generic="roman" style:font-pitch="variable" fo:font-size="14pt" fo:font-weight="bold"/>
+  </style:style>
+  <style:style style:name="Filled_20_Red" style:display-name="Filled Red" style:family="graphic" style:parent-style-name="Filled">
+   <style:graphic-properties draw:stroke="none" draw:fill="gradient" draw:fill-gradient-name="Rellenado_20_rojo"/>
+   <style:text-properties fo:color="#ffffff" style:font-name="Noto Sans" fo:font-family="&apos;Noto Sans&apos;" style:font-family-generic="roman" style:font-pitch="variable" fo:font-size="14pt" fo:font-weight="bold"/>
+  </style:style>
+  <style:style style:name="Filled_20_Yellow" style:display-name="Filled Yellow" style:family="graphic" style:parent-style-name="Filled">
+   <style:graphic-properties draw:stroke="none" draw:fill="gradient" draw:fill-gradient-name="Rellenado_20_amarillo"/>
+   <style:text-properties fo:color="#ffffff" style:font-name="Noto Sans" fo:font-family="&apos;Noto Sans&apos;" style:font-family-generic="roman" style:font-pitch="variable" fo:font-size="14pt" fo:font-weight="bold"/>
+  </style:style>
+  <style:style style:name="Outlined" style:family="graphic">
+   <style:graphic-properties svg:stroke-width="0.081cm" svg:stroke-color="#000000" draw:fill="none"/>
+   <style:text-properties style:font-name="Noto Sans" fo:font-family="&apos;Noto Sans&apos;" style:font-family-generic="roman" style:font-pitch="variable" fo:font-size="14pt" fo:font-weight="bold"/>
+  </style:style>
+  <style:style style:name="Outlined_20_Blue" style:display-name="Outlined Blue" style:family="graphic" style:parent-style-name="Outlined">
+   <style:graphic-properties draw:stroke="solid" svg:stroke-width="0.081cm" svg:stroke-color="#355269"/>
+   <style:text-properties fo:color="#355269" style:font-name="Noto Sans" fo:font-family="&apos;Noto Sans&apos;" style:font-family-generic="roman" style:font-pitch="variable" fo:font-size="14pt" fo:font-weight="bold"/>
+  </style:style>
+  <style:style style:name="Outlined_20_Green" style:display-name="Outlined Green" style:family="graphic" style:parent-style-name="Outlined">
+   <style:graphic-properties draw:stroke="solid" svg:stroke-width="0.081cm" svg:stroke-color="#127622"/>
+   <style:text-properties fo:color="#127622" style:font-name="Noto Sans" fo:font-family="&apos;Noto Sans&apos;" style:font-family-generic="roman" style:font-pitch="variable" fo:font-size="14pt" fo:font-weight="bold"/>
+  </style:style>
+  <style:style style:name="Outlined_20_Red" style:display-name="Outlined Red" style:family="graphic" style:parent-style-name="Outlined">
+   <style:graphic-properties draw:stroke="solid" svg:stroke-width="0.081cm" svg:stroke-color="#c9211e"/>
+   <style:text-properties fo:color="#c9211e" style:font-name="Noto Sans" fo:font-family="&apos;Noto Sans&apos;" style:font-family-generic="roman" style:font-pitch="variable" fo:font-size="14pt" fo:font-weight="bold"/>
+  </style:style>
+  <style:style style:name="Outlined_20_Yellow" style:display-name="Outlined Yellow" style:family="graphic" style:parent-style-name="Outlined">
+   <style:graphic-properties draw:stroke="solid" svg:stroke-width="0.081cm" svg:stroke-color="#b47804"/>
+   <style:text-properties fo:color="#b47804" style:font-name="Noto Sans" fo:font-family="&apos;Noto Sans&apos;" style:font-family-generic="roman" style:font-pitch="variable" fo:font-size="14pt" fo:font-weight="bold"/>
+  </style:style>
+  <style:style style:name="objectwitharrow" style:family="graphic" style:parent-style-name="standard">
+   <style:graphic-properties draw:stroke="solid" svg:stroke-width="0.15cm" svg:stroke-color="#000000" draw:marker-start="Arrow" draw:marker-start-width="0.7cm" draw:marker-start-center="true" draw:marker-end-width="0.3cm"/>
+  </style:style>
+  <style:style style:name="objectwithshadow" style:family="graphic" style:parent-style-name="standard">
+   <style:graphic-properties draw:shadow="visible" draw:shadow-offset-x="0.2cm" draw:shadow-offset-y="0.2cm" draw:shadow-color="#808080"/>
   </style:style>
   <style:style style:name="textbody" style:family="graphic" style:parent-style-name="standard">
    <style:graphic-properties draw:stroke="none" draw:fill="none"/>
@@ -221,10 +283,6 @@
    <style:graphic-properties draw:stroke="none" draw:fill="none"/>
    <style:paragraph-properties fo:margin-left="0cm" fo:margin-right="0cm" fo:text-indent="0.6cm"/>
   </style:style>
-  <style:style style:name="title" style:family="graphic" style:parent-style-name="standard">
-   <style:graphic-properties draw:stroke="none" draw:fill="none"/>
-   <style:text-properties fo:font-size="44pt"/>
-  </style:style>
   <style:style style:name="title1" style:family="graphic" style:parent-style-name="standard">
    <style:graphic-properties draw:stroke="none" draw:fill="solid" draw:fill-color="#008080" draw:shadow="visible" draw:shadow-offset-x="0.2cm" draw:shadow-offset-y="0.2cm" draw:shadow-color="#808080"/>
    <style:paragraph-properties fo:text-align="center"/>
@@ -235,11 +293,6 @@
    <style:paragraph-properties fo:margin-left="0cm" fo:margin-right="0.2cm" fo:margin-top="0.1cm" fo:margin-bottom="0.1cm" fo:text-align="center" fo:text-indent="0cm"/>
    <style:text-properties fo:font-size="36pt"/>
   </style:style>
-  <style:style style:name="headline" style:family="graphic" style:parent-style-name="standard">
-   <style:graphic-properties draw:stroke="none" draw:fill="none"/>
-   <style:paragraph-properties fo:margin-top="0.42cm" fo:margin-bottom="0.21cm"/>
-   <style:text-properties fo:font-size="24pt"/>
-  </style:style>
   <style:style style:name="headline1" style:family="graphic" style:parent-style-name="standard">
    <style:graphic-properties draw:stroke="none" draw:fill="none"/>
    <style:paragraph-properties fo:margin-top="0.42cm" fo:margin-bottom="0.21cm"/>
@@ -249,10 +302,6 @@
    <style:graphic-properties draw:stroke="none" draw:fill="none"/>
    <style:paragraph-properties fo:margin-top="0.42cm" fo:margin-bottom="0.21cm"/>
    <style:text-properties fo:font-size="14pt" fo:font-style="italic" fo:font-weight="bold"/>
-  </style:style>
-  <style:style style:name="measure" style:family="graphic" style:parent-style-name="standard">
-   <style:graphic-properties draw:stroke="solid" svg:stroke-color="#000000" draw:marker-start="Arrow" draw:marker-start-width="0.2cm" draw:marker-end="Arrow" draw:marker-end-width="0.2cm" draw:fill="none" draw:show-unit="true"/>
-   <style:text-properties fo:font-size="12pt"/>
   </style:style>
  </office:styles>
  <office:automatic-styles>
@@ -282,10 +331,10 @@
    <style:graphic-properties draw:stroke="none" draw:fill="none" draw:textarea-horizontal-align="justify" draw:textarea-vertical-align="middle" draw:auto-grow-height="false" fo:min-height="0.75cm" fo:min-width="7cm"/>
   </style:style>
   <style:style style:name="gr7" style:family="graphic" style:parent-style-name="standard">
-   <style:graphic-properties svg:stroke-width="0.05cm" svg:stroke-color="#000000" draw:marker-start-width="0.275cm" draw:marker-end-width="0.275cm" draw:fill="solid" draw:fill-color="#ffffff" draw:textarea-horizontal-align="justify" draw:textarea-vertical-align="middle" draw:auto-grow-height="false" fo:min-height="5.736cm" fo:min-width="5.781cm" fo:padding-top="0.15cm" fo:padding-bottom="0.15cm" fo:padding-left="0.275cm" fo:padding-right="0.275cm"/>
+   <style:graphic-properties draw:stroke="dash" draw:stroke-dash="Fine_20_Dashed" svg:stroke-width="0.05cm" svg:stroke-color="#000000" draw:marker-start-width="0.275cm" draw:marker-end-width="0.275cm" draw:fill-color="#ffffff" draw:textarea-horizontal-align="justify" draw:textarea-vertical-align="middle" draw:auto-grow-height="false" fo:min-height="6.904cm" fo:min-width="1.957cm" fo:padding-top="0.15cm" fo:padding-bottom="0.15cm" fo:padding-left="0.275cm" fo:padding-right="0.275cm"/>
   </style:style>
   <style:style style:name="gr8" style:family="graphic" style:parent-style-name="standard">
-   <style:graphic-properties draw:stroke="dash" draw:stroke-dash="Fine_20_Dashed" svg:stroke-width="0.05cm" svg:stroke-color="#000000" draw:marker-start-width="0.275cm" draw:marker-end-width="0.275cm" draw:fill-color="#ffffff" draw:textarea-horizontal-align="justify" draw:textarea-vertical-align="middle" draw:auto-grow-height="false" fo:min-height="5.805cm" fo:min-width="1.957cm" fo:padding-top="0.15cm" fo:padding-bottom="0.15cm" fo:padding-left="0.275cm" fo:padding-right="0.275cm"/>
+   <style:graphic-properties svg:stroke-width="0.05cm" svg:stroke-color="#000000" draw:marker-start-width="0.275cm" draw:marker-end-width="0.275cm" draw:fill="solid" draw:fill-color="#ffffff" draw:textarea-horizontal-align="justify" draw:textarea-vertical-align="middle" draw:auto-grow-height="false" fo:min-height="6.825cm" fo:min-width="5.775cm" fo:padding-top="0.15cm" fo:padding-bottom="0.15cm" fo:padding-left="0.275cm" fo:padding-right="0.275cm"/>
   </style:style>
   <style:style style:name="gr9" style:family="graphic" style:parent-style-name="standard">
    <style:graphic-properties svg:stroke-width="0.05cm" svg:stroke-color="#000000" draw:marker-start-width="0.275cm" draw:marker-end-width="0.275cm" draw:fill="solid" draw:fill-color="#ffffff" draw:textarea-horizontal-align="justify" draw:textarea-vertical-align="middle" draw:auto-grow-height="false" fo:min-height="0.604cm" fo:min-width="2.354cm" fo:padding-top="0.15cm" fo:padding-bottom="0.15cm" fo:padding-left="0.275cm" fo:padding-right="0.275cm"/>
@@ -294,7 +343,7 @@
    <style:graphic-properties svg:stroke-width="0.05cm" svg:stroke-color="#000000" draw:marker-start-width="0.275cm" draw:marker-end-width="0.275cm" draw:fill="solid" draw:fill-color="#008000" draw:textarea-horizontal-align="justify" draw:textarea-vertical-align="middle" draw:auto-grow-height="false" fo:min-height="0.604cm" fo:min-width="2.354cm" fo:padding-top="0.15cm" fo:padding-bottom="0.15cm" fo:padding-left="0.275cm" fo:padding-right="0.275cm"/>
   </style:style>
   <style:style style:name="gr11" style:family="graphic" style:parent-style-name="standard">
-   <style:graphic-properties svg:stroke-width="0.05cm" svg:stroke-color="#000000" draw:marker-start-width="0.275cm" draw:marker-end-width="0.275cm" draw:fill-color="#e6e6e6" draw:textarea-horizontal-align="justify" draw:textarea-vertical-align="middle" draw:auto-grow-height="false" fo:min-height="2.468cm" fo:min-width="1.318cm" fo:padding-top="0.15cm" fo:padding-bottom="0.15cm" fo:padding-left="0.275cm" fo:padding-right="0.275cm"/>
+   <style:graphic-properties svg:stroke-width="0.05cm" svg:stroke-color="#000000" draw:marker-start-width="0.275cm" draw:marker-end-width="0.275cm" draw:fill-color="#e6e6e6" draw:textarea-horizontal-align="justify" draw:textarea-vertical-align="middle" draw:auto-grow-height="false" fo:min-height="1.61cm" fo:min-width="0.74cm" fo:padding-top="0.15cm" fo:padding-bottom="0.15cm" fo:padding-left="0.275cm" fo:padding-right="0.275cm"/>
   </style:style>
   <style:style style:name="gr12" style:family="graphic" style:parent-style-name="Objeto_20_sin_20_relleno_20_ni_20_línea">
    <style:graphic-properties draw:stroke="none" svg:stroke-width="0.05cm" draw:marker-start-width="0.275cm" draw:marker-end-width="0.275cm" draw:fill="none" draw:textarea-vertical-align="middle" draw:color-mode="standard" draw:luminance="0%" draw:contrast="0%" draw:gamma="100%" draw:red="0%" draw:green="0%" draw:blue="0%" fo:clip="rect(0cm, 0cm, 0cm, 0cm)" draw:image-opacity="100%" style:mirror="none"/>
@@ -307,6 +356,18 @@
   </style:style>
   <style:style style:name="gr15" style:family="graphic" style:parent-style-name="objectwithoutfill">
    <style:graphic-properties svg:stroke-width="0.05cm" svg:stroke-color="#000080" draw:marker-start-width="0.275cm" draw:marker-end="Fin_20_de_20_línea_20_1" draw:marker-end-width="0.375cm" draw:fill="none" draw:textarea-vertical-align="middle" fo:padding-top="0.15cm" fo:padding-bottom="0.15cm" fo:padding-left="0.275cm" fo:padding-right="0.275cm"/>
+  </style:style>
+  <style:style style:name="gr16" style:family="graphic" style:parent-style-name="standard">
+   <style:graphic-properties svg:stroke-width="0.05cm" svg:stroke-color="#000000" draw:marker-start-width="0.275cm" draw:marker-end-width="0.275cm" draw:fill-color="#e6e6e6" draw:textarea-horizontal-align="justify" draw:textarea-vertical-align="middle" draw:auto-grow-height="false" fo:min-height="1.382cm" fo:min-width="1.132cm" fo:padding-top="0.15cm" fo:padding-bottom="0.15cm" fo:padding-left="0.275cm" fo:padding-right="0.275cm"/>
+  </style:style>
+  <style:style style:name="gr17" style:family="graphic" style:parent-style-name="Objeto_20_sin_20_relleno_20_ni_20_línea">
+   <style:graphic-properties draw:textarea-horizontal-align="center" draw:textarea-vertical-align="middle" draw:color-mode="standard" draw:luminance="0%" draw:contrast="0%" draw:gamma="100%" draw:red="0%" draw:green="0%" draw:blue="0%" fo:clip="rect(0cm, 0cm, 0cm, 0cm)" draw:image-opacity="100%" style:mirror="none"/>
+  </style:style>
+  <style:style style:name="gr18" style:family="graphic" style:parent-style-name="standard">
+   <style:graphic-properties svg:stroke-width="0.05cm" svg:stroke-color="#000000" draw:marker-start-width="0.275cm" draw:marker-end-width="0.275cm" draw:fill="solid" draw:fill-color="#008000" draw:textarea-horizontal-align="justify" draw:textarea-vertical-align="middle" draw:auto-grow-height="false" fo:min-height="0.604cm" fo:min-width="1.754cm" fo:padding-top="0.15cm" fo:padding-bottom="0.15cm" fo:padding-left="0.275cm" fo:padding-right="0.275cm"/>
+  </style:style>
+  <style:style style:name="gr19" style:family="graphic" style:parent-style-name="objectwithoutfill">
+   <style:graphic-properties svg:stroke-width="0.05cm" svg:stroke-color="#000080" draw:marker-start="" draw:marker-start-width="0.275cm" draw:marker-end="" draw:marker-end-width="0.375cm" draw:fill="none" draw:textarea-vertical-align="middle" fo:padding-top="0.15cm" fo:padding-bottom="0.15cm" fo:padding-left="0.275cm" fo:padding-right="0.275cm"/>
   </style:style>
   <style:style style:name="P1" style:family="paragraph">
    <loext:graphic-properties draw:fill="solid" draw:fill-color="#e6e64c" draw:opacity="100%"/>
@@ -340,15 +401,15 @@
    <style:text-properties fo:font-size="24pt" fo:font-weight="bold" style:font-size-asian="24pt" style:font-weight-asian="bold" style:font-size-complex="24pt" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="P9" style:family="paragraph">
-   <style:paragraph-properties fo:text-align="end"/>
+   <loext:graphic-properties draw:fill-color="#ffffff"/>
+   <style:paragraph-properties fo:text-align="center"/>
   </style:style>
   <style:style style:name="P10" style:family="paragraph">
-   <loext:graphic-properties draw:fill="solid" draw:fill-color="#ffffff"/>
    <style:paragraph-properties fo:text-align="end"/>
   </style:style>
   <style:style style:name="P11" style:family="paragraph">
-   <loext:graphic-properties draw:fill-color="#ffffff"/>
-   <style:paragraph-properties fo:text-align="center"/>
+   <loext:graphic-properties draw:fill="solid" draw:fill-color="#ffffff"/>
+   <style:paragraph-properties fo:text-align="end"/>
   </style:style>
   <style:style style:name="P12" style:family="paragraph">
    <loext:graphic-properties draw:fill="solid" draw:fill-color="#ffffff"/>
@@ -371,10 +432,10 @@
    <style:text-properties fo:color="#0066cc" fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T2" style:family="text">
-   <style:text-properties fo:color="#0066cc" fo:text-shadow="none" fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+   <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T3" style:family="text">
-   <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+   <style:text-properties fo:color="#0066cc" fo:text-shadow="none" fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T4" style:family="text">
    <style:text-properties fo:color="#800080" fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
@@ -462,25 +523,25 @@
        <text:p text:style-name="P4">Open project</text:p>
       </text:list-item>
       <text:list-item>
-       <text:p text:style-name="P4"><text:span text:style-name="T1">Pre-flow </text:span><text:span text:style-name="T2">command</text:span><text:span text:style-name="T1">s</text:span></text:p>
+       <text:p text:style-name="P4"><text:span text:style-name="T1">preflow hook</text:span></text:p>
       </text:list-item>
       <text:list-item>
        <text:p text:style-name="P4">Synthesis</text:p>
       </text:list-item>
       <text:list-item>
-       <text:p text:style-name="P4"><text:span text:style-name="T1">Post-syn </text:span><text:span text:style-name="T2">command</text:span><text:span text:style-name="T1">s</text:span></text:p>
+       <text:p text:style-name="P4"><text:span text:style-name="T1">postsyn hook</text:span></text:p>
       </text:list-item>
       <text:list-item>
        <text:p text:style-name="P4">Implementation</text:p>
       </text:list-item>
       <text:list-item>
-       <text:p text:style-name="P4"><text:span text:style-name="T1">Post-imp </text:span><text:span text:style-name="T2">command</text:span><text:span text:style-name="T1">s</text:span></text:p>
+       <text:p text:style-name="P4"><text:span text:style-name="T1">postimp hook</text:span></text:p>
       </text:list-item>
       <text:list-item>
        <text:p text:style-name="P4">Bitstream generation</text:p>
       </text:list-item>
       <text:list-item>
-       <text:p text:style-name="P4"><text:span text:style-name="T1">Post-bit </text:span><text:span text:style-name="T2">command</text:span><text:span text:style-name="T1">s</text:span></text:p>
+       <text:p text:style-name="P4"><text:span text:style-name="T1">postbit hook</text:span></text:p>
       </text:list-item>
       <text:list-item>
        <text:p text:style-name="P4">Close project</text:p>
@@ -507,16 +568,16 @@
        <text:p text:style-name="P4">Project creation</text:p>
       </text:list-item>
       <text:list-item>
-       <text:p text:style-name="P4"><text:span text:style-name="T3">PART</text:span> specification</text:p>
+       <text:p text:style-name="P4"><text:span text:style-name="T2">PART</text:span> specification</text:p>
       </text:list-item>
       <text:list-item>
-       <text:p text:style-name="P4"><text:span text:style-name="T2">Pre-file commands</text:span></text:p>
+       <text:p text:style-name="P4"><text:span text:style-name="T3">prefile hook</text:span></text:p>
       </text:list-item>
       <text:list-item>
        <text:p text:style-name="P4">Files addition</text:p>
       </text:list-item>
       <text:list-item>
-       <text:p text:style-name="P4"><text:span text:style-name="T3">TOP</text:span> specification</text:p>
+       <text:p text:style-name="P4"><text:span text:style-name="T2">TOP</text:span> specification</text:p>
       </text:list-item>
       <text:list-item>
        <text:p text:style-name="P4"><text:span text:style-name="T4">Params</text:span><text:span text:style-name="T5"> specification</text:span></text:p>
@@ -525,7 +586,7 @@
        <text:p text:style-name="P4"><text:span text:style-name="T4">Strategy </text:span><text:span text:style-name="T5">selection</text:span></text:p>
       </text:list-item>
       <text:list-item>
-       <text:p text:style-name="P4"><text:span text:style-name="T2">Post-prj commands</text:span></text:p>
+       <text:p text:style-name="P4"><text:span text:style-name="T3">postprj hook</text:span></text:p>
       </text:list-item>
       <text:list-item>
        <text:p text:style-name="P4">Close project</text:p>
@@ -556,13 +617,18 @@
     </draw:custom-shape>
    </draw:page>
    <draw:page draw:name="page2" draw:style-name="dp2" draw:master-page-name="Predeterminado">
-    <draw:custom-shape draw:style-name="gr7" draw:text-style-name="P10" draw:layer="layout" svg:width="6.495cm" svg:height="6.2cm" svg:x="13.505cm" svg:y="6.305cm">
-     <draw:glue-point draw:id="4" svg:x="-5.003cm" svg:y="1.97cm"/>
-     <draw:glue-point draw:id="5" svg:x="-5.003cm" svg:y="-2.03cm"/>
-     <draw:glue-point draw:id="6" svg:x="-5.003cm" svg:y="3.97cm"/>
-     <draw:glue-point draw:id="7" svg:x="-5.003cm" svg:y="-4.03cm"/>
-     <text:p text:style-name="P9">Project</text:p>
-     <draw:enhanced-geometry svg:viewBox="0 0 21600 21600" draw:path-stretchpoint-x="10800" draw:path-stretchpoint-y="10800" draw:text-areas="?f3 ?f4 ?f5 ?f6" draw:type="round-rectangle" draw:modifiers="975.55593863127" draw:enhanced-path="M ?f7 0 X 0 ?f8 L 0 ?f9 Y ?f7 21600 L ?f10 21600 X 21600 ?f9 L 21600 ?f8 Y ?f10 0 Z N">
+    <draw:custom-shape draw:style-name="gr7" draw:text-style-name="P9" draw:layer="layout" svg:width="2.601cm" svg:height="7.298cm" svg:x="9.901cm" svg:y="6.302cm">
+     <draw:glue-point draw:id="4" svg:x="5.09cm" svg:y="-1.935cm"/>
+     <draw:glue-point draw:id="5" svg:x="5.09cm" svg:y="1.935cm"/>
+     <draw:glue-point draw:id="6" svg:x="5.09cm" svg:y="-3.871cm"/>
+     <draw:glue-point draw:id="7" svg:x="5.09cm" svg:y="3.871cm"/>
+     <text:p text:style-name="P7">Tool</text:p>
+     <text:p text:style-name="P7"/>
+     <text:p text:style-name="P7"/>
+     <text:p text:style-name="P7"/>
+     <text:p text:style-name="P7"/>
+     <text:p text:style-name="P7"/>
+     <draw:enhanced-geometry svg:viewBox="0 0 21600 21600" draw:path-stretchpoint-x="10800" draw:path-stretchpoint-y="10800" draw:text-areas="?f3 ?f4 ?f5 ?f6" draw:mirror-horizontal="false" draw:mirror-vertical="false" draw:type="round-rectangle" draw:modifiers="1345.95134955015" draw:enhanced-path="M ?f7 0 X 0 ?f8 L 0 ?f9 Y ?f7 21600 L ?f10 21600 X 21600 ?f9 L 21600 ?f8 Y ?f10 0 Z N">
       <draw:equation draw:name="f0" draw:formula="45"/>
       <draw:equation draw:name="f1" draw:formula="$0 *sin(?f0 *(pi/180))"/>
       <draw:equation draw:name="f2" draw:formula="?f1 *3163/7636"/>
@@ -577,20 +643,22 @@
       <draw:handle draw:handle-position="$0 top" draw:handle-switched="true" draw:handle-range-x-minimum="0" draw:handle-range-x-maximum="10800"/>
      </draw:enhanced-geometry>
     </draw:custom-shape>
-    <draw:custom-shape draw:style-name="gr8" draw:text-style-name="P11" xml:id="id2" draw:id="id2" draw:layer="layout" svg:width="2.601cm" svg:height="6.199cm" svg:x="9.901cm" svg:y="6.302cm">
-     <draw:glue-point draw:id="4" svg:x="5.09cm" svg:y="-1.935cm"/>
-     <draw:glue-point draw:id="5" svg:x="5.09cm" svg:y="1.935cm"/>
-     <draw:glue-point draw:id="6" svg:x="5.09cm" svg:y="-3.871cm"/>
-     <draw:glue-point draw:id="7" svg:x="5.09cm" svg:y="3.871cm"/>
-     <text:p text:style-name="P7">Tool</text:p>
-     <text:p text:style-name="P7"/>
-     <text:p text:style-name="P7"/>
-     <text:p text:style-name="P7"/>
-     <text:p text:style-name="P7"/>
-     <text:p text:style-name="P7"/>
-     <text:p text:style-name="P7"/>
-     <text:p text:style-name="P7"/>
-     <draw:enhanced-geometry svg:viewBox="0 0 21600 21600" draw:path-stretchpoint-x="10800" draw:path-stretchpoint-y="10800" draw:text-areas="?f3 ?f4 ?f5 ?f6" draw:type="round-rectangle" draw:modifiers="1345.95134955015" draw:enhanced-path="M ?f7 0 X 0 ?f8 L 0 ?f9 Y ?f7 21600 L ?f10 21600 X 21600 ?f9 L 21600 ?f8 Y ?f10 0 Z N">
+    <draw:custom-shape draw:style-name="gr8" draw:text-style-name="P11" draw:layer="layout" svg:width="6.495cm" svg:height="7.295cm" svg:x="13.51cm" svg:y="6.3cm">
+     <draw:glue-point draw:id="4" svg:x="-5.003cm" svg:y="1.97cm"/>
+     <draw:glue-point draw:id="5" svg:x="-5.003cm" svg:y="-2.03cm"/>
+     <draw:glue-point draw:id="6" svg:x="-5.003cm" svg:y="3.97cm"/>
+     <draw:glue-point draw:id="7" svg:x="-5.003cm" svg:y="-4.03cm"/>
+     <text:p text:style-name="P10"/>
+     <text:p text:style-name="P10"/>
+     <text:p text:style-name="P10"/>
+     <text:p text:style-name="P10"/>
+     <text:p text:style-name="P10"/>
+     <text:p text:style-name="P10"/>
+     <text:p text:style-name="P10"/>
+     <text:p text:style-name="P10"/>
+     <text:p text:style-name="P10"/>
+     <text:p text:style-name="P4">Project</text:p>
+     <draw:enhanced-geometry svg:viewBox="0 0 21600 21600" draw:path-stretchpoint-x="10800" draw:path-stretchpoint-y="10800" draw:text-areas="?f3 ?f4 ?f5 ?f6" draw:type="round-rectangle" draw:modifiers="975.55593863127" draw:enhanced-path="M ?f7 0 X 0 ?f8 L 0 ?f9 Y ?f7 21600 L ?f10 21600 X 21600 ?f9 L 21600 ?f8 Y ?f10 0 Z N">
       <draw:equation draw:name="f0" draw:formula="45"/>
       <draw:equation draw:name="f1" draw:formula="$0 *sin(?f0 *(pi/180))"/>
       <draw:equation draw:name="f2" draw:formula="?f1 *3163/7636"/>
@@ -622,7 +690,7 @@
       <draw:handle draw:handle-position="$0 top" draw:handle-switched="true" draw:handle-range-x-minimum="0" draw:handle-range-x-maximum="10800"/>
      </draw:enhanced-geometry>
     </draw:custom-shape>
-    <draw:custom-shape draw:style-name="gr9" draw:text-style-name="P12" xml:id="id3" draw:id="id3" draw:layer="layout" svg:width="3cm" svg:height="1cm" svg:x="13.704cm" svg:y="7.704cm">
+    <draw:custom-shape draw:style-name="gr9" draw:text-style-name="P12" xml:id="id2" draw:id="id2" draw:layer="layout" svg:width="3cm" svg:height="1cm" svg:x="13.704cm" svg:y="7.704cm">
      <text:p text:style-name="P7">Libero</text:p>
      <draw:enhanced-geometry svg:viewBox="0 0 21600 21600" draw:path-stretchpoint-x="10800" draw:path-stretchpoint-y="10800" draw:text-areas="?f3 ?f4 ?f5 ?f6" draw:type="round-rectangle" draw:modifiers="3600" draw:enhanced-path="M ?f7 0 X 0 ?f8 L 0 ?f9 Y ?f7 21600 L ?f10 21600 X 21600 ?f9 L 21600 ?f8 Y ?f10 0 Z N">
       <draw:equation draw:name="f0" draw:formula="45"/>
@@ -639,7 +707,7 @@
       <draw:handle draw:handle-position="$0 top" draw:handle-switched="true" draw:handle-range-x-minimum="0" draw:handle-range-x-maximum="10800"/>
      </draw:enhanced-geometry>
     </draw:custom-shape>
-    <draw:custom-shape draw:style-name="gr9" draw:text-style-name="P12" xml:id="id4" draw:id="id4" draw:layer="layout" svg:width="3cm" svg:height="1cm" svg:x="13.704cm" svg:y="8.904cm">
+    <draw:custom-shape draw:style-name="gr9" draw:text-style-name="P12" xml:id="id3" draw:id="id3" draw:layer="layout" svg:width="3cm" svg:height="1cm" svg:x="13.704cm" svg:y="8.904cm">
      <text:p text:style-name="P7">Quartus</text:p>
      <draw:enhanced-geometry svg:viewBox="0 0 21600 21600" draw:path-stretchpoint-x="10800" draw:path-stretchpoint-y="10800" draw:text-areas="?f3 ?f4 ?f5 ?f6" draw:type="round-rectangle" draw:modifiers="3600" draw:enhanced-path="M ?f7 0 X 0 ?f8 L 0 ?f9 Y ?f7 21600 L ?f10 21600 X 21600 ?f9 L 21600 ?f8 Y ?f10 0 Z N">
       <draw:equation draw:name="f0" draw:formula="45"/>
@@ -656,7 +724,7 @@
       <draw:handle draw:handle-position="$0 top" draw:handle-switched="true" draw:handle-range-x-minimum="0" draw:handle-range-x-maximum="10800"/>
      </draw:enhanced-geometry>
     </draw:custom-shape>
-    <draw:custom-shape draw:style-name="gr9" draw:text-style-name="P12" xml:id="id5" draw:id="id5" draw:layer="layout" svg:width="3cm" svg:height="1cm" svg:x="13.705cm" svg:y="10.105cm">
+    <draw:custom-shape draw:style-name="gr9" draw:text-style-name="P12" xml:id="id4" draw:id="id4" draw:layer="layout" svg:width="3cm" svg:height="1cm" svg:x="13.705cm" svg:y="10.105cm">
      <text:p text:style-name="P7">Vivado</text:p>
      <draw:enhanced-geometry svg:viewBox="0 0 21600 21600" draw:path-stretchpoint-x="10800" draw:path-stretchpoint-y="10800" draw:text-areas="?f3 ?f4 ?f5 ?f6" draw:type="round-rectangle" draw:modifiers="3600" draw:enhanced-path="M ?f7 0 X 0 ?f8 L 0 ?f9 Y ?f7 21600 L ?f10 21600 X 21600 ?f9 L 21600 ?f8 Y ?f10 0 Z N">
       <draw:equation draw:name="f0" draw:formula="45"/>
@@ -673,10 +741,8 @@
       <draw:handle draw:handle-position="$0 top" draw:handle-switched="true" draw:handle-range-x-minimum="0" draw:handle-range-x-maximum="10800"/>
      </draw:enhanced-geometry>
     </draw:custom-shape>
-    <draw:custom-shape draw:style-name="gr10" draw:text-style-name="P13" xml:id="id6" draw:id="id6" draw:layer="layout" svg:width="3cm" svg:height="1cm" svg:x="13.706cm" svg:y="11.306cm">
-     <draw:glue-point draw:id="4" svg:x="5.086cm" svg:y="2.94cm"/>
-     <draw:glue-point draw:id="5" svg:x="5.086cm" svg:y="-3.06cm"/>
-     <text:p text:style-name="P7"><text:span text:style-name="T7">Yosys</text:span></text:p>
+    <draw:custom-shape draw:style-name="gr10" draw:text-style-name="P13" xml:id="id5" draw:id="id5" draw:layer="layout" svg:width="3cm" svg:height="1cm" svg:x="13.706cm" svg:y="11.306cm">
+     <text:p text:style-name="P7"><text:span text:style-name="T7">Openflow</text:span></text:p>
      <draw:enhanced-geometry svg:viewBox="0 0 21600 21600" draw:path-stretchpoint-x="10800" draw:path-stretchpoint-y="10800" draw:text-areas="?f3 ?f4 ?f5 ?f6" draw:type="round-rectangle" draw:modifiers="3600" draw:enhanced-path="M ?f7 0 X 0 ?f8 L 0 ?f9 Y ?f7 21600 L ?f10 21600 X 21600 ?f9 L 21600 ?f8 Y ?f10 0 Z N">
       <draw:equation draw:name="f0" draw:formula="45"/>
       <draw:equation draw:name="f1" draw:formula="$0 *sin(?f0 *(pi/180))"/>
@@ -692,7 +758,7 @@
       <draw:handle draw:handle-position="$0 top" draw:handle-switched="true" draw:handle-range-x-minimum="0" draw:handle-range-x-maximum="10800"/>
      </draw:enhanced-geometry>
     </draw:custom-shape>
-    <draw:custom-shape draw:style-name="gr11" draw:text-style-name="P14" draw:layer="layout" svg:width="2cm" svg:height="2.9cm" svg:x="10.202cm" svg:y="9.403cm">
+    <draw:custom-shape draw:style-name="gr11" draw:text-style-name="P14" draw:layer="layout" svg:width="1.38cm" svg:height="2cm" svg:x="10.502cm" svg:y="9.203cm">
      <text:p/>
      <draw:enhanced-geometry svg:viewBox="0 0 21600 21600" draw:mirror-horizontal="false" draw:mirror-vertical="false" draw:path-stretchpoint-x="10800" draw:path-stretchpoint-y="10800" draw:text-areas="?f3 ?f4 ?f5 ?f6" draw:type="round-rectangle" draw:modifiers="2439.98667110963" draw:enhanced-path="M ?f7 0 X 0 ?f8 L 0 ?f9 Y ?f7 21600 L ?f10 21600 X 21600 ?f9 L 21600 ?f8 Y ?f10 0 Z N">
       <draw:equation draw:name="f0" draw:formula="45"/>
@@ -709,8 +775,8 @@
       <draw:handle draw:handle-position="$0 top" draw:handle-switched="true" draw:handle-range-x-minimum="0" draw:handle-range-x-maximum="10800"/>
      </draw:enhanced-geometry>
     </draw:custom-shape>
-    <draw:frame draw:style-name="gr12" draw:text-style-name="P15" draw:layer="layout" svg:width="1.18cm" svg:height="2.5cm" svg:x="10.672cm" svg:y="9.609cm">
-     <draw:image xlink:href="">
+    <draw:frame draw:style-name="gr12" draw:text-style-name="P15" draw:layer="layout" svg:width="0.814cm" svg:height="1.723cm" svg:x="10.827cm" svg:y="9.346cm">
+     <draw:image loext:mime-type="image/png">
       <office:binary-data>iVBORw0KGgoAAAANSUhEUgAABLAAAAnwCAYAAACFrthjAAAABmJLR0QA/wD/AP+gvaeTAAAA
        B3RJTUUH2wMQDxU1yc4OCQAAIABJREFUeJzs3Xec1PWB//HXbIUFFlAQwW7sioqCIgICogL2
        Ati7ib0mMcYeW6JGUzSJSYyXxFzuLndeujG5JJfyS7lHYhQVOyoLyy67LNt3Z3bK74+RiErb
@@ -3200,23 +3266,23 @@
       <text:p/>
      </draw:image>
     </draw:frame>
-    <draw:connector draw:style-name="gr13" draw:text-style-name="P15" draw:layer="layout" draw:type="line" svg:x1="13.703cm" svg:y1="7.003cm" svg:x2="12.502cm" svg:y2="7.002cm" draw:start-shape="id1" draw:start-glue-point="3" draw:end-shape="id2" draw:end-glue-point="6" svg:d="M13703 7003l-1201-1" svg:viewBox="0 0 1202 2">
+    <draw:connector draw:style-name="gr13" draw:text-style-name="P15" draw:layer="layout" draw:type="line" svg:x1="13.703cm" svg:y1="7.003cm" svg:x2="12.502cm" svg:y2="7.002cm" draw:start-shape="id1" draw:start-glue-point="3" svg:d="M13703 7003l-1201-1" svg:viewBox="0 0 1202 2">
      <text:p/>
     </draw:connector>
-    <draw:connector draw:style-name="gr13" draw:text-style-name="P15" draw:layer="layout" draw:type="line" svg:x1="13.704cm" svg:y1="8.204cm" svg:x2="12.502cm" svg:y2="8.202cm" draw:start-shape="id3" draw:start-glue-point="3" draw:end-shape="id2" draw:end-glue-point="4" svg:d="M13704 8204l-1202-2" svg:viewBox="0 0 1203 3">
+    <draw:connector draw:style-name="gr13" draw:text-style-name="P15" draw:layer="layout" draw:type="line" svg:x1="13.704cm" svg:y1="8.204cm" svg:x2="12.502cm" svg:y2="8.202cm" draw:start-shape="id2" draw:start-glue-point="3" svg:d="M13704 8204l-1202-2" svg:viewBox="0 0 1203 3">
      <text:p/>
     </draw:connector>
-    <draw:connector draw:style-name="gr13" draw:text-style-name="P15" draw:layer="layout" draw:type="line" svg:x1="13.704cm" svg:y1="9.404cm" svg:x2="12.502cm" svg:y2="9.401cm" draw:start-shape="id4" draw:start-glue-point="3" draw:end-shape="id2" draw:end-glue-point="1" svg:d="M13704 9404l-1202-3" svg:viewBox="0 0 1203 4">
+    <draw:connector draw:style-name="gr13" draw:text-style-name="P15" draw:layer="layout" draw:type="line" svg:x1="13.704cm" svg:y1="9.404cm" svg:x2="12.502cm" svg:y2="9.401cm" draw:start-shape="id3" draw:start-glue-point="3" svg:d="M13704 9404l-1202-3" svg:viewBox="0 0 1203 4">
      <text:p/>
     </draw:connector>
-    <draw:connector draw:style-name="gr13" draw:text-style-name="P15" draw:layer="layout" draw:type="line" svg:x1="13.705cm" svg:y1="10.605cm" svg:x2="12.502cm" svg:y2="10.6cm" draw:start-shape="id5" draw:start-glue-point="3" draw:end-shape="id2" draw:end-glue-point="5" svg:d="M13705 10605l-1203-5" svg:viewBox="0 0 1204 6">
+    <draw:connector draw:style-name="gr13" draw:text-style-name="P15" draw:layer="layout" draw:type="line" svg:x1="13.705cm" svg:y1="10.605cm" svg:x2="12.502cm" svg:y2="10.6cm" draw:start-shape="id4" draw:start-glue-point="3" svg:d="M13705 10605l-1203-5" svg:viewBox="0 0 1204 6">
      <text:p/>
     </draw:connector>
-    <draw:connector draw:style-name="gr13" draw:text-style-name="P15" draw:layer="layout" draw:type="line" svg:x1="13.706cm" svg:y1="11.806cm" svg:x2="12.502cm" svg:y2="11.8cm" draw:start-shape="id6" draw:start-glue-point="3" draw:end-shape="id2" draw:end-glue-point="7" svg:d="M13706 11806l-1204-6" svg:viewBox="0 0 1205 7">
+    <draw:connector draw:style-name="gr13" draw:text-style-name="P15" draw:layer="layout" draw:type="line" svg:x1="13.706cm" svg:y1="11.806cm" svg:x2="12.502cm" svg:y2="11.8cm" draw:start-shape="id5" draw:start-glue-point="3" svg:d="M13706 11806l-1204-6" svg:viewBox="0 0 1205 7">
      <text:p/>
     </draw:connector>
-    <draw:frame draw:style-name="gr14" draw:text-style-name="P15" draw:layer="layout" svg:width="1.4cm" svg:height="1.4cm" svg:x="10.5cm" svg:y="7.6cm">
-     <draw:image xlink:href="">
+    <draw:frame draw:style-name="gr14" draw:text-style-name="P15" draw:layer="layout" svg:width="1cm" svg:height="1cm" svg:x="10.7cm" svg:y="6.5cm">
+     <draw:image loext:mime-type="image/svg+xml">
       <office:binary-data>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+
        CjwhLS0gQ3JlYXRlZCB3aXRoIElua3NjYXBlIChodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy8p
        IC0tPgo8c3ZnCiAgIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4x
@@ -3322,11 +3388,621 @@
       </office:binary-data>
       <text:p/>
      </draw:image>
+     <draw:image loext:mime-type="image/png">
+      <office:binary-data>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
+      </office:binary-data>
+     </draw:image>
     </draw:frame>
-    <draw:connector draw:style-name="gr15" draw:text-style-name="P15" draw:layer="layout" draw:line-skew="-0.032cm" svg:x1="16.705cm" svg:y1="10.605cm" svg:x2="16.706cm" svg:y2="11.5cm" draw:start-shape="id5" draw:start-glue-point="1" draw:end-shape="id6" draw:end-glue-point="5" svg:d="M16705 10605h495v895h-494" svg:viewBox="0 0 496 896">
+    <draw:connector draw:style-name="gr15" draw:text-style-name="P15" draw:layer="layout" svg:x1="16.705cm" svg:y1="10.605cm" svg:x2="18.608cm" svg:y2="11.308cm" draw:start-shape="id4" draw:start-glue-point="1" draw:end-shape="id6" draw:end-glue-point="0" svg:d="M16705 10605h1903v703" svg:viewBox="0 0 1904 704">
      <text:p/>
     </draw:connector>
-    <draw:connector draw:style-name="gr15" draw:text-style-name="P15" draw:layer="layout" draw:line-skew="0.168cm" svg:x1="16.703cm" svg:y1="7.003cm" svg:x2="16.706cm" svg:y2="12.1cm" draw:start-shape="id1" draw:start-glue-point="1" draw:end-shape="id6" draw:end-glue-point="4" svg:d="M16703 7003h697v5097h-694" svg:viewBox="0 0 698 5098">
+    <draw:connector draw:style-name="gr15" draw:text-style-name="P15" draw:layer="layout" svg:x1="16.703cm" svg:y1="7.003cm" svg:x2="18.608cm" svg:y2="11.308cm" draw:start-shape="id1" draw:start-glue-point="1" draw:end-shape="id6" draw:end-glue-point="0" svg:d="M16703 7003h1905v4305" svg:viewBox="0 0 1906 4306">
+     <text:p/>
+    </draw:connector>
+    <draw:custom-shape draw:style-name="gr16" draw:text-style-name="P14" draw:layer="layout" svg:width="1.8cm" svg:height="1.8cm" svg:x="10.3cm" svg:y="11.5cm">
+     <text:p/>
+     <draw:enhanced-geometry svg:viewBox="0 0 21600 21600" draw:mirror-horizontal="false" draw:mirror-vertical="false" draw:path-stretchpoint-x="10800" draw:path-stretchpoint-y="10800" draw:text-areas="?f3 ?f4 ?f5 ?f6" draw:type="round-rectangle" draw:modifiers="2439.98667110963" draw:enhanced-path="M ?f7 0 X 0 ?f8 L 0 ?f9 Y ?f7 21600 L ?f10 21600 X 21600 ?f9 L 21600 ?f8 Y ?f10 0 Z N">
+      <draw:equation draw:name="f0" draw:formula="45"/>
+      <draw:equation draw:name="f1" draw:formula="$0 *sin(?f0 *(pi/180))"/>
+      <draw:equation draw:name="f2" draw:formula="?f1 *3163/7636"/>
+      <draw:equation draw:name="f3" draw:formula="left+?f2 "/>
+      <draw:equation draw:name="f4" draw:formula="top+?f2 "/>
+      <draw:equation draw:name="f5" draw:formula="right-?f2 "/>
+      <draw:equation draw:name="f6" draw:formula="bottom-?f2 "/>
+      <draw:equation draw:name="f7" draw:formula="left+$0 "/>
+      <draw:equation draw:name="f8" draw:formula="top+$0 "/>
+      <draw:equation draw:name="f9" draw:formula="bottom-$0 "/>
+      <draw:equation draw:name="f10" draw:formula="right-$0 "/>
+      <draw:handle draw:handle-position="$0 top" draw:handle-switched="true" draw:handle-range-x-minimum="0" draw:handle-range-x-maximum="10800"/>
+     </draw:enhanced-geometry>
+    </draw:custom-shape>
+    <draw:frame draw:style-name="gr17" draw:text-style-name="P7" draw:layer="layout" svg:width="1.384cm" svg:height="1.575cm" svg:x="10.525cm" svg:y="11.613cm">
+     <draw:image loext:mime-type="image/png">
+      <office:binary-data>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
+      </office:binary-data>
+      <text:p/>
+     </draw:image>
+    </draw:frame>
+    <draw:frame draw:style-name="gr14" draw:text-style-name="P15" draw:layer="layout" svg:width="1cm" svg:height="1cm" svg:x="18.8cm" svg:y="6.4cm">
+     <draw:image loext:mime-type="image/svg+xml">
+      <office:binary-data>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+
+       CjwhLS0gQ3JlYXRlZCB3aXRoIElua3NjYXBlIChodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy8p
+       IC0tPgo8c3ZnCiAgIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4x
+       LyIKICAgeG1sbnM6Y2M9Imh0dHA6Ly93ZWIucmVzb3VyY2Uub3JnL2NjLyIKICAgeG1sbnM6
+       cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIgogICB4
+       bWxuczpzdmc9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIgogICB4bWxucz0iaHR0cDov
+       L3d3dy53My5vcmcvMjAwMC9zdmciCiAgIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9y
+       Zy8xOTk5L3hsaW5rIgogICB4bWxuczpzb2RpcG9kaT0iaHR0cDovL3NvZGlwb2RpLnNvdXJj
+       ZWZvcmdlLm5ldC9EVEQvc29kaXBvZGktMC5kdGQiCiAgIHhtbG5zOmlua3NjYXBlPSJodHRw
+       Oi8vd3d3Lmlua3NjYXBlLm9yZy9uYW1lc3BhY2VzL2lua3NjYXBlIgogICB3aWR0aD0iMTEw
+       LjQyMTEiCiAgIGhlaWdodD0iMTA5Ljg0NjEiCiAgIGlkPSJzdmcyMTY5IgogICBzb2RpcG9k
+       aTp2ZXJzaW9uPSIwLjMyIgogICBpbmtzY2FwZTp2ZXJzaW9uPSIwLjQ1LjEiCiAgIHZlcnNp
+       b249IjEuMCIKICAgc29kaXBvZGk6ZG9jYmFzZT0iL2hvbWUvYmVuZS9EZXNrdG9wIgogICBz
+       b2RpcG9kaTpkb2NuYW1lPSJkZXNzaW4tMS5zdmciCiAgIGlua3NjYXBlOm91dHB1dF9leHRl
+       bnNpb249Im9yZy5pbmtzY2FwZS5vdXRwdXQuc3ZnLmlua3NjYXBlIj4KICA8ZGVmcwogICAg
+       IGlkPSJkZWZzMjE3MSI+CiAgICA8bGluZWFyR3JhZGllbnQKICAgICAgIGlkPSJsaW5lYXJH
+       cmFkaWVudDExMzAxIgogICAgICAgaW5rc2NhcGU6Y29sbGVjdD0iYWx3YXlzIj4KICAgICAg
+       PHN0b3AKICAgICAgICAgaWQ9InN0b3AxMTMwMyIKICAgICAgICAgb2Zmc2V0PSIwIgogICAg
+       ICAgICBzdHlsZT0ic3RvcC1jb2xvcjojZmZlMDUyO3N0b3Atb3BhY2l0eToxIiAvPgogICAg
+       ICA8c3RvcAogICAgICAgICBpZD0ic3RvcDExMzA1IgogICAgICAgICBvZmZzZXQ9IjEiCiAg
+       ICAgICAgIHN0eWxlPSJzdG9wLWNvbG9yOiNmZmMzMzE7c3RvcC1vcGFjaXR5OjEiIC8+CiAg
+       ICA8L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50CiAgICAgICBncmFkaWVu
+       dFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIKICAgICAgIHkyPSIxNjguMTAxMiIKICAgICAgIHgy
+       PSIxNDcuNzc3MzciCiAgICAgICB5MT0iMTExLjkyMDUzIgogICAgICAgeDE9Ijg5LjEzNjc0
+       OSIKICAgICAgIGlkPSJsaW5lYXJHcmFkaWVudDExMzA3IgogICAgICAgeGxpbms6aHJlZj0i
+       I2xpbmVhckdyYWRpZW50MTEzMDEiCiAgICAgICBpbmtzY2FwZTpjb2xsZWN0PSJhbHdheXMi
+       IC8+CiAgICA8bGluZWFyR3JhZGllbnQKICAgICAgIGlkPSJsaW5lYXJHcmFkaWVudDk1MTUi
+       CiAgICAgICBpbmtzY2FwZTpjb2xsZWN0PSJhbHdheXMiPgogICAgICA8c3RvcAogICAgICAg
+       ICBpZD0ic3RvcDk1MTciCiAgICAgICAgIG9mZnNldD0iMCIKICAgICAgICAgc3R5bGU9InN0
+       b3AtY29sb3I6IzM4N2ViODtzdG9wLW9wYWNpdHk6MSIgLz4KICAgICAgPHN0b3AKICAgICAg
+       ICAgaWQ9InN0b3A5NTE5IgogICAgICAgICBvZmZzZXQ9IjEiCiAgICAgICAgIHN0eWxlPSJz
+       dG9wLWNvbG9yOiMzNjY5OTQ7c3RvcC1vcGFjaXR5OjEiIC8+CiAgICA8L2xpbmVhckdyYWRp
+       ZW50PgogICAgPGxpbmVhckdyYWRpZW50CiAgICAgICBncmFkaWVudFVuaXRzPSJ1c2VyU3Bh
+       Y2VPblVzZSIKICAgICAgIHkyPSIxMzEuODUyOTEiCiAgICAgICB4Mj0iMTEwLjE0OTE5Igog
+       ICAgICAgeTE9Ijc3LjA3MDI3NCIKICAgICAgIHgxPSI1NS41NDkxNzkiCiAgICAgICBpZD0i
+       bGluZWFyR3JhZGllbnQ5NTIxIgogICAgICAgeGxpbms6aHJlZj0iI2xpbmVhckdyYWRpZW50
+       OTUxNSIKICAgICAgIGlua3NjYXBlOmNvbGxlY3Q9ImFsd2F5cyIgLz4KICA8L2RlZnM+CiAg
+       PHNvZGlwb2RpOm5hbWVkdmlldwogICAgIGlkPSJiYXNlIgogICAgIHBhZ2Vjb2xvcj0iI2Zm
+       ZmZmZiIKICAgICBib3JkZXJjb2xvcj0iIzY2NjY2NiIKICAgICBib3JkZXJvcGFjaXR5PSIx
+       LjAiCiAgICAgaW5rc2NhcGU6cGFnZW9wYWNpdHk9IjAuMCIKICAgICBpbmtzY2FwZTpwYWdl
+       c2hhZG93PSIyIgogICAgIGlua3NjYXBlOnpvb209IjAuMjQ3NDg3MzciCiAgICAgaW5rc2Nh
+       cGU6Y3g9Ii0yNjAuNDYzMTIiCiAgICAgaW5rc2NhcGU6Y3k9IjMxNi4wMjc0NCIKICAgICBp
+       bmtzY2FwZTpkb2N1bWVudC11bml0cz0icHgiCiAgICAgaW5rc2NhcGU6Y3VycmVudC1sYXll
+       cj0ibGF5ZXIxIgogICAgIHdpZHRoPSIxMzEuMTAyMzZweCIKICAgICBoZWlnaHQ9IjE4NC4y
+       NTE5N3B4IgogICAgIGlua3NjYXBlOndpbmRvdy13aWR0aD0iODcyIgogICAgIGlua3NjYXBl
+       OndpbmRvdy1oZWlnaHQ9IjYyNCIKICAgICBpbmtzY2FwZTp3aW5kb3cteD0iNSIKICAgICBp
+       bmtzY2FwZTp3aW5kb3cteT0iNDgiIC8+CiAgPG1ldGFkYXRhCiAgICAgaWQ9Im1ldGFkYXRh
+       MjE3NCI+CiAgICA8cmRmOlJERj4KICAgICAgPGNjOldvcmsKICAgICAgICAgcmRmOmFib3V0
+       PSIiPgogICAgICAgIDxkYzpmb3JtYXQ+aW1hZ2Uvc3ZnK3htbDwvZGM6Zm9ybWF0PgogICAg
+       ICAgIDxkYzp0eXBlCiAgICAgICAgICAgcmRmOnJlc291cmNlPSJodHRwOi8vcHVybC5vcmcv
+       ZGMvZGNtaXR5cGUvU3RpbGxJbWFnZSIgLz4KICAgICAgPC9jYzpXb3JrPgogICAgPC9yZGY6
+       UkRGPgogIDwvbWV0YWRhdGE+CiAgPGcKICAgICBpbmtzY2FwZTpsYWJlbD0iQ2FscXVlIDEi
+       CiAgICAgaW5rc2NhcGU6Z3JvdXBtb2RlPSJsYXllciIKICAgICBpZD0ibGF5ZXIxIgogICAg
+       IHRyYW5zZm9ybT0idHJhbnNsYXRlKC00NzMuMzYwODgsLTI1MS43MjQ4NSkiPgogICAgPGcK
+       ICAgICAgIGlkPSJnMTg5NCIKICAgICAgIHRyYW5zZm9ybT0idHJhbnNsYXRlKDQyOC40MjMz
+       OCwxODQuMjU2MSkiPgogICAgICA8cGF0aAogICAgICAgICBzdHlsZT0ib3BhY2l0eToxO2Nv
+       bG9yOiMwMDAwMDA7ZmlsbDp1cmwoI2xpbmVhckdyYWRpZW50OTUyMSk7ZmlsbC1vcGFjaXR5
+       OjE7ZmlsbC1ydWxlOm5vbnplcm87c3Ryb2tlOm5vbmU7c3Ryb2tlLXdpZHRoOjE7c3Ryb2tl
+       LWxpbmVjYXA6YnV0dDtzdHJva2UtbGluZWpvaW46bWl0ZXI7bWFya2VyOm5vbmU7bWFya2Vy
+       LXN0YXJ0Om5vbmU7bWFya2VyLW1pZDpub25lO21hcmtlci1lbmQ6bm9uZTtzdHJva2UtbWl0
+       ZXJsaW1pdDo0O3N0cm9rZS1kYXNoYXJyYXk6bm9uZTtzdHJva2UtZGFzaG9mZnNldDowO3N0
+       cm9rZS1vcGFjaXR5OjE7dmlzaWJpbGl0eTp2aXNpYmxlO2Rpc3BsYXk6aW5saW5lO292ZXJm
+       bG93OnZpc2libGUiCiAgICAgICAgIGQ9Ik0gOTkuNzUsNjcuNDY4NzUgQyA3MS43MTgyNjgs
+       NjcuNDY4NzUyIDczLjQ2ODc1LDc5LjYyNSA3My40Njg3NSw3OS42MjUgTCA3My41LDkyLjIx
+       ODc1IEwgMTAwLjI1LDkyLjIxODc1IEwgMTAwLjI1LDk2IEwgNjIuODc1LDk2IEMgNjIuODc1
+       LDk2IDQ0LjkzNzUsOTMuOTY1NzI0IDQ0LjkzNzUsMTIyLjI1IEMgNDQuOTM3NDk4LDE1MC41
+       MzQyNyA2MC41OTM3NSwxNDkuNTMxMjUgNjAuNTkzNzUsMTQ5LjUzMTI1IEwgNjkuOTM3NSwx
+       NDkuNTMxMjUgTCA2OS45Mzc1LDEzNi40MDYyNSBDIDY5LjkzNzUsMTM2LjQwNjI1IDY5LjQz
+       Mzg0OCwxMjAuNzUgODUuMzQzNzUsMTIwLjc1IEMgMTAxLjI1MzY1LDEyMC43NSAxMTEuODc1
+       LDEyMC43NSAxMTEuODc1LDEyMC43NSBDIDExMS44NzUsMTIwLjc1IDEyNi43ODEyNSwxMjAu
+       OTkwOTYgMTI2Ljc4MTI1LDEwNi4zNDM3NSBDIDEyNi43ODEyNSw5MS42OTY1NDQgMTI2Ljc4
+       MTI1LDgyLjEyNSAxMjYuNzgxMjUsODIuMTI1IEMgMTI2Ljc4MTI1LDgyLjEyNDk5OCAxMjku
+       MDQ0NDMsNjcuNDY4NzUgOTkuNzUsNjcuNDY4NzUgeiBNIDg1LDc1LjkzNzUgQyA4Ny42NjE0
+       MjksNzUuOTM3NDk4IDg5LjgxMjUsNzguMDg4NTcxIDg5LjgxMjUsODAuNzUgQyA4OS44MTI1
+       MDIsODMuNDExNDI5IDg3LjY2MTQyOSw4NS41NjI1IDg1LDg1LjU2MjUgQyA4Mi4zMzg1NzEs
+       ODUuNTYyNTAyIDgwLjE4NzUsODMuNDExNDI5IDgwLjE4NzUsODAuNzUgQyA4MC4xODc0OTgs
+       NzguMDg4NTcxIDgyLjMzODU3MSw3NS45Mzc1IDg1LDc1LjkzNzUgeiAiCiAgICAgICAgIGlk
+       PSJwYXRoODYxNSIgLz4KICAgICAgPHBhdGgKICAgICAgICAgaWQ9InBhdGg4NjIwIgogICAg
+       ICAgICBkPSJNIDEwMC41NDYxLDE3Ny4zMTQ4NSBDIDEyOC41Nzc4NCwxNzcuMzE0ODUgMTI2
+       LjgyNzM1LDE2NS4xNTg2IDEyNi44MjczNSwxNjUuMTU4NiBMIDEyNi43OTYxLDE1Mi41NjQ4
+       NSBMIDEwMC4wNDYxLDE1Mi41NjQ4NSBMIDEwMC4wNDYxLDE0OC43ODM2IEwgMTM3LjQyMTEs
+       MTQ4Ljc4MzYgQyAxMzcuNDIxMSwxNDguNzgzNiAxNTUuMzU4NiwxNTAuODE3ODcgMTU1LjM1
+       ODYsMTIyLjUzMzU5IEMgMTU1LjM1ODYxLDk0LjI0OTMyMyAxMzkuNzAyMzUsOTUuMjUyMzQz
+       IDEzOS43MDIzNSw5NS4yNTIzNDMgTCAxMzAuMzU4Niw5NS4yNTIzNDMgTCAxMzAuMzU4Niwx
+       MDguMzc3MzQgQyAxMzAuMzU4NiwxMDguMzc3MzQgMTMwLjg2MjI2LDEyNC4wMzM1OSAxMTQu
+       OTUyMzUsMTI0LjAzMzU5IEMgOTkuMDQyNDQ4LDEyNC4wMzM1OSA4OC40MjEwOTgsMTI0LjAz
+       MzU5IDg4LjQyMTA5OCwxMjQuMDMzNTkgQyA4OC40MjEwOTgsMTI0LjAzMzU5IDczLjUxNDg0
+       OCwxMjMuNzkyNjMgNzMuNTE0ODQ4LDEzOC40Mzk4NSBDIDczLjUxNDg0OCwxNTMuMDg3MDUg
+       NzMuNTE0ODQ4LDE2Mi42NTg2IDczLjUxNDg0OCwxNjIuNjU4NiBDIDczLjUxNDg0OCwxNjIu
+       NjU4NiA3MS4yNTE2NjgsMTc3LjMxNDg1IDEwMC41NDYxLDE3Ny4zMTQ4NSB6IE0gMTE1LjI5
+       NjEsMTY4Ljg0NjEgQyAxMTIuNjM0NjcsMTY4Ljg0NjEgMTEwLjQ4MzYsMTY2LjY5NTAzIDEx
+       MC40ODM2LDE2NC4wMzM2IEMgMTEwLjQ4MzYsMTYxLjM3MjE3IDExMi42MzQ2NywxNTkuMjIx
+       MSAxMTUuMjk2MSwxNTkuMjIxMSBDIDExNy45NTc1MywxNTkuMjIxMSAxMjAuMTA4NiwxNjEu
+       MzcyMTcgMTIwLjEwODYsMTY0LjAzMzYgQyAxMjAuMTA4NjEsMTY2LjY5NTAzIDExNy45NTc1
+       MywxNjguODQ2MSAxMTUuMjk2MSwxNjguODQ2MSB6ICIKICAgICAgICAgc3R5bGU9Im9wYWNp
+       dHk6MTtjb2xvcjojMDAwMDAwO2ZpbGw6dXJsKCNsaW5lYXJHcmFkaWVudDExMzA3KTtmaWxs
+       LW9wYWNpdHk6MTtmaWxsLXJ1bGU6bm9uemVybztzdHJva2U6bm9uZTtzdHJva2Utd2lkdGg6
+       MTtzdHJva2UtbGluZWNhcDpidXR0O3N0cm9rZS1saW5lam9pbjptaXRlcjttYXJrZXI6bm9u
+       ZTttYXJrZXItc3RhcnQ6bm9uZTttYXJrZXItbWlkOm5vbmU7bWFya2VyLWVuZDpub25lO3N0
+       cm9rZS1taXRlcmxpbWl0OjQ7c3Ryb2tlLWRhc2hhcnJheTpub25lO3N0cm9rZS1kYXNob2Zm
+       c2V0OjA7c3Ryb2tlLW9wYWNpdHk6MTt2aXNpYmlsaXR5OnZpc2libGU7ZGlzcGxheTppbmxp
+       bmU7b3ZlcmZsb3c6dmlzaWJsZSIgLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPgo=
+      </office:binary-data>
+      <text:p/>
+     </draw:image>
+     <draw:image loext:mime-type="image/png">
+      <office:binary-data>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
+      </office:binary-data>
+     </draw:image>
+    </draw:frame>
+    <draw:custom-shape draw:style-name="gr18" draw:text-style-name="P13" xml:id="id7" draw:id="id7" draw:layer="layout" svg:width="2.4cm" svg:height="1cm" svg:x="17.407cm" svg:y="12.507cm">
+     <draw:glue-point draw:id="4" svg:x="5.086cm" svg:y="2.94cm"/>
+     <draw:glue-point draw:id="5" svg:x="5.086cm" svg:y="-3.06cm"/>
+     <text:p text:style-name="P7"><text:span text:style-name="T7">GHDL</text:span></text:p>
+     <draw:enhanced-geometry svg:viewBox="0 0 21600 21600" draw:path-stretchpoint-x="10800" draw:path-stretchpoint-y="10800" draw:text-areas="?f3 ?f4 ?f5 ?f6" draw:type="round-rectangle" draw:modifiers="3600" draw:enhanced-path="M ?f7 0 X 0 ?f8 L 0 ?f9 Y ?f7 21600 L ?f10 21600 X 21600 ?f9 L 21600 ?f8 Y ?f10 0 Z N">
+      <draw:equation draw:name="f0" draw:formula="45"/>
+      <draw:equation draw:name="f1" draw:formula="$0 *sin(?f0 *(pi/180))"/>
+      <draw:equation draw:name="f2" draw:formula="?f1 *3163/7636"/>
+      <draw:equation draw:name="f3" draw:formula="left+?f2 "/>
+      <draw:equation draw:name="f4" draw:formula="top+?f2 "/>
+      <draw:equation draw:name="f5" draw:formula="right-?f2 "/>
+      <draw:equation draw:name="f6" draw:formula="bottom-?f2 "/>
+      <draw:equation draw:name="f7" draw:formula="left+$0 "/>
+      <draw:equation draw:name="f8" draw:formula="top+$0 "/>
+      <draw:equation draw:name="f9" draw:formula="bottom-$0 "/>
+      <draw:equation draw:name="f10" draw:formula="right-$0 "/>
+      <draw:handle draw:handle-position="$0 top" draw:handle-switched="true" draw:handle-range-x-minimum="0" draw:handle-range-x-maximum="10800"/>
+     </draw:enhanced-geometry>
+    </draw:custom-shape>
+    <draw:custom-shape draw:style-name="gr18" draw:text-style-name="P13" xml:id="id6" draw:id="id6" draw:layer="layout" svg:width="2.4cm" svg:height="1cm" svg:x="17.408cm" svg:y="11.308cm">
+     <draw:glue-point draw:id="4" svg:x="5.086cm" svg:y="2.94cm"/>
+     <draw:glue-point draw:id="5" svg:x="5.086cm" svg:y="-3.06cm"/>
+     <text:p text:style-name="P7"><text:span text:style-name="T7">Yosys</text:span></text:p>
+     <draw:enhanced-geometry svg:viewBox="0 0 21600 21600" draw:path-stretchpoint-x="10800" draw:path-stretchpoint-y="10800" draw:text-areas="?f3 ?f4 ?f5 ?f6" draw:type="round-rectangle" draw:modifiers="3600" draw:enhanced-path="M ?f7 0 X 0 ?f8 L 0 ?f9 Y ?f7 21600 L ?f10 21600 X 21600 ?f9 L 21600 ?f8 Y ?f10 0 Z N">
+      <draw:equation draw:name="f0" draw:formula="45"/>
+      <draw:equation draw:name="f1" draw:formula="$0 *sin(?f0 *(pi/180))"/>
+      <draw:equation draw:name="f2" draw:formula="?f1 *3163/7636"/>
+      <draw:equation draw:name="f3" draw:formula="left+?f2 "/>
+      <draw:equation draw:name="f4" draw:formula="top+?f2 "/>
+      <draw:equation draw:name="f5" draw:formula="right-?f2 "/>
+      <draw:equation draw:name="f6" draw:formula="bottom-?f2 "/>
+      <draw:equation draw:name="f7" draw:formula="left+$0 "/>
+      <draw:equation draw:name="f8" draw:formula="top+$0 "/>
+      <draw:equation draw:name="f9" draw:formula="bottom-$0 "/>
+      <draw:equation draw:name="f10" draw:formula="right-$0 "/>
+      <draw:handle draw:handle-position="$0 top" draw:handle-switched="true" draw:handle-range-x-minimum="0" draw:handle-range-x-maximum="10800"/>
+     </draw:enhanced-geometry>
+    </draw:custom-shape>
+    <draw:connector draw:style-name="gr15" draw:text-style-name="P15" draw:layer="layout" svg:x1="17.408cm" svg:y1="11.808cm" svg:x2="16.706cm" svg:y2="11.806cm" draw:start-shape="id6" draw:start-glue-point="3" draw:end-shape="id5" draw:end-glue-point="1" svg:d="M17408 11808h-350v-2h-352" svg:viewBox="0 0 703 3">
+     <text:p/>
+    </draw:connector>
+    <draw:connector draw:style-name="gr19" draw:text-style-name="P15" draw:layer="layout" draw:line-skew="4.119cm 2.219cm" svg:x1="17.407cm" svg:y1="13.007cm" svg:x2="16.706cm" svg:y2="11.806cm" draw:start-shape="id7" draw:start-glue-point="3" draw:end-shape="id5" draw:end-glue-point="1" svg:d="M17407 13007h-107v-7h-68v-1194h-526" svg:viewBox="0 0 702 1202">
      <text:p/>
     </draw:connector>
    </draw:page>

@@ -210,7 +210,7 @@ class Project:
         **WARNING:** using a hook, you will be probably broken the vendor
         independence.
         """
-        self.tool.add_command(hook, phase)
+        self.tool.add_hook(phase, hook)
 
     def generate(
             self, strategy='default', to_task='bit', from_task='prj',
