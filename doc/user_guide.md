@@ -62,8 +62,8 @@ prj.set_top('Top')
 > * For some Tools, the files order could be a problem.
 > If a complain about something not found is displayed, try changing the
 > order.
-> If a file seems unsupported, you can always use the `prefile` or `postprj`
-> commands (see [Advanced usage](#advanced-usage)).
+> If a file seems unsupported, you can always use the `prefile` or `project`
+> hooks (see [Advanced usage](#advanced-usage)).
 > * A file with the tcl extension will be included with the `source` command.
 > It could be used to have a file with particular additional options.
 > * A relative path to a valid VHDL/Verilog file is also accepted by
@@ -88,10 +88,18 @@ And wait for the backend Tool to accomplish its task.
 
 ## Advanced usage
 
-The following picture depicts the parts of the Project Creation and the Design
-Flow internally performed by PyFPGA.
+The following table depicts the parts of the *Project Creation* and the
+*Design Flow* internally performed by PyFPGA.
 
-![Tcl Structure](images/tcl-structure.png)
+Project Creation         | Design Flow
+---                      | ---
+Part specification       | **preflow** hook
+**prefile** hook         | Synthesis
+Files addition           | **postsyn** hook
+Top specification        | Implementation
+Parameters specification | **postimp** hook
+Strategy selection       | Bitstream generation
+**project** hook         | **postbit** hook
 
 If the provided API if not enough or suitable for your project, you can
 specify additional *hooks* in different parts of the flow, using:
@@ -101,8 +109,8 @@ prj.add_hook(hook, phase)
 ```
 
 > **Notes:**
-> * Valid vaues for *phase* are `prefile`, `postprj`, `preflow`, `postsyn`,
-> `postimp` and `postbit`.
+> * Valid vaues for *phase* are `prefile`, `project` (default), `preflow`,
+> `postsyn`, `postimp` and `postbit`.
 > * The *hook* string must be a valid command (supported by the used tool).
 > * If more than one *hook* is needed in the same *phase*, you can call this
 > method several times (the commands will be executed in order).

@@ -193,14 +193,14 @@ class Project:
         else:
             self.tool.set_top(toplevel)
 
-    def add_hook(self, hook, phase='postprj'):
+    def add_hook(self, hook, phase='project'):
         """Adds a hook in the specified phase.
 
         A hook is a place that allows you to insert customized programming.
 
         The valid **phase** values are:
         * *prefile* to add options needed to find files.
-        * *postprj* to add project related options.
+        * *project* to add project related options.
         * *preflow* to change options previous to run the flow.
         * *postsyn* to perform an action between *syn* and *imp*.
         * *postimp* to perform an action between *imp* and *bit*.

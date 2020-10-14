@@ -54,8 +54,8 @@ proc fpga_commands { PHASE } {
         "prefile" {
 #PREFILE_CMDS#
         }
-        "postprj" {
-#POSTPRJ_CMDS#
+        "project" {
+#PROJECT_CMDS#
         }
         "preflow" {
 #PREFLOW_CMDS#
@@ -649,7 +649,7 @@ if { [lsearch -exact $TASKS "prj"] >= 0 } {
             "power" {fpga_power}
             "speed" {fpga_speed}
         }
-        fpga_commands "postprj"
+        fpga_commands "project"
         fpga_close
     } ERRMSG]} {
         puts "ERROR: there was a problem creating a New Project.\n"

@@ -27,7 +27,7 @@ import subprocess
 from shutil import rmtree
 
 
-PHASES = ['prefile', 'postprj', 'preflow', 'postsyn', 'postimp', 'postbit']
+PHASES = ['prefile', 'project', 'preflow', 'postsyn', 'postimp', 'postbit']
 
 STRATEGIES = ['default', 'area', 'speed', 'power']
 
@@ -81,7 +81,7 @@ class Tool:
         self.set_part(self._PART)
         self.cmds = {
             'prefile': [],
-            'postprj': [],
+            'project': [],
             'preflow': [],
             'postsyn': [],
             'postimp': [],
@@ -146,7 +146,7 @@ class Tool:
         tcl = tcl.replace('#STRATEGY#', strategy)
         tcl = tcl.replace('#TASKS#', tasks)
         tcl = tcl.replace('#PREFILE_CMDS#', '\n'.join(self.cmds['prefile']))
-        tcl = tcl.replace('#POSTPRJ_CMDS#', '\n'.join(self.cmds['postprj']))
+        tcl = tcl.replace('#PROJECT_CMDS#', '\n'.join(self.cmds['project']))
         tcl = tcl.replace('#PREFLOW_CMDS#', '\n'.join(self.cmds['preflow']))
         tcl = tcl.replace('#POSTSYN_CMDS#', '\n'.join(self.cmds['postsyn']))
         tcl = tcl.replace('#POSTIMP_CMDS#', '\n'.join(self.cmds['postimp']))

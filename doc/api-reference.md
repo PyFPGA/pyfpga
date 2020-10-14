@@ -33,7 +33,7 @@ Adds files to the project (HDLs, TCLs, Constraints).
 and can contain shell-style wildcards (glob compliant).
 * **library:** an optional VHDL library name.
 
-### `add_hook(hook, phase='postprj')`
+### `add_hook(hook, phase='project')`
 
 Adds a hook in the specified phase.
 
@@ -41,7 +41,7 @@ A hook is a place that allows you to insert customized programming.
 
 The valid **phase** values are:
 * *prefile* to add options needed to find files.
-* *postprj* to add project related options.
+* *project* to add project related options.
 * *preflow* to change options previous to run the flow.
 * *postsyn* to perform an action between *syn* and *imp*.
 * *postimp* to perform an action between *imp* and *bit*.
