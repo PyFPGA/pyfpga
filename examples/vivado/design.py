@@ -16,7 +16,7 @@ prj.add_files('../../hdl/blinking.vhdl')
 prj.add_files('zybo.xdc')
 prj.add_design('design.tcl')
 
-prj.export_hardware()
+prj.export()
 
 try:
     prj.generate()

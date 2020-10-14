@@ -69,7 +69,7 @@ also needs to add the file when is a Verilog Included File.
 
 Clean the generated project files.
 
-### `export_hardware()`
+### `export()`
 
 Exports files for the development of a Processor System.
 

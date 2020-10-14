@@ -169,7 +169,7 @@ class Tool:
         self._create_gen_script(strategy, tasks)
         return run(self._GEN_COMMAND, capture)
 
-    def export_hardware(self):
+    def export(self):
         """Exports files for the development of a Processor System."""
         self.add_hook('fpga_export', 'postbit')
 
