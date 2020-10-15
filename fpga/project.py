@@ -116,52 +116,61 @@ class Project:
         """Set a Generic/Parameter Value."""
         self.tool.set_param(name, value)
 
-    def add_design(self, pathname):
-        """Adds a Block Design.
+    def add_files(self, pathname, fileset=None, library=None, options=None):
+        """Adds files to the project.
 
-        * **pathname:** a string containing a relative path to a file.
-        """
-        pathname = os.path.join(self._absdir, pathname)
-        pathname = os.path.normpath(pathname)
-        if os.path.isfile(pathname):
-            self.tool.add_file(pathname, None, False, True)
-        else:
-            self._log.warning('add_design: %s not found.', pathname)
-
-    def add_files(self, pathname, library=None):
-        """Adds files to the project (HDLs, TCLs, Constraints).
-
-        * **pathname:** a string containing a relative path specification,
-        and can contain shell-style wildcards (glob compliant).
+        * **pathname:** a relative path to a file, which can contain
+        shell-style wildcards (glob compliant).
+        * **fileset:** the valid values are *verilog* or *vhdl* for HDL files,
+        *constraint*, *simulation* (not used by PyFPGA) and *design* (for a
+        graphical block design). It is discovered automatically (based on the
+        extention) if None provided.
         * **library:** an optional VHDL library name.
+        * **options:** to be provided to the used tool.
         """
         pathname = os.path.join(self._absdir, pathname)
         pathname = os.path.normpath(pathname)
         self._log.debug('PATHNAME = %s', pathname)
         files = glob.glob(pathname)
         if len(files) == 0:
-            self._log.warning('add_files: %s not found.', pathname)
+            raise FileNotFoundError(pathname)
         for file in files:
-            self.tool.add_file(file, library, False, False)
+            if not os.path.exists(file):
+                raise FileNotFoundError(file)
+            if fileset is None:
+                ext = os.path.splitext(file)[1]
+                if ext in ['.vhd', '.vhdl']:
+                    fileset = 'vhdl'
+                elif ext in ['.v', '.sv']:
+                    fileset = 'verilog'
+                else:
+                    fileset = 'constraint'
+                self._log.debug('add_files: %s fileset detected.', fileset)
+            self.tool.add_file(file, fileset, library, options)
 
-    def add_include(self, pathname):
-        """Adds a search path.
+    def get_fileset(self, fileset):
+        """Get the list of files in the specified **fileset**.
+
+        * **fileset:** the valid values are *verilog* or *vhdl* for HDL files,
+        *constraint*, *simulation* (not used by PyFPGA) and *design* (for a
+        graphical block design).
+        """
+        return self.tool.get_fileset(fileset)
+
+    def add_path(self, path):
+        """Add a search path.
 
         Useful to specify where to search Verilog Included Files or IP
         repositories.
 
-        * **pathname:** a string containing a relative path to a directory
-        or a file.
-
-        **Note:** generally a directory must be specified, but Libero-SoC
-        also needs to add the file when is a Verilog Included File.
+        * **path:** a relative path to a directory.
         """
-        pathname = os.path.join(self._absdir, pathname)
-        pathname = os.path.normpath(pathname)
-        if os.path.exists(pathname):
-            self.tool.add_file(pathname, None, True, False)
+        path = os.path.join(self._absdir, path)
+        path = os.path.normpath(path)
+        if os.path.isdir(path):
+            self.tool.add_path(path)
         else:
-            self._log.warning('add_include: %s not found.', pathname)
+            raise NotADirectoryError(path)
 
     def set_top(self, toplevel):
         """Set the top level of the project.

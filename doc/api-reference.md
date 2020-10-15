@@ -19,19 +19,18 @@ Class constructor.
 * **relative_to_script:** specifies if the files/directories are
 relative to the script or the execution directory.
 
-### `add_design(pathname)`
+### `add_files(pathname, fileset=None, library=None, options=None)`
 
-Adds a Block Design.
+Adds files to the project.
 
-* **pathname:** a string containing a relative path to a file.
-
-### `add_files(pathname, library=None)`
-
-Adds files to the project (HDLs, TCLs, Constraints).
-
-* **pathname:** a string containing a relative path specification,
-and can contain shell-style wildcards (glob compliant).
+* **pathname:** a relative path to a file, which can contain
+shell-style wildcards (glob compliant).
+* **fileset:** the valid values are *verilog* or *vhdl* for HDL files,
+*constraint*, *simulation* (not used by PyFPGA) and *design* (for a
+graphical block design). It is discovered automatically (based on the
+extention) if None provided.
 * **library:** an optional VHDL library name.
+* **options:** to be provided to the used tool.
 
 ### `add_hook(hook, phase='project')`
 
@@ -52,18 +51,14 @@ The *hook* is a string representing a tool specific command.
 **WARNING:** using a hook, you will be probably broken the vendor
 independence.
 
-### `add_include(pathname)`
+### `add_path(path)`
 
-Adds a search path.
+Add a search path.
 
 Useful to specify where to search Verilog Included Files or IP
 repositories.
 
-* **pathname:** a string containing a relative path to a directory
-or a file.
-
-**Note:** generally a directory must be specified, but Libero-SoC
-also needs to add the file when is a Verilog Included File.
+* **path:** a relative path to a directory.
 
 ### `clean()`
 
@@ -98,6 +93,14 @@ Gets the Project Configurations.
 It returns a dict which includes *tool* and *project* names, the
 *extension* of a project file (according to the selected tool) and
 the *part* to be used.
+
+### `get_fileset(fileset)`
+
+Get the list of files in the specified **fileset**.
+
+* **fileset:** the valid values are *verilog* or *vhdl* for HDL files,
+*constraint*, *simulation* (not used by PyFPGA) and *design* (for a
+graphical block design).
 
 ### `set_bitstream(path)`
 

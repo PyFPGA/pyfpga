@@ -27,6 +27,8 @@ import subprocess
 from shutil import rmtree
 
 
+FILESETS = ['verilog', 'vhdl', 'constraint', 'simulation', 'design']
+
 PHASES = ['prefile', 'project', 'preflow', 'postsyn', 'postimp', 'postbit']
 
 STRATEGIES = ['default', 'area', 'speed', 'power']
@@ -88,7 +90,14 @@ class Tool:
             'postbit': []
         }
         self.params = []
-        self.files = []
+        self.filesets = {
+            'vhdl': [],
+            'verilog': [],
+            'constraint': [],
+            'simulation': [],
+            'design': []
+        }
+        self.paths = []
         self.set_top('UNDEFINED')
         self.presynth = False
         self.bitstream = None
@@ -108,20 +117,24 @@ class Tool:
 
     def set_param(self, name, value):
         """Set a Generic/Parameter Value."""
-        self.params.append('{ %s %s }' % (name, value))
+        self.params.append([name, value])
 
-    def add_file(self, file, library=None, included=False, design=False):
-        """Add a FILE to the project."""
-        command = '    '  # indentation
-        if included:
-            command += 'fpga_include %s' % file
-        elif design:
-            command += 'fpga_design %s' % file
-        else:
-            command += 'fpga_file %s' % file
-            if library is not None:
-                command += ' %s' % library
-        self.files.append(command)
+    def add_file(self, file, fileset, library, options):
+        """Add a file to the project in the specified **fileset**."""
+        check_value(fileset, FILESETS)
+        self.filesets[fileset].append([file, library, options])
+
+    def get_fileset(self, fileset):
+        """Get the list of files in the specified **fileset**."""
+        check_value(fileset, FILESETS)
+        files = []
+        for file in self.filesets[fileset]:
+            files.append(file[0])
+        return files
+
+    def add_path(self, path):
+        """Add a search path."""
+        self.paths.append(path)
 
     def set_top(self, top):
         """Set the TOP LEVEL of the project."""
@@ -134,14 +147,36 @@ class Tool:
 
     def _create_gen_script(self, strategy, tasks):
         """Create the script for generate execution."""
+        # Paths and files
+        files = []
+        for path in self.paths:
+            files.append('fpga_include {}'.format(path))
+        for fileset in self.filesets:
+            for file in self.filesets[fileset]:
+                if fileset == 'design':
+                    files.append('fpga_design {}'.format(file[0]))
+                else:
+                    if file[1] is None:
+                        files.append('fpga_file {}'.format(file[0]))
+                    else:
+                        files.append(
+                            'fpga_file {} {}'.format(file[0], file[1])
+                        )
+        if self.presynth:
+            files = ['{}.edif'.format(self.project)]
+        # Parameters
+        params = []
+        for param in self.params:
+            params.append('{{ {} {} }}'.format(param[0], param[1]))
+        # Script creation
         template = os.path.join(os.path.dirname(__file__), 'template.tcl')
         tcl = open(template).read()
         tcl = tcl.replace('#TOOL#', self._TOOL)
         tcl = tcl.replace('#PRESYNTH#', "True" if self.presynth else "False")
         tcl = tcl.replace('#PROJECT#', self.project)
         tcl = tcl.replace('#PART#', self.part)
-        tcl = tcl.replace('#PARAMS#', ' '.join(self.params))
-        tcl = tcl.replace('#FILES#', '\n'.join(self.files))
+        tcl = tcl.replace('#PARAMS#', ' '.join(params))
+        tcl = tcl.replace('#FILES#', '\n'.join(files))
         tcl = tcl.replace('#TOP#', self.top)
         tcl = tcl.replace('#STRATEGY#', strategy)
         tcl = tcl.replace('#TASKS#', tasks)

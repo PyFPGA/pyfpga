@@ -21,7 +21,6 @@
 Implements the support of ISE (Xilinx).
 """
 
-import os
 import re
 
 from fpga.tool import Tool, run
@@ -136,25 +135,15 @@ class Ise(Tool):
             )
         self.part = part
 
-    def set_param(self, name, value):
-        if self.presynth:
-            self.tool.set_param(name, value)
-        else:
-            super().set_param(name, value)
-
-    def add_file(self, file, library=None, included=False, design=False):
-        ext = os.path.splitext(file)[1]
-        if self.presynth and ext in ['.v', '.sv', '.vh', '.vhd', '.vhdl']:
-            self.tool.add_file(file, library, included, design)
-        else:
-            super().add_file(file, library, included, design)
-
     def generate(self, strategy, to_task, from_task, capture):
         if self.presynth and from_task in ['prj', 'syn']:
             self.tool.set_part(self.part)
             self.tool.set_top(self.top)
+            self.tool.paths = self.paths
+            self.tool.filesets['vhdl'] = self.filesets['vhdl']
+            self.tool.filesets['verilog'] = self.filesets['verilog']
+            self.tool.params = self.params
             output1 = self.tool.generate(strategy, 'syn', 'prj', capture)
-            self.add_file('{}.edif'.format(self.project))
             output2 = super().generate(strategy, to_task, from_task, capture)
             return str(output1) + str(output2)
         return super().generate(strategy, to_task, from_task, capture)
