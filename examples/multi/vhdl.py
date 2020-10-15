@@ -14,8 +14,8 @@ logging.basicConfig()
 for tool in TOOLS:
     PRJ = Project(tool)
     PRJ.set_outdir('../../build/multi/vhdl/%s' % tool)
-    PRJ.add_files('../../hdl/blinking.vhdl', 'examples')
-    PRJ.add_files('../../hdl/examples_pkg.vhdl', 'examples')
+    PRJ.add_files('../../hdl/blinking.vhdl', library='examples')
+    PRJ.add_files('../../hdl/examples_pkg.vhdl', library='examples')
     PRJ.add_files('../../hdl/top.vhdl')
     PRJ.set_top('Top')
     try:

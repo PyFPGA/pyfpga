@@ -14,7 +14,7 @@ logging.getLogger('fpga.project').level = logging.DEBUG
 PRJ = Project('ise', 'capture')
 PRJ.set_outdir('../build/capture')
 
-PRJ.add_files('../hdl/*.vhdl', 'examples')
+PRJ.add_files('../hdl/*.vhdl', library='examples')
 PRJ.set_top('Top')
 
 try:

@@ -15,8 +15,8 @@ logging.basicConfig()
 for tool in ['ise', 'libero', 'quartus', 'vivado']:
     PRJ = Project(tool)
     PRJ.set_outdir('../../build/multi/strategies/%s' % tool)
-    PRJ.add_files('../../hdl/blinking.vhdl', 'examples')
-    PRJ.add_files('../../hdl/examples_pkg.vhdl', 'examples')
+    PRJ.add_files('../../hdl/blinking.vhdl', library='examples')
+    PRJ.add_files('../../hdl/examples_pkg.vhdl', library='examples')
     PRJ.add_files('../../hdl/top.vhdl')
     PRJ.set_top('Top')
     for strategy in ['area', 'power', 'speed']:

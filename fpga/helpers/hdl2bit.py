@@ -144,13 +144,13 @@ def main():
 
     if args.include is not None:
         for include in args.include:
-            prj.add_include(include)
+            prj.add_path(include)
 
     if args.file is not None:
         for file in args.file:
             file = file.split(',')
             if len(file) > 1:
-                prj.add_files(file[0], file[1])
+                prj.add_files(file[0], library=file[1])
             else:
                 prj.add_files(file[0])
 

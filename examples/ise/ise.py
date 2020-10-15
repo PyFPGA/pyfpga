@@ -19,8 +19,8 @@ prj.set_part('XC6SLX9-2-CSG324')
 
 prj.set_outdir('../../build/ise')
 
-prj.add_files('../../hdl/blinking.vhdl', 'examples')
-prj.add_files('../../hdl/examples_pkg.vhdl', 'examples')
+prj.add_files('../../hdl/blinking.vhdl', library='examples')
+prj.add_files('../../hdl/examples_pkg.vhdl', library='examples')
 prj.add_files('../../hdl/top.vhdl')
 prj.set_top('Top')
 prj.add_files('s6micro.xcf')

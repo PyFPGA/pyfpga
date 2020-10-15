@@ -2,9 +2,9 @@
 
 PYTHON = ../venv/bin/python3
 
-.PHONY: multi
+.PHONY: multi helpers
 
-all: general specific multi
+all: general specific multi helpers
 
 general:
 	$(PYTHON) capture.py
@@ -34,3 +34,6 @@ multi:
 	$(PYTHON) multi/strategies.py
 	$(PYTHON) multi/verilog.py
 	$(PYTHON) multi/vhdl.py
+
+helpers:
+	make -C helpers
