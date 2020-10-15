@@ -92,12 +92,10 @@ class Openflow(Tool):
                 lib = '--work={}'.format(file[1])
             vhdls.append('ghdl -a $FLAGS {} {}'.format(lib, file[0]))
         for file in self.filesets['verilog']:
-            verilogs.append(
-                'read_verilog {} -defer {}'.format(
-                    '-sv' if file[0].endswith('.sv') else '',
-                    file[0]
-                )
-            )
+            if file[0].endswith('.sv'):
+                verilogs.append('read_verilog -sv -defer {}'.format(file[0]))
+            else:
+                verilogs.append('read_verilog -defer {}'.format(file[0]))
         for file in self.filesets['constraint']:
             constraints.append(file[0])
         if len(vhdls) > 0:

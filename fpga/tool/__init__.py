@@ -149,21 +149,24 @@ class Tool:
         """Create the script for generate execution."""
         # Paths and files
         files = []
-        for path in self.paths:
-            files.append('fpga_include {}'.format(path))
-        for fileset in self.filesets:
-            for file in self.filesets[fileset]:
-                if fileset == 'design':
-                    files.append('fpga_design {}'.format(file[0]))
-                else:
-                    if file[1] is None:
-                        files.append('fpga_file {}'.format(file[0]))
-                    else:
-                        files.append(
-                            'fpga_file {} {}'.format(file[0], file[1])
-                        )
         if self.presynth:
-            files = ['{}.edif'.format(self.project)]
+            files.append('    fpga_file {}.edif'.format(self.project))
+        else:
+            for path in self.paths:
+                files.append('    fpga_include {}'.format(path))
+            for file in self.filesets['verilog']:
+                files.append('    fpga_file {}'.format(file[0]))
+            for file in self.filesets['vhdl']:
+                if file[1] is None:
+                    files.append('    fpga_file {}'.format(file[0]))
+                else:
+                    files.append(
+                        '    fpga_file {} {}'.format(file[0], file[1])
+                    )
+        for file in self.filesets['design']:
+            files.append('    fpga_design {}'.format(file[0]))
+        for file in self.filesets['constraint']:
+            files.append('    fpga_file {}'.format(file[0]))
         # Parameters
         params = []
         for param in self.params:
