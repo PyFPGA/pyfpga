@@ -41,9 +41,6 @@ and check portability.
 * [multi/vhdl.py](multi/vhdl.py): the same concept that the previous one, but
 using VHDL instead of Verilog files. The main difference is how to deal with
 VHDL libraries.
-* [multi/strategies.py](multi/strategies.py): based on the previous examples,
-the strategy is changed, useful to make comparison with different
-optimizations.
 * [multi/parameters.py](multi/parameters.py): VHDL and Verilog files are
 synthesized changing the value of its generics/parameters.
 * [multi/memory.py](multi/memory.py): it tests the Memory Content Files

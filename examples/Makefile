@@ -31,7 +31,6 @@ multi:
 	$(PYTHON) multi/memory.py
 	$(PYTHON) multi/parameters.py
 	$(PYTHON) multi/projects.py
-	$(PYTHON) multi/strategies.py
 	$(PYTHON) multi/verilog.py
 	$(PYTHON) multi/vhdl.py
 

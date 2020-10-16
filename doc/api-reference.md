@@ -64,11 +64,10 @@ repositories.
 
 Clean the generated project files.
 
-### `generate(strategy='default', to_task='bit', from_task='prj', capture=False)`
+### `generate(to_task='bit', from_task='prj', capture=False)`
 
 Run the FPGA tool.
 
-* **strategy:** *default*, *area*, *speed* or *power*.
 * **to_task:** last task.
 * **from_task:** first task.
 * **capture:** capture STDOUT and STDERR (returned values).

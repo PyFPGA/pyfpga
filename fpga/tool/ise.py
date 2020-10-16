@@ -135,7 +135,7 @@ class Ise(Tool):
             )
         self.part = part
 
-    def generate(self, strategy, to_task, from_task, capture):
+    def generate(self, to_task, from_task, capture):
         if self.presynth and from_task in ['prj', 'syn']:
             self.tool.set_part(self.part)
             self.tool.set_top(self.top)
@@ -143,10 +143,10 @@ class Ise(Tool):
             self.tool.filesets['vhdl'] = self.filesets['vhdl']
             self.tool.filesets['verilog'] = self.filesets['verilog']
             self.tool.params = self.params
-            output1 = self.tool.generate(strategy, 'syn', 'prj', capture)
-            output2 = super().generate(strategy, to_task, from_task, capture)
+            output1 = self.tool.generate('syn', 'prj', capture)
+            output2 = super().generate(to_task, from_task, capture)
             return str(output1) + str(output2)
-        return super().generate(strategy, to_task, from_task, capture)
+        return super().generate(to_task, from_task, capture)
 
     def transfer(self, devtype, position, part, width, capture):
         super().transfer(devtype, position, part, width, capture)

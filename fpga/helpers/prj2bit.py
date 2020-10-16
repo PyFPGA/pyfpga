@@ -108,7 +108,7 @@ def main():
         if args.clean:
             prj.clean()
         else:
-            prj.generate('default', args.run, 'syn')
+            prj.generate(args.run, 'syn')
     except CalledProcessError as exception:
         if exception.returncode == 127:
             logging.error('the backend EDA tool was not found.')

@@ -77,7 +77,7 @@ class Openflow(Tool):
         self.frontend = 'yosys'
         self.includes = []
 
-    def _create_gen_script(self, strategy, tasks):
+    def _create_gen_script(self, tasks):
         # Verilog includes
         paths = []
         for path in self.paths:

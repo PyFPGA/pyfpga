@@ -28,7 +28,7 @@ import sys
 
 from fpga import __version__ as version
 from fpga.project import Project, TOOLS
-from fpga.tool import TASKS, STRATEGIES
+from fpga.tool import TASKS
 
 logging.basicConfig()
 logging.getLogger('fpga.project').level = logging.INFO
@@ -37,7 +37,6 @@ EPILOGUE = """
 Supported values of arguments with choices:
 * TOOL = {}
 * TASK = {}
-* STRATEGY = {}
 
 Notes:
 * PATH and FILE must be relative to the execution directory.
@@ -45,8 +44,7 @@ Notes:
 * More than one '--file', '--include' or '--param' arguments can be specified.
 """.format(
     " | ".join(TOOLS),
-    " | ".join(TASKS[1:len(TASKS)]),
-    " | ".join(STRATEGIES)
+    " | ".join(TASKS[1:len(TASKS)])
 )
 
 
@@ -117,14 +115,6 @@ def main():
     )
 
     parser.add_argument(
-        '--strategy',
-        metavar='STRATEGY',
-        choices=STRATEGIES,
-        default=STRATEGIES[0],
-        help='strategy to apply [{}]'.format(STRATEGIES[0])
-    )
-
-    parser.add_argument(
         '--run',
         metavar='TASK',
         choices=TASKS[1:len(TASKS)],
@@ -162,7 +152,7 @@ def main():
     prj.set_top(args.top)
 
     try:
-        prj.generate(args.strategy, args.run)
+        prj.generate(args.run)
     except CalledProcessError as exception:
         if exception.returncode == 127:
             logging.error('the backend EDA tool was not found.')

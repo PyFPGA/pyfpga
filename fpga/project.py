@@ -223,12 +223,9 @@ class Project:
         """
         self.tool.add_hook(hook, phase)
 
-    def generate(
-            self, strategy='default', to_task='bit', from_task='prj',
-            capture=False):
+    def generate(self, to_task='bit', from_task='prj', capture=False):
         """Run the FPGA tool.
 
-        * **strategy:** *default*, *area*, *speed* or *power*.
         * **to_task:** last task.
         * **from_task:** first task.
         * **capture:** capture STDOUT and STDERR (returned values).
@@ -242,7 +239,7 @@ class Project:
         with self._run_in_dir():
             if capture:
                 self._log.info('The execution messages are being captured.')
-            return self.tool.generate(strategy, to_task, from_task, capture)
+            return self.tool.generate(to_task, from_task, capture)
 
     def set_bitstream(self, path):
         """Set the bitstream file to transfer.

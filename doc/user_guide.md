@@ -98,8 +98,8 @@ Part specification       | **preflow** hook
 Files addition           | **postsyn** hook
 Top specification        | Implementation
 Parameters specification | **postimp** hook
-Strategy selection       | Bitstream generation
-**project** hook         | **postbit** hook
+**project** hook         | Bitstream generation
+                         | **postbit** hook
 
 If the provided API if not enough or suitable for your project, you can
 specify additional *hooks* in different parts of the flow, using:
@@ -127,21 +127,18 @@ The method `generate` (previously seen at the end of
 [Basic usage](#basic-usage) section) has optional parameters:
 
 ```py
-prj.generate(strategy, to_task, from_task, capture)
+prj.generate(to_task, from_task, capture)
 ```
 
-The initial value of *strategy* is `default`, but you can apply some
-optimizations using `area`, `power` or `speed`. At this point you are
-selecting if apply or not certain commands.
-
-In case of *to_task* and *from_taks* (with default values `bit` and `prj`),
+With *to_task* and *from_taks* (with default values `bit` and `prj`),
 you are selecting the first and last task to execute when `generate` is
 invoqued. The order and available tasks are `prj`, `syn`, `imp` and `bit`.
 It can be useful in at least two cases:
 * Maybe you created a file project with the GUI of the Tool and only want to
 run the Design Flow, so you can use: `generate(to_task='bit', from_task='syn')`
-* Methods to insert particular commands are provided, but you would want to
-perform some processing from Python between tasks, using something like:
+* Despite that a method to insert particular commands is provided, you would
+want to perform some processing from Python between tasks, using something
+like:
 ```py
 prj.generate(to_task='syn', from_task='prj')
 #Some other Python commands here

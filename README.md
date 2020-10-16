@@ -52,15 +52,11 @@ The API implemented by the `Project class` provides:
   project (in case of VHDL an optional PACKAGE NAME can be specified) and to specify the TOP-LEVEL
 * Methods to specify a different OUTPUT directory or get some project configurations
 * Methods to generate a bitstream and transfer it to a device (running the selected EDA Tool)
-* The capability of specifying an optimization strategy (area, power or speed) when the bitstream
-  is generated
 * A method to add Verilog Included File directories
 * A method to specify generics/parameters values
 * Methods to add Tcl commands in up to six different parts of the Flow (workaround for not yet
   implemented features)
 * Optional logging capabilities which include the display of the Tool Execution Time
-* Methods to specify where to search an ip-repo, add a block design and export the hardware
-  (only supported for Vivado)
 
 ## Support
 

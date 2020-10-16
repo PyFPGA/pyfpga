@@ -28,14 +28,9 @@ from shutil import rmtree
 
 
 FILESETS = ['verilog', 'vhdl', 'constraint', 'simulation', 'design']
-
-PHASES = ['prefile', 'project', 'preflow', 'postsyn', 'postimp', 'postbit']
-
-STRATEGIES = ['default', 'area', 'speed', 'power']
-
-TASKS = ['prj', 'syn', 'imp', 'bit']
-
 MEMWIDTHS = [1, 2, 4, 8, 16, 32]
+PHASES = ['prefile', 'project', 'preflow', 'postsyn', 'postimp', 'postbit']
+TASKS = ['prj', 'syn', 'imp', 'bit']
 
 
 def check_value(value, values):
@@ -145,7 +140,7 @@ class Tool:
         check_value(phase, PHASES)
         self.cmds[phase].append(hook)
 
-    def _create_gen_script(self, strategy, tasks):
+    def _create_gen_script(self, tasks):
         """Create the script for generate execution."""
         # Paths and files
         files = []
@@ -181,7 +176,6 @@ class Tool:
         tcl = tcl.replace('#PARAMS#', ' '.join(params))
         tcl = tcl.replace('#FILES#', '\n'.join(files))
         tcl = tcl.replace('#TOP#', self.top)
-        tcl = tcl.replace('#STRATEGY#', strategy)
         tcl = tcl.replace('#TASKS#', tasks)
         tcl = tcl.replace('#PREFILE_CMDS#', '\n'.join(self.cmds['prefile']))
         tcl = tcl.replace('#PROJECT_CMDS#', '\n'.join(self.cmds['project']))
@@ -191,9 +185,8 @@ class Tool:
         tcl = tcl.replace('#POSTBIT_CMDS#', '\n'.join(self.cmds['postbit']))
         open("%s.tcl" % self._TOOL, 'w').write(tcl)
 
-    def generate(self, strategy, to_task, from_task, capture):
+    def generate(self, to_task, from_task, capture):
         """Run the FPGA tool."""
-        check_value(strategy, STRATEGIES)
         check_value(to_task, TASKS)
         check_value(from_task, TASKS)
         to_index = TASKS.index(to_task)
@@ -204,7 +197,7 @@ class Tool:
                 .format(from_task, to_task)
             )
         tasks = " ".join(TASKS[from_index:to_index+1])
-        self._create_gen_script(strategy, tasks)
+        self._create_gen_script(tasks)
         return run(self._GEN_COMMAND, capture)
 
     def set_bitstream(self, path):
