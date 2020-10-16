@@ -311,13 +311,8 @@ proc fpga_file {FILE {LIBRARY "work"}} {
     }
 }
 
-proc fpga_include {FILE} {
+proc fpga_include {PATH} {
     global TOOL INCLUDED
-    if { [file isfile $FILE] } {
-        set PATH [file dirname $FILE]
-    } else {
-        set PATH $FILE
-    }
     lappend INCLUDED $PATH
     fpga_print "setting '$PATH' as a search location"
     switch $TOOL {
@@ -329,7 +324,9 @@ proc fpga_include {FILE} {
         "libero" {
             # Verilog Included Files are ALSO added
             # They must be specified after set_root (see fpga_top)
-            create_links -hdl_source $FILE
+            foreach FILE [glob -nocomplain $PATH/*.vh] {
+                create_links -hdl_source $FILE
+            }
             build_design_hierarchy
         }
         "quartus" {
