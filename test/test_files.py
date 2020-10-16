@@ -1,14 +1,14 @@
 import os
 import pytest
 
-from fpga.project import Project, TOOLS, COMBINED_TOOLS
+from fpga.project import Project, TOOLS
 
 
 def get_path(file):
     return os.path.join(os.path.dirname(__file__), file)
 
 
-@pytest.mark.parametrize('tool', TOOLS+COMBINED_TOOLS)
+@pytest.mark.parametrize('tool', TOOLS)
 def test_files(tool):
     prj = Project(tool)
     prj.add_files(get_path('../hdl/*.vhdl'))

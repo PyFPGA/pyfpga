@@ -27,7 +27,7 @@ from subprocess import CalledProcessError
 import sys
 
 from fpga import __version__ as version
-from fpga.project import Project, TOOLS, COMBINED_TOOLS
+from fpga.project import Project, TOOLS
 from fpga.tool import TASKS, STRATEGIES
 
 logging.basicConfig()
@@ -44,7 +44,7 @@ Notes:
 * The default PART name and how to specify it depends on the selected TOOL.
 * More than one '--file', '--include' or '--param' arguments can be specified.
 """.format(
-    " | ".join(TOOLS + COMBINED_TOOLS),
+    " | ".join(TOOLS),
     " | ".join(TASKS[1:len(TASKS)]),
     " | ".join(STRATEGIES)
 )
@@ -77,7 +77,7 @@ def main():
         '-t', '--tool',
         metavar='TOOL',
         default='vivado',
-        choices=TOOLS+COMBINED_TOOLS,
+        choices=TOOLS,
         help='backend tool to be used [vivado]'
     )
 
