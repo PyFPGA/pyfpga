@@ -108,14 +108,6 @@ Set the bitstream file to transfer.
 
 * **path:** path to the bitstream file.
 
-### `set_board(board)`
-
-Sets a development board to have predefined values.
-
-* **board:** board name.
-
-**Note:** Not Yet Implemented.
-
 ### `set_outdir(outdir)`
 
 Sets the OUTput DIRectory (where to put the resulting files).

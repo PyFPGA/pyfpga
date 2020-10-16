@@ -251,15 +251,6 @@ class Project:
         """
         self.tool.export()
 
-    def set_board(self, board):
-        """Sets a development board to have predefined values.
-
-        * **board:** board name.
-
-        **Note:** Not Yet Implemented.
-        """
-        raise NotImplementedError('set_board')
-
     def set_bitstream(self, path):
         """Set the bitstream file to transfer.
 
