@@ -1,14 +1,5 @@
 # PyFPGA examples
 
-## General-purpose examples
-
-The general-purpose examples present some features, regardless of the selected
-tool or device.
-
-* [boilerplate.py](boilerplate.py): an example where almost all the
-capabilities of the Project class are used, to be employed as starting point.
-* [capture.py](capture.py): it shows how to capture the execution messages.
-
 ## Tool-specific examples
 
 Led blinking examples where a Bitstream is generated and transfer to a
@@ -45,3 +36,13 @@ VHDL libraries.
 synthesized changing the value of its generics/parameters.
 * [multi/memory.py](multi/memory.py): it tests the Memory Content Files
 inclusion capability of the supported tools.
+
+## Hooks examples
+
+* [hooks/strategies.py](hooks/strategies.py): the same HDL is synthesized by
+different tools, changing the optimization strategy (`area`, `power` and
+`speed`).
+
+## Miscellaneous examples
+
+* [misc/capture.py](misc/capture.py): it shows how to capture the execution messages.
