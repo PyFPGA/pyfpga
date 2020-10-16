@@ -64,13 +64,6 @@ repositories.
 
 Clean the generated project files.
 
-### `export()`
-
-Exports files for the development of a Processor System.
-
-Useful when working with FPGA-SoCs to provide information for the
-development of the Processor System side.
-
 ### `generate(strategy='default', to_task='bit', from_task='prj', capture=False)`
 
 Run the FPGA tool.

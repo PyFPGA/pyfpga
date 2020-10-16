@@ -16,7 +16,20 @@ prj.add_files('../../hdl/blinking.vhdl')
 prj.add_files('zybo.xdc')
 prj.add_files('design.tcl', fileset='design')
 
-prj.export()
+export = """
+set PROJECT %s
+if { [ catch {
+    # Vitis
+    write_hw_platform -fixed -force -include_bit -file ${PROJECT}.xsa
+} ] } {
+    # SDK
+    write_hwdef -force -file ${PROJECT}.hwdef
+    write_sysdef -force -hwdef [glob -nocomplain *.hwdef] \\
+       -bitfile [glob -nocomplain *.bit] -file ${PROJECT}.hdf
+}
+""" % ('zybo-design')
+
+prj.add_hook(export, 'postbit')
 
 try:
     prj.generate()
