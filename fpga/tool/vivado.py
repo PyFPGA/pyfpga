@@ -59,7 +59,7 @@ class Vivado(Tool):
         '*.cache', '*.hw', '*.ip_user_files', '*.runs', '*.sim', '.Xil',
         # files
         '*.bit', '*.jou', '*.log', '*.rpt', 'vivado_*.zip',
-        'vivado.tcl'
+        'vivado.tcl', 'vivado-prog.tcl'
     ]
 
     def __init__(self, project, frontend=None):

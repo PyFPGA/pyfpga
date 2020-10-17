@@ -113,7 +113,7 @@ class Ise(Tool):
         '*.txt',
         '*.xml', '*.xpi', '*.xrpt', '*.xst', '*.xwbt',
         '_impact*',
-        'ise.tcl'
+        '*.impact', 'ise.tcl'
     ]
 
     def __init__(self, project, frontend=None):
