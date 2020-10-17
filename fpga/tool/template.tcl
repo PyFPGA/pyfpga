@@ -253,32 +253,6 @@ proc fpga_file {FILE {LIBRARY "work"}} {
                 create_links -library $LIBRARY -hdl_source $FILE
                 build_design_hierarchy
             }
-            # Only the last organize_tool_files for a certain TOOL is taking
-            # into account, and it needs to include all the related files.
-            #
-            # PDC is only used for PLACEROUTE.
-            # SDC is used by ALL (SYNTHESIZE, PLACEROUTE and VERIFYTIMING).
-            #
-            # The strategy is to make a command string with the collected
-            # -file parameters and using eval to execute it as Tcl command.
-            if {$ext == "pdc" || $ext == "sdc"} {
-                if { [info exists LIBERO_OTHER_CONSTRAINTS] } {
-                    set cmd "organize_tool_files -tool {SYNTHESIZE} "
-                    append cmd $LIBERO_OTHER_CONSTRAINTS
-                    append cmd "-module $TOP -input_type {constraint}"
-                    eval $cmd
-                    set cmd "organize_tool_files -tool {VERIFYTIMING} "
-                    append cmd $LIBERO_OTHER_CONSTRAINTS
-                    append cmd "-module $TOP -input_type {constraint}"
-                    eval $cmd
-                }
-                if { [info exists LIBERO_PLACE_CONSTRAINTS] } {
-                    set cmd "organize_tool_files -tool {PLACEROUTE} "
-                    append cmd $LIBERO_PLACE_CONSTRAINTS
-                    append cmd "-module $TOP -input_type {constraint}"
-                    eval $cmd
-                }
-            }
         }
         "quartus" {
             if {$ext == "v"} {
@@ -383,6 +357,27 @@ proc fpga_top { TOP } {
             }
             append cmd "}"
             eval $cmd
+            # Constraints
+            # PDC is only used for PLACEROUTE.
+            # SDC is used by ALL (SYNTHESIZE, PLACEROUTE and VERIFYTIMING).
+            global LIBERO_PLACE_CONSTRAINTS
+            global LIBERO_OTHER_CONSTRAINTS
+            if { [info exists LIBERO_OTHER_CONSTRAINTS] } {
+                set cmd "organize_tool_files -tool {SYNTHESIZE} "
+                append cmd $LIBERO_OTHER_CONSTRAINTS
+                append cmd "-module $TOP -input_type {constraint}"
+                eval $cmd
+                set cmd "organize_tool_files -tool {VERIFYTIMING} "
+                append cmd $LIBERO_OTHER_CONSTRAINTS
+                append cmd "-module $TOP -input_type {constraint}"
+                eval $cmd
+            }
+            if { [info exists LIBERO_PLACE_CONSTRAINTS] } {
+                set cmd "organize_tool_files -tool {PLACEROUTE} "
+                append cmd $LIBERO_PLACE_CONSTRAINTS
+                append cmd "-module $TOP -input_type {constraint}"
+                eval $cmd
+            }
         }
         "quartus" {
             set_global_assignment -name TOP_LEVEL_ENTITY $TOP
