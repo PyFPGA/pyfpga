@@ -5,6 +5,14 @@ VIVADO_DIR=/opt/Xilinx/vivado
 QUARTUS_DIR=/opt/Intel/quartus
 LIBERO_DIR=/opt/Microsemi/libero
 
+# Extra info
+
+LIBERO_LIC_PORT=1702
+LIBERO_LIC_HOST=localhost
+LIBERO_LMGRD_DIR=/opt/Microsemi/Linux_Licensing_Daemon
+LIBERO_LIC_FILE=/opt/Microsemi/License.dat
+LIBERO_LIC_LOG=/tmp/libero-license.log
+
 # Exports
 
 TOOL=$1
@@ -40,14 +48,15 @@ if [ $TOOL == "all" ] || [ $TOOL == "libero" ]; then
     echo "Configuring Libero"
     export PATH=$PATH:$LIBERO_DIR/Libero/bin
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu
-#export LM_LICENSE_FILE=$LIBERO_LIC_PORT@$LIBERO_LIC_HOST
-#if [ $LIBERO_LIC_HOST == "localhost" ]; then
-#   if [ -z `pidof lmgrd` ]; then
-#      echo "Launcingh Microsemi License manager... "
-#      $LIBERO_LMGRD_DIR/lmgrd -c $LIBERO_LIC_FILE -l /tmp/libero-license.log
-#   else
-#      echo "Microsemi License manager is already running... "
-#   fi
-#fi
+    export LM_LICENSE_FILE=$LIBERO_LIC_PORT@$LIBERO_LIC_HOST
+    if [ -z `pidof lmgrd` ]; then
+        echo "Launcingh Microsemi License manager... "
+        $LIBERO_LMGRD_DIR/lmgrd -c $LIBERO_LIC_FILE -l $LIBERO_LIC_LOG
+    else
+        echo "Microsemi License manager is already running... "
+    fi
+fi
 
+if [ $TOOL == "stop" ]; then
+    $LIBERO_LMGRD_DIR/lmutil lmdown -c $LIBERO_LIC_FILE -q
 fi
