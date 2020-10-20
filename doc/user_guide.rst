@@ -97,15 +97,23 @@ Advanced usage
 The following table depicts the parts of the *Project Creation* and the
 *Design Flow* internally performed by PyFPGA.
 
-Project Creation         | Design Flow
----                      | ---
-Part specification       | **preflow** hook
-**prefile** hook         | Synthesis
-Files addition           | **postsyn** hook
-Top specification        | Implementation
-Parameters specification | **postimp** hook
-**project** hook         | Bitstream generation
-                         | **postbit** hook
++--------------------------+----------------------+
+| Project Creation         | Design Flow          |
++==========================+======================+
+| Part specification       | **preflow** hook     |
++--------------------------+----------------------+
+| **prefile** hook         | Synthesis            |
++--------------------------+----------------------+
+| Files addition           | **postsyn** hook     |
++--------------------------+----------------------+
+| Top specification        | Implementation       |
++--------------------------+----------------------+
+| Parameters specification | **postimp** hook     |
++--------------------------+----------------------+
+| **project** hook         | Bitstream generation |
++--------------------------+----------------------+
+|                          | **postbit** hook     |
++--------------------------+----------------------+
 
 If the provided API if not enough or suitable for your project, you can
 specify additional *hooks* in different parts of the flow, using:
