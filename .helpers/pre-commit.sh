@@ -8,10 +8,6 @@ venv/bin/pycodestyle fpga/ examples/ test/
 echo "Running PyLint ..."
 venv/bin/pylint fpga
 
-echo "Updating documentation ..."
-venv/bin/python .helpers/pydoc-md.py fpga.project > doc/api-reference.md
-git add doc
-
 echo "Checking trailing whitespaces ..."
 git diff --check --cached
 
