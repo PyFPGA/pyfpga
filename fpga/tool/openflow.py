@@ -111,7 +111,17 @@ class Openflow(Tool):
         device = None
         package = None
         if family in ['ice40', 'ecp5']:
-            device, package = self.part.split('-')
+            part = self.part.split('-')
+            if len(part) == 2:
+                device = part[0]
+                package = part[1]
+            elif len(part) == 3:
+                device = '{}-{}'.format(part[0], part[1])
+                package = part[2]
+            else:
+                raise ValueError(
+                    'unsupported part specification [{}]'.format(self.part)
+                )
             if device.endswith('4k'):
                 # See http://www.clifford.at/icestorm/
                 device = device.replace('4', '8')

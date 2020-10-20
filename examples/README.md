@@ -11,6 +11,7 @@ supported board. It shows the inclusion of Constraints files.
 * [openflow](openflow):
   * EDU-CIAA-FPGA (`icestorm.py`)
   * OrangeCrab-r0.2 (`prjtrellis.py`)
+  * ECP5 Evaluation Board (`prjtrellis.py --board ecp5evn`)
 * [quartus](quartus): DE10Nano (Terasic)
 * [vivado](vivado): Zybo (Digilent)
 * [yosys](yosys):
@@ -42,6 +43,11 @@ inclusion capability of the supported tools.
 * [hooks/strategies.py](hooks/strategies.py): the same HDL is synthesized by
 different tools, changing the optimization strategy (`area`, `power` and
 `speed`).
+
+## Helpers
+
+Examples to exercise developed helper tools such as `hdl2bit`, `prj2bit` and
+`bitprog`.
 
 ## Miscellaneous examples
 
