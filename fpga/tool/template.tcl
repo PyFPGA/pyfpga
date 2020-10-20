@@ -37,8 +37,6 @@ set PRESYNTH #PRESYNTH#
 set PROJECT  #PROJECT#
 set PART     #PART#
 set TOP      #TOP#
-# STRATEGY = default area power speed
-set STRATEGY #STRATEGY#
 # TASKS = prj syn imp bit
 set TASKS    [list #TASKS#]
 
@@ -54,8 +52,8 @@ proc fpga_commands { PHASE } {
         "prefile" {
 #PREFILE_CMDS#
         }
-        "postprj" {
-#POSTPRJ_CMDS#
+        "project" {
+#PROJECT_CMDS#
         }
         "preflow" {
 #PREFLOW_CMDS#
@@ -255,32 +253,6 @@ proc fpga_file {FILE {LIBRARY "work"}} {
                 create_links -library $LIBRARY -hdl_source $FILE
                 build_design_hierarchy
             }
-            # Only the last organize_tool_files for a certain TOOL is taking
-            # into account, and it needs to include all the related files.
-            #
-            # PDC is only used for PLACEROUTE.
-            # SDC is used by ALL (SYNTHESIZE, PLACEROUTE and VERIFYTIMING).
-            #
-            # The strategy is to make a command string with the collected
-            # -file parameters and using eval to execute it as Tcl command.
-            if {$ext == "pdc" || $ext == "sdc"} {
-                if { [info exists LIBERO_OTHER_CONSTRAINTS] } {
-                    set cmd "organize_tool_files -tool {SYNTHESIZE} "
-                    append cmd $LIBERO_OTHER_CONSTRAINTS
-                    append cmd "-module $TOP -input_type {constraint}"
-                    eval $cmd
-                    set cmd "organize_tool_files -tool {VERIFYTIMING} "
-                    append cmd $LIBERO_OTHER_CONSTRAINTS
-                    append cmd "-module $TOP -input_type {constraint}"
-                    eval $cmd
-                }
-                if { [info exists LIBERO_PLACE_CONSTRAINTS] } {
-                    set cmd "organize_tool_files -tool {PLACEROUTE} "
-                    append cmd $LIBERO_PLACE_CONSTRAINTS
-                    append cmd "-module $TOP -input_type {constraint}"
-                    eval $cmd
-                }
-            }
         }
         "quartus" {
             if {$ext == "v"} {
@@ -311,13 +283,8 @@ proc fpga_file {FILE {LIBRARY "work"}} {
     }
 }
 
-proc fpga_include {FILE} {
+proc fpga_include {PATH} {
     global TOOL INCLUDED
-    if { [file isfile $FILE] } {
-        set PATH [file dirname $FILE]
-    } else {
-        set PATH $FILE
-    }
     lappend INCLUDED $PATH
     fpga_print "setting '$PATH' as a search location"
     switch $TOOL {
@@ -329,7 +296,9 @@ proc fpga_include {FILE} {
         "libero" {
             # Verilog Included Files are ALSO added
             # They must be specified after set_root (see fpga_top)
-            create_links -hdl_source $FILE
+            foreach FILE [glob -nocomplain $PATH/*.vh] {
+                create_links -hdl_source $FILE
+            }
             build_design_hierarchy
         }
         "quartus" {
@@ -388,6 +357,27 @@ proc fpga_top { TOP } {
             }
             append cmd "}"
             eval $cmd
+            # Constraints
+            # PDC is only used for PLACEROUTE.
+            # SDC is used by ALL (SYNTHESIZE, PLACEROUTE and VERIFYTIMING).
+            global LIBERO_PLACE_CONSTRAINTS
+            global LIBERO_OTHER_CONSTRAINTS
+            if { [info exists LIBERO_OTHER_CONSTRAINTS] } {
+                set cmd "organize_tool_files -tool {SYNTHESIZE} "
+                append cmd $LIBERO_OTHER_CONSTRAINTS
+                append cmd "-module $TOP -input_type {constraint}"
+                eval $cmd
+                set cmd "organize_tool_files -tool {VERIFYTIMING} "
+                append cmd $LIBERO_OTHER_CONSTRAINTS
+                append cmd "-module $TOP -input_type {constraint}"
+                eval $cmd
+            }
+            if { [info exists LIBERO_PLACE_CONSTRAINTS] } {
+                set cmd "organize_tool_files -tool {PLACEROUTE} "
+                append cmd $LIBERO_PLACE_CONSTRAINTS
+                append cmd "-module $TOP -input_type {constraint}"
+                eval $cmd
+            }
         }
         "quartus" {
             set_global_assignment -name TOP_LEVEL_ENTITY $TOP
@@ -422,101 +412,6 @@ proc fpga_params {} {
             set obj [get_filesets sources_1]
             set_property "generic" "[join $assigns]" -objects $obj
         }
-    }
-}
-
-proc fpga_area {} {
-    global TOOL
-    fpga_print "setting options for 'area' optimization"
-    switch $TOOL {
-        "ise"     {
-            project set "Optimization Goal" "Area"
-        }
-        "libero"  {
-            configure_tool -name {SYNTHESIZE} -params {RAM_OPTIMIZED_FOR_POWER:true}
-        }
-        "quartus" {
-            set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE AREA"
-            set_global_assignment -name OPTIMIZATION_TECHNIQUE AREA
-        }
-        "vivado"  {
-            set obj [get_runs synth_1]
-            set_property strategy "Flow_AreaOptimized_high" $obj
-            set_property "steps.synth_design.args.directive" "AreaOptimized_high" $obj
-            set_property "steps.synth_design.args.control_set_opt_threshold" "1" $obj
-            set obj [get_runs impl_1]
-            set_property strategy "Area_Explore" $obj
-            set_property "steps.opt_design.args.directive" "ExploreArea" $obj
-        }
-        default  { puts "UNSUPPORTED by '$TOOL'" }
-    }
-}
-
-proc fpga_power {} {
-    global TOOL
-    fpga_print "setting options for 'power' optimization"
-    switch $TOOL {
-        "ise"     {
-            project set "Optimization Goal" "Area"
-            project set "Power Reduction" "true" -process "Synthesize - XST"
-            project set "Power Reduction" "high" -process "Map"
-            project set "Power Reduction" "true" -process "Place & Route"
-        }
-        "libero"  {
-            configure_tool -name {SYNTHESIZE} -params {RAM_OPTIMIZED_FOR_POWER:true}
-            configure_tool -name {PLACEROUTE} -params {PDPR:true}
-        }
-        "quartus" {
-            set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE POWER"
-            set_global_assignment -name OPTIMIZE_POWER_DURING_SYNTHESIS "EXTRA EFFORT"
-            set_global_assignment -name OPTIMIZE_POWER_DURING_FITTING "EXTRA EFFORT"
-        }
-        "vivado"  {
-            #enable power_opt_design and phys_opt_design
-            set obj [get_runs synth_1]
-            set_property strategy "Vivado Synthesis Defaults" $obj
-            set obj [get_runs impl_1]
-            set_property strategy "Power_DefaultOpt" $obj
-            set_property "steps.power_opt_design.is_enabled" "1" $obj
-            set_property "steps.phys_opt_design.is_enabled" "1" $obj
-        }
-        default  { puts "UNSUPPORTED by '$TOOL'" }
-    }
-}
-
-proc fpga_speed {} {
-    global TOOL
-    fpga_print "setting options for 'speed' optimization"
-    switch $TOOL {
-        "ise"     {
-            project set "Optimization Goal" "Speed"
-        }
-        "libero"  {
-            configure_tool -name {SYNTHESIZE} -params {RAM_OPTIMIZED_FOR_POWER:false}
-            configure_tool -name {PLACEROUTE} -params {EFFORT_LEVEL:true}
-        }
-        "quartus" {
-            set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE PERFORMANCE"
-            set_global_assignment -name OPTIMIZATION_TECHNIQUE SPEED
-        }
-        "vivado"  {
-            #enable phys_opt_design
-            set obj [get_runs synth_1]
-            set_property strategy "Flow_PerfOptimized_high" $obj
-            set_property "steps.synth_design.args.fanout_limit" "400" $obj
-            set_property "steps.synth_design.args.keep_equivalent_registers" "1" $obj
-            set_property "steps.synth_design.args.resource_sharing" "off" $obj
-            set_property "steps.synth_design.args.no_lc" "1" $obj
-            set_property "steps.synth_design.args.shreg_min_size" "5" $obj
-            set obj [get_runs impl_1]
-            set_property strategy "Performance_Explore" $obj
-            set_property "steps.opt_design.args.directive" "Explore" $obj
-            set_property "steps.place_design.args.directive" "Explore" $obj
-            set_property "steps.phys_opt_design.is_enabled" "1" $obj
-            set_property "steps.phys_opt_design.args.directive" "Explore" $obj
-            set_property "steps.route_design.args.directive" "Explore" $obj
-        }
-        default  { puts "UNSUPPORTED by '$TOOL'" }
     }
 }
 
@@ -601,30 +496,6 @@ proc fpga_run_bit {} {
     }
 }
 
-proc fpga_export {} {
-    global TOOL PROJECT
-    fpga_print "exporting the design"
-    switch $TOOL {
-        "vivado"  {
-            if { [ catch {
-                # Vitis
-                write_hw_platform -fixed -force -include_bit \
-                    -file ${PROJECT}.xsa
-                fpga_print "design exported to be used with Vitis"
-            } ] } {
-                # SDK
-                write_hwdef -force -file ${PROJECT}.hwdef
-                write_sysdef -force \
-                    -hwdef [glob -nocomplain *.hwdef] \
-                    -bitfile [glob -nocomplain *.bit] \
-                    -file ${PROJECT}.hdf
-                fpga_print "design exported to be used with the SDK"
-            }
-        }
-        default  { puts "UNSUPPORTED by '$TOOL'" }
-    }
-}
-
 #
 # Start of the script
 #
@@ -644,12 +515,7 @@ if { [lsearch -exact $TASKS "prj"] >= 0 } {
         fpga_files
         fpga_top $TOP
         fpga_params
-        switch $STRATEGY {
-            "area"  {fpga_area}
-            "power" {fpga_power}
-            "speed" {fpga_speed}
-        }
-        fpga_commands "postprj"
+        fpga_commands "project"
         fpga_close
     } ERRMSG]} {
         puts "ERROR: there was a problem creating a New Project.\n"

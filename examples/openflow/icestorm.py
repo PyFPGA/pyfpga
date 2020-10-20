@@ -22,13 +22,13 @@ prj.set_outdir('../../build/icestorm-{}'.format(args.lang))
 prj.set_part('hx4k-tq144')
 
 if args.lang == 'verilog':
-    prj.add_include('../../hdl/headers1/freq.vh')
-    prj.add_include('../../hdl/headers2/secs.vh')
+    prj.add_path('../../hdl/headers1')
+    prj.add_path('../../hdl/headers2')
     prj.add_files('../../hdl/blinking.v')
     prj.add_files('../../hdl/top.v')
 else:  # args.lang == 'vhdl'
-    prj.add_files('../../hdl/blinking.vhdl', 'examples')
-    prj.add_files('../../hdl/examples_pkg.vhdl', 'examples')
+    prj.add_files('../../hdl/blinking.vhdl', library='examples')
+    prj.add_files('../../hdl/examples_pkg.vhdl', library='examples')
     prj.add_files('../../hdl/top.vhdl')
 
 prj.add_files('*.pcf')

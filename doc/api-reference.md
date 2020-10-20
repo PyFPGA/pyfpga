@@ -19,85 +19,55 @@ Class constructor.
 * **relative_to_script:** specifies if the files/directories are
 relative to the script or the execution directory.
 
-### `add_design(pathname)`
+### `add_files(pathname, fileset=None, library=None, options=None)`
 
-Adds a Block Design.
+Adds files to the project.
 
-* **pathname:** a string containing a relative path to a file.
-
-### `add_files(pathname, library=None)`
-
-Adds files to the project (HDLs, TCLs, Constraints).
-
-* **pathname:** a string containing a relative path specification,
-and can contain shell-style wildcards (glob compliant).
+* **pathname:** a relative path to a file, which can contain
+shell-style wildcards (glob compliant).
+* **fileset:** the valid values are *verilog* or *vhdl* for HDL files,
+*constraint*, *simulation* (not used by PyFPGA) and *design* (for a
+graphical block design). It is discovered automatically (based on the
+extention) if None provided.
 * **library:** an optional VHDL library name.
+* **options:** to be provided to the used tool.
 
-### `add_include(pathname)`
+### `add_hook(hook, phase='project')`
 
-Adds a search path.
+Adds a hook in the specified phase.
+
+A hook is a place that allows you to insert customized programming.
+
+The valid **phase** values are:
+* *prefile* to add options needed to find files.
+* *project* to add project related options.
+* *preflow* to change options previous to run the flow.
+* *postsyn* to perform an action between *syn* and *imp*.
+* *postimp* to perform an action between *imp* and *bit*.
+* *postbit* to perform an action after *bit*.
+
+The *hook* is a string representing a tool specific command.
+
+**WARNING:** using a hook, you will be probably broken the vendor
+independence.
+
+### `add_path(path)`
+
+Add a search path.
 
 Useful to specify where to search Verilog Included Files or IP
 repositories.
 
-* **pathname:** a string containing a relative path to a directory
-or a file.
-
-**Note:** generally a directory must be specified, but Libero-SoC
-also needs to add the file when is a Verilog Included File.
-
-### `add_postbit_cmd(command)`
-
-Adds a post bitstream generation COMMAND.
-
-* **command:** a valid, commonly Tcl, tool command.
-
-### `add_postimp_cmd(command)`
-
-Adds a post implementation COMMAND.
-
-* **command:** a valid, commonly Tcl, tool command.
-
-### `add_postprj_cmd(command)`
-
-Adds a postprj COMMAND.
-
-* **command:** a valid, commonly Tcl, tool command.
-
-### `add_postsyn_cmd(command)`
-
-Adds a post synthesis COMMAND.
-
-* **command:** a valid, commonly Tcl, tool command.
-
-### `add_prefile_cmd(command)`
-
-Adds a prefile COMMAND.
-
-* **command:** a valid, commonly Tcl, tool command.
-
-### `add_preflow_cmd(command)`
-
-Adds a pre flow COMMAND.
-
-* **command:** a valid, commonly Tcl, tool command.
+* **path:** a relative path to a directory.
 
 ### `clean()`
 
 Clean the generated project files.
 
-### `export_hardware()`
-
-Exports files for the development of a Processor System.
-
-Useful when working with FPGA-SoCs to provide information for the
-development of the Processor System side.
-
-### `generate(strategy='default', to_task='bit', from_task='prj', capture=False)`
+### `generate(to_task='bit', from_task='prj', capture=False)`
 
 Run the FPGA tool.
 
-* **strategy:** *default*, *area*, *speed* or *power*.
 * **to_task:** last task.
 * **from_task:** first task.
 * **capture:** capture STDOUT and STDERR (returned values).
@@ -116,19 +86,19 @@ It returns a dict which includes *tool* and *project* names, the
 *extension* of a project file (according to the selected tool) and
 the *part* to be used.
 
+### `get_fileset(fileset)`
+
+Get the list of files in the specified **fileset**.
+
+* **fileset:** the valid values are *verilog* or *vhdl* for HDL files,
+*constraint*, *simulation* (not used by PyFPGA) and *design* (for a
+graphical block design).
+
 ### `set_bitstream(path)`
 
 Set the bitstream file to transfer.
 
 * **path:** path to the bitstream file.
-
-### `set_board(board)`
-
-Sets a development board to have predefined values.
-
-* **board:** board name.
-
-**Note:** Not Yet Implemented.
 
 ### `set_outdir(outdir)`
 

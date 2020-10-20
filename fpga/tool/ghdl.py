@@ -37,5 +37,5 @@ class Ghdl(Openflow):
         super().__init__(project)
         self.frontend = 'ghdl'
 
-    def generate(self, strategy, to_task, from_task, capture):
-        return super().generate(strategy, 'syn', 'syn', capture)
+    def generate(self, to_task, from_task, capture):
+        return super().generate('syn', 'syn', capture)

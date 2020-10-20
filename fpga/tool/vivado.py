@@ -21,8 +21,6 @@
 Implements the support of Vivado (Xilinx).
 """
 
-import os
-
 from fpga.tool import Tool, run
 
 _TEMPLATES = {
@@ -61,7 +59,7 @@ class Vivado(Tool):
         '*.cache', '*.hw', '*.ip_user_files', '*.runs', '*.sim', '.Xil',
         # files
         '*.bit', '*.jou', '*.log', '*.rpt', 'vivado_*.zip',
-        'vivado.tcl'
+        'vivado.tcl', 'vivado-prog.tcl'
     ]
 
     def __init__(self, project, frontend=None):
@@ -71,29 +69,19 @@ class Vivado(Tool):
             self.tool = Yosys(self.project, 'vivado')
             self.presynth = True
 
-    def set_param(self, name, value):
-        if self.presynth:
-            self.tool.set_param(name, value)
-        else:
-            super().set_param(name, value)
-
-    def add_file(self, file, library=None, included=False, design=False):
-        ext = os.path.splitext(file)[1]
-        if self.presynth and ext in ['.v', '.sv', '.vh', '.vhd', '.vhdl']:
-            self.tool.add_file(file, library, included, design)
-        else:
-            super().add_file(file, library, included, design)
-
-    def generate(self, strategy, to_task, from_task, capture):
+    def generate(self, to_task, from_task, capture):
         if self.presynth and from_task in ['prj', 'syn']:
             self.tool.set_part(self.part)
             self.tool.set_top(self.top)
-            output1 = self.tool.generate(strategy, 'syn', 'prj', capture)
-            self.add_file('{}.edif'.format(self.project))
+            self.tool.paths = self.paths
+            self.tool.filesets['vhdl'] = self.filesets['vhdl']
+            self.tool.filesets['verilog'] = self.filesets['verilog']
+            self.tool.params = self.params
+            output1 = self.tool.generate('syn', 'prj', capture)
             self.set_top(self.project)
-            output2 = super().generate(strategy, to_task, from_task, capture)
+            output2 = super().generate(to_task, from_task, capture)
             return str(output1) + str(output2)
-        return super().generate(strategy, to_task, from_task, capture)
+        return super().generate(to_task, from_task, capture)
 
     def transfer(self, devtype, position, part, width, capture):
         super().transfer(devtype, position, part, width, capture)

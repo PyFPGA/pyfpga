@@ -2,12 +2,22 @@
 
 PYTHON = ../venv/bin/python3
 
-.PHONY: multi
+.PHONY: helpers misc multi
 
-all: general specific multi
+all: helpers misc multi specific
 
-general:
-	$(PYTHON) capture.py
+helpers:
+	make -C $@
+
+misc:
+	$(PYTHON) $@/capture.py
+
+multi:
+	$(PYTHON) $@/memory.py
+	$(PYTHON) $@/parameters.py
+	$(PYTHON) $@/projects.py
+	$(PYTHON) $@/verilog.py
+	$(PYTHON) $@/vhdl.py
 
 specific:
 	$(PYTHON) ghdl/ghdl.py
@@ -26,11 +36,3 @@ specific:
 	$(PYTHON) yosys/ise.py --action all --lang vhdl
 	$(PYTHON) yosys/vivado.py --action all
 	$(PYTHON) yosys/vivado.py --action all --lang vhdl
-
-multi:
-	$(PYTHON) multi/memory.py
-	$(PYTHON) multi/parameters.py
-	$(PYTHON) multi/projects.py
-	$(PYTHON) multi/strategies.py
-	$(PYTHON) multi/verilog.py
-	$(PYTHON) multi/vhdl.py

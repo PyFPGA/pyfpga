@@ -22,13 +22,13 @@ prj.set_outdir('../../build/yosys-ise-{}'.format(args.lang))
 prj.set_part('XC6SLX9-2-CSG324')
 
 if args.lang == 'verilog':
-    prj.add_include('../../hdl/headers1/freq.vh')
-    prj.add_include('../../hdl/headers2/secs.vh')
+    prj.add_path('../../hdl/headers1')
+    prj.add_path('../../hdl/headers2')
     prj.add_files('../../hdl/blinking.v')
     prj.add_files('../../hdl/top.v')
 else:  # args.lang == 'vhdl'
-    prj.add_files('../../hdl/blinking.vhdl', 'examples')
-    prj.add_files('../../hdl/examples_pkg.vhdl', 'examples')
+    prj.add_files('../../hdl/blinking.vhdl', library='examples')
+    prj.add_files('../../hdl/examples_pkg.vhdl', library='examples')
     prj.add_files('../../hdl/top.vhdl')
 
 prj.add_files('../ise/s6micro.ucf')

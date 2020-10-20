@@ -22,7 +22,7 @@ hdl2bit-verilog:
 
 prj2bit:
 	mkdir -p $(OUTDIR)
-	cp ise.xise quartus.qpf vivado.xpr $(OUTDIR)
+	cp ise.xise quartus.* vivado.xpr $(OUTDIR)
 	$(PYTHON) $(HLPDIR)/prj2bit.py --run syn $(OUTDIR)/ise.xise
 	$(PYTHON) $(HLPDIR)/prj2bit.py --run syn $(OUTDIR)/quartus.qpf
 	$(PYTHON) $(HLPDIR)/prj2bit.py --run syn $(OUTDIR)/vivado.xpr

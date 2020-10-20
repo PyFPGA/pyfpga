@@ -27,7 +27,7 @@ from subprocess import CalledProcessError
 import sys
 
 from fpga import __version__ as version
-from fpga.project import Project, TOOLS, COMBINED_TOOLS
+from fpga.project import Project, TOOLS
 from fpga.tool import MEMWIDTHS
 
 logging.basicConfig()
@@ -45,7 +45,7 @@ Supported values of arguments with choices:
 * MEMWIDTH = {}
 * ACTION = {}
 """.format(
-    " | ".join(TOOLS + COMBINED_TOOLS),
+    " | ".join(TOOLS),
     " | ".join(DEVS),
     " | ".join(str(x) for x in POSITIONS),
     " | ".join(str(x) for x in MEMWIDTHS),
@@ -81,7 +81,7 @@ def main():
         '-t', '--tool',
         metavar='TOOL',
         default='vivado',
-        choices=TOOLS+COMBINED_TOOLS,
+        choices=TOOLS,
         help='backend tool to be used [vivado]'
     )
 

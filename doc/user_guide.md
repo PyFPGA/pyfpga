@@ -56,13 +56,14 @@ prj.set_top('Top')
 > will want to specify a particular one. Examples:
 >     * Ise: `xc7k160t-3-fbg484`
 >     * Libero: `mpf100t-1-fcg484`
+>     * Openflow: `hx8k-ct256`
 >     * Quartus: `10cl120zf780i8g`
 >     * Vivado: `xc7k160t-3-fbg484`
 > * For some Tools, the files order could be a problem.
 > If a complain about something not found is displayed, try changing the
 > order.
-> If a file seems unsupported, you can always use the `prefile` or `postprj`
-> commands (see [Advanced usage](#advanced-usage)).
+> If a file seems unsupported, you can always use the `prefile` or `project`
+> hooks (see [Advanced usage](#advanced-usage)).
 > * A file with the tcl extension will be included with the `source` command.
 > It could be used to have a file with particular additional options.
 > * A relative path to a valid VHDL/Verilog file is also accepted by
@@ -87,29 +88,34 @@ And wait for the backend Tool to accomplish its task.
 
 ## Advanced usage
 
-The following picture depicts the parts of the Project Creation and the Design
-Flow internally performed by PyFPGA.
+The following table depicts the parts of the *Project Creation* and the
+*Design Flow* internally performed by PyFPGA.
 
-![Tcl Structure](images/tcl-structure.png)
+Project Creation         | Design Flow
+---                      | ---
+Part specification       | **preflow** hook
+**prefile** hook         | Synthesis
+Files addition           | **postsyn** hook
+Top specification        | Implementation
+Parameters specification | **postimp** hook
+**project** hook         | Bitstream generation
+                         | **postbit** hook
 
 If the provided API if not enough or suitable for your project, you can
-specify additional *commands* in different parts of the flow, using:
+specify additional *hooks* in different parts of the flow, using:
 
 ```py
-prj.add_prefile_cmd('A text string')  # for *Pre-file commands*.
-prj.add_postprj_cmd('A text string')  # for *Post-prj commands*.
-prj.add_preflow_cmd('A text string')  # for *Pre-flow commands*.
-prj.add_postsyn_cmd('A text string')  # for *Post-syn commands*.
-prj.add_postimp_cmd('A text string')  # for *Post-imp commands*.
-prj.add_postbit_cmd('A text string')  # for *Post-bit commands*.
+prj.add_hook(hook, phase)
 ```
 
 > **Notes:**
-> * The text string must be a valid command supported by the used backend.
-> * If more than one command is needed, you can call these methods several
-> times (will be executed in order).
+> * Valid vaues for *phase* are `prefile`, `project` (default), `preflow`,
+> `postsyn`, `postimp` and `postbit`.
+> * The *hook* string must be a valid command (supported by the used tool).
+> * If more than one *hook* is needed in the same *phase*, you can call this
+> method several times (the commands will be executed in order).
 
-The generics/parameters of the project can be optinally changed with:
+The generics/parameters of the project can be optionally changed with:
 
 ```py
 prj.set_param('param1', value1)
@@ -121,21 +127,18 @@ The method `generate` (previously seen at the end of
 [Basic usage](#basic-usage) section) has optional parameters:
 
 ```py
-prj.generate(strategy, to_task, from_task, capture)
+prj.generate(to_task, from_task, capture)
 ```
 
-The initial value of *strategy* is `default`, but you can apply some
-optimizations using `area`, `power` or `speed`. At this point you are
-selecting if apply or not certain commands.
-
-In case of *to_task* and *from_taks* (with default values `bit` and `prj`),
+With *to_task* and *from_taks* (with default values `bit` and `prj`),
 you are selecting the first and last task to execute when `generate` is
 invoqued. The order and available tasks are `prj`, `syn`, `imp` and `bit`.
 It can be useful in at least two cases:
 * Maybe you created a file project with the GUI of the Tool and only want to
 run the Design Flow, so you can use: `generate(to_task='bit', from_task='syn')`
-* Methods to insert particular commands are provided, but you would want to
-perform some processing from Python between tasks, using something like:
+* Despite that a method to insert particular commands is provided, you would
+want to perform some processing from Python between tasks, using something
+like:
 ```py
 prj.generate(to_task='syn', from_task='prj')
 #Some other Python commands here

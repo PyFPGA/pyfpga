@@ -27,13 +27,10 @@ import subprocess
 from shutil import rmtree
 
 
-PHASES = ['prefile', 'postprj', 'preflow', 'postsyn', 'postimp', 'postbit']
-
-STRATEGIES = ['default', 'area', 'speed', 'power']
-
-TASKS = ['prj', 'syn', 'imp', 'bit']
-
+FILESETS = ['verilog', 'vhdl', 'constraint', 'simulation', 'design']
 MEMWIDTHS = [1, 2, 4, 8, 16, 32]
+PHASES = ['prefile', 'project', 'preflow', 'postsyn', 'postimp', 'postbit']
+TASKS = ['prj', 'syn', 'imp', 'bit']
 
 
 def check_value(value, values):
@@ -81,14 +78,21 @@ class Tool:
         self.set_part(self._PART)
         self.cmds = {
             'prefile': [],
-            'postprj': [],
+            'project': [],
             'preflow': [],
             'postsyn': [],
             'postimp': [],
             'postbit': []
         }
         self.params = []
-        self.files = []
+        self.filesets = {
+            'vhdl': [],
+            'verilog': [],
+            'constraint': [],
+            'simulation': [],
+            'design': []
+        }
+        self.paths = []
         self.set_top('UNDEFINED')
         self.presynth = False
         self.bitstream = None
@@ -108,54 +112,81 @@ class Tool:
 
     def set_param(self, name, value):
         """Set a Generic/Parameter Value."""
-        self.params.append('{ %s %s }' % (name, value))
+        self.params.append([name, value])
 
-    def add_file(self, file, library=None, included=False, design=False):
-        """Add a FILE to the project."""
-        command = '    '  # indentation
-        if included:
-            command += 'fpga_include %s' % file
-        elif design:
-            command += 'fpga_design %s' % file
-        else:
-            command += 'fpga_file %s' % file
-            if library is not None:
-                command += ' %s' % library
-        self.files.append(command)
+    def add_file(self, file, fileset, library, options):
+        """Add a file to the project in the specified **fileset**."""
+        check_value(fileset, FILESETS)
+        self.filesets[fileset].append([file, library, options])
+
+    def get_fileset(self, fileset):
+        """Get the list of files in the specified **fileset**."""
+        check_value(fileset, FILESETS)
+        files = []
+        for file in self.filesets[fileset]:
+            files.append(file[0])
+        return files
+
+    def add_path(self, path):
+        """Add a search path."""
+        self.paths.append(path)
 
     def set_top(self, top):
         """Set the TOP LEVEL of the project."""
         self.top = top
 
-    def add_command(self, command, phase):
-        """Add the specified COMMAND in the desired PHASE."""
+    def add_hook(self, hook, phase):
+        """Add the specified *hook* in the desired *phase*."""
         check_value(phase, PHASES)
-        self.cmds[phase].append(command)
+        self.cmds[phase].append(hook)
 
-    def _create_gen_script(self, strategy, tasks):
+    def _create_gen_script(self, tasks):
         """Create the script for generate execution."""
+        # Paths and files
+        files = []
+        if self.presynth:
+            files.append('    fpga_file {}.edif'.format(self.project))
+        else:
+            for path in self.paths:
+                files.append('    fpga_include {}'.format(path))
+            for file in self.filesets['verilog']:
+                files.append('    fpga_file {}'.format(file[0]))
+            for file in self.filesets['vhdl']:
+                if file[1] is None:
+                    files.append('    fpga_file {}'.format(file[0]))
+                else:
+                    files.append(
+                        '    fpga_file {} {}'.format(file[0], file[1])
+                    )
+        for file in self.filesets['design']:
+            files.append('    fpga_design {}'.format(file[0]))
+        for file in self.filesets['constraint']:
+            files.append('    fpga_file {}'.format(file[0]))
+        # Parameters
+        params = []
+        for param in self.params:
+            params.append('{{ {} {} }}'.format(param[0], param[1]))
+        # Script creation
         template = os.path.join(os.path.dirname(__file__), 'template.tcl')
         tcl = open(template).read()
         tcl = tcl.replace('#TOOL#', self._TOOL)
         tcl = tcl.replace('#PRESYNTH#', "True" if self.presynth else "False")
         tcl = tcl.replace('#PROJECT#', self.project)
         tcl = tcl.replace('#PART#', self.part)
-        tcl = tcl.replace('#PARAMS#', ' '.join(self.params))
-        tcl = tcl.replace('#FILES#', '\n'.join(self.files))
+        tcl = tcl.replace('#PARAMS#', ' '.join(params))
+        tcl = tcl.replace('#FILES#', '\n'.join(files))
         tcl = tcl.replace('#TOP#', self.top)
-        tcl = tcl.replace('#STRATEGY#', strategy)
         tcl = tcl.replace('#TASKS#', tasks)
         tcl = tcl.replace('#PREFILE_CMDS#', '\n'.join(self.cmds['prefile']))
-        tcl = tcl.replace('#POSTPRJ_CMDS#', '\n'.join(self.cmds['postprj']))
+        tcl = tcl.replace('#PROJECT_CMDS#', '\n'.join(self.cmds['project']))
         tcl = tcl.replace('#PREFLOW_CMDS#', '\n'.join(self.cmds['preflow']))
         tcl = tcl.replace('#POSTSYN_CMDS#', '\n'.join(self.cmds['postsyn']))
         tcl = tcl.replace('#POSTIMP_CMDS#', '\n'.join(self.cmds['postimp']))
         tcl = tcl.replace('#POSTBIT_CMDS#', '\n'.join(self.cmds['postbit']))
         open("%s.tcl" % self._TOOL, 'w').write(tcl)
 
-    def generate(self, strategy, to_task, from_task, capture):
+    def generate(self, to_task, from_task, capture):
         """Run the FPGA tool."""
-        check_value(strategy, STRATEGIES)
         check_value(to_task, TASKS)
         check_value(from_task, TASKS)
         to_index = TASKS.index(to_task)
@@ -166,12 +197,8 @@ class Tool:
                 .format(from_task, to_task)
             )
         tasks = " ".join(TASKS[from_index:to_index+1])
-        self._create_gen_script(strategy, tasks)
+        self._create_gen_script(tasks)
         return run(self._GEN_COMMAND, capture)
-
-    def export_hardware(self):
-        """Exports files for the development of a Processor System."""
-        self.add_command('fpga_export', 'postbit')
 
     def set_bitstream(self, path):
         """Set the bitstream file to transfer."""

@@ -32,4 +32,5 @@ test:
   script:
     - pip install pytest
     - pip install .
+    - pytest
     - make -C examples

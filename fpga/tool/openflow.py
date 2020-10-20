@@ -77,41 +77,27 @@ class Openflow(Tool):
         self.frontend = 'yosys'
         self.includes = []
 
-    def set_param(self, name, value):
-        """Set a Generic/Parameter Value."""
-        self.params.append([name, value])
-
-    def add_file(self, file, library=None, included=False, design=False):
-        if included:
-            self.includes.append(file)
-        elif not design:
-            self.files.append([file, library])
-
-    def _create_gen_script(self, strategy, tasks):
+    def _create_gen_script(self, tasks):
         # Verilog includes
-        includes = []
-        for include in self.includes:
-            dirname = os.path.dirname(include)
-            includes.append('verilog_defaults -add -I{}'.format(dirname))
+        paths = []
+        for path in self.paths:
+            paths.append('verilog_defaults -add -I{}'.format(path))
         # Files
         constraints = []
         verilogs = []
         vhdls = []
-        for file in self.files:
-            ext = os.path.splitext(file[0])[1]
-            # VHDL (GHDL)
-            if ext in ['.vhd', '.vhdl']:
-                lib = ''
-                if file[1] is not None:
-                    lib = '--work={}'.format(file[1])
-                vhdls.append('ghdl -a $FLAGS {} {}'.format(lib, file[0]))
-            # Verilog (Yosys)
-            elif ext == '.sv':
+        for file in self.filesets['vhdl']:
+            lib = ''
+            if file[1] is not None:
+                lib = '--work={}'.format(file[1])
+            vhdls.append('ghdl -a $FLAGS {} {}'.format(lib, file[0]))
+        for file in self.filesets['verilog']:
+            if file[0].endswith('.sv'):
                 verilogs.append('read_verilog -sv -defer {}'.format(file[0]))
-            elif ext == '.v':
-                verilogs.append('read_verilog -defer {}'.format(file[0]))
             else:
-                constraints.append(file[0])
+                verilogs.append('read_verilog -defer {}'.format(file[0]))
+        for file in self.filesets['constraint']:
+            constraints.append(file[0])
         if len(vhdls) > 0:
             verilogs = ['ghdl $FLAGS {}'.format(self.top)]
         # Parameters
@@ -137,7 +123,7 @@ class Openflow(Tool):
             backend=self.backend,
             constraints='\\\n'+'\n'.join(constraints),
             device=device,
-            includes='\\\n'+'\n'.join(includes),
+            includes='\\\n'+'\n'.join(paths),
             family=family,
             package=package,
             params='\\\n'+'\n'.join(params),
