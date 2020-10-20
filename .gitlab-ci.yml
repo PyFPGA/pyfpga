@@ -17,6 +17,7 @@ before_script:
 stages:
   - lint
   - test
+  - doc
 
 lint:
   stage: lint
@@ -34,3 +35,12 @@ test:
     - pip install .
     - pytest
     - make -C examples
+
+doc:
+  stage: doc
+  script:
+    - cd doc
+    - pip install -r requirements.txt
+    - mkdir _theme
+    - curl -fsSL https://codeload.github.com/buildthedocs/sphinx.theme/tar.gz/v0 | tar xzf - -C _theme --strip-components=1
+    - PYTHONPATH=$(pwd)/.. make html
