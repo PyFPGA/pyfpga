@@ -11,7 +11,13 @@
 ![Quartus](https://img.shields.io/badge/Quartus--Prime-19.1-blue.svg?style=flat-square)
 ![Vivado](https://img.shields.io/badge/Vivado-2019.2-blue.svg?style=flat-square)
 
-PyFPGA is a **Python** Class for **vendor-independent FPGA development**. PyFPGA allows using **a single project file** and **programmatically** executing **synthesis**, **implementation**, generation of **bitstream** and/or **transference** to supported boards.
+> **NOTICE:** (*Oct 2020*) the API is being redefined, so you should expect
+> modifications, additions and removes.
+
+PyFPGA is a **Python** Class for **vendor-independent FPGA development**.
+It allows using **a single project file** and **programmatically** executing
+**synthesis**, **implementation**, generation of **bitstream** and/or
+**transference** to supported boards.
 
 - The workflow is command-line centric.
 - It's friendly with *Version Control Systems* and *Continuous Integration* (CI).
@@ -88,24 +94,26 @@ Should you achieve either success of failure on non-POSIX systems, please let us
 **Notes:**
 
 - The open-source tools are supported trough container images from the
-[ghdl/docker](https://github.com/ghdl/docker) project, so [Docker](https://www.docker.com/) or
-[Podman](https://podman.io/) must be installed. The same workflow can be used in CI services.
-- ISE, Libero-Soc, Quartus Prime and Vivado, must be ready to be executed from the terminal
-(installed and well configured).
+[ghdl/docker](https://github.com/ghdl/docker) project, so
+[Docker](https://www.docker.com/) ~~or [Podman](https://podman.io/)~~ must be
+installed. The same workflow can be used in CI services.
+- ISE, Libero-Soc, Quartus Prime and Vivado, must be ready to be executed from
+the terminal (installed and well configured).
 
 ## Installation
 
-PyFPGA requires Python `>=3.6`. For now, it's only available as a git repository hosted on GitLab.
-It can be installed with pip:
+PyFPGA requires Python `>=3.5`. For now, it's only available as a git repository
+hosted on GitLab. It can be installed with pip:
 
 ```
 pip install 'git+https://gitlab.com/rodrigomelo9/pyfpga#egg=pyfpga'
 ```
 
-> On GNU/Linux, installing pip packages on the system requires `sudo`. Alternatively, use
-> `--local` for installing PyFPGA in your HOME.
+> On GNU/Linux, installing pip packages on the system requires `sudo`.
+> Alternatively, use `--local` for installing PyFPGA in your HOME.
 
-Alternatively, get a copy of the repository either through git clone or downloading a tarball/zipfile:
+You can get a copy of the repository either through git clone or downloading a
+tarball/zipfile:
 
 ```
 git clone https://gitlab.com/rodrigomelo9/pyfpga.git
@@ -118,6 +126,6 @@ Then, use pip from the root of the repo:
 pip install -e .
 ```
 
-> With `-e` (`--editable`) your application is installed into site-packages via a kind of symlink.
-> That allows pulling changes through git or changing the branch, without the need to reinstall
-> the package.
+> With `-e` (`--editable`) your application is installed into site-packages via
+> a kind of symlink. That allows pulling changes through git or changing the
+> branch, without the need to reinstall the package.
