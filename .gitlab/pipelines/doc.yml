@@ -1,0 +1,41 @@
+image: python:latest
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+    - venv/
+
+before_script:
+  - python -V
+  - pip install virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
+
+stages:
+  - build
+  - pages
+
+build:
+  stage: build
+  script:
+    - cd doc
+    - pip install -r requirements.txt
+    - mkdir _theme
+    - curl -fsSL https://codeload.github.com/buildthedocs/sphinx.theme/tar.gz/v0 | tar xzf - -C _theme --strip-components=1
+    - PYTHONPATH=$(pwd)/.. make html
+  artifacts:
+    paths:
+      - doc/_build/html
+
+pages:
+  stage: pages
+  script:
+    - mv doc/_build/html public
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
