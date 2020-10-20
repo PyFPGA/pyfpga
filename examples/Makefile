@@ -21,18 +21,18 @@ multi:
 
 specific:
 	$(PYTHON) ghdl/ghdl.py
-	$(PYTHON) ise/ise.py --action all
-	$(PYTHON) libero/libero.py --action all
-	$(PYTHON) openflow/icestorm.py --action all
-	$(PYTHON) openflow/icestorm.py --action all --lang vhdl
-	$(PYTHON) openflow/prjtrellis.py --action all
-	$(PYTHON) openflow/prjtrellis.py --action all --lang vhdl
-	$(PYTHON) quartus/quartus.py --action all
+	$(PYTHON) ise/ise.py
+	$(PYTHON) libero/libero.py
+	$(PYTHON) openflow/icestorm.py
+	$(PYTHON) openflow/icestorm.py --lang vhdl
+	$(PYTHON) openflow/prjtrellis.py --board ecp5evn
+	$(PYTHON) openflow/prjtrellis.py --lang vhdl
+	$(PYTHON) quartus/quartus.py
 	$(PYTHON) vivado/design.py
-	$(PYTHON) vivado/vivado.py --action all
+	$(PYTHON) vivado/vivado.py
 	$(PYTHON) yosys/yosys.py
 	$(PYTHON) yosys/yosys.py --lang vhdl
-	$(PYTHON) yosys/ise.py --action all
-	$(PYTHON) yosys/ise.py --action all --lang vhdl
-	$(PYTHON) yosys/vivado.py --action all
-	$(PYTHON) yosys/vivado.py --action all --lang vhdl
+	$(PYTHON) yosys/ise.py
+	$(PYTHON) yosys/ise.py --lang vhdl
+	$(PYTHON) yosys/vivado.py
+	$(PYTHON) yosys/vivado.py --lang vhdl
