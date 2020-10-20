@@ -1,50 +1,14 @@
-image: python:latest
-
-variables:
-  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-
-cache:
-  paths:
-    - .cache/pip
-    - venv/
-
-before_script:
-  - python -V
-  - pip install virtualenv
-  - virtualenv venv
-  - source venv/bin/activate
-
 stages:
-  - lint
-  - test
-
-lint:
-  stage: lint
-  script:
-    - pip install pycodestyle
-    - pip install pylint
-    - pycodestyle fpga examples test
-    - pylint fpga
-    - git diff --check --cached
+  - triggers
 
 test:
-  stage: test
-  script:
-    - pip install pytest
-    - pip install .
-    - pytest
-    - make -C examples
+  stage: triggers
+  trigger:
+    include: .gitlab/pipelines/test.yml
+    strategy: depend
 
-pages:
-  script:
-    - cd doc
-    - pip install -r requirements.txt
-    - mkdir _theme
-    - curl -fsSL https://codeload.github.com/buildthedocs/sphinx.theme/tar.gz/v0 | tar xzf - -C _theme --strip-components=1
-    - PYTHONPATH=$(pwd)/.. make html
-    - mv _build/html ../public
-  artifacts:
-    paths:
-      - public
-  only:
-    - master
+doc:
+  stage: triggers
+  trigger:
+    include: .gitlab/pipelines/doc.yml
+    strategy: depend
