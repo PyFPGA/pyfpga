@@ -53,7 +53,8 @@ prj.set_top('Top')
 prj.generate()
 ```
 
-Find more examples in the [User Guide](doc/user_guide.md) and in subdir [examples](examples).
+Now, you can read the [docs](https://rodrigomelo9.gitlab.io/pyfpga/) or find
+more examples in subdir [examples](examples).
 
 The API implemented by the `Project class` provides:
 
