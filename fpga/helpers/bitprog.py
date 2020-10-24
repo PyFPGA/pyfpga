@@ -23,7 +23,6 @@ A CLI helper utility to transfer a bitstream to a supported device.
 
 import argparse
 import logging
-from subprocess import CalledProcessError
 import sys
 
 from fpga import __version__ as version
@@ -150,11 +149,10 @@ def main():
 
     try:
         prj.transfer(devtype, args.position, args.memname, args.width)
-    except CalledProcessError as exception:
-        if exception.returncode == 127:
-            logging.error('the backend EDA tool was not found.')
-        else:
-            sys.exit('{} ({})'.format(type(exception).__name__, exception))
+    except RuntimeError:
+        logging.error('{} not found'.format(args.tool))
+    except Exception as e:
+        sys.exit('{} ({})'.format(type(e).__name__, e))
 
 
 if __name__ == "__main__":
