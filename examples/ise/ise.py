@@ -29,8 +29,8 @@ prj.add_files('s6micro.ucf')
 if args.action in ['generate', 'all']:
     try:
         prj.generate()
-    except Exception as e:
-        logging.warning('{} ({})'.format(type(e).__name__, e))
+    except RuntimeError:
+        print('ERROR:generate:ISE not found')
 
 if args.action in ['transfer', 'all']:
     try:
@@ -38,5 +38,5 @@ if args.action in ['transfer', 'all']:
         #  prj.transfer('detect')
         #  prj.transfer('unlock')
         #  prj.transfer('spi', 1, 'N25Q128', 4)
-    except Exception as e:
-        logging.warning('ERROR: {} ({})'.format(type(e).__name__, e))
+    except RuntimeError:
+        print('ERROR:transfer:ISE not found')

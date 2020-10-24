@@ -20,11 +20,11 @@ PRJ.set_top('Top')
 try:
     output = PRJ.generate(to_task='syn', capture=True)
     print(output)
-except Exception as e:
-    logging.warning('{} ({})'.format(type(e).__name__, e))
+except RuntimeError:
+    print('ERROR:generate:ISE not found')
 
 try:
     output = PRJ.transfer(devtype='detect', capture=True)
     print(output)
-except Exception as e:
-    logging.warning('{} ({})'.format(type(e).__name__, e))
+except RuntimeError:
+    print('ERROR:transfer:ISE not found')

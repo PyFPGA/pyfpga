@@ -40,6 +40,5 @@ for hdl in ['vhdl', 'verilog']:
         # PRJ.set_top('Params')
         try:
             PRJ.generate(to_task='syn')
-        except Exception as e:
-            print('There was an error running %s with %s files' % (tool, hdl))
-            print('{} ({})'.format(type(e).__name__, e))
+        except RuntimeError:
+            print('ERROR:generate:{} not found'.format(tool))

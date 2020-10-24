@@ -47,11 +47,11 @@ prj.set_top('Top')
 if args.action in ['generate', 'all']:
     try:
         prj.generate()
-    except Exception as e:
-        logging.warning('{} ({})'.format(type(e).__name__, e))
+    except RuntimeError:
+        print('ERROR:generate:Docker not found')
 
 if args.action in ['transfer', 'all']:
     try:
         prj.transfer()
-    except Exception as e:
-        logging.warning('ERROR: {} ({})'.format(type(e).__name__, e))
+    except RuntimeError:
+        print('ERROR:transfer:Docker not found')

@@ -61,6 +61,5 @@ for project in sorted(PROJECTS.keys()):
     # Running implementation
     try:
         PRJ.generate(to_task='imp')
-    except Exception as e:
-        print('There was an error with the project %s' % project)
-        print('{} ({})'.format(type(e).__name__, e))
+    except RuntimeError:
+        print('ERROR:generate:{} not found'.format(tool))
