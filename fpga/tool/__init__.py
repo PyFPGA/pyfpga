@@ -24,7 +24,7 @@ Defines the interface to be inherited to support a tool.
 from glob import glob
 import os
 import subprocess
-from shutil import rmtree
+from shutil import rmtree, which
 
 
 FILESETS = ['verilog', 'vhdl', 'constraint', 'simulation', 'design']
@@ -59,18 +59,15 @@ class Tool:
     It is the basic interface for tool implementations.
     """
 
-    _TOOL = 'UNDEFINED'
-    _EXTENSION = 'UNDEFINED'
-    _PART = 'UNDEFINED'
-
-    _GEN_COMMAND = 'UNDEFINED'
-    _TRF_COMMAND = 'UNDEFINED'
-
-    _BIT_EXT = []
-
-    _DEVTYPES = []
-
-    _GENERATED = []
+    # Following variables are set in each inheritance (if employed)
+    _TOOL = None         # tool name
+    _EXTENSION = None    # project file extension
+    _PART = None         # default device part name
+    _GEN_COMMAND = None  # command to run when generate is executed
+    _TRF_COMMAND = None  # command to run when transfer is executed
+    _BIT_EXT = []        # Supported BITstream EXTensions
+    _DEVTYPES = []       # Supported DEVice TYPES
+    _CLEAN = []          # Files to be CLEAN
 
     def __init__(self, project):
         """Initializes the attributes of the class."""
@@ -222,7 +219,7 @@ class Tool:
 
     def clean(self):
         """Clean the generated project files."""
-        for path in self._GENERATED:
+        for path in self._CLEAN:
             elements = glob(path)
             for element in elements:
                 if os.path.isfile(element):

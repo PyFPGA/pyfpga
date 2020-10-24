@@ -87,14 +87,11 @@ class Ise(Tool):
     _TOOL = 'ise'
     _EXTENSION = 'xise'
     _PART = 'xc7k160t-3-fbg484'
-
     _GEN_COMMAND = 'xtclsh ise.tcl'
     _TRF_COMMAND = 'impact -batch ise-prog.impact'
-
     _BIT_EXT = ['bit']
     _DEVTYPES = ['fpga', 'spi', 'bpi', 'detect', 'unlock']
-
-    _GENERATED = [
+    _CLEAN = [
         # directories
         'iseconfig', '_ngo', 'xlnx_auto_0_xdb', '_xmsgs', 'xst',
         # files
@@ -113,6 +110,7 @@ class Ise(Tool):
         '*.txt',
         '*.xml', '*.xpi', '*.xrpt', '*.xst', '*.xwbt',
         '_impact*',
+        # pyfpga
         '*.impact', 'ise.tcl'
     ]
 

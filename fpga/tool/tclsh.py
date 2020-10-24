@@ -28,5 +28,4 @@ class Tclsh(Tool):
     """Implementation of the class to support Tclsh."""
 
     _TOOL = 'tclsh'
-
     _GEN_COMMAND = 'tclsh tclsh.tcl'

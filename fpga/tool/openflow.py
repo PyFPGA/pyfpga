@@ -59,16 +59,16 @@ class Openflow(Tool):
 
     _TOOL = 'openflow'
     _PART = 'hx8k-ct256'
-
-    _GEN_COMMAND = 'bash {}.sh'.format(_TOOL)
+    _GEN_COMMAND = 'bash openflow.sh'
     _TRF_COMMAND = 'bash openprog.sh'
-
     _BIT_EXT = ['bit']
     _DEVTYPES = ['fpga']
-
-    _GENERATED = [
+    _CLEAN = [
+        # files
         '*.asc', '*.bit', '*.cf', '*.config', '*.edif', '*.json', '*.rpt',
-        '*.svf'
+        '*.svf',
+        # pyfpga
+        '*.sh'
     ]
 
     def __init__(self, project):

@@ -28,10 +28,13 @@ class Ghdl(Openflow):
     """Implementation of the class to support GHDL."""
 
     _TOOL = 'ghdl'
-
-    _GEN_COMMAND = 'bash {}.sh'.format(_TOOL)
-
-    _GENERATED = ['*.cf']
+    _GEN_COMMAND = 'bash ghdl.sh'
+    _CLEAN = [
+        # files
+        '*.cf',
+        # pyfpga
+        '*.sh'
+    ]
 
     def __init__(self, project):
         super().__init__(project)
