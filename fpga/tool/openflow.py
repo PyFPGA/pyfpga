@@ -59,7 +59,9 @@ class Openflow(Tool):
 
     _TOOL = 'openflow'
     _PART = 'hx8k-ct256'
+    _GEN_PROGRAM = 'docker'
     _GEN_COMMAND = 'bash openflow.sh'
+    _TRF_PROGRAM = 'docker'
     _TRF_COMMAND = 'bash openprog.sh'
     _BIT_EXT = ['bit']
     _DEVTYPES = ['fpga']

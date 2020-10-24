@@ -87,7 +87,9 @@ class Ise(Tool):
     _TOOL = 'ise'
     _EXTENSION = 'xise'
     _PART = 'xc7k160t-3-fbg484'
+    _GEN_PROGRAM = 'xtclsh'
     _GEN_COMMAND = 'xtclsh ise.tcl'
+    _TRF_PROGRAM = 'impact'
     _TRF_COMMAND = 'impact -batch ise-prog.impact'
     _BIT_EXT = ['bit']
     _DEVTYPES = ['fpga', 'spi', 'bpi', 'detect', 'unlock']

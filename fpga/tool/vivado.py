@@ -47,7 +47,9 @@ class Vivado(Tool):
     _TOOL = 'vivado'
     _EXTENSION = 'xpr'
     _PART = 'xc7k160t-3-fbg484'
+    _GEN_PROGRAM = 'vivado'
     _GEN_COMMAND = 'vivado -mode batch -notrace -quiet -source vivado.tcl'
+    _TRF_PROGRAM = 'vivado'
     _TRF_COMMAND = 'vivado -mode batch -notrace -quiet -source vivado-prog.tcl'
     _BIT_EXT = ['bit']
     _DEVTYPES = ['fpga', 'detect']

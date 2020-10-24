@@ -33,7 +33,9 @@ class Quartus(Tool):
     _TOOL = 'quartus'
     _EXTENSION = 'qpf'
     _PART = '10cl120zf780i8g'
+    _GEN_PROGRAM = 'quartus_sh'
     _GEN_COMMAND = 'quartus_sh --script quartus.tcl'
+    _TRF_PROGRAM = 'quartus_pgm'
     _TRF_COMMAND = 'quartus_pgm -c %s --mode jtag -o "p;%s@%s"'
     _BIT_EXT = ['sof', 'pof']
     _DEVTYPES = ['fpga', 'detect']

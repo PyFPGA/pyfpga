@@ -47,6 +47,7 @@ class Libero(Tool):
     _TOOL = 'libero'
     _EXTENSION = 'prjx'
     _PART = 'mpf100t-1-fcg484'
+    _GEN_PROGRAM = 'libero'
     _GEN_COMMAND = 'libero SCRIPT:libero.tcl'
     _DEVTYPES = ['fpga']
     _CLEAN = [
