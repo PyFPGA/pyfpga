@@ -24,7 +24,7 @@ Defines the interface to be inherited to support a tool.
 from glob import glob
 import os
 import subprocess
-from shutil import rmtree
+from shutil import rmtree, which
 
 
 FILESETS = ['verilog', 'vhdl', 'constraint', 'simulation', 'design']
@@ -59,18 +59,17 @@ class Tool:
     It is the basic interface for tool implementations.
     """
 
-    _TOOL = 'UNDEFINED'
-    _EXTENSION = 'UNDEFINED'
-    _PART = 'UNDEFINED'
-
-    _GEN_COMMAND = 'UNDEFINED'
-    _TRF_COMMAND = 'UNDEFINED'
-
-    _BIT_EXT = []
-
-    _DEVTYPES = []
-
-    _GENERATED = []
+    # Following variables are set in each inheritance (if employed)
+    _TOOL = None         # tool name
+    _EXTENSION = None    # project file extension
+    _PART = None         # default device part name
+    _GEN_PROGRAM = None  # program used when generate is executed
+    _GEN_COMMAND = None  # command to run when generate is executed
+    _TRF_PROGRAM = None  # program used when transfer is executed
+    _TRF_COMMAND = None  # command to run when transfer is executed
+    _BIT_EXT = []        # Supported BITstream EXTensions
+    _DEVTYPES = []       # Supported DEVice TYPES
+    _CLEAN = []          # Files to be CLEAN
 
     def __init__(self, project):
         """Initializes the attributes of the class."""
@@ -187,13 +186,17 @@ class Tool:
 
     def generate(self, to_task, from_task, capture):
         """Run the FPGA tool."""
+        if not which(self._GEN_PROGRAM):
+            raise RuntimeError(
+                'program "{}" not found'.format(self._GEN_PROGRAM)
+            )
         check_value(to_task, TASKS)
         check_value(from_task, TASKS)
         to_index = TASKS.index(to_task)
         from_index = TASKS.index(from_task)
         if from_index > to_index:
             raise ValueError(
-                'initial task ({}) cannot be later than the last task ({})'
+                'initial task "{}" cannot be later than the last task "{}"'
                 .format(from_task, to_task)
             )
         tasks = " ".join(TASKS[from_index:to_index+1])
@@ -206,6 +209,10 @@ class Tool:
 
     def transfer(self, devtype, position, part, width, capture):
         """Transfer a bitstream."""
+        if not which(self._TRF_PROGRAM):
+            raise RuntimeError(
+                'program "{}" not found'.format(self._TRF_PROGRAM)
+            )
         check_value(devtype, self._DEVTYPES)
         check_value(position, range(10))
         isinstance(part, str)
@@ -217,12 +224,12 @@ class Tool:
             for ext in self._BIT_EXT:
                 bitstream.extend(glob('**/*.{}'.format(ext), recursive=True))
             if len(bitstream) == 0:
-                raise FileNotFoundError('BitStream not found')
+                raise FileNotFoundError('bitStream not found')
             self.bitstream = bitstream[0]
 
     def clean(self):
         """Clean the generated project files."""
-        for path in self._GENERATED:
+        for path in self._CLEAN:
             elements = glob(path)
             for element in elements:
                 if os.path.isfile(element):

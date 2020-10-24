@@ -59,16 +59,18 @@ class Openflow(Tool):
 
     _TOOL = 'openflow'
     _PART = 'hx8k-ct256'
-
-    _GEN_COMMAND = 'bash {}.sh'.format(_TOOL)
+    _GEN_PROGRAM = 'docker'
+    _GEN_COMMAND = 'bash openflow.sh'
+    _TRF_PROGRAM = 'docker'
     _TRF_COMMAND = 'bash openprog.sh'
-
     _BIT_EXT = ['bit']
     _DEVTYPES = ['fpga']
-
-    _GENERATED = [
+    _CLEAN = [
+        # files
         '*.asc', '*.bit', '*.cf', '*.config', '*.edif', '*.json', '*.rpt',
-        '*.svf'
+        '*.svf',
+        # pyfpga
+        '*.sh'
     ]
 
     def __init__(self, project):
@@ -103,9 +105,9 @@ class Openflow(Tool):
         # Parameters
         params = []
         for param in self.params:
-            params.append('chparam -set {} {} {}').format(
+            params.append('chparam -set {} {} {}'.format(
                 param[0], param[1], self.top
-            )
+            ))
         # Family, Device and Package
         family = get_family(self.part)
         device = None

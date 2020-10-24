@@ -28,10 +28,13 @@ class Yosys(Openflow):
     """Implementation of the class to support Yosys."""
 
     _TOOL = 'yosys'
-
-    _GEN_COMMAND = 'bash {}.sh'.format(_TOOL)
-
-    _GENERATED = ['*.cf', '*.edif', '*.json']
+    _GEN_COMMAND = 'bash yosys.sh'
+    _CLEAN = [
+        # files
+        '*.cf', '*.edif', '*.json',
+        # pyfpga
+        '*.sh'
+    ]
 
     def __init__(self, project, backend='verilog'):
         super().__init__(project)

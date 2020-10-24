@@ -29,8 +29,8 @@ prj.add_files('mkr.sdc')
 if args.action in ['generate', 'all']:
     try:
         prj.generate()
-    except Exception as e:
-        logging.warning('{} ({})'.format(type(e).__name__, e))
+    except RuntimeError:
+        print('ERROR:generate:Libero not found')
 
 if args.action in ['transfer', 'all']:
-    logging.warning('Not yet implemented')
+    print('ERROR:transfer:Not yet implemented')

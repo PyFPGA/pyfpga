@@ -24,7 +24,6 @@ A CLI helper utility to deal with a vendor FPGA Project file.
 import argparse
 import logging
 import os
-from subprocess import CalledProcessError
 import sys
 
 from fpga import __version__ as version
@@ -84,7 +83,7 @@ def main():
     }
 
     if not os.path.exists(args.project):
-        sys.exit('Project file not found.')
+        sys.exit('Project file not found')
 
     outdir = os.path.dirname(args.project)
     project, extension = os.path.splitext(args.project)
@@ -95,7 +94,7 @@ def main():
         tool = tool_per_ext[extension]
         print('{} Project file found.'.format(tool))
     else:
-        sys.exit('Unknown Project file extension.')
+        sys.exit('Unknown Project file extension')
 
     # Solving with PyFPGA
 
@@ -109,11 +108,10 @@ def main():
             prj.clean()
         else:
             prj.generate(args.run, 'syn')
-    except CalledProcessError as exception:
-        if exception.returncode == 127:
-            logging.error('the backend EDA tool was not found.')
-        else:
-            sys.exit('{} ({})'.format(type(exception).__name__, exception))
+    except RuntimeError:
+        logging.error('{} not found'.format(tool))
+    except Exception as e:
+        sys.exit('{} ({})'.format(type(e).__name__, e))
 
 
 if __name__ == "__main__":

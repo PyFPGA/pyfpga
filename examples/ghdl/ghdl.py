@@ -17,5 +17,5 @@ prj.set_top('Top')
 
 try:
     prj.generate()
-except Exception as e:
-    logging.warning('{} ({})'.format(type(e).__name__, e))
+except RuntimeError:
+    print('ERROR:generate:Docker not found')

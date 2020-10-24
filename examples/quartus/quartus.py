@@ -29,11 +29,11 @@ prj.add_files('de10nano.tcl')
 if args.action in ['generate', 'all']:
     try:
         prj.generate()
-    except Exception as e:
-        logging.warning('{} ({})'.format(type(e).__name__, e))
+    except RuntimeError:
+        print('ERROR:generate:Quartus not found')
 
 if args.action in ['transfer', 'all']:
     try:
         prj.transfer('fpga', 2)
-    except Exception as e:
-        logging.warning('ERROR: {} ({})'.format(type(e).__name__, e))
+    except RuntimeError:
+        print('ERROR:transfer:Quartus not found')

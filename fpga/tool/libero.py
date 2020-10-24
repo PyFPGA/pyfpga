@@ -47,14 +47,13 @@ class Libero(Tool):
     _TOOL = 'libero'
     _EXTENSION = 'prjx'
     _PART = 'mpf100t-1-fcg484'
-
+    _GEN_PROGRAM = 'libero'
     _GEN_COMMAND = 'libero SCRIPT:libero.tcl'
-    _TRF_COMMAND = ''
-
-    _BIT_EXT = []
     _DEVTYPES = ['fpga']
-
-    _GENERATED = [
+    _CLEAN = [
+        # directories
+        'libero',
+        # pyfpga
         'libero.tcl'
     ]
 

@@ -33,19 +33,20 @@ class Quartus(Tool):
     _TOOL = 'quartus'
     _EXTENSION = 'qpf'
     _PART = '10cl120zf780i8g'
-
+    _GEN_PROGRAM = 'quartus_sh'
     _GEN_COMMAND = 'quartus_sh --script quartus.tcl'
+    _TRF_PROGRAM = 'quartus_pgm'
     _TRF_COMMAND = 'quartus_pgm -c %s --mode jtag -o "p;%s@%s"'
-
     _BIT_EXT = ['sof', 'pof']
     _DEVTYPES = ['fpga', 'detect']
-
-    _GENERATED = [
+    _CLEAN = [
         # directories
         'db', 'incremental_db', 'output_files',
         # files
-        '*.done', '*.jdi', '*.log', '*.pin', '*.qws', '*.rpt', '*.smsg',
-        '*.sld', '*.sof', '*.sop', '*.summary', '*.txt', 'quartus.tcl'
+        '*.done', '*.jdi', '*.log', '*.pin', '*.pof', '*.qws', '*.rpt',
+        '*.smsg', '*.sld', '*.sof', '*.sop', '*.summary', '*.txt',
+        # pyfpga
+        'quartus.tcl'
     ]
 
     def transfer(self, devtype, position, part, width, capture):

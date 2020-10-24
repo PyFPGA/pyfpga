@@ -27,11 +27,11 @@ prj.set_top('Blinking')
 if args.action in ['generate', 'all']:
     try:
         prj.generate()
-    except Exception as e:
-        logging.warning('{} ({})'.format(type(e).__name__, e))
+    except RuntimeError:
+        print('ERROR:generate:Vivado not found')
 
 if args.action in ['transfer', 'all']:
     try:
         prj.transfer('fpga')
-    except Exception as e:
-        logging.warning('ERROR: {} ({})'.format(type(e).__name__, e))
+    except RuntimeError:
+        print('ERROR:transfer:Vivado not found')
