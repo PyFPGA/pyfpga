@@ -67,9 +67,6 @@ class Project:
         elif tool == 'quartus':
             from fpga.tool.quartus import Quartus
             self.tool = Quartus(project)
-        elif tool == 'tclsh':
-            from fpga.tool.tclsh import Tclsh
-            self.tool = Tclsh(project)
         elif tool in ['vivado', 'yosys-vivado']:
             from fpga.tool.vivado import Vivado
             self.tool = Vivado(project, 'yosys' if 'yosys' in tool else '')
