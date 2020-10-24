@@ -105,9 +105,9 @@ class Openflow(Tool):
         # Parameters
         params = []
         for param in self.params:
-            params.append('chparam -set {} {} {}').format(
+            params.append('chparam -set {} {} {}'.format(
                 param[0], param[1], self.top
-            )
+            ))
         # Family, Device and Package
         family = get_family(self.part)
         device = None

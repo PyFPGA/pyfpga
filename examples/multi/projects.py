@@ -62,4 +62,4 @@ for project in sorted(PROJECTS.keys()):
     try:
         PRJ.generate(to_task='imp')
     except RuntimeError:
-        print('ERROR:generate:{} not found'.format(tool))
+        print('ERROR:generate:{} not found'.format(PROJECTS[project]['tool']))
