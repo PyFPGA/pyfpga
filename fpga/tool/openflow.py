@@ -73,10 +73,10 @@ class Openflow(Tool):
         '*.sh'
     ]
 
-    def __init__(self, project):
+    def __init__(self, project, frontend='yosys', backend='nextpnr'):
         super().__init__(project)
-        self.backend = 'nextpnr'
-        self.frontend = 'yosys'
+        self.backend = backend
+        self.frontend = frontend
 
     def _create_gen_script(self, tasks):
         # Verilog includes
@@ -146,6 +146,12 @@ class Openflow(Tool):
             vhdls='\\\n'+'\n'.join(vhdls)
         )
         open("%s.sh" % self._TOOL, 'w').write(text)
+
+    def generate(self, to_task, from_task, capture):
+        if self.frontend == 'ghdl':
+            to_task = 'syn'
+            from_task = 'syn'
+        return super().generate(to_task, from_task, capture)
 
     def transfer(self, devtype, position, part, width, capture):
         super().transfer(devtype, position, part, width, capture)

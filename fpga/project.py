@@ -53,8 +53,8 @@ class Project:
         self._log.level = logging.INFO
         self._log.addHandler(logging.NullHandler())
         if tool == 'ghdl':
-            from fpga.tool.ghdl import Ghdl
-            self.tool = Ghdl(project)
+            from fpga.tool.openflow import Openflow
+            self.tool = Openflow(project, frontend='ghdl')
         elif tool in ['ise', 'yosys-ise']:
             from fpga.tool.ise import Ise
             self.tool = Ise(project, 'yosys' if 'yosys' in tool else '')
