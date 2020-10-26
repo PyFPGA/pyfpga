@@ -15,14 +15,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Supported TOOLs: ghdl, ghdl-yosys-plugin, yosys, nextpnr, icestrom, trellis
+# This file implements an open-source flow based on ghdl, ghdl-yosys-plugin,
+# yosys, nextpnr, icestorm and prjtrellis.
 #
 
 ###############################################################################
 # Things to tuneup
 ###############################################################################
 
-TOOL={tool}
+FRONTEND={frontend}
 BACKEND={backend}
 PROJECT={project}
 FAMILY={family}
@@ -63,7 +64,7 @@ function print () {{
 # GHDL
 #######################################
 
-if [[ $TASKS == *"syn"* && $TOOL == "ghdl" ]]; then
+if [[ $TASKS == *"syn"* && $FRONTEND == "ghdl" ]]; then
 
 print "ghdl" "running 'synthesis'"
 
@@ -78,7 +79,7 @@ fi
 # Yosys (with ghdl-yosys-plugin)
 #######################################
 
-if [[ $TASKS == *"syn"* && $TOOL == "yosys" ]]; then
+if [[ $TASKS == *"syn"* && $FRONTEND == "yosys" ]]; then
 
 print "yosys" "running 'synthesis'"
 

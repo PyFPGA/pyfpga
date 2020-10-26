@@ -140,11 +140,11 @@ class Openflow(Tool):
             device=device,
             includes='\\\n'+'\n'.join(paths),
             family=family,
+            frontend=self.frontend,
             package=package,
             params='\\\n'+'\n'.join(params),
             project=self.project,
             tasks=tasks,
-            tool=self.frontend,
             top=self.top,
             verilogs='\\\n'+'\n'.join(verilogs),
             vhdls='\\\n'+'\n'.join(vhdls)
