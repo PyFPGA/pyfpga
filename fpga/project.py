@@ -54,7 +54,7 @@ class Project:
         self._log.addHandler(logging.NullHandler())
         if tool == 'ghdl':
             from fpga.tool.openflow import Openflow
-            self.tool = Openflow(project, frontend='ghdl')
+            self.tool = Openflow(project, frontend='ghdl', backend='vhdl')
         elif tool in ['ise', 'yosys-ise']:
             from fpga.tool.ise import Ise
             self.tool = Ise(project, 'yosys' if 'yosys' in tool else '')
@@ -71,8 +71,8 @@ class Project:
             from fpga.tool.vivado import Vivado
             self.tool = Vivado(project, 'yosys' if 'yosys' in tool else '')
         elif tool == 'yosys':
-            from fpga.tool.yosys import Yosys
-            self.tool = Yosys(project)
+            from fpga.tool.openflow import Openflow
+            self.tool = Openflow(project, frontend='yosys', backend='verilog')
         else:
             raise NotImplementedError(tool)
         self._rundir = os.getcwd()

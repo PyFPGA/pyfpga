@@ -65,8 +65,12 @@ class Vivado(Tool):
     def __init__(self, project, frontend=None):
         super().__init__(project)
         if frontend == 'yosys':
-            from fpga.tool.yosys import Yosys
-            self.tool = Yosys(self.project, 'vivado')
+            from fpga.tool.openflow import Openflow
+            self.tool = Openflow(
+                self.project,
+                frontend='yosys',
+                backend='vivado'
+            )
             self.presynth = True
 
     def generate(self, to_task, from_task, capture):

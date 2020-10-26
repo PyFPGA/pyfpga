@@ -119,8 +119,12 @@ class Ise(Tool):
     def __init__(self, project, frontend=None):
         super().__init__(project)
         if frontend == 'yosys':
-            from fpga.tool.yosys import Yosys
-            self.tool = Yosys(self.project, 'ise')
+            from fpga.tool.openflow import Openflow
+            self.tool = Openflow(
+                self.project,
+                frontend='yosys',
+                backend='ise'
+            )
             self.presynth = True
 
     def set_part(self, part):

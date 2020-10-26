@@ -74,6 +74,10 @@ class Openflow(Tool):
     ]
 
     def __init__(self, project, frontend='yosys', backend='nextpnr'):
+        # The valid frontends are be ghdl and yosys
+        # The valid backends are:
+        # * For ghdl -> vhdl
+        # * For yosys -> ise, nextpnr, verilog, verilog-nosynth and vivado
         super().__init__(project)
         self.backend = backend
         self.frontend = frontend
@@ -148,7 +152,7 @@ class Openflow(Tool):
         open("%s.sh" % self._TOOL, 'w').write(text)
 
     def generate(self, to_task, from_task, capture):
-        if self.frontend == 'ghdl':
+        if self.frontend == 'ghdl' or 'verilog' in self.backend:
             to_task = 'syn'
             from_task = 'syn'
         return super().generate(to_task, from_task, capture)
