@@ -77,7 +77,6 @@ class Openflow(Tool):
         super().__init__(project)
         self.backend = 'nextpnr'
         self.frontend = 'yosys'
-        self.includes = []
 
     def _create_gen_script(self, tasks):
         # Verilog includes
