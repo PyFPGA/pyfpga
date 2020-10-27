@@ -75,7 +75,7 @@ class Vivado(Tool):
 
     def generate(self, to_task, from_task, capture):
         if self.presynth and from_task in ['prj', 'syn']:
-            self.tool.set_part(self.part)
+            self.tool.set_part(self.part['name'])
             self.tool.set_top(self.top)
             self.tool.paths = self.paths
             self.tool.filesets['vhdl'] = self.filesets['vhdl']

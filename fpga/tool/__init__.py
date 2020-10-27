@@ -73,8 +73,7 @@ class Tool:
 
     def __init__(self, project):
         """Initializes the attributes of the class."""
-        self.project = self._TOOL if project is None else project
-        self.set_part(self._PART)
+        self.bitstream = None
         self.cmds = {
             'prefile': [],
             'project': [],
@@ -83,7 +82,6 @@ class Tool:
             'postimp': [],
             'postbit': []
         }
-        self.params = []
         self.filesets = {
             'vhdl': [],
             'verilog': [],
@@ -91,10 +89,19 @@ class Tool:
             'simulation': [],
             'design': []
         }
+        self.params = []
+        self.part = {
+            'name': 'UNSET',
+            'family': 'UNSET',
+            'device': 'UNSET',
+            'package': 'UNSET',
+            'speed': 'UNSET'
+        }
         self.paths = []
-        self.set_top('UNDEFINED')
         self.presynth = False
-        self.bitstream = None
+        self.project = self._TOOL if project is None else project
+        self.set_part(self._PART)
+        self.set_top('UNDEFINED')
 
     def get_configs(self):
         """Get Configurations."""
@@ -102,12 +109,12 @@ class Tool:
             'tool': self._TOOL,
             'project': self.project,
             'extension': self._EXTENSION,
-            'part': self.part
+            'part': self.part['name']
         }
 
     def set_part(self, part):
         """Set the target PART."""
-        self.part = part
+        self.part['name'] = part
 
     def set_param(self, name, value):
         """Set a Generic/Parameter Value."""
@@ -171,7 +178,11 @@ class Tool:
         tcl = tcl.replace('#TOOL#', self._TOOL)
         tcl = tcl.replace('#PRESYNTH#', "True" if self.presynth else "False")
         tcl = tcl.replace('#PROJECT#', self.project)
-        tcl = tcl.replace('#PART#', self.part)
+        tcl = tcl.replace('#PART#', self.part['name'])
+        tcl = tcl.replace('#FAMILY#', self.part['family'])
+        tcl = tcl.replace('#DEVICE#', self.part['device'])
+        tcl = tcl.replace('#PACKAGE#', self.part['package'])
+        tcl = tcl.replace('#SPEED#', self.part['speed'])
         tcl = tcl.replace('#PARAMS#', ' '.join(params))
         tcl = tcl.replace('#FILES#', '\n'.join(files))
         tcl = tcl.replace('#TOP#', self.top)

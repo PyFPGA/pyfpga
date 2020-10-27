@@ -59,18 +59,45 @@ class Libero(Tool):
 
     def set_part(self, part):
         try:
-            family, speed, package = re.findall(r'(\w+)-(\w+)-*(\w*)', part)[0]
+            device, speed, package = re.findall(r'(\w+)-(\w+)-*(\w*)', part)[0]
             if len(speed) > len(package):
                 speed, package = package, speed
             if speed == '':
                 speed = 'STD'
-            part = "{}-{}-{}".format(family, speed, package)
+            part = "{}-{}-{}".format(device, speed, package)
         except IndexError:
             raise ValueError(
-                'Part must be FAMILY-SPEED-PACKAGE or FAMILY-PACKAGE'
+                'Part must be DEVICE-SPEED-PACKAGE or DEVICE-PACKAGE'
             )
-        self.part = part
+        self.part['name'] = part
+        self.part['family'] = get_family(part)
+        self.part['device'] = device
+        self.part['package'] = package
+        self.part['speed'] = 'STD' if speed == 'STD' else '-' + speed
 
     def transfer(self, devtype, position, part, width, capture):
         super().transfer(devtype, position, part, width, capture)
         raise NotImplementedError('transfer(libero)')
+
+
+def get_family(part):
+    """Get the Family name from the specified part name."""
+    part = part.lower()
+    families = {
+        r'm2s': 'SmartFusion2',
+        r'm2gl': 'Igloo2',
+        r'rt4g': 'RTG4',
+        r'mpf': 'PolarFire',
+        r'a2f': 'SmartFusion',
+        r'afs': 'Fusion',
+        r'aglp': 'IGLOO+',
+        r'agle': 'IGLOOE',
+        r'agl': 'IGLOO',
+        r'a3p\d+l': 'ProAsic3L',
+        r'a3pe': 'ProAsic3E',
+        r'a3p': 'ProAsic3'
+    }
+    for key, value in families.items():
+        if re.match(key, part):
+            return value
+    return 'UNKNOWN'
