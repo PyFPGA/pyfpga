@@ -65,13 +65,17 @@ class Vivado(Tool):
     def __init__(self, project, frontend=None):
         super().__init__(project)
         if frontend == 'yosys':
-            from fpga.tool.yosys import Yosys
-            self.tool = Yosys(self.project, 'vivado')
+            from fpga.tool.openflow import Openflow
+            self.tool = Openflow(
+                self.project,
+                frontend='yosys',
+                backend='vivado'
+            )
             self.presynth = True
 
     def generate(self, to_task, from_task, capture):
         if self.presynth and from_task in ['prj', 'syn']:
-            self.tool.set_part(self.part)
+            self.tool.set_part(self.part['name'])
             self.tool.set_top(self.top)
             self.tool.paths = self.paths
             self.tool.filesets['vhdl'] = self.filesets['vhdl']
@@ -88,5 +92,6 @@ class Vivado(Tool):
         temp = _TEMPLATES[devtype]
         if devtype != 'detect':
             temp = temp.replace('#BITSTREAM#', self.bitstream)
-        open("vivado-prog.tcl", 'w').write(temp)
+        with open('vivado-prog.tcl', 'w') as file:
+            file.write(temp)
         return run(self._TRF_COMMAND, capture)

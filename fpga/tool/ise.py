@@ -119,25 +119,33 @@ class Ise(Tool):
     def __init__(self, project, frontend=None):
         super().__init__(project)
         if frontend == 'yosys':
-            from fpga.tool.yosys import Yosys
-            self.tool = Yosys(self.project, 'ise')
+            from fpga.tool.openflow import Openflow
+            self.tool = Openflow(
+                self.project,
+                frontend='yosys',
+                backend='ise'
+            )
             self.presynth = True
 
     def set_part(self, part):
         try:
-            family, speed, package = re.findall(r'(\w+)-(\w+)-(\w+)', part)[0]
+            device, speed, package = re.findall(r'(\w+)-(\w+)-(\w+)', part)[0]
             if len(speed) > len(package):
                 speed, package = package, speed
-            part = "{}-{}-{}".format(family, speed, package)
+            part = "{}-{}-{}".format(device, speed, package)
         except IndexError:
             raise ValueError(
-                'Part must be FAMILY-SPEED-PACKAGE or FAMILY-PACKAGE-SPEED'
+                'Part must be DEVICE-SPEED-PACKAGE or DEVICE-PACKAGE-SPEED'
             )
-        self.part = part
+        self.part['name'] = part
+        self.part['family'] = get_family(part)
+        self.part['device'] = device
+        self.part['package'] = package
+        self.part['speed'] = '-' + speed
 
     def generate(self, to_task, from_task, capture):
         if self.presynth and from_task in ['prj', 'syn']:
-            self.tool.set_part(self.part)
+            self.tool.set_part(self.part['name'])
             self.tool.set_top(self.top)
             self.tool.paths = self.paths
             self.tool.filesets['vhdl'] = self.filesets['vhdl']
@@ -156,5 +164,34 @@ class Ise(Tool):
             temp = temp.replace('#POSITION#', str(position))
             temp = temp.replace('#NAME#', part)
             temp = temp.replace('#WIDTH#', str(width))
-        open("ise-prog.impact", 'w').write(temp)
+        with open('ise-prog.impact', 'w') as file:
+            file.write(temp)
         return run(self._TRF_COMMAND, capture)
+
+
+def get_family(part):
+    """Get the Family name from the specified part name."""
+    part = part.lower()
+    families = {
+        r'xc7a\d+l': 'artix7l',
+        r'xc7a': 'artix7',
+        r'xc7k\d+l': 'kintex7l',
+        r'xc7k': 'kintex7',
+        r'xc3sd\d+a': 'spartan3adsp',
+        r'xc3s\d+a': 'spartan3a',
+        r'xc3s\d+e': 'spartan3e',
+        r'xc3s': 'spartan3',
+        r'xc6s\d+l': 'spartan6l',
+        r'xc6s': 'spartan6',
+        r'xc4v': 'virtex4',
+        r'xc5v': 'virtex5',
+        r'xc6v\d+l': 'virtex6l',
+        r'xc6v': 'virtex6',
+        r'xc7v\d+l': 'virtex7l',
+        r'xc7v': 'virtex7',
+        r'xc7z': 'zynq'
+    }
+    for key, value in families.items():
+        if re.match(key, part):
+            return value
+    return 'UNKNOWN'

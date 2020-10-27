@@ -26,34 +26,6 @@ import os
 from fpga.tool import Tool, run
 
 
-def get_family(part):
-    """Get the Family name from the specified part name."""
-    part = part.lower()
-    families = [
-        # From <YOSYS>/techlibs/xilinx/synth_xilinx.cc
-        'xcup', 'xcu', 'xc7', 'xc6s', 'xc6v', 'xc5v', 'xc4v', 'xc3sda',
-        'xc3sa', 'xc3se', 'xc3s', 'xc2vp', 'xc2v', 'xcve', 'xcv'
-    ]
-    for family in families:
-        if part.startswith(family):
-            return family
-    families = [
-        # From <nextpnr>/ice40/main.cc
-        'lp384', 'lp1k', 'lp4k', 'lp8k', 'hx1k', 'hx4k', 'hx8k',
-        'up3k', 'up5k', 'u1k', 'u2k', 'u4k'
-    ]
-    if part.startswith(tuple(families)):
-        return 'ice40'
-    families = [
-        # From <nextpnr>/ecp5/main.cc
-        '12k', '25k', '45k', '85k', 'um-25k', 'um-45k', 'um-85k',
-        'um5g-25k', 'um5g-45k', 'um5g-85k'
-    ]
-    if part.startswith(tuple(families)):
-        return 'ecp5'
-    return 'UNKNOWN'
-
-
 class Openflow(Tool):
     """Implementation of the class to support the open-source tools."""
 
@@ -73,10 +45,32 @@ class Openflow(Tool):
         '*.sh'
     ]
 
-    def __init__(self, project):
+    def __init__(self, project, frontend='yosys', backend='nextpnr'):
+        # The valid frontends are be ghdl and yosys
+        # The valid backends are:
+        # * For ghdl -> vhdl
+        # * For yosys -> ise, nextpnr, verilog, verilog-nosynth and vivado
         super().__init__(project)
-        self.backend = 'nextpnr'
-        self.frontend = 'yosys'
+        self.backend = backend
+        self.frontend = frontend
+
+    def set_part(self, part):
+        self.part['name'] = part
+        self.part['family'] = get_family(part)
+        if self.part['family'] in ['ice40', 'ecp5']:
+            aux = part.split('-')
+            if len(aux) == 2:
+                self.part['device'] = aux[0]
+                self.part['package'] = aux[1]
+            elif len(aux) == 3:
+                self.part['device'] = '{}-{}'.format(aux[0], aux[1])
+                self.part['package'] = aux[2]
+            else:
+                raise ValueError('Part must be DEVICE-PACKAGE')
+            if self.part['device'].endswith('4k'):
+                # See http://www.clifford.at/icestorm/
+                self.part['device'] = self.part['device'].replace('4', '8')
+                self.part['package'] += ":4k"
 
     def _create_gen_script(self, tasks):
         # Verilog includes
@@ -107,54 +101,71 @@ class Openflow(Tool):
             params.append('chparam -set {} {} {}'.format(
                 param[0], param[1], self.top
             ))
-        # Family, Device and Package
-        family = get_family(self.part)
-        device = None
-        package = None
-        if family in ['ice40', 'ecp5']:
-            part = self.part.split('-')
-            if len(part) == 2:
-                device = part[0]
-                package = part[1]
-            elif len(part) == 3:
-                device = '{}-{}'.format(part[0], part[1])
-                package = part[2]
-            else:
-                raise ValueError(
-                    'unsupported part specification [{}]'.format(self.part)
-                )
-            if device.endswith('4k'):
-                # See http://www.clifford.at/icestorm/
-                device = device.replace('4', '8')
-                package += ":4k"
         # Script creation
         template = os.path.join(os.path.dirname(__file__), 'template.sh')
-        text = open(template).read()
+        with open(template, 'r') as file:
+            text = file.read()
         text = text.format(
             backend=self.backend,
             constraints='\\\n'+'\n'.join(constraints),
-            device=device,
+            device=self.part['device'],
             includes='\\\n'+'\n'.join(paths),
-            family=family,
-            package=package,
+            family=self.part['family'],
+            frontend=self.frontend,
+            package=self.part['package'],
             params='\\\n'+'\n'.join(params),
             project=self.project,
             tasks=tasks,
-            tool=self.frontend,
             top=self.top,
             verilogs='\\\n'+'\n'.join(verilogs),
             vhdls='\\\n'+'\n'.join(vhdls)
         )
-        open("%s.sh" % self._TOOL, 'w').write(text)
+        with open('%s.sh' % self._TOOL, 'w') as file:
+            file.write(text)
+
+    def generate(self, to_task, from_task, capture):
+        if self.frontend == 'ghdl' or 'verilog' in self.backend:
+            to_task = 'syn'
+            from_task = 'syn'
+        return super().generate(to_task, from_task, capture)
 
     def transfer(self, devtype, position, part, width, capture):
         super().transfer(devtype, position, part, width, capture)
-        family = get_family(self.part)
         template = os.path.join(os.path.dirname(__file__), 'openprog.sh')
-        text = open(template).read()
+        with open(template, 'r') as file:
+            text = file.read()
         text = text.format(
-            family=family,
+            family=self.part['family'],
             project=self.project
         )
-        open("openprog.sh", 'w').write(text)
+        with open('openprog.sh', 'w') as file:
+            file.write(text)
         return run(self._TRF_COMMAND, capture)
+
+
+def get_family(part):
+    """Get the Family name from the specified part name."""
+    part = part.lower()
+    families = [
+        # From <YOSYS>/techlibs/xilinx/synth_xilinx.cc
+        'xcup', 'xcu', 'xc7', 'xc6s', 'xc6v', 'xc5v', 'xc4v', 'xc3sda',
+        'xc3sa', 'xc3se', 'xc3s', 'xc2vp', 'xc2v', 'xcve', 'xcv'
+    ]
+    for family in families:
+        if part.startswith(family):
+            return family
+    families = [
+        # From <nextpnr>/ice40/main.cc
+        'lp384', 'lp1k', 'lp4k', 'lp8k', 'hx1k', 'hx4k', 'hx8k',
+        'up3k', 'up5k', 'u1k', 'u2k', 'u4k'
+    ]
+    if part.startswith(tuple(families)):
+        return 'ice40'
+    families = [
+        # From <nextpnr>/ecp5/main.cc
+        '12k', '25k', '45k', '85k', 'um-25k', 'um-45k', 'um-85k',
+        'um5g-25k', 'um5g-45k', 'um5g-85k'
+    ]
+    if part.startswith(tuple(families)):
+        return 'ecp5'
+    return 'UNKNOWN'

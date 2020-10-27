@@ -53,8 +53,8 @@ class Project:
         self._log.level = logging.INFO
         self._log.addHandler(logging.NullHandler())
         if tool == 'ghdl':
-            from fpga.tool.ghdl import Ghdl
-            self.tool = Ghdl(project)
+            from fpga.tool.openflow import Openflow
+            self.tool = Openflow(project, frontend='ghdl', backend='vhdl')
         elif tool in ['ise', 'yosys-ise']:
             from fpga.tool.ise import Ise
             self.tool = Ise(project, 'yosys' if 'yosys' in tool else '')
@@ -71,8 +71,8 @@ class Project:
             from fpga.tool.vivado import Vivado
             self.tool = Vivado(project, 'yosys' if 'yosys' in tool else '')
         elif tool == 'yosys':
-            from fpga.tool.yosys import Yosys
-            self.tool = Yosys(project)
+            from fpga.tool.openflow import Openflow
+            self.tool = Openflow(project, frontend='yosys', backend='verilog')
         else:
             raise NotImplementedError(tool)
         self._rundir = os.getcwd()
@@ -179,7 +179,8 @@ class Project:
             toplevel = os.path.join(self._absdir, toplevel)
             toplevel = os.path.normpath(toplevel)
             if os.path.exists(toplevel):
-                hdl = open(toplevel, 'r').read()
+                with open(toplevel, 'r') as file:
+                    hdl = file.read()
                 # Removing comments, newlines and carriage-returns
                 hdl = re.sub(r'--.*[$\n]|\/\/.*[$\n]', '', hdl)
                 hdl = hdl.replace('\n', '').replace('\r', '')
