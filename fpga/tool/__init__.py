@@ -174,7 +174,8 @@ class Tool:
             params.append('{{ {} {} }}'.format(param[0], param[1]))
         # Script creation
         template = os.path.join(os.path.dirname(__file__), 'template.tcl')
-        tcl = open(template).read()
+        with open(template, 'r') as file:
+            tcl = file.read()
         tcl = tcl.replace('#TOOL#', self._TOOL)
         tcl = tcl.replace('#PRESYNTH#', "True" if self.presynth else "False")
         tcl = tcl.replace('#PROJECT#', self.project)
@@ -193,7 +194,8 @@ class Tool:
         tcl = tcl.replace('#POSTSYN_CMDS#', '\n'.join(self.cmds['postsyn']))
         tcl = tcl.replace('#POSTIMP_CMDS#', '\n'.join(self.cmds['postimp']))
         tcl = tcl.replace('#POSTBIT_CMDS#', '\n'.join(self.cmds['postbit']))
-        open("%s.tcl" % self._TOOL, 'w').write(tcl)
+        with open('%s.tcl' % self._TOOL, 'w') as file:
+            file.write(tcl)
 
     def generate(self, to_task, from_task, capture):
         """Run the FPGA tool."""

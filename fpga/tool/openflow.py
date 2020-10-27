@@ -103,7 +103,8 @@ class Openflow(Tool):
             ))
         # Script creation
         template = os.path.join(os.path.dirname(__file__), 'template.sh')
-        text = open(template).read()
+        with open(template, 'r') as file:
+            text = file.read()
         text = text.format(
             backend=self.backend,
             constraints='\\\n'+'\n'.join(constraints),
@@ -119,7 +120,8 @@ class Openflow(Tool):
             verilogs='\\\n'+'\n'.join(verilogs),
             vhdls='\\\n'+'\n'.join(vhdls)
         )
-        open("%s.sh" % self._TOOL, 'w').write(text)
+        with open('%s.sh' % self._TOOL, 'w') as file:
+            file.write(text)
 
     def generate(self, to_task, from_task, capture):
         if self.frontend == 'ghdl' or 'verilog' in self.backend:
@@ -130,12 +132,14 @@ class Openflow(Tool):
     def transfer(self, devtype, position, part, width, capture):
         super().transfer(devtype, position, part, width, capture)
         template = os.path.join(os.path.dirname(__file__), 'openprog.sh')
-        text = open(template).read()
+        with open(template, 'r') as file:
+            text = file.read()
         text = text.format(
             family=self.part['family'],
             project=self.project
         )
-        open("openprog.sh", 'w').write(text)
+        with open('openprog.sh', 'w') as file:
+            file.write(text)
         return run(self._TRF_COMMAND, capture)
 
 

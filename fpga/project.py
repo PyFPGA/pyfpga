@@ -179,7 +179,8 @@ class Project:
             toplevel = os.path.join(self._absdir, toplevel)
             toplevel = os.path.normpath(toplevel)
             if os.path.exists(toplevel):
-                hdl = open(toplevel, 'r').read()
+                with open(toplevel, 'r') as file:
+                    hdl = file.read()
                 # Removing comments, newlines and carriage-returns
                 hdl = re.sub(r'--.*[$\n]|\/\/.*[$\n]', '', hdl)
                 hdl = hdl.replace('\n', '').replace('\r', '')

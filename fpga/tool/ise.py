@@ -164,7 +164,8 @@ class Ise(Tool):
             temp = temp.replace('#POSITION#', str(position))
             temp = temp.replace('#NAME#', part)
             temp = temp.replace('#WIDTH#', str(width))
-        open("ise-prog.impact", 'w').write(temp)
+        with open('ise-prog.impact', 'w') as file:
+            file.write(temp)
         return run(self._TRF_COMMAND, capture)
 
 
