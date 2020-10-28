@@ -25,8 +25,9 @@ set -e
 FAMILY={family}
 PROJECT={project}
 
-OCI_CMD="{oci_cmd}"
-OCI_PRG="{oci_prg}"
+OCI_RUN="{oci_run}"
+OCI_PRG_ICE40="{oci_prg_ice40}"
+OCI_PRG_ECP5="{oci_prg_ecp5}"
 
 ###############################################################################
 # Programming
@@ -34,7 +35,7 @@ OCI_PRG="{oci_prg}"
 
 if [[ $FAMILY == "ice40" ]]; then
 
-$OCI_CMD $OCI_PRG iceprog $PROJECT.bit
+$OCI_RUN $OCI_PRG_ICE40 iceprog $PROJECT.bit
 
 #elif [[ $FAMILY == "ecp5" ]]; then
 

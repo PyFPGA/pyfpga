@@ -17,18 +17,9 @@ args = parser.parse_args()
 logging.basicConfig()
 logging.getLogger('fpga.project').level = logging.DEBUG
 
-oci_configs = {
-    'cmd': 'docker run --rm -v $HOME:$HOME -w $PWD',
-    'syn': 'ghdl/synth:beta',
-    'imp': 'ghdl/synth:nextpnr-ice40',
-    'bit': 'ghdl/synth:icestorm',
-    'prg': '--device /dev/bus/usb ghdl/synth:prog'
-}
-
 prj = Project('openflow')
 prj.set_outdir('../../build/icestorm-{}'.format(args.lang))
 prj.set_part('hx4k-tq144')
-prj.set_oci(oci_configs)
 
 if args.lang == 'verilog':
     prj.add_path('../../hdl/headers1')

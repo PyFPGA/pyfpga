@@ -43,10 +43,13 @@ CONSTRAINTS="{constraints}"
 # taks = prj syn imp bit
 TASKS="{tasks}"
 
-OCI_CMD="{oci_cmd}"
-OCI_SYN={oci_syn}
-OCI_IMP={oci_imp}
-OCI_BIT={oci_bit}
+OCI_RUN="{oci_run}"
+OCI_GHDL={oci_syn_ghdl}
+OCI_YOSYS={oci_syn_yosys}
+OCI_IMP_ICE40={oci_imp_ice40}
+OCI_IMP_ECP5={oci_imp_ecp5}
+OCI_BIT_ICE40={oci_bit_ice40}
+OCI_BIT_ECP5={oci_bit_ecp5}
 
 ###############################################################################
 # Support
@@ -71,7 +74,7 @@ if [[ $TASKS == *"syn"* && $FRONTEND == "ghdl" ]]; then
 
 print "ghdl" "running 'synthesis'"
 
-$OCI_CMD $OCI_SYN /bin/bash -c "
+$OCI_RUN $OCI_GHDL /bin/bash -c "
 $VHDLS
 ghdl --synth $FLAGS $TOP
 " > $PROJECT.vhdl
@@ -103,7 +106,7 @@ else
     WRITE="write_verilog $PROJECT.v"
 fi
 
-$OCI_CMD $OCI_SYN /bin/bash -c "
+$OCI_RUN $OCI_YOSYS /bin/bash -c "
 $VHDLS
 yosys -Q $MODULE -p '
 $INCLUDES;
@@ -127,18 +130,16 @@ INPUT="--json $PROJECT.json"
 if [[ $FAMILY == "ice40" ]]; then
     CONSTRAINT="--pcf $CONSTRAINTS"
     OUTPUT="--asc $PROJECT.asc"
+    $OCI_RUN $OCI_IMP_ICE40 \
+        nextpnr-ice40 --$DEVICE --package $PACKAGE $CONSTRAINT $INPUT $OUTPUT
+    $OCI_RUN $OCI_BIT_ICE40 \
+        icetime -d $DEVICE -mtr $PROJECT.rpt $PROJECT.asc
 else
     CONSTRAINT="--lpf $CONSTRAINTS"
     OUTPUT="--textcfg $PROJECT.config"
+    $OCI_RUN $OCI_IMP_ECP5 \
+        nextpnr-ecp5 --$DEVICE --package $PACKAGE $CONSTRAINT $INPUT $OUTPUT
 fi
-
-$OCI_CMD $OCI_IMP /bin/bash -c "
-nextpnr-$FAMILY --$DEVICE --package $PACKAGE $CONSTRAINT $INPUT $OUTPUT
-"
-
-[ $FAMILY == "ice40" ] && $OCI_CMD $OCI_BIT /bin/bash -c "
-icetime -d $DEVICE -mtr $PROJECT.rpt $PROJECT.asc
-"
 
 fi
 
@@ -146,29 +147,15 @@ fi
 # Bitstream generation
 ###############################################################################
 
-#######################################
-# icestorm
-#######################################
+if [[ $TASKS == *"bit"* ]]; then
 
-if [[ $TASKS == *"bit"* && $FAMILY == "ice40" ]]; then
-
-print "icepack" "running 'bitstream generation'"
-
-$OCI_CMD $OCI_BIT /bin/bash -c "
-icepack $PROJECT.asc $PROJECT.bit
-"
+if [[ $FAMILY == "ice40" ]]; then
+    print "icepack" "running 'bitstream generation'"
+    $OCI_RUN $OCI_BIT_ICE40 icepack $PROJECT.asc $PROJECT.bit
+else
+    print "eccpack" "running 'bitstream generation'"
+    $OCI_RUN $OCI_BIT_ECP5 \
+      ecppack --svf $PROJECT.svf $PROJECT.config $PROJECT.bit
 fi
-
-#######################################
-# Trellis
-#######################################
-
-if [[ $TASKS == *"bit"* && $FAMILY == "ecp5" ]]; then
-
-print "eccpack" "running 'bitstream generation'"
-
-$OCI_CMD $OCI_BIT /bin/bash -c "
-ecppack --svf $PROJECT.svf $PROJECT.config $PROJECT.bit
-"
 
 fi

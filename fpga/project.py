@@ -274,13 +274,6 @@ class Project:
         with self._run_in_dir():
             self.tool.clean()
 
-    def set_oci(self, configs):
-        """Set the OCI (Open Container Initiative) configurations.
-
-        **WARNING:** set_oci is only supported by the open-source tools.
-        """
-        self.tool.set_oci(configs)
-
     @contextlib.contextmanager
     def _run_in_dir(self):
         """Runs the tool in other directory."""

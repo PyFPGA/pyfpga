@@ -33,5 +33,6 @@ setup(
         'Programming Language :: Python :: 3',
         'Topic :: Utilities',
         'Topic :: Software Development :: Build Tools'
-    ]
+    ],
+    install_requires=['pyyaml']
 )

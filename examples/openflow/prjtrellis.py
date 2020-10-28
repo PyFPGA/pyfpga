@@ -22,14 +22,6 @@ args = parser.parse_args()
 logging.basicConfig()
 logging.getLogger('fpga.project').level = logging.DEBUG
 
-oci_configs = {
-    'cmd': 'docker run --rm -v $HOME:$HOME -w $PWD',
-    'syn': 'ghdl/synth:beta',
-    'imp': 'ghdl/synth:nextpnr-ecp5',
-    'bit': 'ghdl/synth:trellis',
-    'prg': '--device /dev/bus/usb ghdl/synth:prog'
-}
-
 BOARDS = {
     'orangecrab': ['25k-CSFBGA285', 'orangecrab_r0.2.lpf'],
     'ecp5evn': ['um5g-85k-CABGA381', 'ecp5evn.lpf']
@@ -38,7 +30,6 @@ BOARDS = {
 prj = Project('openflow')
 prj.set_outdir('../../build/prjtrellis-{}-{}'.format(args.board, args.lang))
 prj.set_part(BOARDS[args.board][0])
-prj.set_oci(oci_configs)
 
 if args.lang == 'verilog':
     prj.add_path('../../hdl/headers1')
