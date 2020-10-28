@@ -6,13 +6,10 @@ variables:
 cache:
   paths:
     - .cache/pip
-    - venv/
 
 before_script:
   - python -V
-  - pip install virtualenv
-  - virtualenv venv
-  - source venv/bin/activate
+  - pip install .
 
 stages:
   - lint
@@ -32,6 +29,5 @@ test:
   needs: [ lint ]
   script:
     - pip install pytest
-    - pip install .
     - pytest
     - make -C examples
