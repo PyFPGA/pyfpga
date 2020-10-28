@@ -53,6 +53,13 @@ class Openflow(Tool):
         super().__init__(project)
         self.backend = backend
         self.frontend = frontend
+        self.oci = {
+            'cmd': '',
+            'syn': '',
+            'imp': '',
+            'bit': '',
+            'prg': ''
+        }
 
     def set_part(self, part):
         self.part['name'] = part
@@ -112,6 +119,10 @@ class Openflow(Tool):
             includes='\\\n'+'\n'.join(paths),
             family=self.part['family'],
             frontend=self.frontend,
+            oci_cmd=self.oci['cmd'],
+            oci_syn=self.oci['syn'],
+            oci_imp=self.oci['imp'],
+            oci_bit=self.oci['bit'],
             package=self.part['package'],
             params='\\\n'+'\n'.join(params),
             project=self.project,
@@ -136,11 +147,23 @@ class Openflow(Tool):
             text = file.read()
         text = text.format(
             family=self.part['family'],
+            oci_cmd=self.oci['cmd'],
+            oci_prg=self.oci['prg'],
             project=self.project
         )
         with open('openprog.sh', 'w') as file:
             file.write(text)
         return run(self._TRF_COMMAND, capture)
+
+    def set_oci(self, configs):
+        """Set the OCI (Open Container Initiative) configurations."""
+        self.oci = {
+            'cmd': configs['cmd'] if 'cmd' in configs else '',
+            'syn': configs['syn'] if 'syn' in configs else '',
+            'imp': configs['imp'] if 'imp' in configs else '',
+            'bit': configs['bit'] if 'bit' in configs else '',
+            'prg': configs['prg'] if 'prg' in configs else ''
+        }
 
 
 def get_family(part):

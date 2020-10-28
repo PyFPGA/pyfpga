@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+set -e
+
 ###############################################################################
 # Things to tuneup
 ###############################################################################
@@ -23,14 +25,8 @@
 FAMILY={family}
 PROJECT={project}
 
-###############################################################################
-# Support
-###############################################################################
-
-set -e
-
-DOCKER="docker run --rm -v $HOME:$HOME -w $PWD"
-DOCKER="$DOCKER --device /dev/bus/usb ghdl/synth:prog"
+OCI_CMD="{oci_cmd}"
+OCI_PRG="{oci_prg}"
 
 ###############################################################################
 # Programming
@@ -38,7 +34,7 @@ DOCKER="$DOCKER --device /dev/bus/usb ghdl/synth:prog"
 
 if [[ $FAMILY == "ice40" ]]; then
 
-$DOCKER iceprog $PROJECT.bit
+$OCI_CMD $OCI_PRG iceprog $PROJECT.bit
 
 #elif [[ $FAMILY == "ecp5" ]]; then
 

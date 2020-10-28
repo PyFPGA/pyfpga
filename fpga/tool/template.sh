@@ -19,6 +19,8 @@
 # yosys, nextpnr, icestorm and prjtrellis.
 #
 
+set -e
+
 ###############################################################################
 # Things to tuneup
 ###############################################################################
@@ -41,13 +43,14 @@ CONSTRAINTS="{constraints}"
 # taks = prj syn imp bit
 TASKS="{tasks}"
 
+OCI_CMD="{oci_cmd}"
+OCI_SYN={oci_syn}
+OCI_IMP={oci_imp}
+OCI_BIT={oci_bit}
+
 ###############################################################################
 # Support
 ###############################################################################
-
-set -e
-
-DOCKER="docker run --rm -v $HOME:$HOME -w $PWD"
 
 MODULE=
 [ -n "$VHDLS" ] && MODULE="-m ghdl"
@@ -68,7 +71,7 @@ if [[ $TASKS == *"syn"* && $FRONTEND == "ghdl" ]]; then
 
 print "ghdl" "running 'synthesis'"
 
-$DOCKER ghdl/synth:beta /bin/bash -c "
+$OCI_CMD $OCI_SYN /bin/bash -c "
 $VHDLS
 ghdl --synth $FLAGS $TOP
 " > $PROJECT.vhdl
@@ -100,7 +103,7 @@ else
     WRITE="write_verilog $PROJECT.v"
 fi
 
-$DOCKER ghdl/synth:beta /bin/bash -c "
+$OCI_CMD $OCI_SYN /bin/bash -c "
 $VHDLS
 yosys -Q $MODULE -p '
 $INCLUDES;
@@ -129,11 +132,11 @@ else
     OUTPUT="--textcfg $PROJECT.config"
 fi
 
-$DOCKER ghdl/synth:nextpnr-$FAMILY /bin/bash -c "
+$OCI_CMD $OCI_IMP /bin/bash -c "
 nextpnr-$FAMILY --$DEVICE --package $PACKAGE $CONSTRAINT $INPUT $OUTPUT
 "
 
-[ $FAMILY == "ice40" ] && $DOCKER ghdl/synth:icestorm /bin/bash -c "
+[ $FAMILY == "ice40" ] && $OCI_CMD $OCI_BIT /bin/bash -c "
 icetime -d $DEVICE -mtr $PROJECT.rpt $PROJECT.asc
 "
 
@@ -151,7 +154,7 @@ if [[ $TASKS == *"bit"* && $FAMILY == "ice40" ]]; then
 
 print "icepack" "running 'bitstream generation'"
 
-$DOCKER ghdl/synth:icestorm /bin/bash -c "
+$OCI_CMD $OCI_BIT /bin/bash -c "
 icepack $PROJECT.asc $PROJECT.bit
 "
 fi
@@ -164,7 +167,7 @@ if [[ $TASKS == *"bit"* && $FAMILY == "ecp5" ]]; then
 
 print "eccpack" "running 'bitstream generation'"
 
-$DOCKER ghdl/synth:trellis /bin/bash -c "
+$OCI_CMD $OCI_BIT /bin/bash -c "
 ecppack --svf $PROJECT.svf $PROJECT.config $PROJECT.bit
 "
 
