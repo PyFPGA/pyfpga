@@ -103,9 +103,12 @@ class Tool:
         self.project = self._TOOL if project is None else project
         self.set_part(self._PART)
         self.set_top('UNDEFINED')
+        self.config = {}
         if os.path.exists('pyfpga.yml'):
             with open('pyfpga.yml', 'r') as yamlfile:
-                self.config = yaml.safe_load(yamlfile)[self._TOOL]
+                config = yaml.safe_load(yamlfile)
+                if self._TOOL in config:
+                    self.config = config[self._TOOL]
 
     def get_configs(self):
         """Get Configurations."""
