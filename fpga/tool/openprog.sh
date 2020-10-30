@@ -25,25 +25,28 @@ set -e
 FAMILY={family}
 PROJECT={project}
 
-OCI_RUN="{oci_run}"
-OCI_PRG_ICE40="{oci_prg_ice40}"
-OCI_PRG_ECP5="{oci_prg_ecp5}"
+#
+# Tools configuration
+#
+
+OCI_ENGINE="{oci_engine}"
+
+CONT_ICEPROG="{cont_iceprog}"
+CONT_OPENOCD="{cont_openocd}"
+
+TOOL_ICEPROG="{tool_iceprog}"
+TOOL_OPENOCD="{tool_openocd}"
 
 ###############################################################################
 # Programming
 ###############################################################################
 
 if [[ $FAMILY == "ice40" ]]; then
-
-$OCI_RUN $OCI_PRG_ICE40 iceprog $PROJECT.bit
-
-#elif [[ $FAMILY == "ecp5" ]]; then
-
-#$DOCKER openocd -f /usr/share/trellis/misc/openocd/ecp5-evn.cfg \
-#-c "transport select jtag; init; svf $PROJECT.svf; exit"
-
+    $OCI_ENGINE $CONT_ICEPROG $TOOL_ICEPROG $PROJECT.bit
+elif [[ $FAMILY == "ecp5" ]]; then
+    $OCI_ENGINE $CONT_OPENOCD $TOOL_OPENOCD \
+        -f /usr/share/trellis/misc/openocd/ecp5-evn.cfg \
+        -c "transport select jtag; init; svf $PROJECT.svf; exit"
 else
-
-echo "ERROR: unsuported tool" && exit 1
-
+    echo "ERROR: unsuported tool" && exit 1
 fi

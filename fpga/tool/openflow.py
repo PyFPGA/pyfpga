@@ -22,7 +22,6 @@ Implements the support of the open-source tools.
 """
 
 import os
-
 from fpga.tool import Tool, run
 
 
@@ -53,6 +52,35 @@ class Openflow(Tool):
         super().__init__(project)
         self.backend = backend
         self.frontend = frontend
+        self.config_tools()
+
+    def config_tools(self):
+        """Configure the employed tools."""
+        # OCI ENGINE
+        engine = self.config.get('oci', {}).get('engine', {})
+        command = engine.get('command', 'docker') + ' run --rm'
+        volumes = '-v ' + ('-v ').join(engine.get('volumes', ['$HOME:$HOME']))
+        work = '-w ' + engine.get('work', '$PWD')
+        self.oci_engine = '{} {} {}'.format(command, volumes, work)
+        # Containers
+        defaults = {
+            'ghdl': 'ghdl/synth:beta',
+            'yosys': 'ghdl/synth:beta',
+            'nextpnr-ice40': 'ghdl/synth:nextpnr-ice40',
+            'icetime': 'ghdl/synth:icestorm',
+            'icepack': 'ghdl/synth:icestorm',
+            'iceprog': '--device /dev/bus/usb ghdl/synth:prog',
+            'nextpnr-ecp5': 'ghdl/synth:nextpnr-ecp5',
+            'ecppack': 'ghdl/synth:trellis',
+            'openocd': '--device /dev/bus/usb ghdl/synth:prog'
+        }
+        self.tools = {}
+        self.conts = {}
+        tools = self.config.get('tools', {})
+        containers = self.config.get('oci', {}).get('containers', {})
+        for tool, container in defaults.items():
+            self.tools[tool] = tools.get(tool, tool)
+            self.conts[tool] = containers.get(tool, container)
 
     def set_part(self, part):
         self.part['name'] = part
@@ -85,7 +113,9 @@ class Openflow(Tool):
             lib = ''
             if file[1] is not None:
                 lib = '--work={}'.format(file[1])
-            vhdls.append('ghdl -a $FLAGS {} {}'.format(lib, file[0]))
+            vhdls.append('{} -a $FLAGS {} {}'.format(
+                self.tools['ghdl'], lib, file[0])
+            )
         for file in self.filesets['verilog']:
             if file[0].endswith('.sv'):
                 verilogs.append('read_verilog -sv -defer {}'.format(file[0]))
@@ -112,20 +142,29 @@ class Openflow(Tool):
             includes='\\\n'+'\n'.join(paths),
             family=self.part['family'],
             frontend=self.frontend,
-            oci_run=self.config.get('oci_run', ''),
-            oci_syn_ghdl=self.config.get('oci_syn', {}).get('ghdl', ''),
-            oci_syn_yosys=self.config.get('oci_syn', {}).get('yosys', ''),
-            oci_imp_ice40=self.config.get('oci_imp', {}).get('ice40', ''),
-            oci_imp_ecp5=self.config.get('oci_imp', {}).get('ecp5', ''),
-            oci_bit_ice40=self.config.get('oci_bit', {}).get('ice40', ''),
-            oci_bit_ecp5=self.config.get('oci_bit', {}).get('ecp5', ''),
             package=self.part['package'],
             params='\\\n'+'\n'.join(params),
             project=self.project,
             tasks=tasks,
             top=self.top,
             verilogs='\\\n'+'\n'.join(verilogs),
-            vhdls='\\\n'+'\n'.join(vhdls)
+            vhdls='\\\n'+'\n'.join(vhdls),
+            #
+            oci_engine=self.oci_engine,
+            cont_ghdl=self.conts['ghdl'],
+            cont_yosys=self.conts['yosys'],
+            cont_nextpnr_ice40=self.conts['nextpnr-ice40'],
+            cont_icetime=self.conts['icetime'],
+            cont_icepack=self.conts['icepack'],
+            cont_nextpnr_ecp5=self.conts['nextpnr-ecp5'],
+            cont_ecppack=self.conts['ecppack'],
+            tool_ghdl=self.tools['ghdl'],
+            tool_yosys=self.tools['yosys'],
+            tool_nextpnr_ice40=self.tools['nextpnr-ice40'],
+            tool_icetime=self.tools['icetime'],
+            tool_icepack=self.tools['icepack'],
+            tool_nextpnr_ecp5=self.tools['nextpnr-ecp5'],
+            tool_ecppack=self.tools['ecppack']
         )
         with open('%s.sh' % self._TOOL, 'w') as file:
             file.write(text)
@@ -143,10 +182,13 @@ class Openflow(Tool):
             text = file.read()
         text = text.format(
             family=self.part['family'],
-            oci_run=self.config['oci_run'] or '',
-            oci_prg_ice40=self.config['oci_prg']['ice40'] or '',
-            oci_prg_ecp5=self.config['oci_prg']['ecp5'] or '',
-            project=self.project
+            project=self.project,
+            #
+            oci_engine=self.oci_engine,
+            cont_iceprog=self.conts['iceprog'],
+            cont_openocd=self.conts['openocd'],
+            tool_iceprog=self.tools['iceprog'],
+            tool_openocd=self.tools['openocd']
         )
         with open('openprog.sh', 'w') as file:
             file.write(text)

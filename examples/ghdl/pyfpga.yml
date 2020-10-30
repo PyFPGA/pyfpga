@@ -1,4 +1,0 @@
-openflow:
-    oci_run: "docker run --rm -v $HOME:$HOME -w $PWD"
-    oci_syn:
-        ghdl: ghdl/synth:beta
