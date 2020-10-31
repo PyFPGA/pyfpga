@@ -52,12 +52,11 @@ class Openflow(Tool):
         super().__init__(project)
         self.backend = backend
         self.frontend = frontend
-        self.config_tools()
 
-    def config_tools(self):
-        """Configure the employed tools."""
+    def _configure(self):
+        super()._configure()
         # OCI ENGINE
-        engine = self.config.get('oci', {}).get('engine', {})
+        engine = self.configs.get('oci', {}).get('engine', {})
         command = engine.get('command', 'docker') + ' run --rm'
         volumes = '-v ' + ('-v ').join(engine.get('volumes', ['$HOME:$HOME']))
         work = '-w ' + engine.get('work', '$PWD')
@@ -76,8 +75,8 @@ class Openflow(Tool):
         }
         self.tools = {}
         self.conts = {}
-        tools = self.config.get('tools', {})
-        containers = self.config.get('oci', {}).get('containers', {})
+        tools = self.configs.get('tools', {})
+        containers = self.configs.get('oci', {}).get('containers', {})
         for tool, container in defaults.items():
             self.tools[tool] = tools.get(tool, tool)
             self.conts[tool] = containers.get(tool, container)
