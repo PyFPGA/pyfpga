@@ -148,8 +148,8 @@ class Ise(Tool):
             self.tool.set_part(self.part['name'])
             self.tool.set_top(self.top)
             self.tool.paths = self.paths
-            self.tool.filesets['vhdl'] = self.filesets['vhdl']
-            self.tool.filesets['verilog'] = self.filesets['verilog']
+            self.tool.files['vhdl'] = self.files['vhdl']
+            self.tool.files['verilog'] = self.files['verilog']
             self.tool.params = self.params
             output1 = self.tool.generate('syn', 'prj', capture)
             output2 = super().generate(to_task, from_task, capture)

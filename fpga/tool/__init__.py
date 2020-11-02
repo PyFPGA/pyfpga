@@ -28,7 +28,7 @@ from shutil import rmtree, which
 from yaml import safe_load
 
 
-FILESETS = ['verilog', 'vhdl', 'constraint', 'simulation', 'design']
+FILETYPES = ['verilog', 'vhdl', 'constraint', 'design']
 MEMWIDTHS = [1, 2, 4, 8, 16, 32]
 PHASES = ['prefile', 'project', 'preflow', 'postsyn', 'postimp', 'postbit']
 TASKS = ['prj', 'syn', 'imp', 'bit']
@@ -83,7 +83,7 @@ class Tool:
             'postimp': [],
             'postbit': []
         }
-        self.filesets = {
+        self.files = {
             'vhdl': [],
             'verilog': [],
             'constraint': [],
@@ -132,18 +132,14 @@ class Tool:
         """Set a Generic/Parameter Value."""
         self.params.append([name, value])
 
-    def add_file(self, file, fileset, library, options):
-        """Add a file to the project in the specified **fileset**."""
-        check_value(fileset, FILESETS)
-        self.filesets[fileset].append([file, library, options])
+    def add_file(self, file, filetype, library, options):
+        """Add a file to the project of the specified **type**."""
+        check_value(filetype, FILETYPES)
+        self.files[filetype].append([file, library, options])
 
-    def get_fileset(self, fileset):
-        """Get the list of files in the specified **fileset**."""
-        check_value(fileset, FILESETS)
-        files = []
-        for file in self.filesets[fileset]:
-            files.append(file[0])
-        return files
+    def get_files(self):
+        """Get the files of the project."""
+        return self.files
 
     def add_path(self, path):
         """Add a search path."""
@@ -167,18 +163,18 @@ class Tool:
         else:
             for path in self.paths:
                 files.append('    fpga_include {}'.format(path))
-            for file in self.filesets['verilog']:
+            for file in self.files['verilog']:
                 files.append('    fpga_file {}'.format(file[0]))
-            for file in self.filesets['vhdl']:
+            for file in self.files['vhdl']:
                 if file[1] is None:
                     files.append('    fpga_file {}'.format(file[0]))
                 else:
                     files.append(
                         '    fpga_file {} {}'.format(file[0], file[1])
                     )
-        for file in self.filesets['design']:
+        for file in self.files['design']:
             files.append('    fpga_design {}'.format(file[0]))
-        for file in self.filesets['constraint']:
+        for file in self.files['constraint']:
             files.append('    fpga_file {}'.format(file[0]))
         # Parameters
         params = []

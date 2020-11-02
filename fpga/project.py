@@ -114,17 +114,17 @@ class Project:
         """Set a Generic/Parameter Value."""
         self.tool.set_param(name, value)
 
-    def add_files(self, pathname, fileset=None, library=None, options=None):
+    def add_files(self, pathname, filetype=None, library=None, options=None):
         """Adds files to the project.
 
         * **pathname:** a relative path to a file, which can contain
         shell-style wildcards (glob compliant).
-        * **fileset:** the valid values are *verilog* or *vhdl* for HDL files,
-        *constraint*, *simulation* (not used by PyFPGA) and *design* (for a
-        graphical block design). It is discovered automatically (based on the
-        extention) if None provided.
+        * **filetype:** the valid values are *verilog* or *vhdl*, *constraint*
+        and *design* (for a graphical block design). It is automatically
+        discovered (based on the extension) if None provided (except for
+        *design*). The default (autodiscovery failed) is *constraint*.
         * **library:** an optional VHDL library name.
-        * **options:** to be provided to the used tool.
+        * **options:** to be provided to the underlying tool.
         """
         pathname = os.path.join(self._absdir, pathname)
         pathname = os.path.normpath(pathname)
@@ -135,26 +135,21 @@ class Project:
         for file in files:
             if not os.path.exists(file):
                 raise FileNotFoundError(file)
-            if fileset is None:
+            if filetype is None:
                 ext = os.path.splitext(file)[1]
                 if ext in ['.vhd', '.vhdl']:
-                    fileset = 'vhdl'
+                    filetype = 'vhdl'
                 elif ext in ['.v', '.sv']:
-                    fileset = 'verilog'
+                    filetype = 'verilog'
                 else:
-                    fileset = 'constraint'
-                self._log.debug('add_files: %s fileset detected.', fileset)
+                    filetype = 'constraint'
+                self._log.debug('add_files: %s filetype detected.', filetype)
             file = os.path.relpath(file, self.outdir)
-            self.tool.add_file(file, fileset, library, options)
+            self.tool.add_file(file, filetype, library, options)
 
-    def get_fileset(self, fileset):
-        """Get the list of files in the specified **fileset**.
-
-        * **fileset:** the valid values are *verilog* or *vhdl* for HDL files,
-        *constraint*, *simulation* (not used by PyFPGA) and *design* (for a
-        graphical block design).
-        """
-        return self.tool.get_fileset(fileset)
+    def get_files(self):
+        """Get the files of the project."""
+        return self.tool.get_files()
 
     def add_path(self, path):
         """Add a search path.
