@@ -25,6 +25,7 @@ from glob import glob
 import os
 import subprocess
 from shutil import rmtree, which
+from yaml import safe_load
 
 
 FILESETS = ['verilog', 'vhdl', 'constraint', 'simulation', 'design']
@@ -102,6 +103,17 @@ class Tool:
         self.project = self._TOOL if project is None else project
         self.set_part(self._PART)
         self.set_top('UNDEFINED')
+        self._configure()
+
+    def _configure(self):
+        """Configures the underlying tools."""
+        filename = '.pyfpga.yml'
+        self.configs = {}
+        if os.path.exists(filename):
+            with open(filename, 'r') as file:
+                data = safe_load(file)
+                if self._TOOL in data:
+                    self.configs = data[self._TOOL]
 
     def get_configs(self):
         """Get Configurations."""

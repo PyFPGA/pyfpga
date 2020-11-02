@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+set -e
+
 ###############################################################################
 # Things to tuneup
 ###############################################################################
@@ -23,30 +25,28 @@
 FAMILY={family}
 PROJECT={project}
 
-###############################################################################
-# Support
-###############################################################################
+#
+# Tools configuration
+#
 
-set -e
+OCI_ENGINE="{oci_engine}"
 
-DOCKER="docker run --rm -v $HOME:$HOME -w $PWD"
-DOCKER="$DOCKER --device /dev/bus/usb ghdl/synth:prog"
+CONT_ICEPROG="{cont_iceprog}"
+CONT_OPENOCD="{cont_openocd}"
+
+TOOL_ICEPROG="{tool_iceprog}"
+TOOL_OPENOCD="{tool_openocd}"
 
 ###############################################################################
 # Programming
 ###############################################################################
 
 if [[ $FAMILY == "ice40" ]]; then
-
-$DOCKER iceprog $PROJECT.bit
-
-#elif [[ $FAMILY == "ecp5" ]]; then
-
-#$DOCKER openocd -f /usr/share/trellis/misc/openocd/ecp5-evn.cfg \
-#-c "transport select jtag; init; svf $PROJECT.svf; exit"
-
+    $OCI_ENGINE $CONT_ICEPROG $TOOL_ICEPROG $PROJECT.bit
+elif [[ $FAMILY == "ecp5" ]]; then
+    $OCI_ENGINE $CONT_OPENOCD $TOOL_OPENOCD \
+        -f /usr/share/trellis/misc/openocd/ecp5-evn.cfg \
+        -c "transport select jtag; init; svf $PROJECT.svf; exit"
 else
-
-echo "ERROR: unsuported tool" && exit 1
-
+    echo "ERROR: unsuported tool" && exit 1
 fi

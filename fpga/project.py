@@ -144,6 +144,7 @@ class Project:
                 else:
                     fileset = 'constraint'
                 self._log.debug('add_files: %s fileset detected.', fileset)
+            file = os.path.relpath(file, self.outdir)
             self.tool.add_file(file, fileset, library, options)
 
     def get_fileset(self, fileset):
@@ -166,6 +167,7 @@ class Project:
         path = os.path.join(self._absdir, path)
         path = os.path.normpath(path)
         if os.path.isdir(path):
+            path = os.path.relpath(path, self.outdir)
             self.tool.add_path(path)
         else:
             raise NotADirectoryError(path)

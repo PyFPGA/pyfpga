@@ -281,7 +281,9 @@ proc fpga_top { TOP } {
             global INCLUDED PARAMS
             set cmd "configure_tool -name {SYNTHESIZE} -params {SYNPLIFY_OPTIONS:"
             if { [info exists INCLUDED] && [llength $INCLUDED] > 0 } {
-                set PATHS [join $INCLUDED ";"]
+                # See <ROOT>/poc/include/libero.tcl for details
+                set PATHS "../../"
+                append PATHS [join $INCLUDED ";../../"]
                 append cmd "set_option -include_path \"$PATHS\""
                 append cmd "\n"
             }

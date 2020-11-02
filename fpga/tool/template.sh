@@ -19,6 +19,8 @@
 # yosys, nextpnr, icestorm and prjtrellis.
 #
 
+set -e
+
 ###############################################################################
 # Things to tuneup
 ###############################################################################
@@ -41,13 +43,31 @@ CONSTRAINTS="{constraints}"
 # taks = prj syn imp bit
 TASKS="{tasks}"
 
+#
+# Tools configuration
+#
+
+OCI_ENGINE="{oci_engine}"
+
+CONT_GHDL="{cont_ghdl}"
+CONT_YOSYS="{cont_yosys}"
+CONT_NEXTPNR_ICE40="{cont_nextpnr_ice40}"
+CONT_ICETIME="{cont_icetime}"
+CONT_ICEPACK="{cont_icepack}"
+CONT_NEXTPNR_ECP5="{cont_nextpnr_ecp5}"
+CONT_ECPPACK="{cont_ecppack}"
+
+TOOL_GHDL="{tool_ghdl}"
+TOOL_YOSYS="{tool_yosys}"
+TOOL_NEXTPNR_ICE40="{tool_nextpnr_ice40}"
+TOOL_ICETIME="{tool_icetime}"
+TOOL_ICEPACK="{tool_icepack}"
+TOOL_NEXTPNR_ECP5="{tool_nextpnr_ecp5}"
+TOOL_ECPPACK="{tool_ecppack}"
+
 ###############################################################################
 # Support
 ###############################################################################
-
-set -e
-
-DOCKER="docker run --rm -v $HOME:$HOME -w $PWD"
 
 MODULE=
 [ -n "$VHDLS" ] && MODULE="-m ghdl"
@@ -60,28 +80,24 @@ function print () {{
 # Synthesis
 ###############################################################################
 
-#######################################
-# GHDL
-#######################################
+if [[ $TASKS == *"syn"* ]]; then
 
-if [[ $TASKS == *"syn"* && $FRONTEND == "ghdl" ]]; then
+print "$FRONTEND" "running 'synthesis'"
 
-print "ghdl" "running 'synthesis'"
+### GHDL
 
-$DOCKER ghdl/synth:beta /bin/bash -c "
+if [[ $FRONTEND == "ghdl" ]]; then
+
+$OCI_ENGINE $CONT_GHDL /bin/bash -c "
 $VHDLS
-ghdl --synth $FLAGS $TOP
+$TOOL_GHDL --synth $FLAGS $TOP
 " > $PROJECT.vhdl
 
 fi
 
-#######################################
-# Yosys (with ghdl-yosys-plugin)
-#######################################
+### Yosys (with ghdl-yosys-plugin)
 
-if [[ $TASKS == *"syn"* && $FRONTEND == "yosys" ]]; then
-
-print "yosys" "running 'synthesis'"
+if [[ $FRONTEND == "yosys" ]]; then
 
 SYNTH=
 WRITE=
@@ -100,15 +116,19 @@ else
     WRITE="write_verilog $PROJECT.v"
 fi
 
-$DOCKER ghdl/synth:beta /bin/bash -c "
+$OCI_ENGINE $CONT_YOSYS /bin/bash -c "
 $VHDLS
-yosys -Q $MODULE -p '
+$TOOL_YOSYS -Q $MODULE -p '
 $INCLUDES;
 $VERILOGS;
 $PARAMS;
 $SYNTH;
 $WRITE
 '"
+
+fi
+
+###
 
 fi
 
@@ -121,21 +141,22 @@ if [[ $TASKS == *"imp"* ]]; then
 print "nextpnr-$FAMILY" "running 'implementation'"
 
 INPUT="--json $PROJECT.json"
+
 if [[ $FAMILY == "ice40" ]]; then
     CONSTRAINT="--pcf $CONSTRAINTS"
     OUTPUT="--asc $PROJECT.asc"
-else
-    CONSTRAINT="--lpf $CONSTRAINTS"
-    OUTPUT="--textcfg $PROJECT.config"
+    $OCI_ENGINE $CONT_NEXTPNR_ICE40 $TOOL_NEXTPNR_ICE40 \
+        --$DEVICE --package $PACKAGE $CONSTRAINT $INPUT $OUTPUT
+    $OCI_ENGINE $CONT_ICETIME $TOOL_ICETIME \
+        -d $DEVICE -mtr $PROJECT.rpt $PROJECT.asc
 fi
 
-$DOCKER ghdl/synth:nextpnr-$FAMILY /bin/bash -c "
-nextpnr-$FAMILY --$DEVICE --package $PACKAGE $CONSTRAINT $INPUT $OUTPUT
-"
-
-[ $FAMILY == "ice40" ] && $DOCKER ghdl/synth:icestorm /bin/bash -c "
-icetime -d $DEVICE -mtr $PROJECT.rpt $PROJECT.asc
-"
+if [[ $FAMILY == "ecp5" ]]; then
+    CONSTRAINT="--lpf $CONSTRAINTS"
+    OUTPUT="--textcfg $PROJECT.config"
+    $OCI_ENGINE $CONT_NEXTPNR_ECP5 $TOOL_NEXTPNR_ECP5 \
+        --$DEVICE --package $PACKAGE $CONSTRAINT $INPUT $OUTPUT
+fi
 
 fi
 
@@ -143,29 +164,18 @@ fi
 # Bitstream generation
 ###############################################################################
 
-#######################################
-# icestorm
-#######################################
+if [[ $TASKS == *"bit"* ]]; then
 
-if [[ $TASKS == *"bit"* && $FAMILY == "ice40" ]]; then
-
-print "icepack" "running 'bitstream generation'"
-
-$DOCKER ghdl/synth:icestorm /bin/bash -c "
-icepack $PROJECT.asc $PROJECT.bit
-"
+if [[ $FAMILY == "ice40" ]]; then
+    print "icepack" "running 'bitstream generation'"
+    $OCI_ENGINE $CONT_ICEPACK $TOOL_ICEPACK \
+        $PROJECT.asc $PROJECT.bit
 fi
 
-#######################################
-# Trellis
-#######################################
-
-if [[ $TASKS == *"bit"* && $FAMILY == "ecp5" ]]; then
-
-print "eccpack" "running 'bitstream generation'"
-
-$DOCKER ghdl/synth:trellis /bin/bash -c "
-ecppack --svf $PROJECT.svf $PROJECT.config $PROJECT.bit
-"
+if [[ $FAMILY == "ecp5" ]]; then
+    print "eccpack" "running 'bitstream generation'"
+    $OCI_ENGINE $CONT_ECPPACK $TOOL_ECPPACK \
+        --svf $PROJECT.svf $PROJECT.config $PROJECT.bit
+fi
 
 fi
