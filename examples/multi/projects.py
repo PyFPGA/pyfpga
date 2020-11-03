@@ -15,22 +15,20 @@ PROJECTS = {
         'tool': 'vivado',
         'outdir': '../../build/multi/projects/vivado',
         'part': 'xc7k70t-3-fbg484',
-        'files': {
-            'vhdl': [
-                ['../../hdl/blinking.vhdl', 'examples'],
-                ['../../hdl/examples_pkg.vhdl', 'examples'],
-                ['../../hdl/top.vhdl']
-            ]
-        },
+        'vhdl': [
+            ['../../hdl/blinking.vhdl', 'examples'],
+            ['../../hdl/examples_pkg.vhdl', 'examples'],
+            '../../hdl/top.vhdl'
+        ],
         'top': 'Top'
     },
     'ise-prj': {
         'tool': 'ise',
         'outdir': '../../build/multi/projects/ise',
         'part': 'xc6slx9-2-csg324',
-        'files': {
-            'vhdl': [['../../hdl/blinking.vhdl']]
-         },
+        'vhdl': [
+            '../../hdl/blinking.vhdl'
+        ],
         'top': 'Blinking'
     },
     'quartus-prj': {
@@ -41,12 +39,10 @@ PROJECTS = {
             '../../hdl/headers1',
             '../../hdl/headers2'
         ],
-        'files': {
-            'verilog': [
-                ['../../hdl/blinking.v'],
-                ['../../hdl/top.v']
-            ],
-         },
+        'verilog': [
+            '../../hdl/blinking.v',
+            '../../hdl/top.v'
+        ],
         'top': 'Top'
     }
 }

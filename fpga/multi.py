@@ -52,13 +52,18 @@ class Multi:
                 for path in data['paths']:
                     print('  * %s' % path)
                     prj.add_path(path)
-            if 'files' in data:
-                for filetype in data['files']:
+            for filetype in ['vhdl', 'verilog', 'constraint']:
+                if filetype in data:
                     print('* %s files' % filetype)
-                    for file in data['files'][filetype]:
-                        filename = file[0]
-                        library = file[1] if len(file) > 1 else ''
-                        print('  * %s (%s)' % (filename, library))
+                    for file in data[filetype]:
+                        if isinstance(file, list):
+                            filename = file[0]
+                            library = file[1]
+                            print('  * %s (%s)' % (filename, library))
+                        else:
+                            filename = file
+                            library = None
+                            print('  * %s' % filename)
                         prj.add_files(filename, filetype, library)
             if 'params' in data:
                 for param, value in data['params'].items():
