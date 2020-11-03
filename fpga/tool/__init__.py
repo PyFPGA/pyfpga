@@ -87,7 +87,6 @@ class Tool:
             'vhdl': [],
             'verilog': [],
             'constraint': [],
-            'simulation': [],
             'design': []
         }
         self.params = []
@@ -207,10 +206,6 @@ class Tool:
 
     def generate(self, to_task, from_task, capture):
         """Run the FPGA tool."""
-        if not which(self._GEN_PROGRAM):
-            raise RuntimeError(
-                'program "{}" not found'.format(self._GEN_PROGRAM)
-            )
         check_value(to_task, TASKS)
         check_value(from_task, TASKS)
         to_index = TASKS.index(to_task)
@@ -222,6 +217,10 @@ class Tool:
             )
         tasks = " ".join(TASKS[from_index:to_index+1])
         self._create_gen_script(tasks)
+        if not which(self._GEN_PROGRAM):
+            raise RuntimeError(
+                'program "{}" not found'.format(self._GEN_PROGRAM)
+            )
         return run(self._GEN_COMMAND, capture)
 
     def set_bitstream(self, path):

@@ -42,14 +42,13 @@ class Project:
     """Class to manage an FPGA project."""
 
     def __init__(
-            self, tool='vivado', project=None, meta=None,
+            self, tool='vivado', project=None, init=None,
             relative_to_script=True):
         """Class constructor.
 
         * **tool:** FPGA tool to be used.
         * **project:** project name (the tool name is used if none specified).
-        * **meta:** a dictionary of metadata provided to set some internal
-        parameters.
+        * **init:** a dict to initialize some parameters.
         * **relative_to_script:** specifies if the files/directories are
         relative to the script or the execution directory.
         """
@@ -89,26 +88,25 @@ class Project:
         self._absdir = os.path.join(self._rundir, self._reldir)
         self._log.debug('ABSDIR = %s', self._absdir)
         self.set_outdir('build')
-        self.set_meta(meta)
+        self._initialize(init)
 
-    def set_meta(self, meta):
+    def _initialize(self, init):
         """Set some of the most used internal parameters."""
-        if meta is None:
+        if init is None:
             return
-        for key, value in meta.items():
-            if key == 'outdir':
-                self._log.debug('OUTDIR = %s', value)
-                self.set_outdir(value)
-            if key == 'part':
-                self._log.debug('PART = %s', value)
-                self.set_part(value)
-            if key == 'paths':
-                for path in value:
-                    self._log.debug('PATH = %s', path)
-                    self.add_path(path)
-            if key in ['vhdl', 'verilog', 'constraint']:
-                filetype = key
-                for file in value:
+        if 'outdir' in init:
+            self._log.debug('OUTDIR = %s', init['outdir'])
+            self.set_outdir(init['outdir'])
+        if 'part' in init:
+            self._log.debug('PART = %s', init['part'])
+            self.set_part(init['part'])
+        if 'paths' in init:
+            for path in init['paths']:
+                self._log.debug('PATH = %s', path)
+                self.add_path(path)
+        for filetype in ['vhdl', 'verilog', 'constraint']:
+            if filetype in init:
+                for file in init[filetype]:
                     if isinstance(file, list):
                         filename = file[0]
                         library = file[1]
@@ -119,13 +117,13 @@ class Project:
                         'FILE = %s %s %s', filename, filetype, library
                     )
                     self.add_files(filename, filetype, library)
-            if key == 'params':
-                for parname, parvalue in value.items():
-                    self._log.debug('PARAM = %s %s', parname, parvalue)
-                    self.set_param(parname, parvalue)
-            if key == 'top':
-                self._log.debug('TOP = %s', value)
-                self.set_top(value)
+        if 'params' in init:
+            for parname, parvalue in init['params'].items():
+                self._log.debug('PARAM = %s %s', parname, parvalue)
+                self.set_param(parname, parvalue)
+        if 'top' in init:
+            self._log.debug('TOP = %s', init['top'])
+            self.set_top(init['top'])
 
     def set_outdir(self, outdir):
         """Sets the OUTput DIRectory (where to put the resulting files).
