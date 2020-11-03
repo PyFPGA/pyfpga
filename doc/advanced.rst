@@ -9,42 +9,42 @@ Multi project managment
 .. code-block:: python
 
    PROJECTS = {
-       '<PROJECTNAME1>': {
-           'tool': '<TOOLNAME>',
-           'outdir': '<DIRNAME>',
-           'part': '<PARTNAME>'
-           'paths': [
-               '<PATHNAME1>',
-               ...
-               '<PATHNAMEn>'
-           ],
-           'files': {
+       '<NAME1>': Project(
+           '<TOOLNAME>',
+           '<PROJECTNAME>',
+           {
+               'outdir': '<DIRNAME>',
+               'part': '<PARTNAME>'
+               'paths': [
+                   '<PATHNAME1>',
+                   ...
+                   '<PATHNAMEn>'
+               ],
                'vhdl': [
                    ['<FILENAME1>', '<LIBRARYNAME1>'],
-                   ['<FILENAME2>'],
+                   '<FILENAME2>',
                    ...
-                   ['<FILENAMEn>']
+                   '<FILENAMEn>'
                ],
                'verilog': [
-                   ['<FILENAME1>'],
+                   '<FILENAME1>',
                    ...
-                   ['<FILENAMEn>']
+                   '<FILENAMEn>'
                ],
                'constraint': [
-                   ['<FILENAME1>'],
+                   '<FILENAME1>',
                    ...
-                   ['<FILENAMEn>']
-               ]
-           },
-           'params': {
-               '<PARAMNAME1>': '<VALUE1>',
-               ...
-               '<PARAMNAMEn>': '<VALUEn>'
-           },
-           'top': '<TOPNAME>'
-       },
-       ...
-       '<PROJECTNAME2>': {
+                   '<FILENAMEn>'
+               ],
+               'params': {
+                   '<PARAMNAME1>': '<VALUE1>',
+                   ...
+                   '<PARAMNAMEn>': '<VALUEn>'
+               },
+               'top': '<TOPNAME>'
+           }
+       )
+       '<NAME2>': Project(
            ...
-       }
+       )
    }
