@@ -1,24 +1,12 @@
 .. program:: pyfpga
 
+.. _basic:
+
 Basic usage
 ###########
 
-You can read the detailed :ref:`api` and/or start with the :repo:`Examples <examples>`.
-In this document, you will find a tutorial about basic and advanced uses of PyFPGA.
-
-.. ATTENTION::
-
-  PyFPGA assumes that the backend Tool is ready to run.
-  This implies, depending on the operating system, things such as:
-
-  * Tool installed.
-  * A valid License configured.
-  * Tool available in the system PATH.
-  * In a GNU/Linux: extra packages installed, environment variables assigned
-    and permissions granted on devices (to transfer the bitstream).
-
-Basic usage
-===========
+Project Creation
+================
 
 The first steps are import and instantiate the ``Project`` *class*, specifying
 the tool to use and, optionally, the project name. By default, the directory
@@ -46,6 +34,9 @@ optional parameter to indicate if it is a member of a VHDL package.
 .. code-block:: python
 
    prj.set_part('xc7k160t-3-fbg484')
+
+Files addition
+==============
 
    prj.add_files('hdl/blinking.vhdl', 'examples')
    prj.add_files('hdl/examples_pkg.vhdl', 'examples')
@@ -76,6 +67,9 @@ optional parameter to indicate if it is a member of a VHDL package.
   * In case of Verilog, ``add_include`` can be used to specify where to search
     included files.
 
+Generate
+========
+
 Finally, you must run the bitstream generation or its transfer. Both of them
 are time-consuming tasks, performed by a backend tool, which could fail.
 Exceptions are raised in such cases, that should be ideally caught to avoid
@@ -90,87 +84,6 @@ abnormal program termination.
        print('{} ({})'.format(type(e).__name__, e))
 
 And wait for the backend Tool to accomplish its task.
-
-Advanced usage
-==============
-
-The following table depicts the parts of the *Project Creation* and the
-*Design Flow* internally performed by PyFPGA.
-
-+--------------------------+----------------------+
-| Project Creation         | Design Flow          |
-+==========================+======================+
-| Part specification       | **preflow** hook     |
-+--------------------------+----------------------+
-| **prefile** hook         | Synthesis            |
-+--------------------------+----------------------+
-| Files addition           | **postsyn** hook     |
-+--------------------------+----------------------+
-| Top specification        | Implementation       |
-+--------------------------+----------------------+
-| Parameters specification | **postimp** hook     |
-+--------------------------+----------------------+
-| **project** hook         | Bitstream generation |
-+--------------------------+----------------------+
-|                          | **postbit** hook     |
-+--------------------------+----------------------+
-
-If the provided API if not enough or suitable for your project, you can
-specify additional *hooks* in different parts of the flow, using:
-
-.. code-block:: python
-
-   prj.add_hook(hook, phase)
-
-.. NOTE::
-
-  * Valid vaues for *phase* are ``prefile``, ``project`` (default), ``preflow``,
-    ``postsyn``, ``postimp`` and ``postbit``.
-  * The *hook* string must be a valid command (supported by the used tool).
-  * If more than one *hook* is needed in the same *phase*, you can call this
-    method several times (the commands will be executed in order).
-
-The generics/parameters of the project can be optionally changed with:
-
-.. code-block:: python
-
-   prj.set_param('param1', value1)
-   ...
-   prj.set_param('paramN', valueN)
-
-The method ``generate`` (previously seen at the end of
-[Basic usage](#basic-usage) section) has optional parameters:
-
-.. code-block:: python
-
-   prj.generate(to_task, from_task, capture)
-
-With *to_task* and *from_taks* (with default values ``bit`` and ``prj``),
-you are selecting the first and last task to execute when `generate` is
-invoqued. The order and available tasks are ``prj``, ``syn``, ``imp`` and ``bit``.
-It can be useful in at least two cases:
-
-* Maybe you created a file project with the GUI of the Tool and only want to
-  run the Design Flow, so you can use: ``generate(to_task='bit', from_task='syn')``
-
-* Despite that a method to insert particular commands is provided, you would
-  want to perform some processing from Python between tasks, using something
-  like:
-
-.. code-block:: python
-
-   prj.generate(to_task='syn', from_task='prj')
-   #Some other Python commands here
-   prj.generate(to_task='bit', from_task='syn')
-
-In case of *capture*, it is useful to catch execution messages to be
-post-processed or saved to a file:
-
-.. code-block:: python
-
-   result = prj.generate(capture=True)
-   print(result)
-
 
 Transfer to a device
 ====================
@@ -215,4 +128,3 @@ You can enable *DEBUG* messages adding:
 .. code-block:: python
 
    logging.getLogger('fpga.project').level = logging.DEBUG
-
