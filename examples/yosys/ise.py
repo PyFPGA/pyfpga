@@ -5,6 +5,8 @@ import logging
 
 from fpga.project import Project
 
+logging.basicConfig()
+
 parser = argparse.ArgumentParser()
 parser.add_argument(
     '--action', choices=['generate', 'transfer', 'all'], default='generate',
@@ -13,9 +15,6 @@ parser.add_argument(
     '--lang', choices=['verilog', 'vhdl'], default='verilog',
 )
 args = parser.parse_args()
-
-logging.basicConfig()
-logging.getLogger('fpga.project').level = logging.DEBUG
 
 prj = Project('yosys-ise')
 prj.set_outdir('../../build/yosys-ise-{}'.format(args.lang))

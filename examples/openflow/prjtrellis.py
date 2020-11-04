@@ -5,6 +5,8 @@ import logging
 
 from fpga.project import Project
 
+logging.basicConfig()
+
 parser = argparse.ArgumentParser()
 parser.add_argument(
     '--action', choices=['generate', 'transfer', 'all'], default='generate'
@@ -18,9 +20,6 @@ parser.add_argument(
     default='orangecrab'
 )
 args = parser.parse_args()
-
-logging.basicConfig()
-logging.getLogger('fpga.project').level = logging.DEBUG
 
 BOARDS = {
     'orangecrab': ['25k-CSFBGA285', 'orangecrab_r0.2.lpf'],

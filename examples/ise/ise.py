@@ -6,7 +6,6 @@ import logging
 from fpga.project import Project
 
 logging.basicConfig()
-logging.getLogger('fpga.project').level = logging.DEBUG
 
 parser = argparse.ArgumentParser()
 parser.add_argument(

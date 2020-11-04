@@ -38,6 +38,11 @@ TOOLS = [
 ]
 
 
+_log = logging.getLogger(__name__)
+_log.level = logging.INFO
+_log.addHandler(logging.NullHandler())
+
+
 class Project:
     """Class to manage an FPGA project."""
 
@@ -52,9 +57,6 @@ class Project:
         * **relative_to_script:** specifies if the files/directories are
         relative to the script or the execution directory.
         """
-        self._log = logging.getLogger(__name__)
-        self._log.level = logging.INFO
-        self._log.addHandler(logging.NullHandler())
         if tool == 'ghdl':
             from fpga.tool.openflow import Openflow
             self.tool = Openflow(project, frontend='ghdl', backend='vhdl')
@@ -79,14 +81,14 @@ class Project:
         else:
             raise NotImplementedError(tool)
         self._rundir = os.getcwd()
-        self._log.debug('RUNDIR = %s', self._rundir)
+        _log.debug('RUNDIR = %s', self._rundir)
         if relative_to_script:
             self._reldir = os.path.dirname(inspect.stack()[-1].filename)
         else:
             self._reldir = ''
-        self._log.debug('RELDIR = %s', self._reldir)
+        _log.debug('RELDIR = %s', self._reldir)
         self._absdir = os.path.join(self._rundir, self._reldir)
-        self._log.debug('ABSDIR = %s', self._absdir)
+        _log.debug('ABSDIR = %s', self._absdir)
         self.set_outdir('build')
         self._initialize(init)
 
@@ -95,14 +97,14 @@ class Project:
         if init is None:
             return
         if 'outdir' in init:
-            self._log.debug('OUTDIR = %s', init['outdir'])
+            _log.debug('OUTDIR = %s', init['outdir'])
             self.set_outdir(init['outdir'])
         if 'part' in init:
-            self._log.debug('PART = %s', init['part'])
+            _log.debug('PART = %s', init['part'])
             self.set_part(init['part'])
         if 'paths' in init:
             for path in init['paths']:
-                self._log.debug('PATH = %s', path)
+                _log.debug('PATH = %s', path)
                 self.add_path(path)
         for filetype in ['vhdl', 'verilog', 'constraint']:
             if filetype in init:
@@ -113,16 +115,16 @@ class Project:
                     else:
                         filename = file
                         library = None
-                    self._log.debug(
+                    _log.debug(
                         'FILE = %s %s %s', filename, filetype, library
                     )
                     self.add_files(filename, filetype, library)
         if 'params' in init:
             for parname, parvalue in init['params'].items():
-                self._log.debug('PARAM = %s %s', parname, parvalue)
+                _log.debug('PARAM = %s %s', parname, parvalue)
                 self.set_param(parname, parvalue)
         if 'top' in init:
-            self._log.debug('TOP = %s', init['top'])
+            _log.debug('TOP = %s', init['top'])
             self.set_top(init['top'])
 
     def set_outdir(self, outdir):
@@ -130,8 +132,8 @@ class Project:
 
         * **outdir:** path to the output directory.
         """
-        self.outdir = os.path.join(self._absdir, outdir)
-        self._log.debug('OUTDIR = %s', self.outdir)
+        self.outdir = os.path.normpath(os.path.join(self._absdir, outdir))
+        _log.debug('OUTDIR = %s', self.outdir)
 
     def get_configs(self):
         """Gets the Project Configurations.
@@ -167,7 +169,7 @@ class Project:
         """
         pathname = os.path.join(self._absdir, pathname)
         pathname = os.path.normpath(pathname)
-        self._log.debug('PATHNAME = %s', pathname)
+        _log.debug('PATHNAME = %s', pathname)
         files = glob.glob(pathname)
         if len(files) == 0:
             raise FileNotFoundError(pathname)
@@ -182,7 +184,7 @@ class Project:
                     filetype = 'verilog'
                 else:
                     filetype = 'constraint'
-                self._log.debug('add_files: %s filetype detected.', filetype)
+                _log.debug('add_files: %s filetype detected', filetype)
             file = os.path.relpath(file, self.outdir)
             self.tool.add_file(file, filetype, library, options)
 
@@ -227,8 +229,8 @@ class Project:
                 if len(top) > 0:
                     self.tool.set_top(top[-1])
                     if len(top) > 1:
-                        self._log.warning(
-                            'set_top: more than one Top found, last selected.'
+                        _log.warning(
+                            'set_top: more than one Top found (last selected)'
                         )
                 else:
                     self.tool.set_top('UNDEFINED')
@@ -270,9 +272,13 @@ class Project:
         * *imp* to runs implementation.
         * *bit* to generates the bitstream.
         """
+        _log.info(
+            'generating "%s" project using "%s" tool into "%s" directory',
+            self.tool.project, self.tool.get_configs()['tool'], self.outdir
+        )
         with self._run_in_dir():
             if capture:
-                self._log.info('The execution messages are being captured.')
+                _log.info('the execution messages are being captured')
             return self.tool.generate(to_task, from_task, capture)
 
     def set_bitstream(self, path):
@@ -297,14 +303,20 @@ class Project:
         * **width:** bits width of the memory (when device is not *fpga*).
         * **capture:** capture STDOUT and STDERR (returned values).
         """
+        _log.info(
+            'transfering "%s" project using "%s" tool from "%s" directory',
+            self.tool.project, self.tool.get_configs()['tool'], self.outdir
+        )
         with self._run_in_dir():
             if capture:
-                self._log.info('The execution messages are being captured.')
+                _log.info('the execution messages are being captured')
             return self.tool.transfer(devtype, position, part, width, capture)
 
     def clean(self):
         """Clean the generated project files."""
-        self._log.info('Cleaning the generated project files.')
+        _log.info(
+            'cleaning the generated project files into "%s"', self.outdir
+        )
         with self._run_in_dir():
             self.tool.clean()
 
@@ -313,7 +325,7 @@ class Project:
         """Runs the tool in other directory."""
         try:
             if not os.path.exists(self.outdir):
-                self._log.debug('the output directory did not exist, created.')
+                _log.debug('the output directory did not exist (created)')
                 os.makedirs(self.outdir)
             os.chdir(self.outdir)
             start = time.time()
@@ -321,4 +333,4 @@ class Project:
         finally:
             end = time.time()
             os.chdir(self._rundir)
-            self._log.info('executed in %.3f seconds.', end-start)
+            _log.info('executed in %.3f seconds', end-start)
