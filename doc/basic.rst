@@ -1,7 +1,7 @@
 .. program:: pyfpga
 
-User Guide
-##########
+Basic usage
+###########
 
 You can read the detailed :ref:`api` and/or start with the :repo:`Examples <examples>`.
 In this document, you will find a tutorial about basic and advanced uses of PyFPGA.

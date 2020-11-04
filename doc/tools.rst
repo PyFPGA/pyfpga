@@ -1,7 +1,7 @@
 .. program:: pyfpga
 
-Info about supported Tools
-##########################
+Per tool usage
+##############
 
 +---------------+-----------+---------+-----+-----------------------------------------------+
 | Tools         | Vendor    | Version | Tcl | Comment                                       |
