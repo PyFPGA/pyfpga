@@ -5,7 +5,6 @@ import logging
 from fpga.project import Project
 
 logging.basicConfig()
-logging.getLogger('fpga.project').level = logging.DEBUG
 
 prj = Project('ghdl')
 prj.set_outdir('../../build/ghdl')

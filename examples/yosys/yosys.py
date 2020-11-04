@@ -5,14 +5,13 @@ import logging
 
 from fpga.project import Project
 
+logging.basicConfig()
+
 parser = argparse.ArgumentParser()
 parser.add_argument(
     '--lang', choices=['verilog', 'vhdl'], default='verilog',
 )
 args = parser.parse_args()
-
-logging.basicConfig()
-logging.getLogger('fpga.project').level = logging.DEBUG
 
 prj = Project('yosys')
 prj.set_outdir('../../build/yosys-{}'.format(args.lang))

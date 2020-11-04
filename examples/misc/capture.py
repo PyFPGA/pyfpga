@@ -9,7 +9,6 @@ import logging
 from fpga.project import Project
 
 logging.basicConfig()
-logging.getLogger('fpga.project').level = logging.DEBUG
 
 PRJ = Project('ise', 'capture')
 PRJ.set_outdir('../../build/capture')
