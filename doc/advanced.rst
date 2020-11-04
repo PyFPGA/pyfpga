@@ -51,6 +51,8 @@ Multi project managment
        )
    }
 
+.. _hooks:
+
 Hooks
 =====
 
@@ -137,5 +139,23 @@ post-processed or saved to a file:
    result = prj.generate(capture=True)
    print(result)
 
+In case of *capture*, it is useful to catch execution messages to be
+post-processed or saved to a file.
+
 Exceptions
 ==========
+
+Finally, you must run the bitstream generation or its transfer. Both of them
+are time-consuming tasks, performed by a backend tool, which could fail.
+Exceptions are raised in such cases, that should be ideally caught to avoid
+abnormal program termination.
+
+.. code-block:: python
+
+   try:
+       prj.generate()
+       prj.transfer()
+   except Exception as e:
+       print('{} ({})'.format(type(e).__name__, e))
+
+And wait for the backend Tool to accomplish its task.
