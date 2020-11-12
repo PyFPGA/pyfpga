@@ -44,19 +44,24 @@ _log.addHandler(logging.NullHandler())
 
 
 class Project:
-    """Class to manage an FPGA project."""
+    """Class to manage an FPGA project.
+
+    :param tool: FPGA tool to be used
+    :param project: project name (the tool name is used if none specified)
+    :param init: a dict to initialize some parameters
+    :param relative_to_script: specifies if the files/directories are relative
+     to the script or the execution directory
+    :raises NotImplementedError: when tool is unsupported
+
+    .. note:: Valid values for **tool** are ``ghdl``, ``ise``, ``libero``,
+     ``openflow``, ``quartus``, ``vivado``, ``yosys``, ``yosys-ise`` and
+     ``yosys-vivado``
+    """
 
     def __init__(
             self, tool='vivado', project=None, init=None,
             relative_to_script=True):
-        """Class constructor.
-
-        * **tool:** FPGA tool to be used.
-        * **project:** project name (the tool name is used if none specified).
-        * **init:** a dict to initialize some parameters.
-        * **relative_to_script:** specifies if the files/directories are
-        relative to the script or the execution directory.
-        """
+        """Class constructor."""
         if tool == 'ghdl':
             from fpga.tool.openflow import Openflow
             self.tool = Openflow(project, frontend='ghdl', backend='vhdl')
@@ -130,7 +135,7 @@ class Project:
     def set_outdir(self, outdir):
         """Sets the OUTput DIRectory (where to put the resulting files).
 
-        * **outdir:** path to the output directory.
+        :param outdir: path to the output directory
         """
         self.outdir = os.path.normpath(os.path.join(self._absdir, outdir))
         _log.debug('OUTDIR = %s', self.outdir)
@@ -138,34 +143,42 @@ class Project:
     def get_configs(self):
         """Gets the Project Configurations.
 
-        It returns a dict which includes *tool* and *project* names, the
-        *extension* of a project file (according to the selected tool) and
-        the *part* to be used.
+        :returns: a dict which includes ``tool`` and ``project`` names, the
+         ``extension`` of a project file (according to the selected tool) and
+         the ``part`` to be used
         """
         return self.tool.get_configs()
 
     def set_part(self, part):
         """Set the target FPGA part.
 
-        * **part:** the FPGA part as specified by the tool.
+        :param part: the FPGA part as specified by the tool
         """
         self.tool.set_part(part)
 
     def set_param(self, name, value):
-        """Set a Generic/Parameter Value."""
+        """Set a Generic/Parameter Value.
+
+        :param name: parameter/generic name
+        :param value: value to be assigned
+        """
         self.tool.set_param(name, value)
 
     def add_files(self, pathname, filetype=None, library=None, options=None):
         """Adds files to the project.
 
-        * **pathname:** a relative path to a file, which can contain
-        shell-style wildcards (glob compliant).
-        * **filetype:** the valid values are *verilog* or *vhdl*, *constraint*
-        and *design* (for a graphical block design). It is automatically
-        discovered (based on the extension) if None provided (except for
-        *design*). The default (autodiscovery failed) is *constraint*.
-        * **library:** an optional VHDL library name.
-        * **options:** to be provided to the underlying tool.
+        :param pathname: a relative path to a file, which can contain
+         shell-style wildcards (glob compliant)
+        :param filetype: the valid values are **verilog** or **vhdl**,
+         **constraint** and **design** (for a graphical block design). It is
+         automatically discovered (based on the extension) if None provided
+         (except for **design**). The default (autodiscovery failed) is
+         **constraint**
+        :param library: an optional VHDL library name
+        :param options: to be provided to the underlying tool
+        :raises FileNotFoundError: when a file specified as pathname is not
+         found
+        :raises ValueError: when filetype is unsupported
         """
         pathname = os.path.join(self._absdir, pathname)
         pathname = os.path.normpath(pathname)
@@ -189,7 +202,10 @@ class Project:
             self.tool.add_file(file, filetype, library, options)
 
     def get_files(self):
-        """Get the files of the project."""
+        """Get the files of the project.
+
+       :returns: a list with the files of the project
+        """
         return self.tool.get_files()
 
     def add_path(self, path):
@@ -198,7 +214,8 @@ class Project:
         Useful to specify where to search Verilog Included Files or IP
         repositories.
 
-        * **path:** a relative path to a directory.
+        :param path: a relative path to a directory
+        :raises NotADirectoryError: when path is not a directory
         """
         path = os.path.join(self._absdir, path)
         path = os.path.normpath(path)
@@ -211,7 +228,8 @@ class Project:
     def set_top(self, toplevel):
         """Set the top level of the project.
 
-        * **toplevel:** name or file path of the top level entity/module.
+        :param toplevel: name or file path of the top level entity/module
+        :raises FileNotFoundError: when toplevel is a not found file
         """
         if os.path.splitext(toplevel)[1]:
             toplevel = os.path.join(self._absdir, toplevel)
@@ -244,33 +262,39 @@ class Project:
 
         A hook is a place that allows you to insert customized programming.
 
-        The valid **phase** values are:
-        * *prefile* to add options needed to find files.
-        * *project* to add project related options.
-        * *preflow* to change options previous to run the flow.
-        * *postsyn* to perform an action between *syn* and *imp*.
-        * *postimp* to perform an action between *imp* and *bit*.
-        * *postbit* to perform an action after *bit*.
+        :param hook: is a string representing a tool specific command
+        :param phase: the phase where to insert a hook
+        :raises ValueError: when phase is unsupported
 
-        The *hook* is a string representing a tool specific command.
+        .. note:: Valid values for *phase* are
+         ``prefile`` (to add options needed to find files),
+         ``project`` (to add project related options),
+         ``preflow`` (to change options previous to run the flow),
+         ``postsyn`` (to perform an action between *syn* and *imp*),
+         ``postimp`` (to perform an action between *imp* and *bit*) and
+         ``postbit`` (to perform an action after *bit*)
 
-        **WARNING:** using a hook, you will be probably broken the vendor
-        independence.
+        .. warning:: Using a hook, you will be probably broken the vendor
+         independence
         """
         self.tool.add_hook(hook, phase)
 
     def generate(self, to_task='bit', from_task='prj', capture=False):
         """Run the FPGA tool.
 
-        * **to_task:** last task.
-        * **from_task:** first task.
-        * **capture:** capture STDOUT and STDERR (returned values).
+        :param to_task: last task
+        :param from_task: first task
+        :param capture: capture STDOUT and STDERR
+        :returns: STDOUT and STDERR messages
+        :raises ValueError: when from_task is later than to_task
+        :raises RuntimeError: when the tool to be used is not found
+        :raises ValueError: when to_task or from_task are is unsupported
 
-        The valid tasks values, in order, are:
-        * *prj* to creates the project file.
-        * *syn* to performs the synthesis.
-        * *imp* to runs implementation.
-        * *bit* to generates the bitstream.
+        .. note:: Valid values for **tasks** are
+         ``prj`` (to creates the project file),
+         ``syn`` (to performs the synthesis),
+         ``imp`` (to runs implementation) and
+         ``bit`` (to generates the bitstream)
         """
         _log.info(
             'generating "%s" project using "%s" tool into "%s" directory',
@@ -284,7 +308,7 @@ class Project:
     def set_bitstream(self, path):
         """Set the bitstream file to transfer.
 
-        * **path:** path to the bitstream file.
+        :param path: path to the bitstream file
         """
         path = os.path.join(self._absdir, path)
         if not os.path.exists(path):
@@ -296,12 +320,16 @@ class Project:
             capture=False):
         """Transfers the generated bitstream to a device.
 
-        * **devtype:** *fpga* or other valid option
-        (depending on the used tool, it could be *spi*, *bpi, etc).
-        * **position:** position of the device in the JTAG chain.
-        * **part:** name of the memory (when device is not *fpga*).
-        * **width:** bits width of the memory (when device is not *fpga*).
-        * **capture:** capture STDOUT and STDERR (returned values).
+        :param devtype: *fpga* or other valid option
+         (depending on the used tool, it could be *spi*, *bpi*, etc)
+        :param position: position of the device in the JTAG chain
+        :param part: name of the memory (when device is not *fpga*)
+        :param width: bits width of the memory (when device is not *fpga*)
+        :param capture: capture STDOUT and STDERR
+        :returns: STDOUT and STDERR messages
+        :raises RuntimeError: when the tool to be used is not found
+        :raises FileNotFoundError: when the bitstream is not found
+        :raises ValueError: when devtype, position or width are unsupported
         """
         _log.info(
             'transfering "%s" project using "%s" tool from "%s" directory',
