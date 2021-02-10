@@ -40,7 +40,7 @@ source_suffix = {
 master_doc = 'index'
 
 roject = u'PyFPGA'
-copyright = u'2020, Rodrigo Alejandro Melo and contributors'
+copyright = u'2019-2021, Rodrigo Alejandro Melo and contributors'
 author = u'Rodrigo Alejandro Melo and contributors'
 
 version = "latest"
@@ -125,5 +125,5 @@ intersphinx_mapping = {
 # -- Sphinx.Ext.ExtLinks --------------------------------------------------
 extlinks = {
    'wikipedia': ('https://en.wikipedia.org/wiki/%s', None),
-   'repo': ('https://gitlab.com/rodrigomelo9/pyfpga/blob/master/%s', None)
+   'repo': ('https://github.com/PyFPGA/pyfpga/blob/main/%s', None)
 }

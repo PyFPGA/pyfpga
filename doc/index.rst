@@ -6,12 +6,12 @@ PyFPGA Documentation
 .. image:: images/logo.png
    :width: 200 px
    :align: center
-   :target: https://gitlab.com/rodrigomelo9/pyfpga
+   :target: https://github.com/PyFPGA/pyfpga
 
 .. raw:: html
 
     <p style="text-align: center;">
-      <a title="GitLab Repository" href="https://gitlab.com/rodrigomelo9/pyfpga"><img src="https://img.shields.io/badge/-rodrigomelo9/pyfpga-323131.svg?longCache=true&style=flat-square&logo=gitlab"></a><!--
+      <a title="GitLab Repository" href="https://github.com/PyFPGA/pyfpga"><img src="https://img.shields.io/badge/-PyFPGA/pyfpga-323131.svg?longCache=true&style=flat-square&logo=github"></a><!--
       -->
     </p>
 
