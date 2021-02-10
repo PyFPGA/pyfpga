@@ -362,6 +362,7 @@ proc fpga_run_syn {} {
             } else {
                 project clean
                 process run "Synthesize"
+                if { [process get "Synthesize" status] == "errors" } { exit 2 }
             }
         }
         "libero"  {
@@ -389,8 +390,11 @@ proc fpga_run_imp {} {
     switch $TOOL {
         "ise"     {
             process run "Translate"
+            if { [process get "Translate" status] == "errors" } { exit 2 }
             process run "Map"
+            if { [process get "Map" status] == "errors" } { exit 2 }
             process run "Place & Route"
+            if { [process get "Place & Route" status] == "errors" } { exit 2 }
         }
         "libero"  {
             run_tool -name {PLACEROUTE}
@@ -417,6 +421,7 @@ proc fpga_run_bit {} {
     switch $TOOL {
         "ise"     {
             process run "Generate Programming File"
+            if { [process get "Generate Programming File" status] == "errors" } { exit 2 }
             catch { file rename -force $TOP.bit $PROJECT.bit }
         }
         "libero"  {
