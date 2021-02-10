@@ -52,9 +52,6 @@ pyfpga.pdf: pyfpga.dvi
 #---
 
 clean:
-	$(RM) *~ *.dvi *.info pyfpga.aux pyfpga.cp pyfpga.fn pyfpga.ky pyfpga.log
-	$(RM) pyfpga.pdf pyfpga.pg pyfpga.toc pyfpga.tp pyfpga.vr
-	$(RM) -rf build
-
-maintainer-clean: clean
-	$(RM) pyfpga.texi
+	$(RM) *~ *.dvi *.info *.aux *.cp *.fn *.ky *.log
+	$(RM) *.pdf *.pg *.toc *.tp *.vr *.texi
+	$(RM) -rf _build

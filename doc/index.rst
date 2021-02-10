@@ -19,8 +19,10 @@ PyFPGA Documentation
 
 .. toctree::
 
-   user_guide
+   intro
+   basic
    advanced
-   api
    tools
+   api
+   helpers
    dev
