@@ -16,13 +16,6 @@ venv-create:
 venv-remove:
 	@rm -fr $(VENV)
 
-HOOKS = $(notdir $(basename $(wildcard .helpers/*.sh)))
-
-install-hooks:
-	@$(foreach HOOK,$(HOOKS), echo "* Installing $(HOOK)";\
-		ln -sf ../../.helpers/$(HOOK).sh .git/hooks/$(HOOK);\
-	)
-
 clean:
 	@$(VENV)/bin/py3clean .
 	@rm -fr build .pytest_cache
