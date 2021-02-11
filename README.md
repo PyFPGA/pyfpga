@@ -11,9 +11,6 @@
 ![Quartus](https://img.shields.io/badge/Quartus--Prime-19.1-blue.svg?style=flat-square)
 ![Vivado](https://img.shields.io/badge/Vivado-2019.2-blue.svg?style=flat-square)
 
-> **NOTICE:** (*Oct 2020*) the API is being redefined, so you should expect
-> modifications, additions and removes.
-
 PyFPGA is a **Python** Class for **vendor-independent FPGA development**.
 It allows using **a single project file** and **programmatically** executing
 **synthesis**, **implementation**, generation of **bitstream** and/or
@@ -53,7 +50,7 @@ prj.set_top('Top')
 prj.generate()
 ```
 
-Now, you can read the [docs](https://rodrigomelo9.gitlab.io/pyfpga/) or find
+Now, you can read the [docs](https://pyfpga.github.io/pyfpga/) or find
 more examples in subdir [examples](examples).
 
 The API implemented by the `Project class` provides:
@@ -76,7 +73,7 @@ The API implemented by the `Project class` provides:
 PyFPGA is a Python 3 package, which is developed on Debian GNU/Linux.
 It should run on any other POSIX compatible OS and probably also on different OS.
 Should you achieve either success of failure on non-POSIX systems, please let us know through the
-[issue](https://gitlab.com/rodrigomelo9/pyfpga/issues) tracker.
+[issue](https://github.com/PyFPGA/pyfpga/issues) tracker.
 
 - The whole development flow (from reading HDL and constraint sources to producing a bitstream)
  can be performed with ISE (Xilinx), Vivado (Xilinx), Quarts Prime (Intel/Altera), Libero-SoC
@@ -103,11 +100,11 @@ the terminal (installed and well configured).
 
 ## Installation
 
-PyFPGA requires Python `>=3.5`. For now, it's only available as a git repository
-hosted on GitLab. It can be installed with pip:
+PyFPGA requires Python `>=3.6`. For now, it's only available as a git repository
+hosted on GitHub. It can be installed with pip:
 
 ```
-pip install 'git+https://gitlab.com/rodrigomelo9/pyfpga#egg=pyfpga'
+pip install 'git+https://github.com/PyFPGA/pyfpga#egg=pyfpga'
 ```
 
 > On GNU/Linux, installing pip packages on the system requires `sudo`.
@@ -117,7 +114,7 @@ You can get a copy of the repository either through git clone or downloading a
 tarball/zipfile:
 
 ```
-git clone https://gitlab.com/rodrigomelo9/pyfpga.git
+git clone https://github.com/PyFPGA/pyfpga.git
 cd pyfpga
 ```
 
