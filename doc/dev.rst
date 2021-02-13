@@ -43,8 +43,8 @@ solve the complete workflow were encapsulated into procedures
   This file is compliant with Tcl 8.4 because is the oldest used by a
   supported FPGA Tool (Xilinx ISE).
 
-fpga/tool/*.py
-==============
+fpga/tool/<TOOL>.py
+===================
 
 A base class (``__init__.py``) was developed to provides a uniform API to be
 implemented for each supported Tool.
