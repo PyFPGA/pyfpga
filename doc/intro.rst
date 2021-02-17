@@ -3,10 +3,6 @@
 Introduction
 ############
 
-
-Detailed support
-----------------
-
 .. ATTENTION::
 
   PyFPGA assumes that the backend Tool is ready to run.
@@ -17,6 +13,45 @@ Detailed support
   * Tool available in the system PATH.
   * GNU/Linux: extra packages installed, environment variables assigned
     and permissions granted on devices (to transfer the bitstream).
+
+Detailed support
+----------------
+
+|                                |  ISE  | Libero | Openflow | Quartus | Vivado |
+|---                             |:---:  |:---:   |:---:     |:---:    |:---:   |
+| **add_files**
+| `vhdl`                         | `Yes` | `Yes`  | `Yes`    | `Yes`   | `Yes`  |
+| `verilog`                      | `Yes` | `Yes`  | `Yes`    | `Yes`   | `Yes`  |
+| `system_verilog`               | `TBD` | `TBD`  | `TBD`    | `TBD`   | `TBD`  |
+| `constraint`                   | `Yes` | `Yes`  | `Yes`    | `Yes`   | `Yes`  |
+| `block_design`                 | `NY`  | `NY`   | `NY`     | `NY`    | `Yes`  |
+| **set_param**
+| `boolean` (*VHDL/Verilog*)     | `TBD` | `TBD`  |`TBD`     | `TBD`   | `TBD`  |
+| `integer` (*VHDL/Verilog*)     | `TBD` | `TBD`  |`TBD`     | `TBD`   | `TBD`  |
+| `string` (*VHDL/Verilog*)      | `TBD` | `TBD`  |`TBD`     | `TBD`   | `TBD`  |
+| `real` (*VHDL/Verilog*)        | `TBD` | `TBD`  |`TBD`     | `TBD`   | `TBD`  |
+| `std_logic` (*VHDL*)           | `TBD` | `TBD`  |`TBD`     | `TBD`   | `TBD`  |
+| `std_logic_vector` (*VHDL*)    | `TBD` | `TBD`  |`TBD`     | `TBD`   | `TBD`  |
+| **add_path**                   | `Yes` | `Yes`  | `Yes`    | `Yes`   | `Yes`  |
+| **set_define** (*Verilog*)     | `TBI` | `TBI`  | `TBI`    | `TBI`   | `TBI`  |
+| **set_arch** (*VHDL*)          | `TBI` | `TBI`  | `TBI`    | `TBI`   | `TBI`  |
+| **generate**
+| `prj`                          | `Yes` | `Yes`  | `No`     | `Yes`   | `Yes`  |
+| `syn`                          | `Yes` | `Yes`  | `Yes`    | `Yes`   | `Yes`  |
+| `imp`                          | `Yes` | `Yes`  | `Yes`    | `Yes`   | `Yes`  |
+| `bit`                          | `Yes` | `Yes`  | `Yes`    | `Yes`   | `Yes`  |
+| **transfer**
+| `fpga`                         | `Yes` | `NY`   | `Yes`    | `Yes`   | `Yes`  |
+| `spi`                          | `Yes` | `NY`   | `NY`     | `NY`    | `NY`   |
+| `bpi`                          | `Yes` | `NY`   | `NY`     | `NY`    | `NY`   |
+| `detect`                       | `Yes` | `NY`   | `NY`     | `Yes`   | `Yes`  |
+| `unlock`                       | `Yes` | `No`   | `No`     | `No`    | `No`   |
+
+* `Yes`: already supported
+* `No`: no plans (or unneeded)
+* `NY`: Not yet, but maybe someday
+* `TBD`: To Be Defined
+* `TBI`: To Be Implemented
 
 Next Steps
 ----------
