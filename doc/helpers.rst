@@ -1,4 +1,0 @@
-.. program:: pyfpga
-
-Helper tools
-############

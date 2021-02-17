@@ -1,6 +1,6 @@
 #
+# Copyright (C) 2019-2021 Rodrigo A. Melo
 # Copyright (C) 2019-2020 INTI
-# Copyright (C) 2019-2020 Rodrigo A. Melo
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -169,16 +169,18 @@ class Project:
 
         :param pathname: a relative path to a file, which can contain
          shell-style wildcards (glob compliant)
-        :param filetype: the valid values are **verilog** or **vhdl**,
-         **constraint** and **design** (for a graphical block design). It is
-         automatically discovered (based on the extension) if None provided
-         (except for **design**). The default (autodiscovery failed) is
-         **constraint**
+        :param filetype: specifies the file type
         :param library: an optional VHDL library name
         :param options: to be provided to the underlying tool
         :raises FileNotFoundError: when a file specified as pathname is not
          found
-        :raises ValueError: when filetype is unsupported
+        :raises ValueError: when *filetype* is unsupported
+
+        .. note:: Valid values for *filetype* are ``vhdl``, ``verilog``,
+        ``system_verilog``, ``constraint`` (default) and ``block_design``
+        (only **Vivado** is currently supported). If None provided, this
+        value is automatically discovered based on the extension (
+        ``.vhd`` or ``.vhdl``, ``.v`` and ``.sv``).
         """
         pathname = os.path.join(self._absdir, pathname)
         pathname = os.path.normpath(pathname)

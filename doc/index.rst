@@ -24,5 +24,4 @@ PyFPGA Documentation
    advanced
    tools
    api
-   helpers
    dev
