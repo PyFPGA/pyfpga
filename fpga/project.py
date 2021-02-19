@@ -206,7 +206,7 @@ class Project:
     def get_files(self):
         """Get the files of the project.
 
-       :returns: a list with the files of the project
+        :returns: a list with the files of the project
         """
         return self.tool.get_files()
 
