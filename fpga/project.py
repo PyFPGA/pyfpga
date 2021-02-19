@@ -200,7 +200,7 @@ class Project:
                 else:
                     filetype = 'constraint'
                 _log.debug('add_files: %s filetype detected', filetype)
-            file = os.path.relpath(file, self.outdir)
+            file = os.path.relpath(file, self.outdir).replace(os.path.sep, "/")
             self.tool.add_file(file, filetype, library, options)
 
     def get_files(self):
