@@ -54,6 +54,11 @@ def run(command, capture):
     return result.stdout
 
 
+def tcl_path(path):
+    """Returns a Tcl suitable path."""
+    return path.replace(os.path.sep, "/")
+
+
 class Tool:
     """Tool interface.
 
@@ -161,20 +166,20 @@ class Tool:
             files.append('    fpga_file {}.edif'.format(self.project))
         else:
             for path in self.paths:
-                files.append('    fpga_include {}'.format(path))
+                files.append('    fpga_include {}'.format(tcl_path(path)))
             for file in self.files['verilog']:
-                files.append('    fpga_file {}'.format(file[0]))
+                files.append('    fpga_file {}'.format(tcl_path(file[0])))
             for file in self.files['vhdl']:
                 if file[1] is None:
-                    files.append('    fpga_file {}'.format(file[0]))
+                    files.append('    fpga_file {}'.format(tcl_path(file[0])))
                 else:
-                    files.append(
-                        '    fpga_file {} {}'.format(file[0], file[1])
-                    )
+                    files.append('    fpga_file {} {}'.format(
+                        tcl_path(file[0]), file[1]
+                    ))
         for file in self.files['design']:
-            files.append('    fpga_design {}'.format(file[0]))
+            files.append('    fpga_design {}'.format(tcl_path(file[0])))
         for file in self.files['constraint']:
-            files.append('    fpga_file {}'.format(file[0]))
+            files.append('    fpga_file {}'.format(tcl_path(file[0])))
         # Parameters
         params = []
         for param in self.params:
