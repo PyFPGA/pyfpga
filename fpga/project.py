@@ -33,8 +33,8 @@ import time
 
 
 TOOLS = [
-    'ghdl', 'ise', 'libero', 'openflow', 'quartus', 'vivado', 'yosys',
-    'yosys-ise', 'yosys-vivado'
+    'ghdl', 'ise', 'libero', 'openflow', 'symbiflow', 'quartus', 'vivado',
+    'yosys', 'yosys-ise', 'yosys-vivado'
 ]
 
 
@@ -74,6 +74,9 @@ class Project:
         elif tool == 'openflow':
             from fpga.tool.openflow import Openflow
             self.tool = Openflow(project)
+        elif tool == 'symbiflow':
+            from fpga.tool.symbiflow import Symbiflow
+            self.tool = Symbiflow(project)
         elif tool == 'quartus':
             from fpga.tool.quartus import Quartus
             self.tool = Quartus(project)
