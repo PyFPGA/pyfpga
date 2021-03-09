@@ -9,7 +9,8 @@ supported board. It shows the inclusion of Constraints files.
 * [ise](ise): Spartan-6 FPGA LX9 MicroBoard (Avnet)
 * [libero](libero): Digi-Key SmartFusion2 Maker Board (Digi-Key)
 * [openflow](openflow):
-  * EDU-CIAA-FPGA (`icestorm.py`)
+  * IceStick (`icestorm.py`)
+  * EDU-CIAA-FPGA (`icestorm.py --board edu-ciaa-fpga`)
   * OrangeCrab-r0.2 (`prjtrellis.py`)
   * ECP5 Evaluation Board (`prjtrellis.py --board ecp5evn`)
 * [quartus](quartus): DE10Nano (Terasic)
