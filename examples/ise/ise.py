@@ -11,19 +11,30 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     '--action', choices=['generate', 'transfer', 'all'], default='generate',
 )
+parser.add_argument(
+    '--board',
+    choices=['nexys3', 's6micro'],
+    default='nexys3'
+)
 args = parser.parse_args()
 
-prj = Project('ise')
-prj.set_part('XC6SLX9-2-CSG324')
+BOARDS = {
+    'nexys3': ['XC6SLX16-3-CSG324', 'nexys3.ucf', 'nexys3.xcf'],
+    's6micro': ['XC6SLX9-2-CSG324', 's6micro.ucf', 's6micro.xcf']
+}
 
-prj.set_outdir('../../build/ise')
+prj = Project('ise')
+prj.set_part(BOARDS[args.board][0])
+
+prj.set_outdir('../../build/ise-{}'.format(args.board))
 
 prj.add_files('../../hdl/blinking.vhdl', library='examples')
 prj.add_files('../../hdl/examples_pkg.vhdl', library='examples')
 prj.add_files('../../hdl/top.vhdl')
 prj.set_top('Top')
-prj.add_files('s6micro.xcf')
-prj.add_files('s6micro.ucf')
+
+prj.add_files(BOARDS[args.board][1])
+prj.add_files(BOARDS[args.board][2])
 
 if args.action in ['generate', 'all']:
     try:
