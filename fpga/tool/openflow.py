@@ -128,7 +128,7 @@ class Openflow(Tool):
             params.append(f'chparam -set {param[0]} {param[1]} {self.top}')
         # Script creation
         template = os.path.join(os.path.dirname(__file__), 'template.sh')
-        with open(template, 'r') as file:
+        with open(template, 'r', encoding='utf-8') as file:
             text = file.read()
         text = text.format(
             backend=self.backend,
@@ -161,7 +161,7 @@ class Openflow(Tool):
             tool_nextpnr_ecp5=self.tools['nextpnr-ecp5'],
             tool_ecppack=self.tools['ecppack']
         )
-        with open(f'{self._TOOL}.sh', 'w') as file:
+        with open(f'{self._TOOL}.sh', 'w', encoding='utf-8') as file:
             file.write(text)
 
     def generate(self, to_task, from_task, capture):
@@ -173,7 +173,7 @@ class Openflow(Tool):
     def transfer(self, devtype, position, part, width, capture):
         super().transfer(devtype, position, part, width, capture)
         template = os.path.join(os.path.dirname(__file__), 'openprog.sh')
-        with open(template, 'r') as file:
+        with open(template, 'r', encoding='utf-8') as file:
             text = file.read()
         text = text.format(
             family=self.part['family'],
@@ -185,7 +185,7 @@ class Openflow(Tool):
             tool_iceprog=self.tools['iceprog'],
             tool_openocd=self.tools['openocd']
         )
-        with open('openprog.sh', 'w') as file:
+        with open('openprog.sh', 'w', encoding='utf-8') as file:
             file.write(text)
         return run(self._TRF_COMMAND, capture)
 

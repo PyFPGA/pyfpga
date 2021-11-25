@@ -112,7 +112,7 @@ class Tool:
         filename = '.pyfpga.yml'
         self.configs = {}
         if os.path.exists(filename):
-            with open(filename, 'r') as file:
+            with open(filename, 'r', encoding='utf-8') as file:
                 data = safe_load(file)
                 if self._TOOL in data:
                     self.configs = data[self._TOOL]
@@ -184,7 +184,7 @@ class Tool:
             params.append(f'{{ {param[0]} {param[1]} }}')
         # Script creation
         template = os.path.join(os.path.dirname(__file__), 'template.tcl')
-        with open(template, 'r') as file:
+        with open(template, 'r', encoding='utf-8') as file:
             tcl = file.read()
         tcl = tcl.replace('#TOOL#', self._TOOL)
         tcl = tcl.replace('#PRESYNTH#', "True" if self.presynth else "False")
@@ -204,7 +204,7 @@ class Tool:
         tcl = tcl.replace('#POSTSYN_CMDS#', '\n'.join(self.cmds['postsyn']))
         tcl = tcl.replace('#POSTIMP_CMDS#', '\n'.join(self.cmds['postimp']))
         tcl = tcl.replace('#POSTBIT_CMDS#', '\n'.join(self.cmds['postbit']))
-        with open(f'{self._TOOL}.tcl', 'w') as file:
+        with open(f'{self._TOOL}.tcl', 'w', encoding='utf-8') as file:
             file.write(tcl)
 
     def generate(self, to_task, from_task, capture):
