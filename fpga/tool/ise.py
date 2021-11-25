@@ -1,6 +1,6 @@
 #
 # Copyright (C) 2019-2020 INTI
-# Copyright (C) 2019-2020 Rodrigo A. Melo
+# Copyright (C) 2019-2021 Rodrigo A. Melo
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -132,7 +132,7 @@ class Ise(Tool):
             device, speed, package = re.findall(r'(\w+)-(\w+)-(\w+)', part)[0]
             if len(speed) > len(package):
                 speed, package = package, speed
-            part = "{}-{}-{}".format(device, speed, package)
+            part = f'{device}-{speed}-{package}'
         except IndexError:
             raise ValueError(
                 'Part must be DEVICE-SPEED-PACKAGE or DEVICE-PACKAGE-SPEED'

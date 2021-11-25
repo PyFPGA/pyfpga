@@ -1,6 +1,6 @@
 #
 # Copyright (C) 2019-2020 INTI
-# Copyright (C) 2019-2020 Rodrigo A. Melo
+# Copyright (C) 2019-2021 Rodrigo A. Melo
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,10 +37,8 @@ TASKS = ['prj', 'syn', 'imp', 'bit']
 def check_value(value, values):
     """Check if VALUE is included in VALUES."""
     if value not in values:
-        raise ValueError(
-            '{} is not a valid value [{}]'
-            .format(value, ", ".join(values))
-        )
+        joined_values = ", ".join(values)
+        raise ValueError(f'{value} is not a valid value [{joined_values}]')
 
 
 def run(command, capture):
@@ -163,27 +161,27 @@ class Tool:
         # Paths and files
         files = []
         if self.presynth:
-            files.append('    fpga_file {}.edif'.format(self.project))
+            files.append(f'    fpga_file {self.project}.edif')
         else:
             for path in self.paths:
-                files.append('    fpga_include {}'.format(tcl_path(path)))
+                files.append(f'    fpga_include {tcl_path(path)}')
             for file in self.files['verilog']:
-                files.append('    fpga_file {}'.format(tcl_path(file[0])))
+                files.append(f'    fpga_file {tcl_path(file[0])}')
             for file in self.files['vhdl']:
                 if file[1] is None:
-                    files.append('    fpga_file {}'.format(tcl_path(file[0])))
+                    files.append(f'    fpga_file {tcl_path(file[0])}')
                 else:
-                    files.append('    fpga_file {} {}'.format(
-                        tcl_path(file[0]), file[1]
-                    ))
+                    files.append(
+                        f'    fpga_file {tcl_path(file[0])} {file[1]}'
+                    )
         for file in self.files['design']:
-            files.append('    fpga_design {}'.format(tcl_path(file[0])))
+            files.append(f'    fpga_design {tcl_path(file[0])}')
         for file in self.files['constraint']:
-            files.append('    fpga_file {}'.format(tcl_path(file[0])))
+            files.append(f'    fpga_file {tcl_path(file[0])}')
         # Parameters
         params = []
         for param in self.params:
-            params.append('{{ {} {} }}'.format(param[0], param[1]))
+            params.append(f'{{ {param[0]} {param[1]} }}')
         # Script creation
         template = os.path.join(os.path.dirname(__file__), 'template.tcl')
         with open(template, 'r') as file:
@@ -206,7 +204,7 @@ class Tool:
         tcl = tcl.replace('#POSTSYN_CMDS#', '\n'.join(self.cmds['postsyn']))
         tcl = tcl.replace('#POSTIMP_CMDS#', '\n'.join(self.cmds['postimp']))
         tcl = tcl.replace('#POSTBIT_CMDS#', '\n'.join(self.cmds['postbit']))
-        with open('%s.tcl' % self._TOOL, 'w') as file:
+        with open(f'{self._TOOL}.tcl', 'w') as file:
             file.write(tcl)
 
     def generate(self, to_task, from_task, capture):
@@ -217,15 +215,13 @@ class Tool:
         from_index = TASKS.index(from_task)
         if from_index > to_index:
             raise ValueError(
-                'initial task "{}" cannot be later than the last task "{}"'
-                .format(from_task, to_task)
+                f'initial task "{from_task}" cannot be later than the ' +
+                f'last task "{to_task}"'
             )
         tasks = " ".join(TASKS[from_index:to_index+1])
         self._create_gen_script(tasks)
         if not which(self._GEN_PROGRAM):
-            raise RuntimeError(
-                'program "{}" not found'.format(self._GEN_PROGRAM)
-            )
+            raise RuntimeError(f'program "{self._GEN_PROGRAM}" not found')
         return run(self._GEN_COMMAND, capture)
 
     def set_bitstream(self, path):
@@ -235,9 +231,7 @@ class Tool:
     def transfer(self, devtype, position, part, width, capture):
         """Transfer a bitstream."""
         if not which(self._TRF_PROGRAM):
-            raise RuntimeError(
-                'program "{}" not found'.format(self._TRF_PROGRAM)
-            )
+            raise RuntimeError(f'program "{self._TRF_PROGRAM}" not found')
         check_value(devtype, self._DEVTYPES)
         check_value(position, range(10))
         isinstance(part, str)
@@ -247,7 +241,7 @@ class Tool:
         if not self.bitstream and devtype not in ['detect', 'unlock']:
             bitstream = []
             for ext in self._BIT_EXT:
-                bitstream.extend(glob('**/*.{}'.format(ext), recursive=True))
+                bitstream.extend(glob(f'**/*.{ext}', recursive=True))
             if len(bitstream) == 0:
                 raise FileNotFoundError('bitStream not found')
             self.bitstream = bitstream[0]
