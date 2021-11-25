@@ -237,7 +237,7 @@ class Project:
             toplevel = os.path.join(self._absdir, toplevel)
             toplevel = os.path.normpath(toplevel)
             if os.path.exists(toplevel):
-                with open(toplevel, 'r') as file:
+                with open(toplevel, 'r', encoding='utf-8') as file:
                     hdl = file.read()
                 # Removing comments, newlines and carriage-returns
                 hdl = re.sub(r'--.*[$\n]|\/\/.*[$\n]', '', hdl)

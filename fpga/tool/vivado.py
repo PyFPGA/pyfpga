@@ -92,6 +92,6 @@ class Vivado(Tool):
         temp = _TEMPLATES[devtype]
         if devtype != 'detect':
             temp = temp.replace('#BITSTREAM#', self.bitstream)
-        with open('vivado-prog.tcl', 'w') as file:
+        with open('vivado-prog.tcl', 'w', encoding='utf-8') as file:
             file.write(temp)
         return run(self._TRF_COMMAND, capture)
