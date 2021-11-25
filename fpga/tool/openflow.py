@@ -1,6 +1,6 @@
 #
 # Copyright (C) 2020 INTI
-# Copyright (C) 2020 Rodrigo A. Melo
+# Copyright (C) 2020-2021 Rodrigo A. Melo
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ class Openflow(Tool):
         command = engine.get('command', 'docker') + ' run --rm'
         volumes = '-v ' + ('-v ').join(engine.get('volumes', ['$HOME:$HOME']))
         work = '-w ' + engine.get('work', '$PWD')
-        self.oci_engine = '{} {} {}'.format(command, volumes, work)
+        self.oci_engine = f'{command} {volumes} {work}'
         # Containers
         defaults = {
             'ghdl': 'ghdl/synth:beta',
@@ -90,7 +90,7 @@ class Openflow(Tool):
                 self.part['device'] = aux[0]
                 self.part['package'] = aux[1]
             elif len(aux) == 3:
-                self.part['device'] = '{}-{}'.format(aux[0], aux[1])
+                self.part['device'] = f'{aux[0]}-{aux[1]}'
                 self.part['package'] = aux[2]
             else:
                 raise ValueError('Part must be DEVICE-PACKAGE')
@@ -103,7 +103,7 @@ class Openflow(Tool):
         # Verilog includes
         paths = []
         for path in self.paths:
-            paths.append('verilog_defaults -add -I{}'.format(path))
+            paths.append(f'verilog_defaults -add -I{path}')
         # Files
         constraints = []
         verilogs = []
@@ -111,25 +111,21 @@ class Openflow(Tool):
         for file in self.files['vhdl']:
             lib = ''
             if file[1] is not None:
-                lib = '--work={}'.format(file[1])
-            vhdls.append('{} -a $FLAGS {} {}'.format(
-                self.tools['ghdl'], lib, file[0])
-            )
+                lib = f'--work={file[1]}'
+            vhdls.append(f'{self.tools["ghdl"]} -a $FLAGS {lib} {file[0]}')
         for file in self.files['verilog']:
             if file[0].endswith('.sv'):
-                verilogs.append('read_verilog -sv -defer {}'.format(file[0]))
+                verilogs.append(f'read_verilog -sv -defer {file[0]}')
             else:
-                verilogs.append('read_verilog -defer {}'.format(file[0]))
+                verilogs.append(f'read_verilog -defer {file[0]}')
         for file in self.files['constraint']:
             constraints.append(file[0])
         if len(vhdls) > 0:
-            verilogs = ['ghdl $FLAGS {}'.format(self.top)]
+            verilogs = [f'ghdl $FLAGS {self.top}']
         # Parameters
         params = []
         for param in self.params:
-            params.append('chparam -set {} {} {}'.format(
-                param[0], param[1], self.top
-            ))
+            params.append(f'chparam -set {param[0]} {param[1]} {self.top}')
         # Script creation
         template = os.path.join(os.path.dirname(__file__), 'template.sh')
         with open(template, 'r') as file:
@@ -165,7 +161,7 @@ class Openflow(Tool):
             tool_nextpnr_ecp5=self.tools['nextpnr-ecp5'],
             tool_ecppack=self.tools['ecppack']
         )
-        with open('%s.sh' % self._TOOL, 'w') as file:
+        with open(f'{self._TOOL}.sh', 'w') as file:
             file.write(text)
 
     def generate(self, to_task, from_task, capture):
