@@ -3,4 +3,5 @@
 SCRIPTS = $(wildcard *.py)
 
 all:
-	@$(foreach SCRIPT, $(SCRIPTS), python3 $(SCRIPT);)
+	python3 ise.py
+	python3 ise.py --board s6micro
