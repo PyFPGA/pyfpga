@@ -17,15 +17,15 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        pip install pycodestyle
-        pip install pylint
         pip install pytest
         pip install .
-    - name: Lint
+    - name: Pull container images
       run: |
-        pycodestyle fpga examples test
-        pylint fpga
-        git diff --check --cached
+        docker pull hdlc/prjtrellis
+        docker pull hdlc/ghdl:yosys
+        docker pull hdlc/icestorm
+        docker pull hdlc/nextpnr:ecp5
+        docker pull hdlc/nextpnr:ice40
     - name: Test
       run: |
         pytest
