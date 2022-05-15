@@ -1,0 +1,497 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>API Reference &mdash; Python latest documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Development Notes" href="dev.html" />
+    <link rel="prev" title="Per tool usage" href="tools.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                latest
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basic.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Per tool usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev.html">Development Notes</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>API Reference</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            
+              <a href="https://gitlab.com/rodrigomelo9/pyfpga/blob/master/doc/api.rst" class="fa fa-gitlab"> Edit on GitLab</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="module-fpga.project">
+<span id="api-reference"></span><span id="api"></span><h1>API Reference<a class="headerlink" href="#module-fpga.project" title="Permalink to this headline">¶</a></h1>
+<p>fpga.project</p>
+<p>This module implements the main class of PyFPGA, which provides
+functionalities to create a project, generate a bitstream and transfer it to a
+Device.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="fpga.project.Project">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fpga.project.</span></span><span class="sig-name descname"><span class="pre">Project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tool</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'vivado'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative_to_script</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fpga/project.html#Project"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fpga.project.Project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to manage an FPGA project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tool</strong> – FPGA tool to be used</p></li>
+<li><p><strong>project</strong> – project name (the tool name is used if none specified)</p></li>
+<li><p><strong>init</strong> – a dict to initialize some parameters</p></li>
+<li><p><strong>relative_to_script</strong> – specifies if the files/directories are relative
+to the script or the execution directory</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – when tool is unsupported</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Valid values for <strong>tool</strong> are <code class="docutils literal notranslate"><span class="pre">ghdl</span></code>, <code class="docutils literal notranslate"><span class="pre">ise</span></code>, <code class="docutils literal notranslate"><span class="pre">libero</span></code>,
+<code class="docutils literal notranslate"><span class="pre">openflow</span></code>, <code class="docutils literal notranslate"><span class="pre">quartus</span></code>, <code class="docutils literal notranslate"><span class="pre">vivado</span></code>, <code class="docutils literal notranslate"><span class="pre">yosys</span></code>, <code class="docutils literal notranslate"><span class="pre">yosys-ise</span></code> and
+<code class="docutils literal notranslate"><span class="pre">yosys-vivado</span></code></p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="fpga.project.Project.add_files">
+<span class="sig-name descname"><span class="pre">add_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filetype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">library</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fpga/project.html#Project.add_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fpga.project.Project.add_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds files to the project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pathname</strong> – a relative path to a file, which can contain
+shell-style wildcards (glob compliant)</p></li>
+<li><p><strong>filetype</strong> – specifies the file type</p></li>
+<li><p><strong>library</strong> – an optional VHDL library name</p></li>
+<li><p><strong>options</strong> – to be provided to the underlying tool</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>FileNotFoundError</strong> – when a file specified as pathname is not
+found</p></li>
+<li><p><strong>ValueError</strong> – when <em>filetype</em> is unsupported</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Valid values for <em>filetype</em> are <code class="docutils literal notranslate"><span class="pre">vhdl</span></code>, <code class="docutils literal notranslate"><span class="pre">verilog</span></code>,</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">system_verilog</span></code>, <code class="docutils literal notranslate"><span class="pre">constraint</span></code> (default) and <code class="docutils literal notranslate"><span class="pre">block_design</span></code>
+(only <strong>Vivado</strong> is currently supported). If None provided, this
+value is automatically discovered based on the extension (
+<code class="docutils literal notranslate"><span class="pre">.vhd</span></code> or <code class="docutils literal notranslate"><span class="pre">.vhdl</span></code>, <code class="docutils literal notranslate"><span class="pre">.v</span></code> and <code class="docutils literal notranslate"><span class="pre">.sv</span></code>).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fpga.project.Project.add_hook">
+<span class="sig-name descname"><span class="pre">add_hook</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hook</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'project'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fpga/project.html#Project.add_hook"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fpga.project.Project.add_hook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a hook in the specified phase.</p>
+<p>A hook is a place that allows you to insert customized programming.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hook</strong> – is a string representing a tool specific command</p></li>
+<li><p><strong>phase</strong> – the phase where to insert a hook</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – when phase is unsupported</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Valid values for <em>phase</em> are
+<code class="docutils literal notranslate"><span class="pre">prefile</span></code> (to add options needed to find files),
+<code class="docutils literal notranslate"><span class="pre">project</span></code> (to add project related options),
+<code class="docutils literal notranslate"><span class="pre">preflow</span></code> (to change options previous to run the flow),
+<code class="docutils literal notranslate"><span class="pre">postsyn</span></code> (to perform an action between <em>syn</em> and <em>imp</em>),
+<code class="docutils literal notranslate"><span class="pre">postimp</span></code> (to perform an action between <em>imp</em> and <em>bit</em>) and
+<code class="docutils literal notranslate"><span class="pre">postbit</span></code> (to perform an action after <em>bit</em>)</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Using a hook, you will be probably broken the vendor
+independence</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fpga.project.Project.add_path">
+<span class="sig-name descname"><span class="pre">add_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fpga/project.html#Project.add_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fpga.project.Project.add_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a search path.</p>
+<p>Useful to specify where to search Verilog Included Files or IP
+repositories.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> – a relative path to a directory</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>NotADirectoryError</strong> – when path is not a directory</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fpga.project.Project.clean">
+<span class="sig-name descname"><span class="pre">clean</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fpga/project.html#Project.clean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fpga.project.Project.clean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean the generated project files.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fpga.project.Project.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bit'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'prj'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capture</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fpga/project.html#Project.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fpga.project.Project.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the FPGA tool.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>to_task</strong> – last task</p></li>
+<li><p><strong>from_task</strong> – first task</p></li>
+<li><p><strong>capture</strong> – capture STDOUT and STDERR</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>STDOUT and STDERR messages</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError</strong> – when from_task is later than to_task</p></li>
+<li><p><strong>RuntimeError</strong> – when the tool to be used is not found</p></li>
+<li><p><strong>ValueError</strong> – when to_task or from_task are is unsupported</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Valid values for <strong>tasks</strong> are
+<code class="docutils literal notranslate"><span class="pre">prj</span></code> (to creates the project file),
+<code class="docutils literal notranslate"><span class="pre">syn</span></code> (to performs the synthesis),
+<code class="docutils literal notranslate"><span class="pre">imp</span></code> (to runs implementation) and
+<code class="docutils literal notranslate"><span class="pre">bit</span></code> (to generates the bitstream)</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fpga.project.Project.get_configs">
+<span class="sig-name descname"><span class="pre">get_configs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fpga/project.html#Project.get_configs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fpga.project.Project.get_configs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the Project Configurations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a dict which includes <code class="docutils literal notranslate"><span class="pre">tool</span></code> and <code class="docutils literal notranslate"><span class="pre">project</span></code> names, the
+<code class="docutils literal notranslate"><span class="pre">extension</span></code> of a project file (according to the selected tool) and
+the <code class="docutils literal notranslate"><span class="pre">part</span></code> to be used</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fpga.project.Project.get_files">
+<span class="sig-name descname"><span class="pre">get_files</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fpga/project.html#Project.get_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fpga.project.Project.get_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the files of the project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a list with the files of the project</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fpga.project.Project.set_bitstream">
+<span class="sig-name descname"><span class="pre">set_bitstream</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fpga/project.html#Project.set_bitstream"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fpga.project.Project.set_bitstream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the bitstream file to transfer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> – path to the bitstream file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fpga.project.Project.set_outdir">
+<span class="sig-name descname"><span class="pre">set_outdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outdir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fpga/project.html#Project.set_outdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fpga.project.Project.set_outdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the OUTput DIRectory (where to put the resulting files).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>outdir</strong> – path to the output directory</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fpga.project.Project.set_param">
+<span class="sig-name descname"><span class="pre">set_param</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fpga/project.html#Project.set_param"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fpga.project.Project.set_param" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a Generic/Parameter Value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – parameter/generic name</p></li>
+<li><p><strong>value</strong> – value to be assigned</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fpga.project.Project.set_part">
+<span class="sig-name descname"><span class="pre">set_part</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fpga/project.html#Project.set_part"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fpga.project.Project.set_part" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the target FPGA part.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>part</strong> – the FPGA part as specified by the tool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fpga.project.Project.set_top">
+<span class="sig-name descname"><span class="pre">set_top</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">toplevel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fpga/project.html#Project.set_top"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fpga.project.Project.set_top" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the top level of the project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>toplevel</strong> – name or file path of the top level entity/module</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>FileNotFoundError</strong> – when toplevel is a not found file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fpga.project.Project.transfer">
+<span class="sig-name descname"><span class="pre">transfer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">devtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fpga'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">part</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capture</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fpga/project.html#Project.transfer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fpga.project.Project.transfer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transfers the generated bitstream to a device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>devtype</strong> – <em>fpga</em> or other valid option
+(depending on the used tool, it could be <em>spi</em>, <em>bpi</em>, etc)</p></li>
+<li><p><strong>position</strong> – position of the device in the JTAG chain</p></li>
+<li><p><strong>part</strong> – name of the memory (when device is not <em>fpga</em>)</p></li>
+<li><p><strong>width</strong> – bits width of the memory (when device is not <em>fpga</em>)</p></li>
+<li><p><strong>capture</strong> – capture STDOUT and STDERR</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>STDOUT and STDERR messages</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>RuntimeError</strong> – when the tool to be used is not found</p></li>
+<li><p><strong>FileNotFoundError</strong> – when the bitstream is not found</p></li>
+<li><p><strong>ValueError</strong> – when devtype, position or width are unsupported</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="dev.html" class="btn btn-neutral float-right" title="Development Notes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tools.html" class="btn btn-neutral float-left" title="Per tool usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2019-2021, Rodrigo Alejandro Melo and contributors
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/buildthedocs/sphinx.theme">theme</a>
+    
+    provided by <a href="https://buildthedocs.github.io">Build the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

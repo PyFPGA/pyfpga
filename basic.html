@@ -1,0 +1,374 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Basic usage &mdash; Python latest documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Advanced usage" href="advanced.html" />
+    <link rel="prev" title="Introduction" href="intro.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                latest
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Basic usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#project-creation">Project Creation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#project-generation">Project generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bitstream-transfer">Bitstream transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#logging-capabilities">Logging capabilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Per tool usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev.html">Development Notes</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Basic usage</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            
+              <a href="https://gitlab.com/rodrigomelo9/pyfpga/blob/master/doc/basic.rst" class="fa fa-gitlab"> Edit on GitLab</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="basic-usage">
+<span id="basic"></span><h1>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h1>
+<section id="project-creation">
+<h2>Project Creation<a class="headerlink" href="#project-creation" title="Permalink to this headline">¶</a></h2>
+<p>The first steps are import the module and instantiate the <code class="docutils literal notranslate"><span class="pre">Project</span></code> <em>class</em>,
+specifying the <em>TOOL</em> to use and, optionally, a <em>PROJECT NAME</em> (the <em>tool</em>
+name is used when <em>no name</em> is provided).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fpga.project</span> <span class="kn">import</span> <span class="n">Project</span>
+
+<span class="n">prj</span> <span class="o">=</span> <span class="n">Project</span><span class="p">(</span><span class="s1">&#39;vivado&#39;</span><span class="p">,</span> <span class="s1">&#39;projectName&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The supported tool are: <code class="docutils literal notranslate"><span class="pre">ghdl</span></code>, <code class="docutils literal notranslate"><span class="pre">ise</span></code>, <code class="docutils literal notranslate"><span class="pre">libero</span></code>, <code class="docutils literal notranslate"><span class="pre">openflow</span></code>,
+<code class="docutils literal notranslate"><span class="pre">quartus</span></code>, <code class="docutils literal notranslate"><span class="pre">vivado</span></code>, <code class="docutils literal notranslate"><span class="pre">yosys</span></code>, <code class="docutils literal notranslate"><span class="pre">yosys-ise</span></code> and <code class="docutils literal notranslate"><span class="pre">yosys-vivado</span></code>.</p>
+</div>
+<p>By default, the directory where the project is generated is called <code class="docutils literal notranslate"><span class="pre">build</span></code>
+and is located in the same place that the script, but another name and location
+can be specified.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">set_outdir</span><span class="p">(</span><span class="s1">&#39;../temp&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next, the FPGA part would be specified:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">set_part</span><span class="p">(</span><span class="s1">&#39;xc7k160t-3-fbg484&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can use the default FPGA part for a quick test or make a lazy comparison
+between tools, but generally, you will want to specify a particular one.
+Examples about how to specify a part according the tool, are (default values
+when <code class="docutils literal notranslate"><span class="pre">set_part</span></code> is not employed):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Ise:</strong> <code class="docutils literal notranslate"><span class="pre">xc7k160t-3-fbg484</span></code> (<em>device-speed-package</em>)</p></li>
+<li><p><strong>Libero:</strong> <code class="docutils literal notranslate"><span class="pre">mpf100t-1-fcg484</span></code> (<em>device-speed-package</em>)</p></li>
+<li><p><strong>Openflow:</strong> <code class="docutils literal notranslate"><span class="pre">hx8k-ct256</span></code> (<em>device-package</em>)</p></li>
+<li><p><strong>Quartus:</strong> <code class="docutils literal notranslate"><span class="pre">10cl120zf780i8g</span></code> (<em>part</em>)</p></li>
+<li><p><strong>Vivado:</strong> <code class="docutils literal notranslate"><span class="pre">xc7k160t-3-fbg484</span></code> (<em>part</em>)</p></li>
+</ul>
+</div></blockquote>
+</div>
+<p>The files addition method allows specifying one or more HDL or constraint files
+(also block designs in case of Vivado).
+It uses <code class="docutils literal notranslate"><span class="pre">glob</span></code> internally, which makes available the use of wildcards.
+The path to their location must be relative to the Python script, and there
+are optional parameters to indicate the file type (<code class="docutils literal notranslate"><span class="pre">vhdl</span></code>, <code class="docutils literal notranslate"><span class="pre">verilog</span></code>,
+<code class="docutils literal notranslate"><span class="pre">constraint</span></code> or <code class="docutils literal notranslate"><span class="pre">design</span></code>), which is automatically detected based on the
+file extension, and if it is a member of a VHDL package.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">add_files</span><span class="p">(</span><span class="s1">&#39;hdl/blinking.vhdl&#39;</span><span class="p">,</span> <span class="n">library</span><span class="o">=</span><span class="s1">&#39;examples&#39;</span><span class="p">)</span>
+<span class="n">prj</span><span class="o">.</span><span class="n">add_files</span><span class="p">(</span><span class="s1">&#39;hdl/examples_pkg.vhdl&#39;</span><span class="p">,</span> <span class="n">library</span><span class="o">=</span><span class="s1">&#39;examples&#39;</span><span class="p">)</span>
+<span class="n">prj</span><span class="o">.</span><span class="n">add_files</span><span class="p">(</span><span class="s1">&#39;hdl/top.vhdl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>In some cases, the files order could be a problem, so take into account to
+change the order if needed.</p></li>
+<li><p>If a file seems unsupported, you can always use the <code class="docutils literal notranslate"><span class="pre">prefile</span></code> or
+<code class="docutils literal notranslate"><span class="pre">project</span></code> <a class="reference internal" href="advanced.html#hooks"><span class="std std-ref">Hooks</span></a>.</p></li>
+<li><p>In case of Verilog, <code class="docutils literal notranslate"><span class="pre">add_path</span></code> can be used to specify where to search for
+included files.</p></li>
+</ul>
+</div>
+<p>Finally, the top-level must be specified:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">set_top</span><span class="p">(</span><span class="s1">&#39;Top&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A relative path to a valid VHDL/Verilog file is also accepted by <code class="docutils literal notranslate"><span class="pre">set_top</span></code>,
+to automatically extract the top-level name.</p>
+</div>
+</section>
+<section id="project-generation">
+<h2>Project generation<a class="headerlink" href="#project-generation" title="Permalink to this headline">¶</a></h2>
+<p>Next step if to generate the project. In the most basic form, you can run the
+following to get a bitstream:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Additionally, you can specify which task to perform:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="s1">&#39;syn&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The valid values are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">prj</span></code>: to generate only a project file (only supported for privative tools)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">syn</span></code>: to performs synthesis.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">imp</span></code>: to performs synthesis and implementation (place and route,
+optimizations and static timming analysis when available).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bit</span></code>: (default) to perform synthesis, implementation and bitstream generation.</p></li>
+</ul>
+</div>
+</section>
+<section id="bitstream-transfer">
+<h2>Bitstream transfer<a class="headerlink" href="#bitstream-transfer" title="Permalink to this headline">¶</a></h2>
+<p>This method is in charge of run the needed tool to transfer a bitstream to a
+device (commonly an FPGA, but memories are also supported in some cases).
+It has up to four main optional parameters:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">transfer</span><span class="p">(</span><span class="n">devtype</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">part</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Where <em>devtype</em> is <code class="docutils literal notranslate"><span class="pre">fpga</span></code> by default but can also be <code class="docutils literal notranslate"><span class="pre">spi</span></code>, <code class="docutils literal notranslate"><span class="pre">bpi</span></code>, etc, if
+supported. An integer number can be used to specify the <em>position</em> (1) in the
+Jtag chain. When a memory is used as <em>devtype</em>, the <em>part</em> name and the
+<em>width</em> in bits must be also specified.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>In Xilinx, <cite>spi</cite> and <cite>bpi</cite> memories are out of the Jtag chain and are
+programmed through the FPGA. You must specify the FPGA <em>position</em>.</p></li>
+<li><p>In a Linux systems, you need to have permission over the device
+(udev rule, be a part of a group, etc).</p></li>
+</ul>
+</div>
+</section>
+<section id="logging-capabilities">
+<h2>Logging capabilities<a class="headerlink" href="#logging-capabilities" title="Permalink to this headline">¶</a></h2>
+<p>PyFPGA uses the <a class="reference external" href="https://docs.python.org/3/library/logging.html">logging</a>
+module, with a <em>NULL</em> handler and the <em>INFO</em> level by default.
+Messages can be enabled with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You can enable <em>DEBUG</em> messages adding:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;fpga.project&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="advanced.html" class="btn btn-neutral float-right" title="Advanced usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="intro.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2019-2021, Rodrigo Alejandro Melo and contributors
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/buildthedocs/sphinx.theme">theme</a>
+    
+    provided by <a href="https://buildthedocs.github.io">Build the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

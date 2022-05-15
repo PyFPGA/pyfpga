@@ -1,0 +1,396 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Advanced usage &mdash; Python latest documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Per tool usage" href="tools.html" />
+    <link rel="prev" title="Basic usage" href="basic.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                latest
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basic.html">Basic usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#multi-project-managment">Multi project managment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hooks">Hooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generate-options">Generate options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exceptions">Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Per tool usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev.html">Development Notes</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Advanced usage</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            
+              <a href="https://gitlab.com/rodrigomelo9/pyfpga/blob/master/doc/advanced.rst" class="fa fa-gitlab"> Edit on GitLab</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="advanced-usage">
+<span id="advanced"></span><h1>Advanced usage<a class="headerlink" href="#advanced-usage" title="Permalink to this headline">¶</a></h1>
+<section id="multi-project-managment">
+<h2>Multi project managment<a class="headerlink" href="#multi-project-managment" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">PROJECTS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;&lt;NAME1&gt;&#39;</span><span class="p">:</span> <span class="n">Project</span><span class="p">(</span>
+        <span class="s1">&#39;&lt;TOOLNAME&gt;&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;&lt;PROJECTNAME&gt;&#39;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;outdir&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;DIRNAME&gt;&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;part&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;PARTNAME&gt;&#39;</span>
+            <span class="s1">&#39;paths&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s1">&#39;&lt;PATHNAME1&gt;&#39;</span><span class="p">,</span>
+                <span class="o">...</span>
+                <span class="s1">&#39;&lt;PATHNAMEn&gt;&#39;</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;vhdl&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">[</span><span class="s1">&#39;&lt;FILENAME1&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;LIBRARYNAME1&gt;&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;&lt;FILENAME2&gt;&#39;</span><span class="p">,</span>
+                <span class="o">...</span>
+                <span class="s1">&#39;&lt;FILENAMEn&gt;&#39;</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;verilog&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s1">&#39;&lt;FILENAME1&gt;&#39;</span><span class="p">,</span>
+                <span class="o">...</span>
+                <span class="s1">&#39;&lt;FILENAMEn&gt;&#39;</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;constraint&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s1">&#39;&lt;FILENAME1&gt;&#39;</span><span class="p">,</span>
+                <span class="o">...</span>
+                <span class="s1">&#39;&lt;FILENAMEn&gt;&#39;</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;&lt;PARAMNAME1&gt;&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;VALUE1&gt;&#39;</span><span class="p">,</span>
+                <span class="o">...</span>
+                <span class="s1">&#39;&lt;PARAMNAMEn&gt;&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;VALUEn&gt;&#39;</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;top&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;TOPNAME&gt;&#39;</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="s1">&#39;&lt;NAME2&gt;&#39;</span><span class="p">:</span> <span class="n">Project</span><span class="p">(</span>
+        <span class="o">...</span>
+    <span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="hooks">
+<span id="id1"></span><h2>Hooks<a class="headerlink" href="#hooks" title="Permalink to this headline">¶</a></h2>
+<p>The following table depicts the parts of the <em>Project Creation</em> and the
+<em>Design Flow</em> internally performed by PyFPGA.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 54%" />
+<col style="width: 46%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Project Creation</p></th>
+<th class="head"><p>Design Flow</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Part specification</p></td>
+<td><p><strong>preflow</strong> hook</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>prefile</strong> hook</p></td>
+<td><p>Synthesis</p></td>
+</tr>
+<tr class="row-even"><td><p>Files addition</p></td>
+<td><p><strong>postsyn</strong> hook</p></td>
+</tr>
+<tr class="row-odd"><td><p>Top specification</p></td>
+<td><p>Implementation</p></td>
+</tr>
+<tr class="row-even"><td><p>Parameters specification</p></td>
+<td><p><strong>postimp</strong> hook</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>project</strong> hook</p></td>
+<td><p>Bitstream generation</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><strong>postbit</strong> hook</p></td>
+</tr>
+</tbody>
+</table>
+<p>If the provided API if not enough or suitable for your project, you can
+specify additional <em>hooks</em> in different parts of the flow, using:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">add_hook</span><span class="p">(</span><span class="n">hook</span><span class="p">,</span> <span class="n">phase</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Valid vaues for <em>phase</em> are <code class="docutils literal notranslate"><span class="pre">prefile</span></code>, <code class="docutils literal notranslate"><span class="pre">project</span></code> (default), <code class="docutils literal notranslate"><span class="pre">preflow</span></code>,
+<code class="docutils literal notranslate"><span class="pre">postsyn</span></code>, <code class="docutils literal notranslate"><span class="pre">postimp</span></code> and <code class="docutils literal notranslate"><span class="pre">postbit</span></code>.</p></li>
+<li><p>The <em>hook</em> string must be a valid command (supported by the used tool).</p></li>
+<li><p>If more than one <em>hook</em> is needed in the same <em>phase</em>, you can call this
+method several times (the commands will be executed in order).</p></li>
+</ul>
+</div>
+</section>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<p>The generics/parameters of the project can be optionally changed with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s1">&#39;param1&#39;</span><span class="p">,</span> <span class="n">value1</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="n">prj</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s1">&#39;paramN&#39;</span><span class="p">,</span> <span class="n">valueN</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="generate-options">
+<h2>Generate options<a class="headerlink" href="#generate-options" title="Permalink to this headline">¶</a></h2>
+<p>The method <code class="docutils literal notranslate"><span class="pre">generate</span></code> (previously seen at the end of
+[Basic usage](#basic-usage) section) has optional parameters:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">to_task</span><span class="p">,</span> <span class="n">from_task</span><span class="p">,</span> <span class="n">capture</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>With <em>to_task</em> and <em>from_taks</em> (with default values <code class="docutils literal notranslate"><span class="pre">bit</span></code> and <code class="docutils literal notranslate"><span class="pre">prj</span></code>),
+you are selecting the first and last task to execute when <cite>generate</cite> is
+invoqued. The order and available tasks are <code class="docutils literal notranslate"><span class="pre">prj</span></code>, <code class="docutils literal notranslate"><span class="pre">syn</span></code>, <code class="docutils literal notranslate"><span class="pre">imp</span></code> and <code class="docutils literal notranslate"><span class="pre">bit</span></code>.
+It can be useful in at least two cases:</p>
+<ul class="simple">
+<li><p>Maybe you created a file project with the GUI of the Tool and only want to
+run the Design Flow, so you can use: <code class="docutils literal notranslate"><span class="pre">generate(to_task='bit',</span> <span class="pre">from_task='syn')</span></code></p></li>
+<li><p>Despite that a method to insert particular commands is provided, you would
+want to perform some processing from Python between tasks, using something
+like:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">to_task</span><span class="o">=</span><span class="s1">&#39;syn&#39;</span><span class="p">,</span> <span class="n">from_task</span><span class="o">=</span><span class="s1">&#39;prj&#39;</span><span class="p">)</span>
+<span class="c1">#Some other Python commands here</span>
+<span class="n">prj</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">to_task</span><span class="o">=</span><span class="s1">&#39;bit&#39;</span><span class="p">,</span> <span class="n">from_task</span><span class="o">=</span><span class="s1">&#39;syn&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In case of <em>capture</em>, it is useful to catch execution messages to be
+post-processed or saved to a file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">prj</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">capture</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In case of <em>capture</em>, it is useful to catch execution messages to be
+post-processed or saved to a file.</p>
+</section>
+<section id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Finally, you must run the bitstream generation or its transfer. Both of them
+are time-consuming tasks, performed by a backend tool, which could fail.
+Exceptions are raised in such cases, that should be ideally caught to avoid
+abnormal program termination.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">prj</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+    <span class="n">prj</span><span class="o">.</span><span class="n">transfer</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>And wait for the backend Tool to accomplish its task.</p>
+</section>
+</section>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tools.html" class="btn btn-neutral float-right" title="Per tool usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="basic.html" class="btn btn-neutral float-left" title="Basic usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2019-2021, Rodrigo Alejandro Melo and contributors
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/buildthedocs/sphinx.theme">theme</a>
+    
+    provided by <a href="https://buildthedocs.github.io">Build the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
