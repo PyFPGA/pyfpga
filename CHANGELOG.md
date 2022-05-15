@@ -1,6 +1,8 @@
 # Changelog
 
-## [v0.2.0] - dev
+## [v0.2.0] - 2022-05-15
+
+NOTE: this log is probably outdated/incomplete, but PyFPGA will be strongly rewritten/simplified.
 
 * Additional supported FPGA EDA Tools:
     - GHDL --synth: synthesizes VHDL sources.
@@ -27,6 +29,8 @@
     - Added a Makefile to run some examples as a test.
 
 ## [v0.1.0] - 2020-02-29
+
+NOTE: originally released on 2020-02-29 at https://gitlab.com/rodrigomelo9/pyfpga
 
 * FPGA Helpers switched to be a Python package which provides an API to manage projects
 * Supported FPGA EDA Tools:

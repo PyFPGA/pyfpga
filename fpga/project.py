@@ -352,13 +352,13 @@ class Project:
 
     @contextlib.contextmanager
     def _run_in_dir(self):
-        """Runs the tool in other directory."""
+        """Runs the tool in another directory."""
+        start = time.time()
         try:
             if not os.path.exists(self.outdir):
                 _log.debug('the output directory did not exist (created)')
                 os.makedirs(self.outdir)
             os.chdir(self.outdir)
-            start = time.time()
             yield
         finally:
             end = time.time()
