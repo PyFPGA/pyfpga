@@ -23,6 +23,9 @@ It allows using **a single project file** and **programmatically** executing
 
 Create your custom FPGA Tool using a workflow tailored to your needs!
 
+> **WARNING:** (2022-05-15) PyFPGA is in the process of being strongly rewritten/simplified.
+> Most changes are internal, but the API (`Project` class) will change.
+
 ## Usage
 
 A minimal example of how to use PyFPGA:
