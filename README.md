@@ -1,30 +1,30 @@
 # PyFPGA [![License](https://img.shields.io/badge/License-GPL--3.0-darkgreen?style=flat-square)](LICENSE)
 
 ![GDHL](https://img.shields.io/badge/GHDL-last-brightgreen.svg?style=flat-square)
-![icestorm](https://img.shields.io/badge/icestorm-last-brightgreen.svg?style=flat-square)
-![nextpnr](https://img.shields.io/badge/nextpnr-last-brightgreen.svg?style=flat-square)
-![prjtrellis](https://img.shields.io/badge/prjtrellis-last-brightgreen.svg?style=flat-square)
 ![Yosys](https://img.shields.io/badge/Yosys-last-brightgreen.svg?style=flat-square)
+![nextpnr](https://img.shields.io/badge/nextpnr-last-brightgreen.svg?style=flat-square)
+![icestorm](https://img.shields.io/badge/icestorm-last-brightgreen.svg?style=flat-square)
+![prjtrellis](https://img.shields.io/badge/prjtrellis-last-brightgreen.svg?style=flat-square)
 
+![Vivado](https://img.shields.io/badge/Vivado-2019.2-blue.svg?style=flat-square)
+![Quartus](https://img.shields.io/badge/Quartus--Prime-19.1-blue.svg?style=flat-square)
 ![ISE](https://img.shields.io/badge/ISE-14.7-blue.svg?style=flat-square)
 ![Libero](https://img.shields.io/badge/Libero--Soc-12.2-blue.svg?style=flat-square)
-![Quartus](https://img.shields.io/badge/Quartus--Prime-19.1-blue.svg?style=flat-square)
-![Vivado](https://img.shields.io/badge/Vivado-2019.2-blue.svg?style=flat-square)
-
-PyFPGA is a **Python** Class for **vendor-independent FPGA development**.
-It allows using **a single project file** and **programmatically** executing
-**synthesis**, **implementation**, generation of **bitstream** and/or
-**transference** to supported boards.
-
-- The workflow is command-line centric.
-- It's friendly with *Version Control Systems* and *Continuous Integration* (CI).
-- Allows reproducibility and repeatability.
-- Consumes fewer system resources than GUI based workflows.
-
-Create your custom FPGA Tool using a workflow tailored to your needs!
 
 > **WARNING:** (2022-05-15) PyFPGA is in the process of being strongly rewritten/simplified.
 > Most changes are internal, but the API (`Project` class) will change.
+
+PyFPGA is a **Python Package** for **vendor-agnostic** FPGA development.
+It provides a **Class** which allows the programmatically execution of **synthesis**,
+**place and route**, **bitstream generation** and/or **programming** of FPGA devices.
+Additionally, a set of **command-line helpers** are provided for quick and simple runs.
+
+Features:
+* It's *Version Control Systems* and *Continuous Integration* friendly.
+* Allows reproducibility and repeatability.
+* Consumes fewer system resources than GUI based workflows.
+
+With PyFPGA you can create your custom FPGA tool using a workflow tailored to your needs!
 
 ## Usage
 
