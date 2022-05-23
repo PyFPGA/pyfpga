@@ -37,16 +37,10 @@ prj.add_files(BOARDS[args.board][1])
 prj.add_files(BOARDS[args.board][2])
 
 if args.action in ['generate', 'all']:
-    try:
-        prj.generate()
-    except RuntimeError:
-        print('ERROR:generate:ISE not found')
+    prj.generate()
 
 if args.action in ['transfer', 'all']:
-    try:
-        prj.transfer('fpga')
-        #  prj.transfer('detect')
-        #  prj.transfer('unlock')
-        #  prj.transfer('spi', 1, 'N25Q128', 4)
-    except RuntimeError:
-        print('ERROR:transfer:ISE not found')
+    prj.transfer('fpga')
+    #  prj.transfer('detect')
+    #  prj.transfer('unlock')
+    #  prj.transfer('spi', 1, 'N25Q128', 4)

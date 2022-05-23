@@ -24,13 +24,7 @@ prj.add_files('zybo.xdc')
 prj.set_top('Blinking')
 
 if args.action in ['generate', 'all']:
-    try:
-        prj.generate()
-    except RuntimeError:
-        print('ERROR:generate:Vivado not found')
+    prj.generate()
 
 if args.action in ['transfer', 'all']:
-    try:
-        prj.transfer('fpga')
-    except RuntimeError:
-        print('ERROR:transfer:Vivado not found')
+    prj.transfer('fpga')

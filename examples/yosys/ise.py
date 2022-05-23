@@ -34,13 +34,7 @@ prj.add_files('../ise/s6micro.ucf')
 prj.set_top('Top')
 
 if args.action in ['generate', 'all']:
-    try:
-        prj.generate()
-    except RuntimeError:
-        print('ERROR:generate:Docker or ISE not found')
+    prj.generate()
 
 if args.action in ['transfer', 'all']:
-    try:
-        prj.transfer()
-    except RuntimeError:
-        print('ERROR:transfer:ISE not found')
+    prj.transfer()

@@ -16,14 +16,8 @@ PRJ.set_outdir('../../build/capture')
 PRJ.add_files('../../hdl/*.vhdl', library='examples')
 PRJ.set_top('Top')
 
-try:
-    output = PRJ.generate(to_task='syn', capture=True)
-    print(output)
-except RuntimeError:
-    print('ERROR:generate:ISE not found')
+output = PRJ.generate(to_task='syn', capture=True)
+print(output)
 
-try:
-    output = PRJ.transfer(devtype='detect', capture=True)
-    print(output)
-except RuntimeError:
-    print('ERROR:transfer:ISE not found')
+output = PRJ.transfer(devtype='detect', capture=True)
+print(output)

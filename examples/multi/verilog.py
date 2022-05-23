@@ -21,7 +21,4 @@ for tool in TOOLS:
     PRJ.add_files('../../hdl/blinking.v')
     PRJ.add_files('../../hdl/top.v')
     PRJ.set_top('Top')
-    try:
-        PRJ.generate(to_task='syn')
-    except RuntimeError:
-        print('ERROR:generate:{} not found'.format(tool))
+    PRJ.generate(to_task='syn')

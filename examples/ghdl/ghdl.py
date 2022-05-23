@@ -14,7 +14,4 @@ prj.add_files('../../hdl/examples_pkg.vhdl', library='examples')
 prj.add_files('../../hdl/top.vhdl')
 prj.set_top('Top')
 
-try:
-    prj.generate()
-except RuntimeError:
-    print('ERROR:generate:Docker not found')
+prj.generate()

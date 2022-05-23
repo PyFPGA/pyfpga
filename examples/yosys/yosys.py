@@ -28,7 +28,4 @@ else:  # args.lang == 'vhdl'
 
 prj.set_top('Top')
 
-try:
-    prj.generate()
-except RuntimeError:
-    print('ERROR:generate:Docker not found')
+prj.generate()

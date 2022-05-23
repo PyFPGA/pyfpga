@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019-2021 Rodrigo A. Melo
+# Copyright (C) 2019-2022 Rodrigo A. Melo
 # Copyright (C) 2019-2020 INTI
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,10 +17,8 @@
 #
 
 """fpga.project
-
-This module implements the main class of PyFPGA, which provides
-functionalities to create a project, generate a bitstream and transfer it to a
-Device.
+This module implements the entry-point of PyFPGA, which provides
+functionalities to create a project, generate a bitstream and program a device.
 """
 
 import contextlib
@@ -48,7 +46,7 @@ class Project:
 
     :param tool: FPGA tool to be used
     :param project: project name (the tool name is used if none specified)
-    :param init: a dict to initialize some parameters
+    :param init: a dict with metadata about the project
     :param relative_to_script: specifies if the files/directories are relative
      to the script or the execution directory
     :raises NotImplementedError: when tool is unsupported
@@ -289,8 +287,8 @@ class Project:
         :param capture: capture STDOUT and STDERR
         :returns: STDOUT and STDERR messages
         :raises ValueError: when from_task is later than to_task
+        :raises ValueError: when to_task or from_task are unsupported
         :raises RuntimeError: when the tool to be used is not found
-        :raises ValueError: when to_task or from_task are is unsupported
 
         .. note:: Valid values for **tasks** are
          ``prj`` (to creates the project file),
@@ -329,9 +327,9 @@ class Project:
         :param width: bits width of the memory (when device is not *fpga*)
         :param capture: capture STDOUT and STDERR
         :returns: STDOUT and STDERR messages
-        :raises RuntimeError: when the tool to be used is not found
         :raises FileNotFoundError: when the bitstream is not found
         :raises ValueError: when devtype, position or width are unsupported
+        :raises RuntimeError: when the tool to be used is not found
         """
         _log.info(
             'transfering "%s" project using "%s" tool from "%s" directory',
@@ -352,7 +350,7 @@ class Project:
 
     @contextlib.contextmanager
     def _run_in_dir(self):
-        """Runs the tool in another directory."""
+        """Run the tool in another directory."""
         start = time.time()
         try:
             if not os.path.exists(self.outdir):

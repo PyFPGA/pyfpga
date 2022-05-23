@@ -57,7 +57,4 @@ PROJECTS = {
 }
 
 for prj in PROJECTS:
-    try:
-        PROJECTS[prj].generate('syn')
-    except RuntimeError:
-        print('ERROR:generate:tool not found')
+    PROJECTS[prj].generate('syn')

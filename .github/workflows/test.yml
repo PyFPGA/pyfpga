@@ -29,4 +29,4 @@ jobs:
     - name: Test
       run: |
         pytest
-        make -C examples
+        cd examples; make MOCKS=1
