@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        pyver: ['3.6', '3.7', '3.8', '3.9', '3.10']
     steps:
     - uses: actions/checkout@v2
       with:
@@ -21,10 +21,10 @@ jobs:
         docker pull hdlc/nextpnr:ecp5
         docker pull hdlc/icestorm
         docker pull hdlc/prjtrellis
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python ${{ matrix.pyver }}
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: ${{ matrix.pyver }}
     - name: Install dependencies
       run: |
         pip install pytest
