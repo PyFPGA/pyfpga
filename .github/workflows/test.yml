@@ -11,6 +11,16 @@ jobs:
         python-version: [3.6, 3.7, 3.8, 3.9]
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: true
+        fetch-depth: 0
+    - name: Pull container images
+      run: |
+        docker pull hdlc/ghdl:yosys
+        docker pull hdlc/nextpnr:ice40
+        docker pull hdlc/nextpnr:ecp5
+        docker pull hdlc/icestorm
+        docker pull hdlc/prjtrellis
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -19,14 +29,8 @@ jobs:
       run: |
         pip install pytest
         pip install .
-    - name: Pull container images
+    - name: Run test
+      run: pytest
+    - name: Run examples
       run: |
-        docker pull hdlc/prjtrellis
-        docker pull hdlc/ghdl:yosys
-        docker pull hdlc/icestorm
-        docker pull hdlc/nextpnr:ecp5
-        docker pull hdlc/nextpnr:ice40
-    - name: Test
-      run: |
-        pytest
         cd examples; make MOCKS=1
