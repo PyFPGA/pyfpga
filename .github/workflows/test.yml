@@ -2,13 +2,18 @@ name: 'test'
 
 on:
   push:
+  pull_request:
+  schedule: # Run once a week to ensure tests pass with updated dependencies
+    - cron: '0 0 * * 6'
 
 jobs:
   test:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
+        os: ['ubuntu']
         pyver: ['3.6', '3.7', '3.8', '3.9', '3.10']
+    runs-on: ${{ matrix.os }}-latest
+    name: ${{ matrix.os }} | ${{ matrix.pyver }}
     steps:
     - uses: actions/checkout@v2
       with:
