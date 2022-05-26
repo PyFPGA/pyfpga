@@ -26,8 +26,8 @@ for hdl in ['vhdl', 'verilog']:
         if hdl == 'vhdl':
             PRJ.add_files('../../hdl/blinking.vhdl')
         else:
-            PRJ.add_path('../../hdl/headers1')
-            PRJ.add_path('../../hdl/headers2')
+            PRJ.add_vlog_include('../../hdl/headers1')
+            PRJ.add_vlog_include('../../hdl/headers2')
             PRJ.add_files('../../hdl/blinking.v')
         PRJ.set_top('Blinking')
         # PRJ.set_param('INT', '15')

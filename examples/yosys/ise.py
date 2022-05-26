@@ -21,8 +21,8 @@ prj.set_outdir('../../build/yosys-ise-{}'.format(args.lang))
 prj.set_part('XC6SLX9-2-CSG324')
 
 if args.lang == 'verilog':
-    prj.add_path('../../hdl/headers1')
-    prj.add_path('../../hdl/headers2')
+    prj.add_vlog_include('../../hdl/headers1')
+    prj.add_vlog_include('../../hdl/headers2')
     prj.add_files('../../hdl/blinking.v')
     prj.add_files('../../hdl/top.v')
 else:  # args.lang == 'vhdl'

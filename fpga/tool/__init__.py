@@ -143,8 +143,8 @@ class Tool:
         """Get the files of the project."""
         return self.files
 
-    def add_path(self, path):
-        """Add a search path."""
+    def add_vlog_include(self, path):
+        """Add a Verilog include path."""
         self.paths.append(path)
 
     def set_top(self, top):

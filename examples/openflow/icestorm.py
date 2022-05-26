@@ -31,8 +31,8 @@ prj.set_outdir('../../build/icestorm-{}-{}'.format(args.board, args.lang))
 prj.set_part(BOARDS[args.board][0])
 
 if args.lang == 'verilog':
-    prj.add_path('../../hdl/headers1')
-    prj.add_path('../../hdl/headers2')
+    prj.add_vlog_include('../../hdl/headers1')
+    prj.add_vlog_include('../../hdl/headers2')
     prj.add_files('../../hdl/blinking.v')
     prj.add_files('../../hdl/top.v')
 else:  # args.lang == 'vhdl'

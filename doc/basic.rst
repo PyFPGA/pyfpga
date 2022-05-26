@@ -70,8 +70,8 @@ file extension, and if it is a member of a VHDL package.
     change the order if needed.
   * If a file seems unsupported, you can always use the ``prefile`` or
     ``project`` :ref:`hooks`.
-  * In case of Verilog, ``add_path`` can be used to specify where to search for
-    included files.
+  * In case of Verilog, ``add_vlog_include`` can be used to specify where to
+    search for included files.
 
 Finally, the top-level must be specified:
 

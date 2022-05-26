@@ -108,7 +108,7 @@ class Project:
         if 'paths' in init:
             for path in init['paths']:
                 _log.debug('PATH = %s', path)
-                self.add_path(path)
+                self.add_vlog_include(path)
         for filetype in ['vhdl', 'verilog', 'constraint']:
             if filetype in init:
                 for file in init[filetype]:
@@ -208,8 +208,8 @@ class Project:
         """
         return self.tool.get_files()
 
-    def add_path(self, path):
-        """Add a search path.
+    def add_vlog_include(self, path):
+        """Add a Verilog include path.
 
         Useful to specify where to search Verilog Included Files or IP
         repositories.
@@ -221,7 +221,7 @@ class Project:
         path = os.path.normpath(path)
         if os.path.isdir(path):
             path = os.path.relpath(path, self.outdir)
-            self.tool.add_path(path)
+            self.tool.add_vlog_include(path)
         else:
             raise NotADirectoryError(path)
 
