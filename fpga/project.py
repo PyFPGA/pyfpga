@@ -225,6 +225,14 @@ class Project:
         else:
             raise NotADirectoryError(path)
 
+    def add_vlog_define(self, name, value):
+        """Add a Verilog define."""
+        raise NotImplementedError()
+
+    def set_vhdl_arch(self, name):
+        """Set the VHDL architecture."""
+        raise NotImplementedError()
+
     def set_top(self, toplevel):
         """Set the top level of the project.
 
