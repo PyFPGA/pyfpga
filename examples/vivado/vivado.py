@@ -18,7 +18,7 @@ prj.set_part('xc7z010-1-clg400')
 
 prj.set_outdir('../../build/vivado')
 
-prj.set_param('FREQ', '125000000')
+prj.add_param('FREQ', '125000000')
 prj.add_files('../../hdl/blinking.vhdl')
 prj.add_files('zybo.xdc')
 prj.set_top('Blinking')

@@ -99,9 +99,9 @@ The generics/parameters of the project can be optionally changed with:
 
 .. code-block:: python
 
-   prj.set_param('param1', value1)
+   prj.add_param('param1', value1)
    ...
-   prj.set_param('paramN', valueN)
+   prj.add_param('paramN', valueN)
 
 Generate options
 ================

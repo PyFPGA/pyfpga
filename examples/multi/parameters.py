@@ -20,8 +20,8 @@ for hdl in ['vhdl', 'verilog']:
             if tool in ['openflow', 'yosys', 'yosys-ise', 'yosys-vivado']:
                 continue
         PRJ = Project(tool)
-        PRJ.set_param('FREQ', '50000000')
-        PRJ.set_param('SECS', '2')
+        PRJ.add_param('FREQ', '50000000')
+        PRJ.add_param('SECS', '2')
         PRJ.set_outdir('../../build/multi/params/%s/%s' % (tool, hdl))
         if hdl == 'vhdl':
             PRJ.add_files('../../hdl/blinking.vhdl')
@@ -30,11 +30,11 @@ for hdl in ['vhdl', 'verilog']:
             PRJ.add_vlog_include('../../hdl/headers2')
             PRJ.add_files('../../hdl/blinking.v')
         PRJ.set_top('Blinking')
-        # PRJ.set_param('INT', '15')
-        # PRJ.set_param('REA', '1.5')
-        # PRJ.set_param('LOG', "'1'")
-        # PRJ.set_param('VEC', '"10101010"')
-        # PRJ.set_param('STR', '"WXYZ"')
+        # PRJ.add_param('INT', '15')
+        # PRJ.add_param('REA', '1.5')
+        # PRJ.add_param('LOG', "'1'")
+        # PRJ.add_param('VEC', '"10101010"')
+        # PRJ.add_param('STR', '"WXYZ"')
         # PRJ.set_outdir('../../build/multi/params/%s/%s' % (tool, hdl))
         # if hdl == 'vhdl':
         #     PRJ.add_files('../../hdl/fakes/generics.vhdl')

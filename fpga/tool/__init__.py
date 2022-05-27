@@ -130,8 +130,8 @@ class Tool:
         """Set the target PART."""
         self.part['name'] = part
 
-    def set_param(self, name, value):
-        """Set a Generic/Parameter Value."""
+    def add_param(self, name, value):
+        """Add a Generic/Parameter Value."""
         self.params.append([name, value])
 
     def add_file(self, file, filetype, library, options):

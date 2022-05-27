@@ -125,7 +125,7 @@ class Project:
         if 'params' in init:
             for parname, parvalue in init['params'].items():
                 _log.debug('PARAM = %s %s', parname, parvalue)
-                self.set_param(parname, parvalue)
+                self.add_param(parname, parvalue)
         if 'top' in init:
             _log.debug('TOP = %s', init['top'])
             self.set_top(init['top'])
@@ -154,13 +154,13 @@ class Project:
         """
         self.tool.set_part(part)
 
-    def set_param(self, name, value):
-        """Set a Generic/Parameter Value.
+    def add_param(self, name, value):
+        """Add a Generic/Parameter Value.
 
         :param name: parameter/generic name
         :param value: value to be assigned
         """
-        self.tool.set_param(name, value)
+        self.tool.add_param(name, value)
 
     def add_files(self, pathname, filetype=None, library=None, options=None):
         """Adds files to the project.

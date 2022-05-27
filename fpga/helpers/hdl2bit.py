@@ -145,7 +145,7 @@ def main():
 
     if args.param is not None:
         for param in args.param:
-            prj.set_param(param[0], param[1])
+            prj.add_param(param[0], param[1])
 
     prj.add_files(args.top)
     prj.set_top(args.top)
