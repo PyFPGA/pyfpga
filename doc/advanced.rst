@@ -68,9 +68,9 @@ The following table depicts the parts of the *Project Creation* and the
 +--------------------------+----------------------+
 | Files addition           | **postsyn** hook     |
 +--------------------------+----------------------+
-| Top specification        | Implementation       |
+| Top specification        | Place and Route      |
 +--------------------------+----------------------+
-| Parameters specification | **postimp** hook     |
+| Parameters specification | **postpar** hook     |
 +--------------------------+----------------------+
 | **project** hook         | Bitstream generation |
 +--------------------------+----------------------+
@@ -87,7 +87,7 @@ specify additional *hooks* in different parts of the flow, using:
 .. NOTE::
 
   * Valid vaues for *phase* are ``prefile``, ``project`` (default), ``preflow``,
-    ``postsyn``, ``postimp`` and ``postbit``.
+    ``postsyn``, ``postpar`` and ``postbit``.
   * The *hook* string must be a valid command (supported by the used tool).
   * If more than one *hook* is needed in the same *phase*, you can call this
     method several times (the commands will be executed in order).
@@ -115,7 +115,7 @@ The method ``generate`` (previously seen at the end of
 
 With *to_task* and *from_taks* (with default values ``bit`` and ``prj``),
 you are selecting the first and last task to execute when `generate` is
-invoqued. The order and available tasks are ``prj``, ``syn``, ``imp`` and ``bit``.
+invoqued. The order and available tasks are ``prj``, ``syn``, ``par`` and ``bit``.
 It can be useful in at least two cases:
 
 * Maybe you created a file project with the GUI of the Tool and only want to

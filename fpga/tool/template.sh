@@ -40,7 +40,7 @@ INCLUDES="{includes}"
 VERILOGS="{verilogs}"
 CONSTRAINTS="{constraints}"
 
-# taks = prj syn imp bit
+# taks = prj syn par bit
 TASKS="{tasks}"
 
 #
@@ -137,9 +137,9 @@ fi
 # Place and Route
 ###############################################################################
 
-if [[ $TASKS == *"imp"* ]]; then
+if [[ $TASKS == *"par"* ]]; then
 
-print "nextpnr-$FAMILY" "running 'implementation'"
+print "nextpnr-$FAMILY" "running 'place and route'"
 
 INPUT="--json $PROJECT.json"
 

@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Description: Tcl script to create a new project and performs synthesis,
-# implementation and bitstream generation.
+# place and route, and bitstream generation.
 #
 # Supported TOOLs: ise, libero, quartus, vivado
 #
@@ -41,7 +41,7 @@ set DEVICE   #DEVICE#
 set PACKAGE  #PACKAGE#
 set SPEED    #SPEED#
 set TOP      #TOP#
-# TASKS = prj syn imp bit
+# TASKS = prj syn par bit
 set TASKS    [list #TASKS#]
 
 set PARAMS   [list #PARAMS#]
@@ -65,8 +65,8 @@ proc fpga_commands { PHASE } {
         "postsyn" {
 #POSTSYN_CMDS#
         }
-        "postimp" {
-#POSTIMP_CMDS#
+        "postpar" {
+#POSTPAR_CMDS#
         }
         "postbit" {
 #POSTBIT_CMDS#
@@ -384,9 +384,9 @@ proc fpga_run_syn {} {
     }
 }
 
-proc fpga_run_imp {} {
+proc fpga_run_par {} {
     global TOOL PRESYNTH
-    fpga_print "running 'implementation'"
+    fpga_print "running 'place and route'"
     switch $TOOL {
         "ise"     {
             process run "Translate"
@@ -470,7 +470,7 @@ if { [lsearch -exact $TASKS "prj"] >= 0 } {
 # Design Flow
 #
 
-if { [lsearch -regexp $TASKS "syn|imp|bit"] >= 0 } {
+if { [lsearch -regexp $TASKS "syn|par|bit"] >= 0 } {
     fpga_print "running the Design Flow"
     if { [catch {
         fpga_open $PROJECT
@@ -479,9 +479,9 @@ if { [lsearch -regexp $TASKS "syn|imp|bit"] >= 0 } {
             fpga_run_syn
             fpga_commands "postsyn"
         }
-        if { [lsearch -exact $TASKS "imp"] >= 0 } {
-            fpga_run_imp
-            fpga_commands "postimp"
+        if { [lsearch -exact $TASKS "par"] >= 0 } {
+            fpga_run_par
+            fpga_commands "postpar"
         }
         if { [lsearch -exact $TASKS "bit"] >= 0 } {
             fpga_run_bit

@@ -278,8 +278,8 @@ class Project:
          ``prefile`` (to add options needed to find files),
          ``project`` (to add project related options),
          ``preflow`` (to change options previous to run the flow),
-         ``postsyn`` (to perform an action between *syn* and *imp*),
-         ``postimp`` (to perform an action between *imp* and *bit*) and
+         ``postsyn`` (to perform an action between *syn* and *par*),
+         ``postpar`` (to perform an action between *par* and *bit*) and
          ``postbit`` (to perform an action after *bit*)
 
         .. warning:: Using a hook, you will be probably broken the vendor

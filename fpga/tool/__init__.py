@@ -30,8 +30,8 @@ from yaml import safe_load
 
 FILETYPES = ['verilog', 'vhdl', 'constraint', 'design']
 MEMWIDTHS = [1, 2, 4, 8, 16, 32]
-PHASES = ['prefile', 'project', 'preflow', 'postsyn', 'postimp', 'postbit']
-TASKS = ['prj', 'syn', 'imp', 'bit']
+PHASES = ['prefile', 'project', 'preflow', 'postsyn', 'postpar', 'postbit']
+TASKS = ['prj', 'syn', 'par', 'bit']
 
 
 def check_value(value, values):
@@ -83,7 +83,7 @@ class Tool:
             'project': [],
             'preflow': [],
             'postsyn': [],
-            'postimp': [],
+            'postpar': [],
             'postbit': []
         }
         self.files = {
@@ -202,7 +202,7 @@ class Tool:
         tcl = tcl.replace('#PROJECT_CMDS#', '\n'.join(self.cmds['project']))
         tcl = tcl.replace('#PREFLOW_CMDS#', '\n'.join(self.cmds['preflow']))
         tcl = tcl.replace('#POSTSYN_CMDS#', '\n'.join(self.cmds['postsyn']))
-        tcl = tcl.replace('#POSTIMP_CMDS#', '\n'.join(self.cmds['postimp']))
+        tcl = tcl.replace('#POSTPAR_CMDS#', '\n'.join(self.cmds['postpar']))
         tcl = tcl.replace('#POSTBIT_CMDS#', '\n'.join(self.cmds['postbit']))
         with open(f'{self._TOOL}.tcl', 'w', encoding='utf-8') as file:
             file.write(tcl)
