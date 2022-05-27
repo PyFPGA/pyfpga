@@ -14,7 +14,7 @@ PROJECTS = {
     'prj1': Project(
         'vivado',
         'vivado-prj',
-        {
+        meta={
             'outdir': '../../build/multi/projects/vivado',
             'part': 'xc7k70t-3-fbg484',
             'vhdl': [
@@ -28,7 +28,7 @@ PROJECTS = {
     'prj2': Project(
         'ise',
         'ise-prj',
-        {
+        meta={
             'outdir': '../../build/multi/projects/ise',
             'part': 'xc6slx9-2-csg324',
             'vhdl': [
@@ -40,7 +40,7 @@ PROJECTS = {
     'prj3': Project(
         'quartus',
         'qurtus-prj',
-        {
+        meta={
             'outdir': '../../build/multi/projects/quartus',
             'part': '5CEBA2F17A7',
             'paths': [
