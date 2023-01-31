@@ -15,7 +15,7 @@ setup(
     author_email='rodrigomelo9@gmail.com',
     license='GPLv3',
     url='https://github.com/PyFPGA/pyfpga',
-    package_data={'': ['tool/*.sh', 'tool/*.tcl']},
+    package_data={'': ['tool/*.sh', 'tool/*.tcl', 'helpers/*']},
     packages=find_packages(),
     entry_points={
         'console_scripts': [
