@@ -16,12 +16,9 @@ for tool in TOOLS:
         continue
     PRJ = Project(tool)
     PRJ.set_outdir('../../build/multi/verilog/%s' % tool)
-    PRJ.add_path('../../hdl/headers1')
-    PRJ.add_path('../../hdl/headers2')
+    PRJ.add_vlog_include('../../hdl/headers1')
+    PRJ.add_vlog_include('../../hdl/headers2')
     PRJ.add_files('../../hdl/blinking.v')
     PRJ.add_files('../../hdl/top.v')
     PRJ.set_top('Top')
-    try:
-        PRJ.generate(to_task='syn')
-    except RuntimeError:
-        print('ERROR:generate:{} not found'.format(tool))
+    PRJ.generate(to_task='syn')

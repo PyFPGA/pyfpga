@@ -30,8 +30,8 @@ from yaml import safe_load
 
 FILETYPES = ['verilog', 'vhdl', 'constraint', 'design']
 MEMWIDTHS = [1, 2, 4, 8, 16, 32]
-PHASES = ['prefile', 'project', 'preflow', 'postsyn', 'postimp', 'postbit']
-TASKS = ['prj', 'syn', 'imp', 'bit']
+PHASES = ['prefile', 'project', 'preflow', 'postsyn', 'postpar', 'postbit']
+TASKS = ['prj', 'syn', 'par', 'bit']
 
 
 def check_value(value, values):
@@ -83,7 +83,7 @@ class Tool:
             'project': [],
             'preflow': [],
             'postsyn': [],
-            'postimp': [],
+            'postpar': [],
             'postbit': []
         }
         self.files = {
@@ -130,8 +130,8 @@ class Tool:
         """Set the target PART."""
         self.part['name'] = part
 
-    def set_param(self, name, value):
-        """Set a Generic/Parameter Value."""
+    def add_param(self, name, value):
+        """Add a Generic/Parameter Value."""
         self.params.append([name, value])
 
     def add_file(self, file, filetype, library, options):
@@ -143,8 +143,8 @@ class Tool:
         """Get the files of the project."""
         return self.files
 
-    def add_path(self, path):
-        """Add a search path."""
+    def add_vlog_include(self, path):
+        """Add a Verilog include path."""
         self.paths.append(path)
 
     def set_top(self, top):
@@ -202,7 +202,7 @@ class Tool:
         tcl = tcl.replace('#PROJECT_CMDS#', '\n'.join(self.cmds['project']))
         tcl = tcl.replace('#PREFLOW_CMDS#', '\n'.join(self.cmds['preflow']))
         tcl = tcl.replace('#POSTSYN_CMDS#', '\n'.join(self.cmds['postsyn']))
-        tcl = tcl.replace('#POSTIMP_CMDS#', '\n'.join(self.cmds['postimp']))
+        tcl = tcl.replace('#POSTPAR_CMDS#', '\n'.join(self.cmds['postpar']))
         tcl = tcl.replace('#POSTBIT_CMDS#', '\n'.join(self.cmds['postbit']))
         with open(f'{self._TOOL}.tcl', 'w', encoding='utf-8') as file:
             file.write(tcl)

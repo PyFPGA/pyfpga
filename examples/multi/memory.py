@@ -21,7 +21,4 @@ for hdl in ['vhdl', 'verilog']:
         else:
             PRJ.add_files('../../hdl/ram.v')
         PRJ.set_top('ram')
-        try:
-            PRJ.generate(to_task='syn')
-        except RuntimeError:
-            print('ERROR:generate:{} not found'.format(tool))
+        PRJ.generate(to_task='syn')

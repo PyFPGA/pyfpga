@@ -30,7 +30,4 @@ if { [ catch {
 
 prj.add_hook(export, 'postbit')
 
-try:
-    prj.generate()
-except Exception as e:
-    logging.warning('{} ({})'.format(type(e).__name__, e))
+prj.generate()

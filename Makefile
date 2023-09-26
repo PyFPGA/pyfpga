@@ -9,3 +9,6 @@ check:
 clean:
 	py3clean .
 	rm -fr build .pytest_cache
+
+submodule:
+	 git submodule update --init

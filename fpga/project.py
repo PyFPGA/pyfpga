@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019-2021 Rodrigo A. Melo
+# Copyright (C) 2019-2022 Rodrigo A. Melo
 # Copyright (C) 2019-2020 INTI
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,10 +17,8 @@
 #
 
 """fpga.project
-
-This module implements the main class of PyFPGA, which provides
-functionalities to create a project, generate a bitstream and transfer it to a
-Device.
+This module implements the entry-point of PyFPGA, which provides
+functionalities to create a project, generate a bitstream and program a device.
 """
 
 import contextlib
@@ -48,7 +46,7 @@ class Project:
 
     :param tool: FPGA tool to be used
     :param project: project name (the tool name is used if none specified)
-    :param init: a dict to initialize some parameters
+    :param meta: a dict with metadata about the project
     :param relative_to_script: specifies if the files/directories are relative
      to the script or the execution directory
     :raises NotImplementedError: when tool is unsupported
@@ -59,7 +57,7 @@ class Project:
     """
 
     def __init__(
-            self, tool='vivado', project=None, init=None,
+            self, tool='vivado', project=None, meta=None,
             relative_to_script=True):
         """Class constructor."""
         if tool == 'ghdl':
@@ -95,25 +93,25 @@ class Project:
         self._absdir = os.path.join(self._rundir, self._reldir)
         _log.debug('ABSDIR = %s', self._absdir)
         self.set_outdir('build')
-        self._initialize(init)
+        self._initialize(meta)
 
-    def _initialize(self, init):
+    def _initialize(self, meta):
         """Set some of the most used internal parameters."""
-        if init is None:
+        if meta is None:
             return
-        if 'outdir' in init:
-            _log.debug('OUTDIR = %s', init['outdir'])
-            self.set_outdir(init['outdir'])
-        if 'part' in init:
-            _log.debug('PART = %s', init['part'])
-            self.set_part(init['part'])
-        if 'paths' in init:
-            for path in init['paths']:
+        if 'outdir' in meta:
+            _log.debug('OUTDIR = %s', meta['outdir'])
+            self.set_outdir(meta['outdir'])
+        if 'part' in meta:
+            _log.debug('PART = %s', meta['part'])
+            self.set_part(meta['part'])
+        if 'paths' in meta:
+            for path in meta['paths']:
                 _log.debug('PATH = %s', path)
-                self.add_path(path)
+                self.add_vlog_include(path)
         for filetype in ['vhdl', 'verilog', 'constraint']:
-            if filetype in init:
-                for file in init[filetype]:
+            if filetype in meta:
+                for file in meta[filetype]:
                     if isinstance(file, list):
                         filename = file[0]
                         library = file[1]
@@ -124,13 +122,13 @@ class Project:
                         'FILE = %s %s %s', filename, filetype, library
                     )
                     self.add_files(filename, filetype, library)
-        if 'params' in init:
-            for parname, parvalue in init['params'].items():
+        if 'params' in meta:
+            for parname, parvalue in meta['params'].items():
                 _log.debug('PARAM = %s %s', parname, parvalue)
-                self.set_param(parname, parvalue)
-        if 'top' in init:
-            _log.debug('TOP = %s', init['top'])
-            self.set_top(init['top'])
+                self.add_param(parname, parvalue)
+        if 'top' in meta:
+            _log.debug('TOP = %s', meta['top'])
+            self.set_top(meta['top'])
 
     def set_outdir(self, outdir):
         """Sets the OUTput DIRectory (where to put the resulting files).
@@ -156,13 +154,13 @@ class Project:
         """
         self.tool.set_part(part)
 
-    def set_param(self, name, value):
-        """Set a Generic/Parameter Value.
+    def add_param(self, name, value):
+        """Add a Generic/Parameter Value.
 
         :param name: parameter/generic name
         :param value: value to be assigned
         """
-        self.tool.set_param(name, value)
+        self.tool.add_param(name, value)
 
     def add_files(self, pathname, filetype=None, library=None, options=None):
         """Adds files to the project.
@@ -210,8 +208,8 @@ class Project:
         """
         return self.tool.get_files()
 
-    def add_path(self, path):
-        """Add a search path.
+    def add_vlog_include(self, path):
+        """Add a Verilog include path.
 
         Useful to specify where to search Verilog Included Files or IP
         repositories.
@@ -223,9 +221,17 @@ class Project:
         path = os.path.normpath(path)
         if os.path.isdir(path):
             path = os.path.relpath(path, self.outdir)
-            self.tool.add_path(path)
+            self.tool.add_vlog_include(path)
         else:
             raise NotADirectoryError(path)
+
+    def add_vlog_define(self, name, value):
+        """Add a Verilog define."""
+        raise NotImplementedError()
+
+    def set_vhdl_arch(self, name):
+        """Set the VHDL architecture."""
+        raise NotImplementedError()
 
     def set_top(self, toplevel):
         """Set the top level of the project.
@@ -272,8 +278,8 @@ class Project:
          ``prefile`` (to add options needed to find files),
          ``project`` (to add project related options),
          ``preflow`` (to change options previous to run the flow),
-         ``postsyn`` (to perform an action between *syn* and *imp*),
-         ``postimp`` (to perform an action between *imp* and *bit*) and
+         ``postsyn`` (to perform an action between *syn* and *par*),
+         ``postpar`` (to perform an action between *par* and *bit*) and
          ``postbit`` (to perform an action after *bit*)
 
         .. warning:: Using a hook, you will be probably broken the vendor
@@ -289,8 +295,8 @@ class Project:
         :param capture: capture STDOUT and STDERR
         :returns: STDOUT and STDERR messages
         :raises ValueError: when from_task is later than to_task
+        :raises ValueError: when to_task or from_task are unsupported
         :raises RuntimeError: when the tool to be used is not found
-        :raises ValueError: when to_task or from_task are is unsupported
 
         .. note:: Valid values for **tasks** are
          ``prj`` (to creates the project file),
@@ -329,9 +335,9 @@ class Project:
         :param width: bits width of the memory (when device is not *fpga*)
         :param capture: capture STDOUT and STDERR
         :returns: STDOUT and STDERR messages
-        :raises RuntimeError: when the tool to be used is not found
         :raises FileNotFoundError: when the bitstream is not found
         :raises ValueError: when devtype, position or width are unsupported
+        :raises RuntimeError: when the tool to be used is not found
         """
         _log.info(
             'transfering "%s" project using "%s" tool from "%s" directory',
@@ -352,7 +358,7 @@ class Project:
 
     @contextlib.contextmanager
     def _run_in_dir(self):
-        """Runs the tool in another directory."""
+        """Run the tool in another directory."""
         start = time.time()
         try:
             if not os.path.exists(self.outdir):

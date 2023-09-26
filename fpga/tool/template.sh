@@ -40,7 +40,7 @@ INCLUDES="{includes}"
 VERILOGS="{verilogs}"
 CONSTRAINTS="{constraints}"
 
-# taks = prj syn imp bit
+# taks = prj syn par bit
 TASKS="{tasks}"
 
 #
@@ -73,7 +73,8 @@ MODULE=
 [ -n "$VHDLS" ] && MODULE="-m ghdl"
 
 function print () {{
-    tput setaf 6; echo ">>> PyFPGA ($1): $2"; tput sgr0;
+    # tput setaf 6; echo ">>> PyFPGA ($1): $2"; tput sgr0;
+    echo ">>> PyFPGA ($1): $2"
 }}
 
 ###############################################################################
@@ -136,9 +137,9 @@ fi
 # Place and Route
 ###############################################################################
 
-if [[ $TASKS == *"imp"* ]]; then
+if [[ $TASKS == *"par"* ]]; then
 
-print "nextpnr-$FAMILY" "running 'implementation'"
+print "nextpnr-$FAMILY" "running 'place and route'"
 
 INPUT="--json $PROJECT.json"
 

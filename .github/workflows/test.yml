@@ -2,31 +2,40 @@ name: 'test'
 
 on:
   push:
+  pull_request:
+  schedule: # Run once a week to ensure tests pass with updated dependencies
+    - cron: '0 0 * * 6'
 
 jobs:
   test:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        os: ['ubuntu']
+        pyver: ['3.6', '3.7', '3.8', '3.9', '3.10']
+    runs-on: ${{ matrix.os }}-latest
+    name: ${{ matrix.os }} | ${{ matrix.pyver }}
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
+      with:
+        submodules: true
+        fetch-depth: 0
+    - name: Pull container images
+      run: |
+        docker pull hdlc/ghdl:yosys
+        docker pull hdlc/nextpnr:ice40
+        docker pull hdlc/nextpnr:ecp5
+        docker pull hdlc/icestorm
+        docker pull hdlc/prjtrellis
+    - name: Set up Python ${{ matrix.pyver }}
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: ${{ matrix.pyver }}
     - name: Install dependencies
       run: |
         pip install pytest
         pip install .
-    - name: Pull container images
+    - name: Run test
+      run: pytest
+    - name: Run examples
       run: |
-        docker pull hdlc/prjtrellis
-        docker pull hdlc/ghdl:yosys
-        docker pull hdlc/icestorm
-        docker pull hdlc/nextpnr:ecp5
-        docker pull hdlc/nextpnr:ice40
-    - name: Test
-      run: |
-        pytest
-        make -C examples
+        cd examples; make MOCKS=1

@@ -12,7 +12,6 @@ jobs:
       run: |
         pip install pycodestyle
         pip install pylint
-        pip install .
     - name: Lint
       run: |
         pycodestyle fpga examples test

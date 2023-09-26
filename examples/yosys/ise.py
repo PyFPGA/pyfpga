@@ -21,8 +21,8 @@ prj.set_outdir('../../build/yosys-ise-{}'.format(args.lang))
 prj.set_part('XC6SLX9-2-CSG324')
 
 if args.lang == 'verilog':
-    prj.add_path('../../hdl/headers1')
-    prj.add_path('../../hdl/headers2')
+    prj.add_vlog_include('../../hdl/headers1')
+    prj.add_vlog_include('../../hdl/headers2')
     prj.add_files('../../hdl/blinking.v')
     prj.add_files('../../hdl/top.v')
 else:  # args.lang == 'vhdl'
@@ -34,13 +34,7 @@ prj.add_files('../ise/s6micro.ucf')
 prj.set_top('Top')
 
 if args.action in ['generate', 'all']:
-    try:
-        prj.generate()
-    except RuntimeError:
-        print('ERROR:generate:Docker or ISE not found')
+    prj.generate()
 
 if args.action in ['transfer', 'all']:
-    try:
-        prj.transfer()
-    except RuntimeError:
-        print('ERROR:transfer:ISE not found')
+    prj.transfer()

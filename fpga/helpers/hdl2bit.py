@@ -133,7 +133,7 @@ def main():
 
     if args.include is not None:
         for include in args.include:
-            prj.add_path(include)
+            prj.add_vlog_include(include)
 
     if args.file is not None:
         for file in args.file:
@@ -145,7 +145,7 @@ def main():
 
     if args.param is not None:
         for param in args.param:
-            prj.set_param(param[0], param[1])
+            prj.add_param(param[0], param[1])
 
     prj.add_files(args.top)
     prj.set_top(args.top)
