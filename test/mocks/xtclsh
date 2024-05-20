@@ -17,6 +17,8 @@
 #
 
 import argparse
+import subprocess
+
 
 parser = argparse.ArgumentParser()
 
@@ -24,4 +26,23 @@ parser.add_argument('source')
 
 args = parser.parse_args()
 
-print(f'INFO:the {parser.prog.upper()} mock has been executed')
+tool = parser.prog
+
+tcl = f'''
+proc unknown {{ cmmd args }} {{ }}
+
+source {args.source}
+'''
+
+with open(f'{tool}-mock.tcl', 'w', encoding='utf-8') as file:
+    file.write(tcl)
+
+subprocess.run(
+   f'tclsh {tool}-mock.tcl',
+   shell=True,
+   check=True,
+   universal_newlines=True,
+   #stdout=output, stderr=subprocess.STDOUT
+)
+
+print(f'INFO:the {tool.upper()} mock has been executed')

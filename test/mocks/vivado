@@ -17,6 +17,8 @@
 #
 
 import argparse
+import subprocess
+
 
 parser = argparse.ArgumentParser()
 
@@ -27,4 +29,43 @@ parser.add_argument('-source', required=True)
 
 args = parser.parse_args()
 
-print(f'INFO:the {parser.prog.upper()} mock has been executed')
+tool = parser.prog
+
+
+#proc create_project    {{ args }} {{ }}
+#proc open_project      {{ args }} {{ }}
+#proc current_project   {{ args }} {{ }}
+#proc current_fileset   {{ args }} {{ }}
+#proc get_filesets      {{ args }} {{ }}
+#proc set_property      {{ args }} {{ }}
+#proc add_files         {{ args }} {{ }}
+#proc get_files         {{ args }} {{ }}
+#proc reset_run         {{ args }} {{ }}
+#proc launch_runs       {{ args }} {{ }}
+#proc get_runs          {{ args }} {{ }}
+#proc wait_on_run       {{ args }} {{ }}
+#proc open_run          {{ args }} {{ }}
+#proc write_bitstream   {{ args }} {{ }}
+#proc close_project     {{ args }} {{ }}
+#proc current_bd_design {{ args }} {{ }}
+#proc get_bd_cells      {{ args }} {{ }}
+
+
+tcl = f'''
+proc unknown {{ cmmd args }} {{ }}
+
+source {args.source}
+'''
+
+with open(f'{tool}-mock.tcl', 'w', encoding='utf-8') as file:
+    file.write(tcl)
+
+subprocess.run(
+   f'tclsh {tool}-mock.tcl',
+   shell=True,
+   check=True,
+   universal_newlines=True,
+   #stdout=output, stderr=subprocess.STDOUT
+)
+
+print(f'INFO:the {tool.upper()} mock has been executed')
