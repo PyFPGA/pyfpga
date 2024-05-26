@@ -6,7 +6,7 @@ on:
   schedule: # Run once a week to ensure tests pass with updated dependencies
     - cron: '0 0 * * 6'
 
-jobs:
+.jobs:
   test:
     strategy:
       matrix:

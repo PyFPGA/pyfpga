@@ -1,11 +1,11 @@
-name: 'doc'
+name: 'docs'
 
 on:
   push:
     branches:
       - main
 
-jobs:
+.jobs:
   linux:
     runs-on: ubuntu-latest
     steps:
