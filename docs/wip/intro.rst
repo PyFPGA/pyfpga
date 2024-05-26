@@ -84,4 +84,4 @@ Detailed support
 Next Steps
 ----------
 
-You can read the :ref:`basic` and :ref:`advanced` sections, check the detailed :ref:`api` or start with the available :repo:`Examples <examples>`.
+You can read the :ref:`basic` and :ref:`advanced` sections, check the detailed :ref:`api` or start with the available :repositoy:`Examples <examples>`.
