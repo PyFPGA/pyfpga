@@ -1,9 +1,11 @@
 #!/usr/bin/make
 
-check:
-	pycodestyle fpga examples test
-	pylint -s n fpga
+lint:
+	pycodestyle pyfpga examples test
+	pylint -s n pyfpga
 	git diff --check --cached
+
+test:
 	pytest test
 
 clean:

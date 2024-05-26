@@ -12,6 +12,4 @@ jobs:
     - name: Install dependencies
       run: pip install pycodestyle pylint
     - name: Run linters
-      run: |
-        pycodestyle pyfpga examples test
-        pylint pyfpga
+      run: make lint
