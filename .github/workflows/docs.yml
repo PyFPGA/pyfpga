@@ -12,7 +12,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     - name: Install dependencies
-      run: pip install sphinx
+      run: pip install sphinx sphinx-rtd-theme
     - name: Build Sphinx documentation
       run: cd docs; make html
     - name: Deploy to GitHub Pages
