@@ -3,17 +3,20 @@ name: 'docs'
 on:
   push:
     branches:
-      - main
+#      - main
 
-.jobs:
-  linux:
+jobs:
+  build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: buildthedocs/btd@v0
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Install dependencies
+      run: pip install sphinx
+    - name: Build Sphinx documentation
+      run: cd docs; make html
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-    - uses: actions/upload-artifact@master
-      with:
-        name: doc
-        path: doc/_build/html
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: docs/_build/html
