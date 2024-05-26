@@ -6,14 +6,14 @@ on:
 #      - main
 
 jobs:
-  build:
+  docs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
     - name: Install dependencies
       run: pip install sphinx sphinx-rtd-theme
-    - name: Build Sphinx documentation
+    - name: Build documentation
       run: cd docs; make html
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
