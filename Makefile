@@ -1,5 +1,7 @@
 #!/usr/bin/make
 
+.PHONY: test
+
 lint:
 	pycodestyle pyfpga examples test
 	pylint -s n pyfpga
@@ -13,4 +15,4 @@ clean:
 	rm -fr build .pytest_cache
 
 submodule:
-	 git submodule update --init
+	git submodule update --init

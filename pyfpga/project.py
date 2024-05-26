@@ -13,8 +13,6 @@ program a device.
 from enum import Enum
 from pathlib import Path
 
-TASKS = ['prj', 'elb', 'syn', 'par', 'bit']
-
 
 class Tool(Enum):
     """Enumeration of supported FPGA tools."""
@@ -67,6 +65,8 @@ class Project:
         """Class constructor."""
         if not isinstance(tool, Tool):
             raise TypeError('tool must be a Tool enum.')
+        if data and not isinstance(data, dict):
+            raise TypeError('data must be a dict.')
         self.tool = tool
         self.name = name or tool.value
         self.data = data or {}
@@ -75,7 +75,7 @@ class Project:
 
     def set_part(self, name):
         """Temp placeholder"""
-        raise NotImplementedError('Method is not implemented yet.')
+        self.data['part'] = name
 
     def add_file(self, pathname, filetype=None, library=None, options=None):
         """Temp placeholder"""
@@ -98,23 +98,29 @@ class Project:
 
     def add_include(self, path):
         """Temp placeholder"""
-        raise NotImplementedError('Method is not implemented yet.')
+        if 'includes' not in self.data:
+            self.data['includes'] = []
+        self.data['includes'].append(path)
 
     def add_param(self, name, value):
         """Temp placeholder"""
-        raise NotImplementedError('Method is not implemented yet.')
+        if 'params' not in self.data:
+            self.data['params'] = {}
+        self.data['params'][name] = value
 
     def add_define(self, name, value):
         """Temp placeholder"""
-        raise NotImplementedError('Method is not implemented yet.')
+        if 'defines' not in self.data:
+            self.data['defines'] = {}
+        self.data['defines'][name] = value
 
     def set_arch(self, name):
         """Temp placeholder"""
-        raise NotImplementedError('Method is not implemented yet.')
+        self.data['arch'] = name
 
     def set_top(self, name):
         """Temp placeholder"""
-        raise NotImplementedError('Method is not implemented yet.')
+        self.data['top'] = name
 
     def add_hook(self, hook, content):
         """Temp placeholder"""
