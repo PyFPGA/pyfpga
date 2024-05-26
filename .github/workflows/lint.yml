@@ -7,20 +7,6 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Install dependencies
-      run: |
-        pip install pycodestyle
-        pip install pylint
-    - name: Lint
-      run: |
-        pycodestyle pyfpga examples test
-        pylint pyfpga
-
-jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
     - name: Checkout code
       uses: actions/checkout@v4
     - name: Install dependencies
