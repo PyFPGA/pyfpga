@@ -23,5 +23,5 @@ jobs:
         python-version: ${{ matrix.pyver }}
     - name: Install dependencies
       run: pip install pytest
-    - name: Run test
-      run: pytest
+    - name: Run tests
+      run: make test

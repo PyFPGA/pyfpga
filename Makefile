@@ -1,12 +1,12 @@
 #!/usr/bin/make
 
-.PHONY: docs test
+.PHONY: docs
 
 docs:
 	cd docs; make html
 
 lint:
-	pycodestyle pyfpga examples test
+	pycodestyle pyfpga examples tests
 	pylint -s n pyfpga
 	git diff --check --cached
 
