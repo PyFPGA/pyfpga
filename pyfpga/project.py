@@ -56,9 +56,9 @@ class Project:
         """Temp placeholder"""
         raise NotImplementedError('Method is not implemented yet.')
 
-    def add_vlog(self, pathname, options=None):
+    def add_cons(self, pathname, options=None):
         """Temp placeholder"""
-        self.add_file(pathname, filetype='vlog', options=options)
+        self.add_file(pathname, filetype='cons', options=options)
 
     def add_slog(self, pathname, options=None):
         """Temp placeholder"""
@@ -70,6 +70,10 @@ class Project:
             pathname, filetype='vhdl',
             library=library, options=options
         )
+
+    def add_vlog(self, pathname, options=None):
+        """Temp placeholder"""
+        self.add_file(pathname, filetype='vlog', options=options)
 
     def add_include(self, path):
         """Temp placeholder"""
