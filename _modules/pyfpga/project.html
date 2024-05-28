@@ -77,30 +77,12 @@
 <span class="c1"># SPDX-License-Identifier: GPL-3.0-or-later</span>
 <span class="c1">#</span>
 
-<span class="sd">&quot;&quot;&quot;pyfpga.project</span>
-<span class="sd">This module implements the entry-point of PyFPGA, which provides</span>
-<span class="sd">functionalities to create a project, generate a bitstream and</span>
-<span class="sd">program a device.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Base class that implements agnostic methods to deal with FPGA projects.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-
-
-<div class="viewcode-block" id="Tool">
-<a class="viewcode-back" href="../../api.html#pyfpga.project.Tool">[docs]</a>
-<span class="k">class</span> <span class="nc">Tool</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enumeration of supported FPGA tools.&quot;&quot;&quot;</span>
-    <span class="n">GHDL</span> <span class="o">=</span> <span class="s1">&#39;ghdl&#39;</span>
-    <span class="n">ISE</span> <span class="o">=</span> <span class="s1">&#39;ise&#39;</span>
-    <span class="n">LIBERO</span> <span class="o">=</span> <span class="s1">&#39;libero&#39;</span>
-    <span class="n">OPENFLOW</span> <span class="o">=</span> <span class="s1">&#39;openflow&#39;</span>
-    <span class="n">QUARTUS</span> <span class="o">=</span> <span class="s1">&#39;quartus&#39;</span>
-    <span class="n">VIVADO</span> <span class="o">=</span> <span class="s1">&#39;vivado&#39;</span>
-    <span class="n">YOSYS</span> <span class="o">=</span> <span class="s1">&#39;yosys&#39;</span>
-    <span class="n">YOSYS_ISE</span> <span class="o">=</span> <span class="s1">&#39;yosys-ise&#39;</span>
-    <span class="n">YOSYS_VIVADO</span> <span class="o">=</span> <span class="s1">&#39;yosys-vivado&#39;</span></div>
-
 
 
 <div class="viewcode-block" id="Step">
@@ -131,29 +113,19 @@
 <div class="viewcode-block" id="Project">
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project">[docs]</a>
 <span class="k">class</span> <span class="nc">Project</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to manage an FPGA project.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class to manage an FPGA project.</span>
 
-<span class="sd">    :param tool: tool name</span>
-<span class="sd">    :type tool: Tool</span>
 <span class="sd">    :param name: project name (tool name by default)</span>
 <span class="sd">    :type name: str, optional</span>
-<span class="sd">    :param data: pre-populated data for the project</span>
-<span class="sd">    :type data: dict, optional</span>
 <span class="sd">    :param odir: output directory</span>
 <span class="sd">    :type odir: str, optional</span>
-<span class="sd">    :raises TypeError: when a value is not a valid enum</span>
 <span class="sd">    :raises NotImplementedError: when a method is not implemented yet</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s1">&#39;results&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s1">&#39;results&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Class constructor.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tool</span><span class="p">,</span> <span class="n">Tool</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;tool must be a Tool enum.&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">data</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;data must be a dict.&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tool</span> <span class="o">=</span> <span class="n">tool</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">tool</span><span class="o">.</span><span class="n">value</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">odir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">odir</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">odir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -240,8 +212,6 @@
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project.add_hook">[docs]</a>
     <span class="k">def</span> <span class="nf">add_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hook</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
-        <span class="c1"># if not isinstance(hook, Hook):</span>
-        <span class="c1">#     raise TypeError(&#39;hook must be a Hook enum.&#39;)</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method is not implemented yet.&#39;</span><span class="p">)</span></div>
 
 
@@ -249,8 +219,6 @@
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project.make">[docs]</a>
     <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">Step</span><span class="o">.</span><span class="n">BIT</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">Step</span><span class="o">.</span><span class="n">PRJ</span><span class="p">,</span> <span class="n">capture</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
-        <span class="c1"># if not isinstance(end, Step) or not isinstance(start, Step):</span>
-        <span class="c1">#     raise TypeError(&#39;start and end must be a Step enum.&#39;)</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method is not implemented yet.&#39;</span><span class="p">)</span></div>
 
 

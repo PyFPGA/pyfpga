@@ -79,18 +79,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#pyfpga.project.Step.SYN"><code class="docutils literal notranslate"><span class="pre">Step.SYN</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#pyfpga.project.Tool"><code class="docutils literal notranslate"><span class="pre">Tool</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#pyfpga.project.Tool.GHDL"><code class="docutils literal notranslate"><span class="pre">Tool.GHDL</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pyfpga.project.Tool.ISE"><code class="docutils literal notranslate"><span class="pre">Tool.ISE</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pyfpga.project.Tool.LIBERO"><code class="docutils literal notranslate"><span class="pre">Tool.LIBERO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pyfpga.project.Tool.OPENFLOW"><code class="docutils literal notranslate"><span class="pre">Tool.OPENFLOW</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pyfpga.project.Tool.QUARTUS"><code class="docutils literal notranslate"><span class="pre">Tool.QUARTUS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pyfpga.project.Tool.VIVADO"><code class="docutils literal notranslate"><span class="pre">Tool.VIVADO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pyfpga.project.Tool.YOSYS"><code class="docutils literal notranslate"><span class="pre">Tool.YOSYS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pyfpga.project.Tool.YOSYS_ISE"><code class="docutils literal notranslate"><span class="pre">Tool.YOSYS_ISE</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pyfpga.project.Tool.YOSYS_VIVADO"><code class="docutils literal notranslate"><span class="pre">Tool.YOSYS_VIVADO</span></code></a></li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -121,10 +109,7 @@
              
   <section id="module-pyfpga.project">
 <span id="api-reference"></span><h1>API Reference<a class="headerlink" href="#module-pyfpga.project" title="Link to this heading"></a></h1>
-<p>pyfpga.project
-This module implements the entry-point of PyFPGA, which provides
-functionalities to create a project, generate a bitstream and
-program a device.</p>
+<p>Base class that implements agnostic methods to deal with FPGA projects.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyfpga.project.Hook">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyfpga.project.</span></span><span class="sig-name descname"><span class="pre">Hook</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Hook"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Hook" title="Link to this definition"></a></dt>
@@ -163,22 +148,17 @@ program a device.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pyfpga.project.Project">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyfpga.project.</span></span><span class="sig-name descname"><span class="pre">Project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'results'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project" title="Link to this definition"></a></dt>
-<dd><p>Class to manage an FPGA project.</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyfpga.project.</span></span><span class="sig-name descname"><span class="pre">Project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'results'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project" title="Link to this definition"></a></dt>
+<dd><p>Base class to manage an FPGA project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tool</strong> (<a class="reference internal" href="#pyfpga.project.Tool" title="pyfpga.project.Tool"><em>Tool</em></a>) – tool name</p></li>
 <li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – project name (tool name by default)</p></li>
-<li><p><strong>data</strong> (<em>dict</em><em>, </em><em>optional</em>) – pre-populated data for the project</p></li>
 <li><p><strong>odir</strong> (<em>str</em><em>, </em><em>optional</em>) – output directory</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – when a value is not a valid enum</p></li>
-<li><p><strong>NotImplementedError</strong> – when a method is not implemented yet</p></li>
-</ul>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – when a method is not implemented yet</p>
 </dd>
 </dl>
 <dl class="py method">
@@ -288,57 +268,6 @@ program a device.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyfpga.project.Step.SYN">
 <span class="sig-name descname"><span class="pre">SYN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'syn'</span></em><a class="headerlink" href="#pyfpga.project.Step.SYN" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="pyfpga.project.Tool">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyfpga.project.</span></span><span class="sig-name descname"><span class="pre">Tool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Tool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Tool" title="Link to this definition"></a></dt>
-<dd><p>Enumeration of supported FPGA tools.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyfpga.project.Tool.GHDL">
-<span class="sig-name descname"><span class="pre">GHDL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ghdl'</span></em><a class="headerlink" href="#pyfpga.project.Tool.GHDL" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyfpga.project.Tool.ISE">
-<span class="sig-name descname"><span class="pre">ISE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ise'</span></em><a class="headerlink" href="#pyfpga.project.Tool.ISE" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyfpga.project.Tool.LIBERO">
-<span class="sig-name descname"><span class="pre">LIBERO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'libero'</span></em><a class="headerlink" href="#pyfpga.project.Tool.LIBERO" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyfpga.project.Tool.OPENFLOW">
-<span class="sig-name descname"><span class="pre">OPENFLOW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'openflow'</span></em><a class="headerlink" href="#pyfpga.project.Tool.OPENFLOW" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyfpga.project.Tool.QUARTUS">
-<span class="sig-name descname"><span class="pre">QUARTUS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'quartus'</span></em><a class="headerlink" href="#pyfpga.project.Tool.QUARTUS" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyfpga.project.Tool.VIVADO">
-<span class="sig-name descname"><span class="pre">VIVADO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'vivado'</span></em><a class="headerlink" href="#pyfpga.project.Tool.VIVADO" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyfpga.project.Tool.YOSYS">
-<span class="sig-name descname"><span class="pre">YOSYS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'yosys'</span></em><a class="headerlink" href="#pyfpga.project.Tool.YOSYS" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyfpga.project.Tool.YOSYS_ISE">
-<span class="sig-name descname"><span class="pre">YOSYS_ISE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'yosys-ise'</span></em><a class="headerlink" href="#pyfpga.project.Tool.YOSYS_ISE" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyfpga.project.Tool.YOSYS_VIVADO">
-<span class="sig-name descname"><span class="pre">YOSYS_VIVADO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'yosys-vivado'</span></em><a class="headerlink" href="#pyfpga.project.Tool.YOSYS_VIVADO" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
