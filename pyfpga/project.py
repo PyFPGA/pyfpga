@@ -4,27 +4,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-"""pyfpga.project
-This module implements the entry-point of PyFPGA, which provides
-functionalities to create a project, generate a bitstream and
-program a device.
+"""
+Base class that implements agnostic methods to deal with FPGA projects.
 """
 
 from enum import Enum
 from pathlib import Path
-
-
-class Tool(Enum):
-    """Enumeration of supported FPGA tools."""
-    GHDL = 'ghdl'
-    ISE = 'ise'
-    LIBERO = 'libero'
-    OPENFLOW = 'openflow'
-    QUARTUS = 'quartus'
-    VIVADO = 'vivado'
-    YOSYS = 'yosys'
-    YOSYS_ISE = 'yosys-ise'
-    YOSYS_VIVADO = 'yosys-vivado'
 
 
 class Step(Enum):
@@ -47,29 +32,19 @@ class Hook(Enum):
 
 
 class Project:
-    """Class to manage an FPGA project.
+    """Base class to manage an FPGA project.
 
-    :param tool: tool name
-    :type tool: Tool
     :param name: project name (tool name by default)
     :type name: str, optional
-    :param data: pre-populated data for the project
-    :type data: dict, optional
     :param odir: output directory
     :type odir: str, optional
-    :raises TypeError: when a value is not a valid enum
     :raises NotImplementedError: when a method is not implemented yet
     """
 
-    def __init__(self, tool, name=None, data=None, odir='results'):
+    def __init__(self, name=None, odir='results'):
         """Class constructor."""
-        if not isinstance(tool, Tool):
-            raise TypeError('tool must be a Tool enum.')
-        if data and not isinstance(data, dict):
-            raise TypeError('data must be a dict.')
-        self.tool = tool
-        self.name = name or tool.value
-        self.data = data or {}
+        self.data = {}
+        self.name = name
         self.odir = Path(odir)
         self.odir.mkdir(parents=True, exist_ok=True)
 
@@ -124,14 +99,10 @@ class Project:
 
     def add_hook(self, hook, content):
         """Temp placeholder"""
-        # if not isinstance(hook, Hook):
-        #     raise TypeError('hook must be a Hook enum.')
         raise NotImplementedError('Method is not implemented yet.')
 
     def make(self, end=Step.BIT, start=Step.PRJ, capture=False):
         """Temp placeholder"""
-        # if not isinstance(end, Step) or not isinstance(start, Step):
-        #     raise TypeError('start and end must be a Step enum.')
         raise NotImplementedError('Method is not implemented yet.')
 
     def prog(self, position=1, bitstream=None):

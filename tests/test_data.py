@@ -1,7 +1,7 @@
 import os
 import pytest
 
-from pyfpga.project import Project, Tool
+from pyfpga.project import Project
 
 pattern = {
     'part': 'PARTNAME',
@@ -22,7 +22,7 @@ pattern = {
 
 
 def test_names():
-    prj = Project(Tool.VIVADO)
+    prj = Project()
     prj.set_part('PARTNAME')
     prj.set_top('TOPNAME')
     prj.set_arch('ARCHNAME')
