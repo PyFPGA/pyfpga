@@ -1,4 +1,2 @@
-.. program:: pyfpga
-
 Introduction
 ============

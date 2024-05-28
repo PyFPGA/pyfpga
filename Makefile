@@ -1,6 +1,9 @@
 #!/usr/bin/make
 
-.PHONY: test
+.PHONY: docs test
+
+docs:
+	cd docs; make html
 
 lint:
 	pycodestyle pyfpga examples test
@@ -12,6 +15,7 @@ test:
 
 clean:
 	py3clean .
+	cd docs; make clean
 	rm -fr build .pytest_cache
 
 submodule:
