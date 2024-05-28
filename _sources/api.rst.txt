@@ -1,5 +1,3 @@
-.. program:: pyfpga
-
 API Reference
 =============
 
