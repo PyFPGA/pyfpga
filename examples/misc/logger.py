@@ -18,8 +18,8 @@ import logging
 from pyfpga.project import Project
 
 prj = Project()
-prj._test_logging()
+prj.set_part('EXAMPLE')
 prj.logger.setLevel(logging.DEBUG)
-prj._test_logging()
+prj.set_part('EXAMPLE')
 prj.logger.handlers = []
-prj._test_logging()
+prj.set_part('EXAMPLE')

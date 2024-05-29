@@ -62,6 +62,7 @@ class Project:
 
     def set_part(self, name):
         """Temp placeholder"""
+        self.logger.debug('Executing set_part')
         self.data['part'] = name
 
     def add_file(self, pathname, filetype=None, library=None, options=None):
@@ -70,14 +71,17 @@ class Project:
 
     def add_cons(self, pathname, options=None):
         """Temp placeholder"""
+        self.logger.debug('Executing add_cons')
         self.add_file(pathname, filetype='cons', options=options)
 
     def add_slog(self, pathname, options=None):
         """Temp placeholder"""
+        self.logger.debug('Executing add_slog')
         self.add_file(pathname, filetype='slog', options=options)
 
     def add_vhdl(self, pathname, library=None, options=None):
         """Temp placeholder"""
+        self.logger.debug('Executing add_vhdl')
         self.add_file(
             pathname, filetype='vhdl',
             library=library, options=options
@@ -85,32 +89,38 @@ class Project:
 
     def add_vlog(self, pathname, options=None):
         """Temp placeholder"""
+        self.logger.debug('Executing add_vlog')
         self.add_file(pathname, filetype='vlog', options=options)
 
     def add_include(self, path):
         """Temp placeholder"""
+        self.logger.debug('Executing add_include')
         if 'includes' not in self.data:
             self.data['includes'] = []
         self.data['includes'].append(path)
 
     def add_param(self, name, value):
         """Temp placeholder"""
+        self.logger.debug('Executing add_param')
         if 'params' not in self.data:
             self.data['params'] = {}
         self.data['params'][name] = value
 
     def add_define(self, name, value):
         """Temp placeholder"""
+        self.logger.debug('Executing add_define')
         if 'defines' not in self.data:
             self.data['defines'] = {}
         self.data['defines'][name] = value
 
     def set_arch(self, name):
         """Temp placeholder"""
+        self.logger.debug('Executing set_arch')
         self.data['arch'] = name
 
     def set_top(self, name):
         """Temp placeholder"""
+        self.logger.debug('Executing set_top')
         self.data['top'] = name
 
     def add_hook(self, hook, content):
@@ -124,7 +134,3 @@ class Project:
     def prog(self, position=1, bitstream=None):
         """Temp placeholder"""
         raise NotImplementedError('Method is not implemented yet.')
-
-    def _test_logging(self):
-        self.logger.info('It is an INFO message')
-        self.logger.debug('It is anDEBUG message')
