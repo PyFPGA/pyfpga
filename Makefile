@@ -18,5 +18,8 @@ clean:
 	cd docs; make clean
 	rm -fr build .pytest_cache
 
-submodule:
+submodule-init:
 	git submodule update --init
+
+submodule-update:
+	cd resources; git checkout main; git pull
