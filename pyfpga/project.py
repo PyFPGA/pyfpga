@@ -21,20 +21,9 @@ from time import time
 class Step(Enum):
     """Enumeration of supported Steps"""
     PRJ = 'prj'
-    ELB = 'elb'
     SYN = 'syn'
     PAR = 'par'
     BIT = 'bit'
-
-
-class Hook(Enum):
-    """Enumeration of supported Hooks"""
-    PREFILE = 'prefile'
-    PROJECT = 'project'
-    PREFLOW = 'preflow'
-    POSTSYN = 'postsyn'
-    POSTPAR = 'postpar'
-    POSTBIT = 'postbit'
 
 
 class Project:
@@ -127,7 +116,27 @@ class Project:
         self.logger.debug('Executing set_top')
         self.data['top'] = name
 
-    def add_hook(self, hook, content):
+    def add_precfg_hook(self, content):
+        """Temp placeholder"""
+        raise NotImplementedError('Method is not implemented yet.')
+
+    def add_postcfg_hook(self, content):
+        """Temp placeholder"""
+        raise NotImplementedError('Method is not implemented yet.')
+
+    def add_presyn_hook(self, content):
+        """Temp placeholder"""
+        raise NotImplementedError('Method is not implemented yet.')
+
+    def add_prepar_hook(self, content):
+        """Temp placeholder"""
+        raise NotImplementedError('Method is not implemented yet.')
+
+    def add_prebit_hook(self, content):
+        """Temp placeholder"""
+        raise NotImplementedError('Method is not implemented yet.')
+
+    def add_postbit_hook(self, content):
         """Temp placeholder"""
         raise NotImplementedError('Method is not implemented yet.')
 
