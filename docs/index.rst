@@ -9,4 +9,5 @@ PyFPGA's documentation
 .. toctree::
 
    intro
+   hooks
    api
