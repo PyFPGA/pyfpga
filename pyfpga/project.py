@@ -9,9 +9,13 @@ Base class that implements agnostic methods to deal with FPGA projects.
 """
 
 import logging
+import os
+import subprocess
 
 from enum import Enum
+from datetime import datetime
 from pathlib import Path
+from time import time
 
 
 class Step(Enum):
@@ -47,8 +51,8 @@ class Project:
         """Class constructor."""
         self.data = {}
         self.name = name
-        self.odir = Path(odir)
-        self.odir.mkdir(parents=True, exist_ok=True)
+        self.odir = odir
+        # self.odir.mkdir(parents=True, exist_ok=True)
         # logging config
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.setLevel(logging.INFO)
@@ -134,3 +138,37 @@ class Project:
     def prog(self, position=1, bitstream=None):
         """Temp placeholder"""
         raise NotImplementedError('Method is not implemented yet.')
+
+    def _run(self, command):
+        self.logger.info('Running the underlying tool (%s)', datetime.now())
+        run_error = 0
+        old_dir = Path.cwd()
+        new_dir = Path(self.odir)
+        start = time.time()
+        try:
+            os.chdir(new_dir)
+            with open('run.log', 'w', encoding='utf-8') as logfile:
+                subprocess.run(
+                    command, shell=True, check=True, text=True,
+                    stdout=logfile, stderr=subprocess.STDOUT
+                )
+        except subprocess.CalledProcessError:
+            with open('run.log', 'r', encoding='utf-8') as logfile:
+                lines = logfile.readlines()
+                last_lines = lines[-10:] if len(lines) >= 10 else lines
+                for line in last_lines:
+                    self.logger.error(line.strip())
+            run_error = 1
+        finally:
+            os.chdir(old_dir)
+            end = time.time()
+            self.logger.info('Done (%s)', datetime.now())
+            elapsed = end - start
+            self.logger.info(
+                'Elapsed time %dh %dm %.2fs',
+                int(elapsed // 3600),
+                int((elapsed % 3600) // 60),
+                elapsed % 60
+            )
+            if run_error:
+                raise RuntimeError('Error running the underlying tool')
