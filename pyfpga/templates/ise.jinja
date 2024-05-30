@@ -60,7 +60,10 @@ proc fpga_create { PROJECT } {
     global TOOL
     fpga_print "creating the project '$PROJECT'"
     switch $TOOL {
-        "vivado"  { create_project -force $PROJECT }
+        "ise"     {
+            if { [ file exists $PROJECT.xise ] } { file delete $PROJECT.xise }
+            project new $PROJECT.xise
+        }
     }
 }
 
@@ -68,7 +71,7 @@ proc fpga_open { PROJECT } {
     global TOOL
     fpga_print "opening the project '$PROJECT'"
     switch $TOOL {
-        "vivado"  { open_project $PROJECT }
+        "ise"     { project open $PROJECT.xise }
     }
 }
 
@@ -76,7 +79,7 @@ proc fpga_close {} {
     global TOOL
     fpga_print "closing the project"
     switch $TOOL {
-        "vivado"  { close_project }
+        "ise"     { project close }
     }
 }
 
@@ -84,8 +87,11 @@ proc fpga_part { PART } {
     global TOOL FAMILY DEVICE PACKAGE SPEED
     fpga_print "adding the part '$PART'"
     switch $TOOL {
-        "vivado"  {
-            set_property "part" $PART [current_project]
+        "ise"     {
+            project set family  $FAMILY
+            project set device  $DEVICE
+            project set package $PACKAGE
+            project set speed   $SPEED
         }
     }
 }
@@ -101,12 +107,14 @@ proc fpga_file {FILE {LIBRARY "work"}} {
         return
     }
     switch $TOOL {
-        "vivado" {
-            if { $LIBRARY != "work" } {
-                add_files $FILE
-                set_property library $LIBRARY [get_files $FILE]
+        "ise" {
+            if {$ext == "xcf"} {
+                project set "Synthesis Constraints File" $FILE -process "Synthesize - XST"
+            } elseif { $LIBRARY != "work" } {
+                lib_vhdl new $LIBRARY
+                xfile add $FILE -lib_vhdl $LIBRARY
             } else {
-                add_files $FILE
+                xfile add $FILE
             }
         }
     }
@@ -117,27 +125,10 @@ proc fpga_include {PATH} {
     lappend INCLUDED $PATH
     fpga_print "setting '$PATH' as a search location"
     switch $TOOL {
-        "vivado" {
+        "ise" {
             # Verilog Included Files are NOT added
-            set_property "include_dirs" $INCLUDED [current_fileset]
-        }
-    }
-}
-
-proc fpga_design {FILE} {
-    global TOOL TOP INCLUDED
-    fpga_print "including the block design '$FILE'"
-    switch $TOOL {
-        "vivado" {
-            if { [info exists INCLUDED] && [llength $INCLUDED] > 0 } {
-                set_property "ip_repo_paths" $INCLUDED [get_filesets sources_1]
-                update_ip_catalog -rebuild
-            }
-            source $FILE
-            make_wrapper -force -files [get_files design_1.bd] -top -import
-            if { $TOP == "UNDEFINED"} {
-                set TOP design_1_wrapper
-            }
+            project set "Verilog Include Directories" \
+            [join $INCLUDED "|"] -process "Synthesize - XST"
         }
     }
 }
@@ -146,8 +137,8 @@ proc fpga_top { TOP } {
     global TOOL
     fpga_print "specifying the top level '$TOP'"
     switch $TOOL {
-        "vivado"  {
-            set_property top $TOP [current_fileset]
+        "ise"     {
+            project set top $TOP
         }
     }
 }
@@ -157,11 +148,10 @@ proc fpga_params {} {
     if { [llength $PARAMS] == 0 } { return }
     fpga_print "setting generics/parameters"
     switch $TOOL {
-        "vivado"  {
+        "ise"     {
             set assigns [list]
             foreach PARAM $PARAMS { lappend assigns [join $PARAM "="] }
-            set obj [get_filesets sources_1]
-            set_property "generic" "[join $assigns]" -objects $obj
+            project set "Generics, Parameters" "[join $assigns]" -process "Synthesize - XST"
         }
     }
 }
@@ -170,13 +160,13 @@ proc fpga_run_syn {} {
     global TOOL PRESYNTH
     fpga_print "running 'synthesis'"
     switch $TOOL {
-        "vivado"  {
+        "ise"     {
             if { $PRESYNTH == "True" } {
-                set_property design_mode GateLvl [current_fileset]
+                project set top_level_module_type "EDIF"
             } else {
-                reset_run synth_1
-                launch_runs synth_1
-                wait_on_run synth_1
+                project clean
+                process run "Synthesize"
+                if { [process get "Synthesize" status] == "errors" } { exit 2 }
             }
         }
     }
@@ -186,12 +176,13 @@ proc fpga_run_par {} {
     global TOOL PRESYNTH
     fpga_print "running 'place and route'"
     switch $TOOL {
-        "vivado"  {
-            if {$PRESYNTH == "False"} {
-                open_run synth_1
-            }
-            launch_runs impl_1
-            wait_on_run impl_1
+        "ise"     {
+            process run "Translate"
+            if { [process get "Translate" status] == "errors" } { exit 2 }
+            process run "Map"
+            if { [process get "Map" status] == "errors" } { exit 2 }
+            process run "Place & Route"
+            if { [process get "Place & Route" status] == "errors" } { exit 2 }
         }
     }
 }
@@ -200,9 +191,10 @@ proc fpga_run_bit {} {
     global TOOL PROJECT TOP
     fpga_print "running 'bitstream generation'"
     switch $TOOL {
-        "vivado"  {
-            open_run impl_1
-            write_bitstream -force $PROJECT
+        "ise"     {
+            process run "Generate Programming File"
+            if { [process get "Generate Programming File" status] == "errors" } { exit 2 }
+            catch { file rename -force $TOP.bit $PROJECT.bit }
         }
     }
 }

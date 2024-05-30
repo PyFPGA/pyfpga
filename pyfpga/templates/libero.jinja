@@ -60,7 +60,10 @@ proc fpga_create { PROJECT } {
     global TOOL
     fpga_print "creating the project '$PROJECT'"
     switch $TOOL {
-        "vivado"  { create_project -force $PROJECT }
+        "libero"  {
+            if { [ file exists $PROJECT ] } { file delete -force -- $PROJECT }
+            new_project -name $PROJECT -location $PROJECT -hdl {VHDL} -family {SmartFusion2}
+        }
     }
 }
 
@@ -68,7 +71,9 @@ proc fpga_open { PROJECT } {
     global TOOL
     fpga_print "opening the project '$PROJECT'"
     switch $TOOL {
-        "vivado"  { open_project $PROJECT }
+        "libero"  {
+            open_project $PROJECT/$PROJECT.prjx
+        }
     }
 }
 
@@ -76,7 +81,7 @@ proc fpga_close {} {
     global TOOL
     fpga_print "closing the project"
     switch $TOOL {
-        "vivado"  { close_project }
+        "libero"  { close_project }
     }
 }
 
@@ -84,8 +89,8 @@ proc fpga_part { PART } {
     global TOOL FAMILY DEVICE PACKAGE SPEED
     fpga_print "adding the part '$PART'"
     switch $TOOL {
-        "vivado"  {
-            set_property "part" $PART [current_project]
+        "libero"  {
+            set_device -family $FAMILY -die $DEVICE -package $PACKAGE -speed $SPEED
         }
     }
 }
@@ -101,12 +106,19 @@ proc fpga_file {FILE {LIBRARY "work"}} {
         return
     }
     switch $TOOL {
-        "vivado" {
-            if { $LIBRARY != "work" } {
-                add_files $FILE
-                set_property library $LIBRARY [get_files $FILE]
+        "libero" {
+            global LIBERO_PLACE_CONSTRAINTS
+            global LIBERO_OTHER_CONSTRAINTS
+            if {$ext == "pdc"} {
+                create_links -io_pdc $FILE
+                append LIBERO_PLACE_CONSTRAINTS "-file $FILE "
+            } elseif {$ext == "sdc"} {
+                create_links -sdc $FILE
+                append LIBERO_PLACE_CONSTRAINTS "-file $FILE "
+                append LIBERO_OTHER_CONSTRAINTS "-file $FILE "
             } else {
-                add_files $FILE
+                create_links -library $LIBRARY -hdl_source $FILE
+                build_design_hierarchy
             }
         }
     }
@@ -117,27 +129,13 @@ proc fpga_include {PATH} {
     lappend INCLUDED $PATH
     fpga_print "setting '$PATH' as a search location"
     switch $TOOL {
-        "vivado" {
-            # Verilog Included Files are NOT added
-            set_property "include_dirs" $INCLUDED [current_fileset]
-        }
-    }
-}
-
-proc fpga_design {FILE} {
-    global TOOL TOP INCLUDED
-    fpga_print "including the block design '$FILE'"
-    switch $TOOL {
-        "vivado" {
-            if { [info exists INCLUDED] && [llength $INCLUDED] > 0 } {
-                set_property "ip_repo_paths" $INCLUDED [get_filesets sources_1]
-                update_ip_catalog -rebuild
+        "libero" {
+            # Verilog Included Files are ALSO added
+            # They must be specified after set_root (see fpga_top)
+            foreach FILE [glob -nocomplain $PATH/*.vh] {
+                create_links -hdl_source $FILE
             }
-            source $FILE
-            make_wrapper -force -files [get_files design_1.bd] -top -import
-            if { $TOP == "UNDEFINED"} {
-                set TOP design_1_wrapper
-            }
+            build_design_hierarchy
         }
     }
 }
@@ -146,8 +144,46 @@ proc fpga_top { TOP } {
     global TOOL
     fpga_print "specifying the top level '$TOP'"
     switch $TOOL {
-        "vivado"  {
-            set_property top $TOP [current_fileset]
+        "libero"  {
+            set_root $TOP
+            # Verilog Included files
+            global INCLUDED PARAMS
+            set cmd "configure_tool -name {SYNTHESIZE} -params {SYNPLIFY_OPTIONS:"
+            if { [info exists INCLUDED] && [llength $INCLUDED] > 0 } {
+                # See <ROOT>/poc/include/libero.tcl for details
+                set PATHS "../../"
+                append PATHS [join $INCLUDED ";../../"]
+                append cmd "set_option -include_path \"$PATHS\""
+                append cmd "\n"
+            }
+            foreach PARAM $PARAMS {
+                set assign [join $PARAM]
+                append cmd "set_option -hdl_param -set \"$assign\""
+                append cmd "\n"
+            }
+            append cmd "}"
+            eval $cmd
+            # Constraints
+            # PDC is only used for PLACEROUTE.
+            # SDC is used by ALL (SYNTHESIZE, PLACEROUTE and VERIFYTIMING).
+            global LIBERO_PLACE_CONSTRAINTS
+            global LIBERO_OTHER_CONSTRAINTS
+            if { [info exists LIBERO_OTHER_CONSTRAINTS] } {
+                set cmd "organize_tool_files -tool {SYNTHESIZE} "
+                append cmd $LIBERO_OTHER_CONSTRAINTS
+                append cmd "-module $TOP -input_type {constraint}"
+                eval $cmd
+                set cmd "organize_tool_files -tool {VERIFYTIMING} "
+                append cmd $LIBERO_OTHER_CONSTRAINTS
+                append cmd "-module $TOP -input_type {constraint}"
+                eval $cmd
+            }
+            if { [info exists LIBERO_PLACE_CONSTRAINTS] } {
+                set cmd "organize_tool_files -tool {PLACEROUTE} "
+                append cmd $LIBERO_PLACE_CONSTRAINTS
+                append cmd "-module $TOP -input_type {constraint}"
+                eval $cmd
+            }
         }
     }
 }
@@ -157,11 +193,8 @@ proc fpga_params {} {
     if { [llength $PARAMS] == 0 } { return }
     fpga_print "setting generics/parameters"
     switch $TOOL {
-        "vivado"  {
-            set assigns [list]
-            foreach PARAM $PARAMS { lappend assigns [join $PARAM "="] }
-            set obj [get_filesets sources_1]
-            set_property "generic" "[join $assigns]" -objects $obj
+        "libero"  {
+            # They must be specified after set_root (see fpga_top)
         }
     }
 }
@@ -170,14 +203,8 @@ proc fpga_run_syn {} {
     global TOOL PRESYNTH
     fpga_print "running 'synthesis'"
     switch $TOOL {
-        "vivado"  {
-            if { $PRESYNTH == "True" } {
-                set_property design_mode GateLvl [current_fileset]
-            } else {
-                reset_run synth_1
-                launch_runs synth_1
-                wait_on_run synth_1
-            }
+        "libero"  {
+            run_tool -name {SYNTHESIZE}
         }
     }
 }
@@ -186,12 +213,9 @@ proc fpga_run_par {} {
     global TOOL PRESYNTH
     fpga_print "running 'place and route'"
     switch $TOOL {
-        "vivado"  {
-            if {$PRESYNTH == "False"} {
-                open_run synth_1
-            }
-            launch_runs impl_1
-            wait_on_run impl_1
+        "libero"  {
+            run_tool -name {PLACEROUTE}
+            run_tool -name {VERIFYTIMING}
         }
     }
 }
@@ -200,9 +224,8 @@ proc fpga_run_bit {} {
     global TOOL PROJECT TOP
     fpga_print "running 'bitstream generation'"
     switch $TOOL {
-        "vivado"  {
-            open_run impl_1
-            write_bitstream -force $PROJECT
+        "libero"  {
+            run_tool -name {GENERATEPROGRAMMINGFILE}
         }
     }
 }
