@@ -6,8 +6,8 @@
 ![ISE](https://img.shields.io/badge/ISE-14.7-blue.svg?style=flat-square)
 ![Openflow](https://img.shields.io/badge/Openflow-GHDL%20%7C%20Yosys%20%7C%20nextpnr%20%7C%20icestorm%20%7C%20prjtrellis-darkgreen.svg?style=flat-square)
 
-> **WARNING:** (2022-05-15) PyFPGA is in the process of being strongly rewritten/simplified.
-> Most changes are internal, but the API (`Project` class) will change.
+> **WARNING:** (2024-05-20) PyFPGA is in the process of being strongly rewritten/simplified.
+> Most changes are internal, but the API will also change.
 
 PyFPGA is a **Python Package** for **vendor-agnostic** FPGA development.
 It provides a **Class** which allows the programmatically execution of **synthesis**,
