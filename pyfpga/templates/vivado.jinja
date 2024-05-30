@@ -5,7 +5,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-set TOOL     #TOOL#
 set PRESYNTH #PRESYNTH#
 set PROJECT  #PROJECT#
 set PART     #PART#
@@ -23,249 +22,117 @@ proc fpga_files {} {
 #FILES#
 }
 
-proc fpga_commands { PHASE } {
-    fpga_print "setting commands for the phase '$PHASE'"
-    switch $PHASE {
-        "prefile" {
-#PREFILE_CMDS#
-        }
-        "project" {
-#PROJECT_CMDS#
-        }
-        "preflow" {
-#PREFLOW_CMDS#
-        }
-        "postsyn" {
-#POSTSYN_CMDS#
-        }
-        "postpar" {
-#POSTPAR_CMDS#
-        }
-        "postbit" {
-#POSTBIT_CMDS#
-        }
-    }
-}
-
-#
-# Procedures
-#
-
-proc fpga_print { MSG } {
-    global TOOL
-    puts ">>> PyFPGA ($TOOL): $MSG"
-}
-
 proc fpga_create { PROJECT } {
-    global TOOL
-    fpga_print "creating the project '$PROJECT'"
-    switch $TOOL {
-        "vivado"  { create_project -force $PROJECT }
-    }
+    create_project -force $PROJECT
 }
 
 proc fpga_open { PROJECT } {
-    global TOOL
-    fpga_print "opening the project '$PROJECT'"
-    switch $TOOL {
-        "vivado"  { open_project $PROJECT }
-    }
+    open_project $PROJECT
 }
 
 proc fpga_close {} {
-    global TOOL
-    fpga_print "closing the project"
-    switch $TOOL {
-        "vivado"  { close_project }
-    }
+    close_project
 }
 
 proc fpga_part { PART } {
-    global TOOL FAMILY DEVICE PACKAGE SPEED
-    fpga_print "adding the part '$PART'"
-    switch $TOOL {
-        "vivado"  {
-            set_property "part" $PART [current_project]
-        }
-    }
-}
+    set_property "part" $PART [current_project]
+ }
 
 proc fpga_file {FILE {LIBRARY "work"}} {
-    global TOOL TOP
     set message "adding the file '$FILE'"
     if { $LIBRARY != "work" } { append message " (into the VHDL library '$LIBRARY')" }
-    fpga_print $message
     regexp -nocase {\.(\w*)$} $FILE -> ext
     if { $ext == "tcl" } {
         source $FILE
         return
     }
-    switch $TOOL {
-        "vivado" {
-            if { $LIBRARY != "work" } {
-                add_files $FILE
-                set_property library $LIBRARY [get_files $FILE]
-            } else {
-                add_files $FILE
-            }
-        }
+    if { $LIBRARY != "work" } {
+        add_files $FILE
+        set_property library $LIBRARY [get_files $FILE]
+    } else {
+        add_files $FILE
     }
 }
 
 proc fpga_include {PATH} {
-    global TOOL INCLUDED
     lappend INCLUDED $PATH
-    fpga_print "setting '$PATH' as a search location"
-    switch $TOOL {
-        "vivado" {
-            # Verilog Included Files are NOT added
-            set_property "include_dirs" $INCLUDED [current_fileset]
-        }
-    }
+    # Verilog Included Files are NOT added
+    set_property "include_dirs" $INCLUDED [current_fileset]
 }
 
 proc fpga_design {FILE} {
-    global TOOL TOP INCLUDED
     fpga_print "including the block design '$FILE'"
-    switch $TOOL {
-        "vivado" {
-            if { [info exists INCLUDED] && [llength $INCLUDED] > 0 } {
-                set_property "ip_repo_paths" $INCLUDED [get_filesets sources_1]
-                update_ip_catalog -rebuild
-            }
-            source $FILE
-            make_wrapper -force -files [get_files design_1.bd] -top -import
-            if { $TOP == "UNDEFINED"} {
-                set TOP design_1_wrapper
-            }
-        }
+    if { [info exists INCLUDED] && [llength $INCLUDED] > 0 } {
+        set_property "ip_repo_paths" $INCLUDED [get_filesets sources_1]
+        update_ip_catalog -rebuild
+    }
+    source $FILE
+    make_wrapper -force -files [get_files design_1.bd] -top -import
+    if { $TOP == "UNDEFINED"} {
+        set TOP design_1_wrapper
     }
 }
 
 proc fpga_top { TOP } {
-    global TOOL
-    fpga_print "specifying the top level '$TOP'"
-    switch $TOOL {
-        "vivado"  {
-            set_property top $TOP [current_fileset]
-        }
-    }
+    set_property top $TOP [current_fileset]
 }
 
 proc fpga_params {} {
-    global TOOL PARAMS
     if { [llength $PARAMS] == 0 } { return }
-    fpga_print "setting generics/parameters"
-    switch $TOOL {
-        "vivado"  {
-            set assigns [list]
-            foreach PARAM $PARAMS { lappend assigns [join $PARAM "="] }
-            set obj [get_filesets sources_1]
-            set_property "generic" "[join $assigns]" -objects $obj
-        }
-    }
+    set assigns [list]
+    foreach PARAM $PARAMS { lappend assigns [join $PARAM "="] }
+    set obj [get_filesets sources_1]
+    set_property "generic" "[join $assigns]" -objects $obj
 }
 
 proc fpga_run_syn {} {
-    global TOOL PRESYNTH
-    fpga_print "running 'synthesis'"
-    switch $TOOL {
-        "vivado"  {
-            if { $PRESYNTH == "True" } {
-                set_property design_mode GateLvl [current_fileset]
-            } else {
-                reset_run synth_1
-                launch_runs synth_1
-                wait_on_run synth_1
-            }
-        }
+    if { $PRESYNTH == "True" } {
+        set_property design_mode GateLvl [current_fileset]
+    } else {
+        reset_run synth_1
+        launch_runs synth_1
+        wait_on_run synth_1
     }
 }
 
 proc fpga_run_par {} {
-    global TOOL PRESYNTH
-    fpga_print "running 'place and route'"
-    switch $TOOL {
-        "vivado"  {
-            if {$PRESYNTH == "False"} {
-                open_run synth_1
-            }
-            launch_runs impl_1
-            wait_on_run impl_1
-        }
+    if {$PRESYNTH == "False"} {
+        open_run synth_1
     }
+    launch_runs impl_1
+    wait_on_run impl_1
 }
 
 proc fpga_run_bit {} {
-    global TOOL PROJECT TOP
-    fpga_print "running 'bitstream generation'"
-    switch $TOOL {
-        "vivado"  {
-            open_run impl_1
-            write_bitstream -force $PROJECT
-        }
-    }
+    open_run impl_1
+    write_bitstream -force $PROJECT
 }
-
-#
-# Start of the script
-#
-
-fpga_print "start of the Tcl script (interpreter $tcl_version)"
-
-#
-# Project Creation
-#
 
 if { [lsearch -exact $TASKS "prj"] >= 0 } {
-    fpga_print "running the Project Creation"
-    if { [catch {
-        fpga_create $PROJECT
-        fpga_part $PART
-        fpga_commands "prefile"
-        fpga_files
-        fpga_top $TOP
-        fpga_params
-        fpga_commands "project"
-        fpga_close
-    } ERRMSG]} {
-        puts "ERROR: there was a problem creating a New Project.\n"
-        puts $ERRMSG
-        exit 1
-    }
+    fpga_create $PROJECT
+    fpga_part $PART
+    {{ PRECFG }}
+    fpga_files
+    fpga_top $TOP
+    fpga_params
+    {{ POSTCFG }}
+    fpga_close
 }
-
-#
-# Design Flow
-#
 
 if { [lsearch -regexp $TASKS "syn|par|bit"] >= 0 } {
-    fpga_print "running the Design Flow"
-    if { [catch {
-        fpga_open $PROJECT
-        fpga_commands "preflow"
-        if { [lsearch -exact $TASKS "syn"] >= 0 } {
-            fpga_run_syn
-            fpga_commands "postsyn"
-        }
-        if { [lsearch -exact $TASKS "par"] >= 0 } {
-            fpga_run_par
-            fpga_commands "postpar"
-        }
-        if { [lsearch -exact $TASKS "bit"] >= 0 } {
-            fpga_run_bit
-            fpga_commands "postbit"
-        }
-        fpga_close
-    } ERRMSG]} {
-        puts "ERROR: there was a problem running the Design Flow.\n"
-        puts $ERRMSG
-        exit 2
+    fpga_open $PROJECT
+    if { [lsearch -exact $TASKS "syn"] >= 0 } {
+        {{ PRESYN }}
+        fpga_run_syn
     }
+    if { [lsearch -exact $TASKS "par"] >= 0 } {
+        {{ PREPAR }}
+        fpga_run_par
+    }
+    if { [lsearch -exact $TASKS "bit"] >= 0 } {
+        {{ PREBIT }}
+        fpga_run_bit
+        {{ POSTBIT }}
+    }
+    fpga_close
 }
-
-#
-# End of the script
-#
-
-fpga_print "end of the Tcl script"
