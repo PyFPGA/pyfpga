@@ -43,6 +43,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hooks.html">Hooks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
 </ul>
 
@@ -82,9 +83,13 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
 
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 
 
 <div class="viewcode-block" id="Step">
@@ -92,23 +97,9 @@
 <span class="k">class</span> <span class="nc">Step</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Enumeration of supported Steps&quot;&quot;&quot;</span>
     <span class="n">PRJ</span> <span class="o">=</span> <span class="s1">&#39;prj&#39;</span>
-    <span class="n">ELB</span> <span class="o">=</span> <span class="s1">&#39;elb&#39;</span>
     <span class="n">SYN</span> <span class="o">=</span> <span class="s1">&#39;syn&#39;</span>
     <span class="n">PAR</span> <span class="o">=</span> <span class="s1">&#39;par&#39;</span>
     <span class="n">BIT</span> <span class="o">=</span> <span class="s1">&#39;bit&#39;</span></div>
-
-
-
-<div class="viewcode-block" id="Hook">
-<a class="viewcode-back" href="../../api.html#pyfpga.project.Hook">[docs]</a>
-<span class="k">class</span> <span class="nc">Hook</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enumeration of supported Hooks&quot;&quot;&quot;</span>
-    <span class="n">PREFILE</span> <span class="o">=</span> <span class="s1">&#39;prefile&#39;</span>
-    <span class="n">PROJECT</span> <span class="o">=</span> <span class="s1">&#39;project&#39;</span>
-    <span class="n">PREFLOW</span> <span class="o">=</span> <span class="s1">&#39;preflow&#39;</span>
-    <span class="n">POSTSYN</span> <span class="o">=</span> <span class="s1">&#39;postsyn&#39;</span>
-    <span class="n">POSTPAR</span> <span class="o">=</span> <span class="s1">&#39;postpar&#39;</span>
-    <span class="n">POSTBIT</span> <span class="o">=</span> <span class="s1">&#39;postbit&#39;</span></div>
 
 
 
@@ -128,8 +119,8 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Class constructor.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">odir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">odir</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">odir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">odir</span> <span class="o">=</span> <span class="n">odir</span>
+        <span class="c1"># self.odir.mkdir(parents=True, exist_ok=True)</span>
         <span class="c1"># logging config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
@@ -237,9 +228,44 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span></div>
 
 
-<div class="viewcode-block" id="Project.add_hook">
-<a class="viewcode-back" href="../../api.html#pyfpga.project.Project.add_hook">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hook</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+<div class="viewcode-block" id="Project.add_precfg_hook">
+<a class="viewcode-back" href="../../api.html#pyfpga.project.Project.add_precfg_hook">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_precfg_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method is not implemented yet.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Project.add_postcfg_hook">
+<a class="viewcode-back" href="../../api.html#pyfpga.project.Project.add_postcfg_hook">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_postcfg_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method is not implemented yet.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Project.add_presyn_hook">
+<a class="viewcode-back" href="../../api.html#pyfpga.project.Project.add_presyn_hook">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_presyn_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method is not implemented yet.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Project.add_prepar_hook">
+<a class="viewcode-back" href="../../api.html#pyfpga.project.Project.add_prepar_hook">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_prepar_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method is not implemented yet.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Project.add_prebit_hook">
+<a class="viewcode-back" href="../../api.html#pyfpga.project.Project.add_prebit_hook">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_prebit_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method is not implemented yet.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Project.add_postbit_hook">
+<a class="viewcode-back" href="../../api.html#pyfpga.project.Project.add_postbit_hook">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_postbit_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method is not implemented yet.&#39;</span><span class="p">)</span></div>
 
@@ -256,7 +282,41 @@
     <span class="k">def</span> <span class="nf">prog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bitstream</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method is not implemented yet.&#39;</span><span class="p">)</span></div>
-</div>
+
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Running the underlying tool (</span><span class="si">%s</span><span class="s1">)&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+        <span class="n">run_error</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">old_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+        <span class="n">new_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">odir</span><span class="p">)</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">new_dir</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;run.log&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">logfile</span><span class="p">:</span>
+                <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+                    <span class="n">command</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">stdout</span><span class="o">=</span><span class="n">logfile</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span>
+                <span class="p">)</span>
+        <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;run.log&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">logfile</span><span class="p">:</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="n">logfile</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+                <span class="n">last_lines</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">:]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">10</span> <span class="k">else</span> <span class="n">lines</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">last_lines</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+            <span class="n">run_error</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">old_dir</span><span class="p">)</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Done (</span><span class="si">%s</span><span class="s1">)&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+            <span class="n">elapsed</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s1">&#39;Elapsed time </span><span class="si">%d</span><span class="s1">h </span><span class="si">%d</span><span class="s1">m </span><span class="si">%.2f</span><span class="s1">s&#39;</span><span class="p">,</span>
+                <span class="nb">int</span><span class="p">(</span><span class="n">elapsed</span> <span class="o">//</span> <span class="mi">3600</span><span class="p">),</span>
+                <span class="nb">int</span><span class="p">((</span><span class="n">elapsed</span> <span class="o">%</span> <span class="mi">3600</span><span class="p">)</span> <span class="o">//</span> <span class="mi">60</span><span class="p">),</span>
+                <span class="n">elapsed</span> <span class="o">%</span> <span class="mi">60</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">run_error</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Error running the underlying tool&#39;</span><span class="p">)</span></div>
 
 </pre></div>
 

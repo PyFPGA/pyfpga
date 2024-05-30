@@ -43,6 +43,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hooks.html">Hooks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
 </ul>
 
@@ -75,8 +76,6 @@
 <div class="genindex-jumpbox">
  <a href="#A"><strong>A</strong></a>
  | <a href="#B"><strong>B</strong></a>
- | <a href="#E"><strong>E</strong></a>
- | <a href="#H"><strong>H</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#S"><strong>S</strong></a>
@@ -91,13 +90,23 @@
 </li>
       <li><a href="api.html#pyfpga.project.Project.add_file">add_file() (pyfpga.project.Project method)</a>
 </li>
-      <li><a href="api.html#pyfpga.project.Project.add_hook">add_hook() (pyfpga.project.Project method)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#pyfpga.project.Project.add_include">add_include() (pyfpga.project.Project method)</a>
 </li>
       <li><a href="api.html#pyfpga.project.Project.add_param">add_param() (pyfpga.project.Project method)</a>
+</li>
+      <li><a href="api.html#pyfpga.project.Project.add_postbit_hook">add_postbit_hook() (pyfpga.project.Project method)</a>
+</li>
+      <li><a href="api.html#pyfpga.project.Project.add_postcfg_hook">add_postcfg_hook() (pyfpga.project.Project method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#pyfpga.project.Project.add_prebit_hook">add_prebit_hook() (pyfpga.project.Project method)</a>
+</li>
+      <li><a href="api.html#pyfpga.project.Project.add_precfg_hook">add_precfg_hook() (pyfpga.project.Project method)</a>
+</li>
+      <li><a href="api.html#pyfpga.project.Project.add_prepar_hook">add_prepar_hook() (pyfpga.project.Project method)</a>
+</li>
+      <li><a href="api.html#pyfpga.project.Project.add_presyn_hook">add_presyn_hook() (pyfpga.project.Project method)</a>
 </li>
       <li><a href="api.html#pyfpga.project.Project.add_slog">add_slog() (pyfpga.project.Project method)</a>
 </li>
@@ -112,22 +121,6 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#pyfpga.project.Step.BIT">BIT (pyfpga.project.Step attribute)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="E">E</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#pyfpga.project.Step.ELB">ELB (pyfpga.project.Step attribute)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="H">H</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#pyfpga.project.Hook">Hook (class in pyfpga.project)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -154,25 +147,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#pyfpga.project.Step.PAR">PAR (pyfpga.project.Step attribute)</a>
 </li>
-      <li><a href="api.html#pyfpga.project.Hook.POSTBIT">POSTBIT (pyfpga.project.Hook attribute)</a>
-</li>
-      <li><a href="api.html#pyfpga.project.Hook.POSTPAR">POSTPAR (pyfpga.project.Hook attribute)</a>
-</li>
-      <li><a href="api.html#pyfpga.project.Hook.POSTSYN">POSTSYN (pyfpga.project.Hook attribute)</a>
-</li>
-      <li><a href="api.html#pyfpga.project.Hook.PREFILE">PREFILE (pyfpga.project.Hook attribute)</a>
-</li>
-      <li><a href="api.html#pyfpga.project.Hook.PREFLOW">PREFLOW (pyfpga.project.Hook attribute)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#pyfpga.project.Step.PRJ">PRJ (pyfpga.project.Step attribute)</a>
 </li>
       <li><a href="api.html#pyfpga.project.Project.prog">prog() (pyfpga.project.Project method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#pyfpga.project.Project">Project (class in pyfpga.project)</a>
-</li>
-      <li><a href="api.html#pyfpga.project.Hook.PROJECT">PROJECT (pyfpga.project.Hook attribute)</a>
 </li>
       <li>
     pyfpga.project

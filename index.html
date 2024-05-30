@@ -45,6 +45,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hooks.html">Hooks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
 </ul>
 
@@ -78,23 +79,20 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hooks.html">Hooks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api.html#pyfpga.project.Hook"><code class="docutils literal notranslate"><span class="pre">Hook</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Hook.POSTBIT"><code class="docutils literal notranslate"><span class="pre">Hook.POSTBIT</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Hook.POSTPAR"><code class="docutils literal notranslate"><span class="pre">Hook.POSTPAR</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Hook.POSTSYN"><code class="docutils literal notranslate"><span class="pre">Hook.POSTSYN</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Hook.PREFILE"><code class="docutils literal notranslate"><span class="pre">Hook.PREFILE</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Hook.PREFLOW"><code class="docutils literal notranslate"><span class="pre">Hook.PREFLOW</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Hook.PROJECT"><code class="docutils literal notranslate"><span class="pre">Hook.PROJECT</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#pyfpga.project.Project"><code class="docutils literal notranslate"><span class="pre">Project</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Project.add_cons"><code class="docutils literal notranslate"><span class="pre">Project.add_cons()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Project.add_define"><code class="docutils literal notranslate"><span class="pre">Project.add_define()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Project.add_file"><code class="docutils literal notranslate"><span class="pre">Project.add_file()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Project.add_hook"><code class="docutils literal notranslate"><span class="pre">Project.add_hook()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Project.add_include"><code class="docutils literal notranslate"><span class="pre">Project.add_include()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Project.add_param"><code class="docutils literal notranslate"><span class="pre">Project.add_param()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Project.add_postbit_hook"><code class="docutils literal notranslate"><span class="pre">Project.add_postbit_hook()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Project.add_postcfg_hook"><code class="docutils literal notranslate"><span class="pre">Project.add_postcfg_hook()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Project.add_prebit_hook"><code class="docutils literal notranslate"><span class="pre">Project.add_prebit_hook()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Project.add_precfg_hook"><code class="docutils literal notranslate"><span class="pre">Project.add_precfg_hook()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Project.add_prepar_hook"><code class="docutils literal notranslate"><span class="pre">Project.add_prepar_hook()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Project.add_presyn_hook"><code class="docutils literal notranslate"><span class="pre">Project.add_presyn_hook()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Project.add_slog"><code class="docutils literal notranslate"><span class="pre">Project.add_slog()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Project.add_vhdl"><code class="docutils literal notranslate"><span class="pre">Project.add_vhdl()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Project.add_vlog"><code class="docutils literal notranslate"><span class="pre">Project.add_vlog()</span></code></a></li>
@@ -107,7 +105,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#pyfpga.project.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Step.BIT"><code class="docutils literal notranslate"><span class="pre">Step.BIT</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Step.ELB"><code class="docutils literal notranslate"><span class="pre">Step.ELB</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Step.PAR"><code class="docutils literal notranslate"><span class="pre">Step.PAR</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Step.PRJ"><code class="docutils literal notranslate"><span class="pre">Step.PRJ</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#pyfpga.project.Step.SYN"><code class="docutils literal notranslate"><span class="pre">Step.SYN</span></code></a></li>
