@@ -12,18 +12,9 @@ import logging
 import os
 import subprocess
 
-from enum import Enum
 from datetime import datetime
 from pathlib import Path
 from time import time
-
-
-class Step(Enum):
-    """Enumeration of supported Steps"""
-    PRJ = 'prj'
-    SYN = 'syn'
-    PAR = 'par'
-    BIT = 'bit'
 
 
 class Project:
@@ -116,32 +107,24 @@ class Project:
         self.logger.debug('Executing set_top')
         self.data['top'] = name
 
-    def add_precfg_hook(self, content):
-        """Temp placeholder"""
+    def add_hook(self, stage, hook):
+        """Add hook for a specific stage."""
+        stages = [
+            'precfg', 'postcfg', 'presyn', 'postsyn',
+            'prepar', 'postpar', 'prebit', 'postbit'
+        ]
+        if stage not in stages:
+            raise ValueError('Invalid stage.')
+        _ = self
+        _ = hook
         raise NotImplementedError('Method is not implemented yet.')
 
-    def add_postcfg_hook(self, content):
+    def make(self, end='bit', start='prj'):
         """Temp placeholder"""
-        raise NotImplementedError('Method is not implemented yet.')
-
-    def add_presyn_hook(self, content):
-        """Temp placeholder"""
-        raise NotImplementedError('Method is not implemented yet.')
-
-    def add_prepar_hook(self, content):
-        """Temp placeholder"""
-        raise NotImplementedError('Method is not implemented yet.')
-
-    def add_prebit_hook(self, content):
-        """Temp placeholder"""
-        raise NotImplementedError('Method is not implemented yet.')
-
-    def add_postbit_hook(self, content):
-        """Temp placeholder"""
-        raise NotImplementedError('Method is not implemented yet.')
-
-    def make(self, end=Step.BIT, start=Step.PRJ, capture=False):
-        """Temp placeholder"""
+        steps = ['prj', 'syn', 'par', 'bit']
+        if end not in steps or start not in steps:
+            raise ValueError('Invalid steps.')
+        _ = self
         raise NotImplementedError('Method is not implemented yet.')
 
     def prog(self, position=1, bitstream=None):

@@ -19,8 +19,10 @@ Hooks
     open project
     presyn hook
     synthesis
+    postsyn hook
     prepar hook
     place_and_route
+    postpar hook
     prebit hook
     bitstream
     postbit hook
