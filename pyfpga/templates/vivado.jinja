@@ -5,38 +5,20 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-set PRESYNTH #PRESYNTH#
-set PROJECT  #PROJECT#
-set PART     #PART#
-set FAMILY   #FAMILY#
-set DEVICE   #DEVICE#
-set PACKAGE  #PACKAGE#
-set SPEED    #SPEED#
-set TOP      #TOP#
-# TASKS = prj syn par bit
-set TASKS    [list #TASKS#]
+set PRESYNTH {{ PRESYNTH }}
+set PROJECT  {{ PROJECT }}
+set PART     {{ PART }}
+set FAMILY   {{ FAMILY }}
+set DEVICE   {{ DEVICE }}
+set PACKAGE  {{ PACKAGE }}
+set SPEED    {{ SPEED }}
+set TOP      {{ TOP }}
 
-set PARAMS   [list #PARAMS#]
+set PARAMS   [list {{ PARAMS }}]
 
 proc fpga_files {} {
-#FILES#
+{{ FILES }}
 }
-
-proc fpga_create { PROJECT } {
-    create_project -force $PROJECT
-}
-
-proc fpga_open { PROJECT } {
-    open_project $PROJECT
-}
-
-proc fpga_close {} {
-    close_project
-}
-
-proc fpga_part { PART } {
-    set_property "part" $PART [current_project]
- }
 
 proc fpga_file {FILE {LIBRARY "work"}} {
     set message "adding the file '$FILE'"
@@ -60,23 +42,6 @@ proc fpga_include {PATH} {
     set_property "include_dirs" $INCLUDED [current_fileset]
 }
 
-proc fpga_design {FILE} {
-    fpga_print "including the block design '$FILE'"
-    if { [info exists INCLUDED] && [llength $INCLUDED] > 0 } {
-        set_property "ip_repo_paths" $INCLUDED [get_filesets sources_1]
-        update_ip_catalog -rebuild
-    }
-    source $FILE
-    make_wrapper -force -files [get_files design_1.bd] -top -import
-    if { $TOP == "UNDEFINED"} {
-        set TOP design_1_wrapper
-    }
-}
-
-proc fpga_top { TOP } {
-    set_property top $TOP [current_fileset]
-}
-
 proc fpga_params {} {
     if { [llength $PARAMS] == 0 } { return }
     set assigns [list]
@@ -85,54 +50,63 @@ proc fpga_params {} {
     set_property "generic" "[join $assigns]" -objects $obj
 }
 
-proc fpga_run_syn {} {
-    if { $PRESYNTH == "True" } {
-        set_property design_mode GateLvl [current_fileset]
-    } else {
-        reset_run synth_1
-        launch_runs synth_1
-        wait_on_run synth_1
-    }
+#------------------------------------------------------------------------------
+
+{% if PRJ %}
+create_project -force $PROJECT
+
+set_property "part" $PART [current_project]
+
+{{ PRECFG }}
+
+fpga_files
+
+set_property top $TOP [current_fileset]
+
+fpga_params
+
+{{ POSTCFG }}
+
+close_project
+{% endif %}
+
+{% if SYN or PAR or BIT %}
+open_project $PROJECT
+
+{% if SYN %}
+{{ PRESYN }}
+
+if { $PRESYNTH == "True" } {
+    set_property design_mode GateLvl [current_fileset]
+} else {
+    reset_run synth_1
+    launch_runs synth_1
+    wait_on_run synth_1
 }
 
-proc fpga_run_par {} {
-    if {$PRESYNTH == "False"} {
-        open_run synth_1
-    }
-    launch_runs impl_1
-    wait_on_run impl_1
-}
+{{ POSTSYN }}
+{% endif %}
 
-proc fpga_run_bit {} {
-    open_run impl_1
-    write_bitstream -force $PROJECT
-}
+{% if PAR %}
+{{ PREPAR }}
 
-if { [lsearch -exact $TASKS "prj"] >= 0 } {
-    fpga_create $PROJECT
-    fpga_part $PART
-    {{ PRECFG }}
-    fpga_files
-    fpga_top $TOP
-    fpga_params
-    {{ POSTCFG }}
-    fpga_close
+if {$PRESYNTH == "False"} {
+    open_run synth_1
 }
+launch_runs impl_1
+wait_on_run impl_1
 
-if { [lsearch -regexp $TASKS "syn|par|bit"] >= 0 } {
-    fpga_open $PROJECT
-    if { [lsearch -exact $TASKS "syn"] >= 0 } {
-        {{ PRESYN }}
-        fpga_run_syn
-    }
-    if { [lsearch -exact $TASKS "par"] >= 0 } {
-        {{ PREPAR }}
-        fpga_run_par
-    }
-    if { [lsearch -exact $TASKS "bit"] >= 0 } {
-        {{ PREBIT }}
-        fpga_run_bit
-        {{ POSTBIT }}
-    }
-    fpga_close
-}
+{{ POSTPAR }}
+{% endif %}
+
+{% if BIT %}
+{{ PREBIT }}
+
+open_run impl_1
+write_bitstream -force $PROJECT
+
+{{ POSTBIT }}
+{% endif %}
+
+close_project
+{% endif %}

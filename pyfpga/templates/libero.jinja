@@ -5,38 +5,19 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-set PRESYNTH #PRESYNTH#
-set PROJECT  #PROJECT#
-set PART     #PART#
-set FAMILY   #FAMILY#
-set DEVICE   #DEVICE#
-set PACKAGE  #PACKAGE#
-set SPEED    #SPEED#
-set TOP      #TOP#
-# TASKS = prj syn par bit
-set TASKS    [list #TASKS#]
+set PRESYNTH {{ PRESYNTH }}
+set PROJECT  {{ PROJECT }}
+set PART     {{ PART }}
+set FAMILY   {{ FAMILY }}
+set DEVICE   {{ DEVICE }}
+set PACKAGE  {{ PACKAGE }}
+set SPEED    {{ SPEED }}
+set TOP      {{ TOP }}
 
-set PARAMS   [list #PARAMS#]
+set PARAMS   [list {{ PARAMS }}]
 
 proc fpga_files {} {
-#FILES#
-}
-
-proc fpga_create { PROJECT } {
-    if { [ file exists $PROJECT ] } { file delete -force -- $PROJECT }
-    new_project -name $PROJECT -location $PROJECT -hdl {VHDL} -family {SmartFusion2}
-}
-
-proc fpga_open { PROJECT } {
-    open_project $PROJECT/$PROJECT.prjx
-}
-
-proc fpga_close {} {
-    close_project
-}
-
-proc fpga_part { PART } {
-    set_device -family $FAMILY -die $DEVICE -package $PACKAGE -speed $SPEED
+{{ FILES }}
 }
 
 proc fpga_file {FILE {LIBRARY "work"}} {
@@ -72,90 +53,96 @@ proc fpga_include {PATH} {
     build_design_hierarchy
 }
 
-proc fpga_top { TOP } {
-    set_root $TOP
-    # Verilog Included files
-    set cmd "configure_tool -name {SYNTHESIZE} -params {SYNPLIFY_OPTIONS:"
-    if { [info exists INCLUDED] && [llength $INCLUDED] > 0 } {
-        # See <ROOT>/poc/include/libero.tcl for details
-        set PATHS "../../"
-        append PATHS [join $INCLUDED ";../../"]
-        append cmd "set_option -include_path \"$PATHS\""
-        append cmd "\n"
-    }
-    foreach PARAM $PARAMS {
-        set assign [join $PARAM]
-        append cmd "set_option -hdl_param -set \"$assign\""
-        append cmd "\n"
-    }
-    append cmd "}"
-    eval $cmd
-    # Constraints
-    # PDC is only used for PLACEROUTE.
-    # SDC is used by ALL (SYNTHESIZE, PLACEROUTE and VERIFYTIMING).
-    global LIBERO_PLACE_CONSTRAINTS
-    global LIBERO_OTHER_CONSTRAINTS
-    if { [info exists LIBERO_OTHER_CONSTRAINTS] } {
-        set cmd "organize_tool_files -tool {SYNTHESIZE} "
-        append cmd $LIBERO_OTHER_CONSTRAINTS
-        append cmd "-module $TOP -input_type {constraint}"
-        eval $cmd
-        set cmd "organize_tool_files -tool {VERIFYTIMING} "
-        append cmd $LIBERO_OTHER_CONSTRAINTS
-        append cmd "-module $TOP -input_type {constraint}"
-        eval $cmd
-    }
-    if { [info exists LIBERO_PLACE_CONSTRAINTS] } {
-        set cmd "organize_tool_files -tool {PLACEROUTE} "
-        append cmd $LIBERO_PLACE_CONSTRAINTS
-        append cmd "-module $TOP -input_type {constraint}"
-        eval $cmd
-    }
-}
-
 proc fpga_params {} {
     if { [llength $PARAMS] == 0 } { return }
     # They must be specified after set_root (see fpga_top)
 }
 
-proc fpga_run_syn {} {
-    run_tool -name {SYNTHESIZE}
+#------------------------------------------------------------------------------
+
+{% if PRJ %}
+if { [ file exists $PROJECT ] } { file delete -force -- $PROJECT }
+new_project -name $PROJECT -location $PROJECT -hdl {VHDL} -family {SmartFusion2}
+
+set_device -family $FAMILY -die $DEVICE -package $PACKAGE -speed $SPEED
+
+{{ PRECFG }}
+
+fpga_files
+
+set_root $TOP
+# Verilog Included files
+set cmd "configure_tool -name {SYNTHESIZE} -params {SYNPLIFY_OPTIONS:"
+if { [info exists INCLUDED] && [llength $INCLUDED] > 0 } {
+    # See <ROOT>/poc/include/libero.tcl for details
+    set PATHS "../../"
+    append PATHS [join $INCLUDED ";../../"]
+    append cmd "set_option -include_path \"$PATHS\""
+    append cmd "\n"
+}
+foreach PARAM $PARAMS {
+    set assign [join $PARAM]
+    append cmd "set_option -hdl_param -set \"$assign\""
+    append cmd "\n"
+}
+append cmd "}"
+eval $cmd
+# Constraints
+# PDC is only used for PLACEROUTE.
+# SDC is used by ALL (SYNTHESIZE, PLACEROUTE and VERIFYTIMING).
+global LIBERO_PLACE_CONSTRAINTS
+global LIBERO_OTHER_CONSTRAINTS
+if { [info exists LIBERO_OTHER_CONSTRAINTS] } {
+    set cmd "organize_tool_files -tool {SYNTHESIZE} "
+    append cmd $LIBERO_OTHER_CONSTRAINTS
+    append cmd "-module $TOP -input_type {constraint}"
+    eval $cmd
+    set cmd "organize_tool_files -tool {VERIFYTIMING} "
+    append cmd $LIBERO_OTHER_CONSTRAINTS
+    append cmd "-module $TOP -input_type {constraint}"
+    eval $cmd
+}
+if { [info exists LIBERO_PLACE_CONSTRAINTS] } {
+    set cmd "organize_tool_files -tool {PLACEROUTE} "
+    append cmd $LIBERO_PLACE_CONSTRAINTS
+    append cmd "-module $TOP -input_type {constraint}"
+    eval $cmd
 }
 
-proc fpga_run_par {} {
-    run_tool -name {PLACEROUTE}
-    run_tool -name {VERIFYTIMING}
-}
+fpga_params
 
-proc fpga_run_bit {} {
-    run_tool -name {GENERATEPROGRAMMINGFILE}
-}
+{{ POSTCFG }}
 
-if { [lsearch -exact $TASKS "prj"] >= 0 } {
-    fpga_create $PROJECT
-    fpga_part $PART
-    {{ PRECFG }}
-    fpga_files
-    fpga_top $TOP
-    fpga_params
-    {{ POSTCFG }}
-    fpga_close
-}
+close_project
+{% endif %}
 
-if { [lsearch -regexp $TASKS "syn|par|bit"] >= 0 } {
-    fpga_open $PROJECT
-    if { [lsearch -exact $TASKS "syn"] >= 0 } {
-        {{ PRESYN }}
-        fpga_run_syn
-    }
-    if { [lsearch -exact $TASKS "par"] >= 0 } {
-        {{ PREPAR }}
-        fpga_run_par
-    }
-    if { [lsearch -exact $TASKS "bit"] >= 0 } {
-        {{ PREBIT }}
-        fpga_run_bit
-        {{ POSTBIT }}
-    }
-    fpga_close
-}
+{% if SYN or PAR or BIT %}
+open_project $PROJECT/$PROJECT.prjx
+
+{% if SYN %}
+{{ PRESYN }}
+
+run_tool -name {SYNTHESIZE}
+
+{{ POSTSYN }}
+{% endif %}
+
+{% if PAR %}
+{{ PREPAR }}
+
+run_tool -name {PLACEROUTE}
+run_tool -name {VERIFYTIMING}
+
+{{ POSTPAR }}
+{% endif %}
+
+{% if BIT %}
+{{ PREBIT }}
+
+run_tool -name {GENERATEPROGRAMMINGFILE}
+
+{{ POSTBIT }}
+{% endif %}
+
+close_project
+{% endif %}

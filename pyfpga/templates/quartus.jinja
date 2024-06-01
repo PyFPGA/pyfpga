@@ -5,40 +5,19 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-set PRESYNTH #PRESYNTH#
-set PROJECT  #PROJECT#
-set PART     #PART#
-set FAMILY   #FAMILY#
-set DEVICE   #DEVICE#
-set PACKAGE  #PACKAGE#
-set SPEED    #SPEED#
-set TOP      #TOP#
-# TASKS = prj syn par bit
-set TASKS    [list #TASKS#]
+set PRESYNTH {{ PRESYNTH }}
+set PROJECT  {{ PROJECT }}
+set PART     {{ PART }}
+set FAMILY   {{ FAMILY }}
+set DEVICE   {{ DEVICE }}
+set PACKAGE  {{ PACKAGE }}
+set SPEED    {{ SPEED }}
+set TOP      {{ TOP }}
 
-set PARAMS   [list #PARAMS#]
+set PARAMS   [list {{ PARAMS }}]
 
 proc fpga_files {} {
-#FILES#
-}
-
-proc fpga_create { PROJECT } {
-    package require ::quartus::project
-    project_new $PROJECT -overwrite
-    set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
-}
-
-proc fpga_open { PROJECT } {
-    package require ::quartus::flow
-    project_open -force $PROJECT.qpf
-}
-
-proc fpga_close {} {
-    project_close
-}
-
-proc fpga_part { PART } {
-    set_global_assignment -name DEVICE $PART
+{{ FILES }}
 }
 
 proc fpga_file {FILE {LIBRARY "work"}} {
@@ -75,10 +54,6 @@ proc fpga_include {PATH} {
     }
 }
 
-proc fpga_top { TOP } {
-    set_global_assignment -name TOP_LEVEL_ENTITY $TOP
-}
-
 proc fpga_params {} {
     if { [llength $PARAMS] == 0 } { return }
     foreach PARAM $PARAMS {
@@ -86,44 +61,56 @@ proc fpga_params {} {
     }
 }
 
-proc fpga_run_syn {} {
-    execute_module -tool map
-}
+#------------------------------------------------------------------------------
 
-proc fpga_run_par {} {
-    execute_module -tool fit
-    execute_module -tool sta
-}
+{% if PRJ %}
+package require ::quartus::project
+project_new $PROJECT -overwrite
+set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
 
-proc fpga_run_bit {} {
-    execute_module -tool asm
-}
+set_global_assignment -name DEVICE $PART
 
-if { [lsearch -exact $TASKS "prj"] >= 0 } {
-    fpga_create $PROJECT
-    fpga_part $PART
-    {{ PRECFG }}
-    fpga_files
-    fpga_top $TOP
-    fpga_params
-    {{ POSTCFG }}
-    fpga_close
-}
+{{ PRECFG }}
 
-if { [lsearch -regexp $TASKS "syn|par|bit"] >= 0 } {
-    fpga_open $PROJECT
-    if { [lsearch -exact $TASKS "syn"] >= 0 } {
-        {{ PRESYN }}
-        fpga_run_syn
-    }
-    if { [lsearch -exact $TASKS "par"] >= 0 } {
-        {{ PREPAR }}
-        fpga_run_par
-    }
-    if { [lsearch -exact $TASKS "bit"] >= 0 } {
-        {{ PREBIT }}
-        fpga_run_bit
-        {{ POSTBIT }}
-    }
-    fpga_close
-}
+fpga_files
+
+set_global_assignment -name TOP_LEVEL_ENTITY $TOP
+
+fpga_params
+
+{{ POSTCFG }}
+
+project_close
+{% endif %}
+
+{% if SYN or PAR or BIT %}
+package require ::quartus::flow
+project_open -force $PROJECT.qpf
+
+{% if SYN %}
+{{ PRESYN }}
+
+execute_module -tool map
+
+{{ POSTSYN }}
+{% endif %}
+
+{% if PAR %}
+{{ PREPAR }}
+
+execute_module -tool fit
+execute_module -tool sta
+
+{{ POSTPAR }}
+{% endif %}
+
+{% if BIT %}
+{{ PREBIT }}
+
+execute_module -tool asm
+
+{{ POSTBIT }}
+{% endif %}
+
+project_close
+{% endif %}

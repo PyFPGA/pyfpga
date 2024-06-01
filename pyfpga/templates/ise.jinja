@@ -5,41 +5,19 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-set PRESYNTH #PRESYNTH#
-set PROJECT  #PROJECT#
-set PART     #PART#
-set FAMILY   #FAMILY#
-set DEVICE   #DEVICE#
-set PACKAGE  #PACKAGE#
-set SPEED    #SPEED#
-set TOP      #TOP#
-# TASKS = prj syn par bit
-set TASKS    [list #TASKS#]
+set PRESYNTH {{ PRESYNTH }}
+set PROJECT  {{ PROJECT }}
+set PART     {{ PART }}
+set FAMILY   {{ FAMILY }}
+set DEVICE   {{ DEVICE }}
+set PACKAGE  {{ PACKAGE }}
+set SPEED    {{ SPEED }}
+set TOP      {{ TOP }}
 
-set PARAMS   [list #PARAMS#]
+set PARAMS   [list {{ PARAMS }}]
 
 proc fpga_files {} {
-#FILES#
-}
-
-proc fpga_create { PROJECT } {
-    if { [ file exists $PROJECT.xise ] } { file delete $PROJECT.xise }
-    project new $PROJECT.xise
-}
-
-proc fpga_open { PROJECT } {
-    project open $PROJECT.xise
-}
-
-proc fpga_close {} {
-    project close
-}
-
-proc fpga_part { PART } {
-    project set family  $FAMILY
-    project set device  $DEVICE
-    project set package $PACKAGE
-    project set speed   $SPEED
+{{ FILES }}
 }
 
 proc fpga_file {FILE {LIBRARY "work"}} {
@@ -67,10 +45,6 @@ proc fpga_include {PATH} {
     [join $INCLUDED "|"] -process "Synthesize - XST"
 }
 
-proc fpga_top { TOP } {
-    project set top $TOP
-}
-
 proc fpga_params {} {
     if { [llength $PARAMS] == 0 } { return }
     set assigns [list]
@@ -78,56 +52,69 @@ proc fpga_params {} {
     project set "Generics, Parameters" "[join $assigns]" -process "Synthesize - XST"
 }
 
-proc fpga_run_syn {} {
-    if { $PRESYNTH == "True" } {
-        project set top_level_module_type "EDIF"
-    } else {
-        project clean
-        process run "Synthesize"
-        if { [process get "Synthesize" status] == "errors" } { exit 2 }
-    }
+#------------------------------------------------------------------------------
+
+{% if PRJ %}
+if { [ file exists $PROJECT.xise ] } { file delete $PROJECT.xise }
+project new $PROJECT.xise
+
+project set family  $FAMILY
+project set device  $DEVICE
+project set package $PACKAGE
+project set speed   $SPEED
+
+{{ PRECFG }}
+
+fpga_files
+
+project set top $TOP
+
+fpga_params
+
+{{ POSTCFG }}
+
+project close
+{% endif %}
+
+{% if SYN or PAR or BIT %}
+project open $PROJECT.xise
+
+{% if SYN %}
+{{ PRESYN }}
+
+if { $PRESYNTH == "True" } {
+    project set top_level_module_type "EDIF"
+} else {
+    project clean
+    process run "Synthesize"
+    if { [process get "Synthesize" status] == "errors" } { exit 2 }
 }
 
-proc fpga_run_par {} {
-    process run "Translate"
-    if { [process get "Translate" status] == "errors" } { exit 2 }
-    process run "Map"
-    if { [process get "Map" status] == "errors" } { exit 2 }
-    process run "Place & Route"
-    if { [process get "Place & Route" status] == "errors" } { exit 2 }
-}
+{{ POSTSYN }}
+{% endif %}
 
-proc fpga_run_bit {} {
-    process run "Generate Programming File"
-    if { [process get "Generate Programming File" status] == "errors" } { exit 2 }
-    catch { file rename -force $TOP.bit $PROJECT.bit }
-}
+{% if PAR %}
+{{ PREPAR }}
 
-if { [lsearch -exact $TASKS "prj"] >= 0 } {
-    fpga_create $PROJECT
-    fpga_part $PART
-    {{ PRECFG }}
-    fpga_files
-    fpga_top $TOP
-    fpga_params
-    {{ POSTCFG }}
-    fpga_close
-}
+process run "Translate"
+if { [process get "Translate" status] == "errors" } { exit 2 }
+process run "Map"
+if { [process get "Map" status] == "errors" } { exit 2 }
+process run "Place & Route"
+if { [process get "Place & Route" status] == "errors" } { exit 2 }
 
-if { [lsearch -regexp $TASKS "syn|par|bit"] >= 0 } {
-    fpga_open $PROJECT
-    if { [lsearch -exact $TASKS "syn"] >= 0 } {
-        {{ PRESYN }}
-        fpga_run_syn
-    }
-    if { [lsearch -exact $TASKS "par"] >= 0 } {
-        {{ PREPAR }}
-        fpga_run_par
-    }
-    if { [lsearch -exact $TASKS "bit"] >= 0 } {
-        {{ PREBIT }}
-        fpga_run_bit
-        {{ POSTBIT }}
-    }
-    fpga_close
-}
+{{ POSTPAR }}
+{% endif %}
+
+{% if BIT %}
+{{ PREBIT }}
+
+process run "Generate Programming File"
+if { [process get "Generate Programming File" status] == "errors" } { exit 2 }
+catch { file rename -force $TOP.bit $PROJECT.bit }
+
+{{ POSTBIT }}
+{% endif %}
+
+project close
+{% endif %}
