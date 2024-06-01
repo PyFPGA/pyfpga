@@ -7,9 +7,9 @@ pattern = {
     'part': 'PARTNAME',
     'includes': ['INC1', 'INC2', 'INC3'],
     'files': {
-        'path1': {'type': 'TYPE1', 'options': 'OPTION1', 'library': 'LIBRARY1'},
-        'path2': {'type': 'TYPE2', 'options': 'OPTION2', 'library': 'LIBRARY2'},
-        'path3': {'type': 'TYPE3', 'options': 'OPTION3', 'library': 'LIBRARY3'}
+        'path1': {'type': 'TYPE1', 'options': 'OPT1', 'library': 'LIB1'},
+        'path2': {'type': 'TYPE2', 'options': 'OPT2', 'library': 'LIB2'},
+        'path3': {'type': 'TYPE3', 'options': 'OPT3', 'library': 'LIB3'}
     },
     'top': 'TOPNAME',
     'params': {
