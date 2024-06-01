@@ -5,7 +5,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-set PRESYNTH {{ PRESYNTH }}
 set PROJECT  {{ PROJECT }}
 set PART     {{ PART }}
 set FAMILY   {{ FAMILY }}
@@ -15,10 +14,6 @@ set SPEED    {{ SPEED }}
 set TOP      {{ TOP }}
 
 set PARAMS   [list {{ PARAMS }}]
-
-proc fpga_files {} {
-{{ FILES }}
-}
 
 proc fpga_file {FILE {LIBRARY "work"}} {
     set message "adding the file '$FILE'"
@@ -54,16 +49,32 @@ proc fpga_params {} {
 
 {% if CFG %}
 create_project -force $PROJECT
+set_property source_mgmt_mode None [current_project]
+set_property STEPS.SYNTH_DESIGN.ARGS.ASSERT true [get_runs synth_1]
 
-set_property "part" $PART [current_project]
+set_property part $PART [current_project]
 
 {{ PRECFG }}
 
-fpga_files
+{{ FILES }}
 
 set_property top $TOP [current_fileset]
 
-fpga_params
+{% if DEFINES %}
+set_property verilog_define { {{ DEFINES}} } [current_fileset]
+{% endif %}
+
+{% if INCLUDES %}
+set_property include_dirs { {{ INCLUDES}} } [current_fileset]
+{% endif %}
+
+{% if PARAMS %}
+set_property generic { {{ PARAMS }} } -objects [get_filesets sources_1]
+{% endif %}
+
+{% if ARCH %}
+set_property top_arch {{ ARCH }} [current_fileset]
+{% endif %}
 
 {{ POSTCFG }}
 
@@ -79,13 +90,13 @@ set_param general.maxThreads [expr {[exec nproc] < 32 ? [exec nproc] : 32}]
 {% if SYN %}
 {{ PRESYN }}
 
-if { $PRESYNTH == "True" } {
-    set_property design_mode GateLvl [current_fileset]
-} else {
-    reset_run synth_1
-    launch_runs synth_1
-    wait_on_run synth_1
-}
+{% if PRESYNTH %}
+set_property design_mode GateLvl [current_fileset]
+{% else %}
+reset_run synth_1
+launch_runs synth_1
+wait_on_run synth_1
+{% endif %}
 
 {{ POSTSYN }}
 {% endif %}
@@ -93,9 +104,9 @@ if { $PRESYNTH == "True" } {
 {% if PAR %}
 {{ PREPAR }}
 
-if {$PRESYNTH == "False"} {
-    open_run synth_1
-}
+{% if not PRESYNTH %}
+open_run synth_1
+{% endif %}
 reset_run impl_1
 launch_runs impl_1
 wait_on_run impl_1

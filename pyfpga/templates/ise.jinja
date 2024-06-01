@@ -5,7 +5,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-set PRESYNTH {{ PRESYNTH }}
 set PROJECT  {{ PROJECT }}
 set PART     {{ PART }}
 set FAMILY   {{ FAMILY }}
@@ -15,10 +14,6 @@ set SPEED    {{ SPEED }}
 set TOP      {{ TOP }}
 
 set PARAMS   [list {{ PARAMS }}]
-
-proc fpga_files {} {
-{{ FILES }}
-}
 
 proc fpga_file {FILE {LIBRARY "work"}} {
     set message "adding the file '$FILE'"
@@ -65,7 +60,7 @@ project set speed   $SPEED
 
 {{ PRECFG }}
 
-fpga_files
+{{ FILES }}
 
 project set top $TOP
 
@@ -84,13 +79,13 @@ project open $PROJECT.xise
 {% if SYN %}
 {{ PRESYN }}
 
-if { $PRESYNTH == "True" } {
-    project set top_level_module_type "EDIF"
-} else {
-    project clean
-    process run "Synthesize"
-    if { [process get "Synthesize" status] == "errors" } { exit 2 }
-}
+{% if PRESYNTH %}
+project set top_level_module_type "EDIF"
+{% else %}
+project clean
+process run "Synthesize"
+if { [process get "Synthesize" status] == "errors" } { exit 2 }
+{% endif %}
 
 {{ POSTSYN }}
 {% endif %}
