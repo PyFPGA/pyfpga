@@ -61,12 +61,11 @@ proc fpga_params {} {
     }
 }
 
-#------------------------------------------------------------------------------
+#--[ Project configuration ]---------------------------------------------------
 
-{% if PRJ %}
+{% if CFG %}
 package require ::quartus::project
 project_new $PROJECT -overwrite
-set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
 
 set_global_assignment -name DEVICE $PART
 
@@ -83,9 +82,12 @@ fpga_params
 project_close
 {% endif %}
 
+#--[ Design flow ]-------------------------------------------------------------
+
 {% if SYN or PAR or BIT %}
 package require ::quartus::flow
 project_open -force $PROJECT.qpf
+set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
 
 {% if SYN %}
 {{ PRESYN }}

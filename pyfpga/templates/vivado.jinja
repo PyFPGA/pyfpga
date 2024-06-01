@@ -50,9 +50,9 @@ proc fpga_params {} {
     set_property "generic" "[join $assigns]" -objects $obj
 }
 
-#------------------------------------------------------------------------------
+#--[ Project configuration ]---------------------------------------------------
 
-{% if PRJ %}
+{% if CFG %}
 create_project -force $PROJECT
 
 set_property "part" $PART [current_project]
@@ -70,8 +70,11 @@ fpga_params
 close_project
 {% endif %}
 
+#--[ Design flow ]-------------------------------------------------------------
+
 {% if SYN or PAR or BIT %}
 open_project $PROJECT
+set_param general.maxThreads [expr {[exec nproc] < 32 ? [exec nproc] : 32}]
 
 {% if SYN %}
 {{ PRESYN }}
@@ -93,6 +96,7 @@ if { $PRESYNTH == "True" } {
 if {$PRESYNTH == "False"} {
     open_run synth_1
 }
+reset_run impl_1
 launch_runs impl_1
 wait_on_run impl_1
 
@@ -104,6 +108,7 @@ wait_on_run impl_1
 
 open_run impl_1
 write_bitstream -force $PROJECT
+write_debug_probes -force -quiet $PROJECT.ltx
 
 {{ POSTBIT }}
 {% endif %}

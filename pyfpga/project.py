@@ -121,7 +121,7 @@ class Project:
 
     def make(self, end='bit', start='prj'):
         """Temp placeholder"""
-        steps = ['prj', 'syn', 'par', 'bit']
+        steps = ['cfg', 'syn', 'par', 'bit']
         if end not in steps or start not in steps:
             raise ValueError('Invalid steps.')
         _ = self

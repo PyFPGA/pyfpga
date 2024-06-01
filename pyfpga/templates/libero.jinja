@@ -58,9 +58,9 @@ proc fpga_params {} {
     # They must be specified after set_root (see fpga_top)
 }
 
-#------------------------------------------------------------------------------
+#--[ Project configuration ]---------------------------------------------------
 
-{% if PRJ %}
+{% if CFG %}
 if { [ file exists $PROJECT ] } { file delete -force -- $PROJECT }
 new_project -name $PROJECT -location $PROJECT -hdl {VHDL} -family {SmartFusion2}
 
@@ -115,6 +115,8 @@ fpga_params
 
 close_project
 {% endif %}
+
+#--[ Design flow ]-------------------------------------------------------------
 
 {% if SYN or PAR or BIT %}
 open_project $PROJECT/$PROJECT.prjx

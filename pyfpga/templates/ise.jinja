@@ -52,9 +52,9 @@ proc fpga_params {} {
     project set "Generics, Parameters" "[join $assigns]" -process "Synthesize - XST"
 }
 
-#------------------------------------------------------------------------------
+#--[ Project configuration ]---------------------------------------------------
 
-{% if PRJ %}
+{% if CFG %}
 if { [ file exists $PROJECT.xise ] } { file delete $PROJECT.xise }
 project new $PROJECT.xise
 
@@ -75,6 +75,8 @@ fpga_params
 
 project close
 {% endif %}
+
+#--[ Design flow ]-------------------------------------------------------------
 
 {% if SYN or PAR or BIT %}
 project open $PROJECT.xise
