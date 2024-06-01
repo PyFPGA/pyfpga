@@ -1,12 +1,12 @@
-.. program:: pyfpga
-
-.. _basic:
-
 Basic usage
-###########
+===========
+
+.. ATTENTION::
+
+  (2024-05-31) To be updated.
 
 Project Creation
-================
+----------------
 
 The first steps are import the module and instantiate the ``Project`` *class*,
 specifying the *TOOL* to use and, optionally, a *PROJECT NAME* (the *tool*
@@ -22,6 +22,17 @@ name is used when *no name* is provided).
 
   The supported tool are: ``ghdl``, ``ise``, ``libero``, ``openflow``,
   ``quartus``, ``vivado``, ``yosys``, ``yosys-ise`` and ``yosys-vivado``.
+
+.. ATTENTION::
+
+  PyFPGA assumes that the backend Tool is ready to run.
+  This implies, depending on the operating system, things such as:
+
+  * Tool installed.
+  * A valid License configured.
+  * Tool available in the system PATH.
+  * GNU/Linux: extra packages installed, environment variables assigned
+    and permissions granted on devices (to transfer the bitstream).
 
 By default, the directory where the project is generated is called ``build``
 and is located in the same place that the script, but another name and location
@@ -85,7 +96,7 @@ Finally, the top-level must be specified:
   to automatically extract the top-level name.
 
 Project generation
-==================
+------------------
 
 Next step if to generate the project. In the most basic form, you can run the
 following to get a bitstream:
@@ -111,7 +122,7 @@ Additionally, you can specify which task to perform:
   * ``bit``: (default) to perform synthesis, implementation and bitstream generation.
 
 Bitstream transfer
-==================
+------------------
 
 This method is in charge of run the needed tool to transfer a bitstream to a
 device (commonly an FPGA, but memories are also supported in some cases).
@@ -134,7 +145,7 @@ Jtag chain. When a memory is used as *devtype*, the *part* name and the
     (udev rule, be a part of a group, etc).
 
 Logging capabilities
-====================
+--------------------
 
 PyFPGA uses the `logging <https://docs.python.org/3/library/logging.html>`_
 module, with a *NULL* handler and the *INFO* level by default.

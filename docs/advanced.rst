@@ -1,12 +1,12 @@
-.. program:: pyfpga
-
-.. _advanced:
-
 Advanced usage
-##############
+==============
+
+.. ATTENTION::
+
+  (2024-05-31) To be updated.
 
 Multi project managment
-=======================
+-----------------------
 
 .. code-block:: python
 
@@ -54,7 +54,7 @@ Multi project managment
 .. _hooks:
 
 Hooks
-=====
+-----
 
 The following table depicts the parts of the *Project Creation* and the
 *Design Flow* internally performed by PyFPGA.
@@ -93,7 +93,7 @@ specify additional *hooks* in different parts of the flow, using:
     method several times (the commands will be executed in order).
 
 Parameters
-==========
+----------
 
 The generics/parameters of the project can be optionally changed with:
 
@@ -104,7 +104,7 @@ The generics/parameters of the project can be optionally changed with:
    prj.add_param('paramN', valueN)
 
 Generate options
-================
+----------------
 
 The method ``generate`` (previously seen at the end of
 [Basic usage](#basic-usage) section) has optional parameters:
@@ -143,7 +143,7 @@ In case of *capture*, it is useful to catch execution messages to be
 post-processed or saved to a file.
 
 Exceptions
-==========
+----------
 
 Finally, you must run the bitstream generation or its transfer. Both of them
 are time-consuming tasks, performed by a backend tool, which could fail.
