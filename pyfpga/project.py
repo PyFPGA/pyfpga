@@ -49,24 +49,25 @@ class Project:
         self.logger.debug('Executing set_part')
         self.data['part'] = name
 
-    def add_file(self, pathname, filetype=None, library=None, options=None):
-        """Temp placeholder"""
-        raise NotImplementedError('Method is not implemented yet.')
+    def _add_file(self, pathname, filetype=None, library=None, options=None):
+        self.data.setdefault('files', {})[pathname] = {
+            'type': filetype, 'options': options, 'library': library
+        }
 
     def add_cons(self, pathname, options=None):
         """Temp placeholder"""
         self.logger.debug('Executing add_cons')
-        self.add_file(pathname, filetype='cons', options=options)
+        self._add_file(pathname, filetype='cons', options=options)
 
     def add_slog(self, pathname, options=None):
         """Temp placeholder"""
         self.logger.debug('Executing add_slog')
-        self.add_file(pathname, filetype='slog', options=options)
+        self._add_file(pathname, filetype='slog', options=options)
 
     def add_vhdl(self, pathname, library=None, options=None):
         """Temp placeholder"""
         self.logger.debug('Executing add_vhdl')
-        self.add_file(
+        self._add_file(
             pathname, filetype='vhdl',
             library=library, options=options
         )
@@ -74,7 +75,7 @@ class Project:
     def add_vlog(self, pathname, options=None):
         """Temp placeholder"""
         self.logger.debug('Executing add_vlog')
-        self.add_file(pathname, filetype='vlog', options=options)
+        self._add_file(pathname, filetype='vlog', options=options)
 
     def add_include(self, path):
         """Temp placeholder"""
@@ -109,9 +110,7 @@ class Project:
         ]
         if stage not in stages:
             raise ValueError('Invalid stage.')
-        _ = self
-        _ = hook
-        raise NotImplementedError('Method is not implemented yet.')
+        self.data.setdefault('hooks', {}).setdefault(stage, []).append(hook)
 
     def make(self, end='bit', start='prj'):
         """Temp placeholder"""
