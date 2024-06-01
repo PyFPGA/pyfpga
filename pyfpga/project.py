@@ -79,23 +79,17 @@ class Project:
     def add_include(self, path):
         """Temp placeholder"""
         self.logger.debug('Executing add_include')
-        if 'includes' not in self.data:
-            self.data['includes'] = []
-        self.data['includes'].append(path)
+        self.data.setdefault('includes', []).append(path)
 
     def add_param(self, name, value):
         """Temp placeholder"""
         self.logger.debug('Executing add_param')
-        if 'params' not in self.data:
-            self.data['params'] = {}
-        self.data['params'][name] = value
+        self.data.setdefault('params', {})[name] = value
 
     def add_define(self, name, value):
         """Temp placeholder"""
         self.logger.debug('Executing add_define')
-        if 'defines' not in self.data:
-            self.data['defines'] = {}
-        self.data['defines'][name] = value
+        self.data.setdefault('defines', {})[name] = value
 
     def set_arch(self, name):
         """Temp placeholder"""
