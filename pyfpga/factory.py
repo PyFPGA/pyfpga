@@ -1,24 +1,11 @@
 #
-# Copyright (C) 2019-2022 Rodrigo A. Melo
-# Copyright (C) 2019-2020 INTI
+# Copyright (C) 2019-2024 Rodrigo A. Melo
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-"""fpga.project
-This module implements the entry-point of PyFPGA, which provides
-functionalities to create a project, generate a bitstream and program a device.
+"""
+A factory class to create FPGA projects.
 """
 
 import contextlib
@@ -28,6 +15,12 @@ import logging
 import os
 import re
 import time
+
+from fpga.tool.ise import Ise
+from fpga.tool.libero import Libero
+from fpga.tool.openflow import Openflow
+from fpga.tool.quartus import Quartus
+from fpga.tool.vivado import Vivado
 
 
 TOOLS = [
@@ -57,29 +50,22 @@ class Project:
     """
 
     def __init__(
-            self, tool='vivado', project=None, meta=None,
+            self, tool='vivado', project=None,
             relative_to_script=True):
         """Class constructor."""
         if tool == 'ghdl':
-            from fpga.tool.openflow import Openflow
             self.tool = Openflow(project, frontend='ghdl', backend='vhdl')
         elif tool in ['ise', 'yosys-ise']:
-            from fpga.tool.ise import Ise
             self.tool = Ise(project, 'yosys' if 'yosys' in tool else '')
         elif tool == 'libero':
-            from fpga.tool.libero import Libero
             self.tool = Libero(project)
         elif tool == 'openflow':
-            from fpga.tool.openflow import Openflow
             self.tool = Openflow(project)
         elif tool == 'quartus':
-            from fpga.tool.quartus import Quartus
             self.tool = Quartus(project)
         elif tool in ['vivado', 'yosys-vivado']:
-            from fpga.tool.vivado import Vivado
             self.tool = Vivado(project, 'yosys' if 'yosys' in tool else '')
         elif tool == 'yosys':
-            from fpga.tool.openflow import Openflow
             self.tool = Openflow(project, frontend='yosys', backend='verilog')
         else:
             raise NotImplementedError(tool)
@@ -93,42 +79,6 @@ class Project:
         self._absdir = os.path.join(self._rundir, self._reldir)
         _log.debug('ABSDIR = %s', self._absdir)
         self.set_outdir('build')
-        self._initialize(meta)
-
-    def _initialize(self, meta):
-        """Set some of the most used internal parameters."""
-        if meta is None:
-            return
-        if 'outdir' in meta:
-            _log.debug('OUTDIR = %s', meta['outdir'])
-            self.set_outdir(meta['outdir'])
-        if 'part' in meta:
-            _log.debug('PART = %s', meta['part'])
-            self.set_part(meta['part'])
-        if 'paths' in meta:
-            for path in meta['paths']:
-                _log.debug('PATH = %s', path)
-                self.add_vlog_include(path)
-        for filetype in ['vhdl', 'verilog', 'constraint']:
-            if filetype in meta:
-                for file in meta[filetype]:
-                    if isinstance(file, list):
-                        filename = file[0]
-                        library = file[1]
-                    else:
-                        filename = file
-                        library = None
-                    _log.debug(
-                        'FILE = %s %s %s', filename, filetype, library
-                    )
-                    self.add_files(filename, filetype, library)
-        if 'params' in meta:
-            for parname, parvalue in meta['params'].items():
-                _log.debug('PARAM = %s %s', parname, parvalue)
-                self.add_param(parname, parvalue)
-        if 'top' in meta:
-            _log.debug('TOP = %s', meta['top'])
-            self.set_top(meta['top'])
 
     def set_outdir(self, outdir):
         """Sets the OUTput DIRectory (where to put the resulting files).
@@ -324,8 +274,7 @@ class Project:
         self.tool.set_bitstream(path)
 
     def transfer(
-            self, devtype='fpga', position=1, part='', width=1,
-            capture=False):
+            self, devtype='fpga', position=1, part='', width=1):
         """Transfers the generated bitstream to a device.
 
         :param devtype: *fpga* or other valid option
@@ -333,7 +282,6 @@ class Project:
         :param position: position of the device in the JTAG chain
         :param part: name of the memory (when device is not *fpga*)
         :param width: bits width of the memory (when device is not *fpga*)
-        :param capture: capture STDOUT and STDERR
         :returns: STDOUT and STDERR messages
         :raises FileNotFoundError: when the bitstream is not found
         :raises ValueError: when devtype, position or width are unsupported
@@ -344,9 +292,7 @@ class Project:
             self.tool.project, self.tool.get_configs()['tool'], self.outdir
         )
         with self._run_in_dir():
-            if capture:
-                _log.info('the execution messages are being captured')
-            return self.tool.transfer(devtype, position, part, width, capture)
+            return self.tool.transfer(devtype, position, part, width, True)
 
     def clean(self):
         """Clean the generated project files."""
