@@ -11,7 +11,7 @@ lint:
 	git diff --check --cached
 
 test:
-	pytest tests
+	cd tests; pytest
 
 clean:
 	py3clean .
