@@ -8,6 +8,7 @@
 Base class that implements agnostic methods to deal with FPGA projects.
 """
 
+# import glob
 import logging
 import os
 import subprocess
@@ -45,11 +46,52 @@ class Project:
         self.logger.addHandler(handler)
 
     def set_part(self, name):
-        """Temp placeholder"""
+        """Set the FPGA part name.
+
+        :param name: FPGA part name
+        :type name: str
+        """
         self.logger.debug('Executing set_part')
         self.data['part'] = name
 
     def _add_file(self, pathname, filetype=None, library=None, options=None):
+        # """Adds files to the project.
+        #
+        # :param pathname: a relative path to a file, which can contain
+        #  shell-style wildcards (glob compliant)
+        # :param filetype: specifies the file type
+        # :param library: an optional VHDL library name
+        # :param options: to be provided to the underlying tool
+        # :raises FileNotFoundError: when a file specified as pathname is not
+        #  found
+        # :raises ValueError: when *filetype* is unsupported
+        #
+        # .. note:: Valid values for *filetype* are ``vhdl``, ``verilog``,
+        # ``system_verilog``, ``constraint`` (default) and ``block_design``
+        # (only **Vivado** is currently supported). If None provided, this
+        # value is automatically discovered based on the extension (
+        # ``.vhd`` or ``.vhdl``, ``.v`` and ``.sv``).
+        # """
+        # pathname = os.path.join(self._absdir, pathname)
+        # pathname = os.path.normpath(pathname)
+        # _log.debug('PATHNAME = %s', pathname)
+        # files = glob.glob(pathname)
+        # if len(files) == 0:
+        #     raise FileNotFoundError(pathname)
+        # for file in files:
+        #     if not os.path.exists(file):
+        #         raise FileNotFoundError(file)
+        #     if filetype is None:
+        #         ext = os.path.splitext(file)[1]
+        #         if ext in ['.vhd', '.vhdl']:
+        #             filetype = 'vhdl'
+        #         elif ext in ['.v', '.sv']:
+        #             filetype = 'verilog'
+        #         else:
+        #             filetype = 'constraint'
+        #         _log.debug('add_files: %s filetype detected', filetype)
+        #     file = os.path.relpath(file, self.outdir)
+        #     self.tool.add_file(file, filetype, library, options)
         self.data.setdefault('files', {})[pathname] = {
             'type': filetype, 'options': options, 'library': library
         }
@@ -78,27 +120,61 @@ class Project:
         self._add_file(pathname, filetype='vlog', options=options)
 
     def add_include(self, path):
-        """Temp placeholder"""
+        """Add an Include path.
+
+        Specify where to search for Included Verilog Files, IP repos, etc.
+
+        :param path: path of a directory
+        :type name: str
+        :raises NotADirectoryError: if path is not a directory
+        """
         self.logger.debug('Executing add_include')
+        # path = os.path.join(self._absdir, path)
+        # path = os.path.normpath(path)
+        # if os.path.isdir(path):
+        #     path = os.path.relpath(path, self.outdir)
+        #     self.tool.add_vlog_include(path)
+        # else:
+        #     raise NotADirectoryError(path)
         self.data.setdefault('includes', []).append(path)
 
     def add_param(self, name, value):
-        """Temp placeholder"""
+        """Add a Parameter/Generic Value.
+
+        :param name: parameter/generic name
+        :type name: str
+        :param value: parameter/generic value
+        :type name: str
+        """
         self.logger.debug('Executing add_param')
         self.data.setdefault('params', {})[name] = value
 
     def add_define(self, name, value):
-        """Temp placeholder"""
+        """Add a Verilog Defile Value.
+
+        :param name: define name
+        :type name: str
+        :param value: define value
+        :type name: str
+        """
         self.logger.debug('Executing add_define')
         self.data.setdefault('defines', {})[name] = value
 
     def set_arch(self, name):
-        """Temp placeholder"""
+        """Set the VHDL architecture.
+
+        :param name: architecture name
+        :type name: str
+        """
         self.logger.debug('Executing set_arch')
         self.data['arch'] = name
 
     def set_top(self, name):
-        """Temp placeholder"""
+        """Set the name of the top level component.
+
+        :param name: top-level name
+        :type name: str
+        """
         self.logger.debug('Executing set_top')
         self.data['top'] = name
 
