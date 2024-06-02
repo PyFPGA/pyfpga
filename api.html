@@ -121,7 +121,15 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="pyfpga.project.Project.add_define">
 <span class="sig-name descname"><span class="pre">add_define</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.add_define"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.add_define" title="Link to this definition"></a></dt>
-<dd><p>Temp placeholder</p>
+<dd><p>Add a Verilog Defile Value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – define name</p></li>
+<li><p><strong>value</strong> – define value</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -133,13 +141,30 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="pyfpga.project.Project.add_include">
 <span class="sig-name descname"><span class="pre">add_include</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.add_include"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.add_include" title="Link to this definition"></a></dt>
-<dd><p>Temp placeholder</p>
+<dd><p>Add an Include path.</p>
+<p>Specify where to search for Included Verilog Files, IP repos, etc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> – path of a directory</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotADirectoryError</strong> – if path is not a directory</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyfpga.project.Project.add_param">
 <span class="sig-name descname"><span class="pre">add_param</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.add_param"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.add_param" title="Link to this definition"></a></dt>
-<dd><p>Temp placeholder</p>
+<dd><p>Add a Parameter/Generic Value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – parameter/generic name</p></li>
+<li><p><strong>value</strong> – parameter/generic value</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -175,19 +200,34 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="pyfpga.project.Project.set_arch">
 <span class="sig-name descname"><span class="pre">set_arch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.set_arch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.set_arch" title="Link to this definition"></a></dt>
-<dd><p>Temp placeholder</p>
+<dd><p>Set the VHDL architecture.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – architecture name</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyfpga.project.Project.set_part">
 <span class="sig-name descname"><span class="pre">set_part</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.set_part"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.set_part" title="Link to this definition"></a></dt>
-<dd><p>Temp placeholder</p>
+<dd><p>Set the FPGA part name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – FPGA part name</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyfpga.project.Project.set_top">
 <span class="sig-name descname"><span class="pre">set_top</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.set_top"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.set_top" title="Link to this definition"></a></dt>
-<dd><p>Temp placeholder</p>
+<dd><p>Set the name of the top level component.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – top-level name</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

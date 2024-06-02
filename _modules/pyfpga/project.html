@@ -85,6 +85,7 @@
 <span class="sd">Base class that implements agnostic methods to deal with FPGA projects.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="c1"># import glob</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
@@ -126,12 +127,53 @@
 <div class="viewcode-block" id="Project.set_part">
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project.set_part">[docs]</a>
     <span class="k">def</span> <span class="nf">set_part</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the FPGA part name.</span>
+
+<span class="sd">        :param name: FPGA part name</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing set_part&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;part&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span></div>
 
 
     <span class="k">def</span> <span class="nf">_add_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">,</span> <span class="n">filetype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">library</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># &quot;&quot;&quot;Adds files to the project.</span>
+        <span class="c1">#</span>
+        <span class="c1"># :param pathname: a relative path to a file, which can contain</span>
+        <span class="c1">#  shell-style wildcards (glob compliant)</span>
+        <span class="c1"># :param filetype: specifies the file type</span>
+        <span class="c1"># :param library: an optional VHDL library name</span>
+        <span class="c1"># :param options: to be provided to the underlying tool</span>
+        <span class="c1"># :raises FileNotFoundError: when a file specified as pathname is not</span>
+        <span class="c1">#  found</span>
+        <span class="c1"># :raises ValueError: when *filetype* is unsupported</span>
+        <span class="c1">#</span>
+        <span class="c1"># .. note:: Valid values for *filetype* are ``vhdl``, ``verilog``,</span>
+        <span class="c1"># ``system_verilog``, ``constraint`` (default) and ``block_design``</span>
+        <span class="c1"># (only **Vivado** is currently supported). If None provided, this</span>
+        <span class="c1"># value is automatically discovered based on the extension (</span>
+        <span class="c1"># ``.vhd`` or ``.vhdl``, ``.v`` and ``.sv``).</span>
+        <span class="c1"># &quot;&quot;&quot;</span>
+        <span class="c1"># pathname = os.path.join(self._absdir, pathname)</span>
+        <span class="c1"># pathname = os.path.normpath(pathname)</span>
+        <span class="c1"># _log.debug(&#39;PATHNAME = %s&#39;, pathname)</span>
+        <span class="c1"># files = glob.glob(pathname)</span>
+        <span class="c1"># if len(files) == 0:</span>
+        <span class="c1">#     raise FileNotFoundError(pathname)</span>
+        <span class="c1"># for file in files:</span>
+        <span class="c1">#     if not os.path.exists(file):</span>
+        <span class="c1">#         raise FileNotFoundError(file)</span>
+        <span class="c1">#     if filetype is None:</span>
+        <span class="c1">#         ext = os.path.splitext(file)[1]</span>
+        <span class="c1">#         if ext in [&#39;.vhd&#39;, &#39;.vhdl&#39;]:</span>
+        <span class="c1">#             filetype = &#39;vhdl&#39;</span>
+        <span class="c1">#         elif ext in [&#39;.v&#39;, &#39;.sv&#39;]:</span>
+        <span class="c1">#             filetype = &#39;verilog&#39;</span>
+        <span class="c1">#         else:</span>
+        <span class="c1">#             filetype = &#39;constraint&#39;</span>
+        <span class="c1">#         _log.debug(&#39;add_files: %s filetype detected&#39;, filetype)</span>
+        <span class="c1">#     file = os.path.relpath(file, self.outdir)</span>
+        <span class="c1">#     self.tool.add_file(file, filetype, library, options)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;files&#39;</span><span class="p">,</span> <span class="p">{})[</span><span class="n">pathname</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">filetype</span><span class="p">,</span> <span class="s1">&#39;options&#39;</span><span class="p">:</span> <span class="n">options</span><span class="p">,</span> <span class="s1">&#39;library&#39;</span><span class="p">:</span> <span class="n">library</span>
         <span class="p">}</span>
@@ -174,15 +216,35 @@
 <div class="viewcode-block" id="Project.add_include">
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project.add_include">[docs]</a>
     <span class="k">def</span> <span class="nf">add_include</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an Include path.</span>
+
+<span class="sd">        Specify where to search for Included Verilog Files, IP repos, etc.</span>
+
+<span class="sd">        :param path: path of a directory</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :raises NotADirectoryError: if path is not a directory</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing add_include&#39;</span><span class="p">)</span>
+        <span class="c1"># path = os.path.join(self._absdir, path)</span>
+        <span class="c1"># path = os.path.normpath(path)</span>
+        <span class="c1"># if os.path.isdir(path):</span>
+        <span class="c1">#     path = os.path.relpath(path, self.outdir)</span>
+        <span class="c1">#     self.tool.add_vlog_include(path)</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     raise NotADirectoryError(path)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;includes&#39;</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Project.add_param">
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project.add_param">[docs]</a>
     <span class="k">def</span> <span class="nf">add_param</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a Parameter/Generic Value.</span>
+
+<span class="sd">        :param name: parameter/generic name</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :param value: parameter/generic value</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing add_param&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;params&#39;</span><span class="p">,</span> <span class="p">{})[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
@@ -190,7 +252,13 @@
 <div class="viewcode-block" id="Project.add_define">
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project.add_define">[docs]</a>
     <span class="k">def</span> <span class="nf">add_define</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a Verilog Defile Value.</span>
+
+<span class="sd">        :param name: define name</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :param value: define value</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing add_define&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;defines&#39;</span><span class="p">,</span> <span class="p">{})[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
@@ -198,7 +266,11 @@
 <div class="viewcode-block" id="Project.set_arch">
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project.set_arch">[docs]</a>
     <span class="k">def</span> <span class="nf">set_arch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the VHDL architecture.</span>
+
+<span class="sd">        :param name: architecture name</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing set_arch&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;arch&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span></div>
 
@@ -206,7 +278,11 @@
 <div class="viewcode-block" id="Project.set_top">
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project.set_top">[docs]</a>
     <span class="k">def</span> <span class="nf">set_top</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the name of the top level component.</span>
+
+<span class="sd">        :param name: top-level name</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing set_top&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span></div>
 
