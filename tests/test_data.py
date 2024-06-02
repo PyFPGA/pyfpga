@@ -1,38 +1,58 @@
 import os
 import pytest
 
+from pathlib import Path
+
 from pyfpga.project import Project
 
 pattern = {
     'part': 'PARTNAME',
-    'includes': ['INC1', 'INC2', 'INC3'],
+    'includes': [
+        Path('fakedata/dir1').resolve(),
+        Path('fakedata/dir2').resolve(),
+        Path('fakedata/dir3').resolve()
+    ],
     'files': {
-        'path1': {'type': 'vhdl', 'options': 'OPT1', 'library': 'LIB1'},
-        'path2': {'type': 'vlog', 'options': 'OPT2', 'library': None},
-        'path3': {'type': 'slog', 'options': 'OPT3', 'library': None},
-        'path4': {'type': 'cons', 'options': 'OPT4', 'library': None}
+        Path('fakedata/dir1/slog1.sv').resolve():
+            {'type': 'slog', 'options': None, 'library': None},
+        Path('fakedata/dir2/slog2.sv').resolve():
+            {'type': 'slog', 'options': None, 'library': None},
+        Path('fakedata/dir3/slog3.sv').resolve():
+            {'type': 'slog', 'options': None, 'library': None},
+        Path('fakedata/dir1/vhdl1.vhdl').resolve():
+            {'type': 'vhdl', 'options': None, 'library': None},
+        Path('fakedata/dir2/vhdl2.vhdl').resolve():
+            {'type': 'vhdl', 'options': None, 'library': None},
+        Path('fakedata/dir3/vhdl3.vhdl').resolve():
+            {'type': 'vhdl', 'options': None, 'library': None},
+        Path('fakedata/dir1/vlog1.v').resolve():
+            {'type': 'vlog', 'options': None, 'library': None},
+        Path('fakedata/dir2/vlog2.v').resolve():
+            {'type': 'vlog', 'options': None, 'library': None},
+        Path('fakedata/dir3/vlog3.v').resolve():
+            {'type': 'vlog', 'options': None, 'library': None}
     },
     'top': 'TOPNAME',
     'params': {
-        'PARAM1': 'VALUE1',
-        'PARAM2': 'VALUE2',
-        'PARAM3': 'VALUE3'
+        'PAR1': 'VAL1',
+        'PAR2': 'VAL2',
+        'PAR3': 'VAL3'
     },
     'defines': {
-        'DEF1': 'VALUE1',
-        'DEF2': 'VALUE2',
-        'DEF3': 'VALUE3'
+        'DEF1': 'VAL1',
+        'DEF2': 'VAL2',
+        'DEF3': 'VAL3'
     },
     'arch': 'ARCHNAME',
     'hooks': {
-        'precfg': ['HOOK1', 'HOOK2'],
-        'postcfg': ['HOOK1', 'HOOK2'],
-        'presyn': ['HOOK1', 'HOOK2'],
-        'postsyn': ['HOOK1', 'HOOK2'],
-        'prepar': ['HOOK1', 'HOOK2'],
-        'postpar': ['HOOK1', 'HOOK2'],
-        'prebit': ['HOOK1', 'HOOK2'],
-        'postbit': ['HOOK1', 'HOOK2']
+        'precfg': ['CMD1', 'CMD2'],
+        'postcfg': ['CMD1', 'CMD2'],
+        'presyn': ['CMD1', 'CMD2'],
+        'postsyn': ['CMD1', 'CMD2'],
+        'prepar': ['CMD1', 'CMD2'],
+        'postpar': ['CMD1', 'CMD2'],
+        'prebit': ['CMD1', 'CMD2'],
+        'postbit': ['CMD1', 'CMD2']
     }
 }
 
@@ -42,33 +62,32 @@ def test_names():
     prj.set_part('PARTNAME')
     prj.set_top('TOPNAME')
     prj.set_arch('ARCHNAME')
-    prj.add_include('INC1')
-    prj.add_include('INC2')
-    prj.add_include('INC3')
-    prj.add_param('PARAM1', 'VALUE1')
-    prj.add_param('PARAM2', 'VALUE2')
-    prj.add_param('PARAM3', 'VALUE3')
-    prj.add_define('DEF1', 'VALUE1')
-    prj.add_define('DEF2', 'VALUE2')
-    prj.add_define('DEF3', 'VALUE3')
-    prj.add_vhdl('path1', 'LIB1', 'OPT1')
-    prj.add_vlog('path2', 'OPT2')
-    prj.add_slog('path3', 'OPT3')
-    prj.add_cons('path4', 'OPT4')
-    prj.add_hook('precfg', 'HOOK1')
-    prj.add_hook('precfg', 'HOOK2')
-    prj.add_hook('postcfg', 'HOOK1')
-    prj.add_hook('postcfg', 'HOOK2')
-    prj.add_hook('presyn', 'HOOK1')
-    prj.add_hook('presyn', 'HOOK2')
-    prj.add_hook('postsyn', 'HOOK1')
-    prj.add_hook('postsyn', 'HOOK2')
-    prj.add_hook('prepar', 'HOOK1')
-    prj.add_hook('prepar', 'HOOK2')
-    prj.add_hook('postpar', 'HOOK1')
-    prj.add_hook('postpar', 'HOOK2')
-    prj.add_hook('prebit', 'HOOK1')
-    prj.add_hook('prebit', 'HOOK2')
-    prj.add_hook('postbit', 'HOOK1')
-    prj.add_hook('postbit', 'HOOK2')
+    prj.add_include('fakedata/dir1')
+    prj.add_include('fakedata/dir2')
+    prj.add_include('fakedata/dir3')
+    prj.add_slog('fakedata/**/*.sv')
+    prj.add_vhdl('fakedata/**/*.vhdl')
+    prj.add_vlog('fakedata/**/*.v')
+    prj.add_param('PAR1', 'VAL1')
+    prj.add_param('PAR2', 'VAL2')
+    prj.add_param('PAR3', 'VAL3')
+    prj.add_define('DEF1', 'VAL1')
+    prj.add_define('DEF2', 'VAL2')
+    prj.add_define('DEF3', 'VAL3')
+    prj.add_hook('precfg', 'CMD1')
+    prj.add_hook('precfg', 'CMD2')
+    prj.add_hook('postcfg', 'CMD1')
+    prj.add_hook('postcfg', 'CMD2')
+    prj.add_hook('presyn', 'CMD1')
+    prj.add_hook('presyn', 'CMD2')
+    prj.add_hook('postsyn', 'CMD1')
+    prj.add_hook('postsyn', 'CMD2')
+    prj.add_hook('prepar', 'CMD1')
+    prj.add_hook('prepar', 'CMD2')
+    prj.add_hook('postpar', 'CMD1')
+    prj.add_hook('postpar', 'CMD2')
+    prj.add_hook('prebit', 'CMD1')
+    prj.add_hook('prebit', 'CMD2')
+    prj.add_hook('postbit', 'CMD1')
+    prj.add_hook('postbit', 'CMD2')
     assert prj.data == pattern, 'ERROR: unexpected data'

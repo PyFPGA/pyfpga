@@ -8,7 +8,7 @@
 Base class that implements agnostic methods to deal with FPGA projects.
 """
 
-# import glob
+import glob
 import logging
 import os
 import subprocess
@@ -55,59 +55,48 @@ class Project:
         self.data['part'] = name
 
     def _add_file(self, pathname, filetype=None, library=None, options=None):
-        # """Adds files to the project.
-        #
-        # :param pathname: a relative path to a file, which can contain
-        #  shell-style wildcards (glob compliant)
-        # :param filetype: specifies the file type
-        # :param library: an optional VHDL library name
-        # :param options: to be provided to the underlying tool
-        # :raises FileNotFoundError: when a file specified as pathname is not
-        #  found
-        # :raises ValueError: when *filetype* is unsupported
-        #
-        # .. note:: Valid values for *filetype* are ``vhdl``, ``verilog``,
-        # ``system_verilog``, ``constraint`` (default) and ``block_design``
-        # (only **Vivado** is currently supported). If None provided, this
-        # value is automatically discovered based on the extension (
-        # ``.vhd`` or ``.vhdl``, ``.v`` and ``.sv``).
-        # """
-        # pathname = os.path.join(self._absdir, pathname)
-        # pathname = os.path.normpath(pathname)
-        # _log.debug('PATHNAME = %s', pathname)
-        # files = glob.glob(pathname)
-        # if len(files) == 0:
-        #     raise FileNotFoundError(pathname)
-        # for file in files:
-        #     if not os.path.exists(file):
-        #         raise FileNotFoundError(file)
-        #     if filetype is None:
-        #         ext = os.path.splitext(file)[1]
-        #         if ext in ['.vhd', '.vhdl']:
-        #             filetype = 'vhdl'
-        #         elif ext in ['.v', '.sv']:
-        #             filetype = 'verilog'
-        #         else:
-        #             filetype = 'constraint'
-        #         _log.debug('add_files: %s filetype detected', filetype)
-        #     file = os.path.relpath(file, self.outdir)
-        #     self.tool.add_file(file, filetype, library, options)
-        self.data.setdefault('files', {})[pathname] = {
-            'type': filetype, 'options': options, 'library': library
-        }
+        files = glob.glob(pathname)
+        if len(files) == 0:
+            raise FileNotFoundError(pathname)
+        for file in files:
+            path = Path(file).resolve()
+            self.data.setdefault('files', {})[path] = {
+                'type': filetype, 'options': options, 'library': library
+            }
 
-    def add_cons(self, pathname, options=None):
-        """Temp placeholder"""
+    def add_cons(self, pathname):
+        """Add constraint file/s.
+
+        :param pathname: path to a constraint file (glob compliant)
+        :type pathname: str
+        :raises FileNotFoundError: when pathname is not found
+        """
         self.logger.debug('Executing add_cons')
-        self._add_file(pathname, filetype='cons', options=options)
+        self._add_file(pathname, filetype='cons', options=None)
 
     def add_slog(self, pathname, options=None):
-        """Temp placeholder"""
+        """Add System Verilog file/s.
+
+        :param pathname: path to a SV file (glob compliant)
+        :type pathname: str
+        :param options: for the underlying tool
+        :type options: str, optional
+        :raises FileNotFoundError: when pathname is not found
+        """
         self.logger.debug('Executing add_slog')
         self._add_file(pathname, filetype='slog', options=options)
 
     def add_vhdl(self, pathname, library=None, options=None):
-        """Temp placeholder"""
+        """Add VHDL file/s.
+
+        :param pathname: path to a SV file (glob compliant)
+        :type pathname: str
+        :param library: VHDL library name
+        :type library: str, optional
+        :param options: for the underlying tool
+        :type options: str, optional
+        :raises FileNotFoundError: when pathname is not found
+        """
         self.logger.debug('Executing add_vhdl')
         self._add_file(
             pathname, filetype='vhdl',
@@ -115,7 +104,14 @@ class Project:
         )
 
     def add_vlog(self, pathname, options=None):
-        """Temp placeholder"""
+        """Add Verilog file/s.
+
+        :param pathname: path to a SV file (glob compliant)
+        :type pathname: str
+        :param options: for the underlying tool
+        :type options: str, optional
+        :raises FileNotFoundError: when pathname is not found
+        """
         self.logger.debug('Executing add_vlog')
         self._add_file(pathname, filetype='vlog', options=options)
 
@@ -129,13 +125,9 @@ class Project:
         :raises NotADirectoryError: if path is not a directory
         """
         self.logger.debug('Executing add_include')
-        # path = os.path.join(self._absdir, path)
-        # path = os.path.normpath(path)
-        # if os.path.isdir(path):
-        #     path = os.path.relpath(path, self.outdir)
-        #     self.tool.add_vlog_include(path)
-        # else:
-        #     raise NotADirectoryError(path)
+        path = Path(path).resolve()
+        if not path.is_dir():
+            raise NotADirectoryError(path)
         self.data.setdefault('includes', []).append(path)
 
     def add_param(self, name, value):
@@ -179,7 +171,16 @@ class Project:
         self.data['top'] = name
 
     def add_hook(self, stage, hook):
-        """Add hook for a specific stage."""
+        """Add a hook in the specific stage.
+
+        A hook is a place that allows you to insert customized code.
+
+        :param stage: where to insert the hook
+        :type stage: str
+        :param hook: a tool-specific command
+        :type hook: str
+        :raises ValueError: when stage is invalid
+        """
         stages = [
             'precfg', 'postcfg', 'presyn', 'postsyn',
             'prepar', 'postpar', 'prebit', 'postbit'
@@ -189,7 +190,15 @@ class Project:
         self.data.setdefault('hooks', {}).setdefault(stage, []).append(hook)
 
     def make(self, end='bit', start='prj'):
-        """Temp placeholder"""
+        """Run the underlying tool.
+
+        :param end: last task
+        :type end: str, optional
+        :param start: first task
+        :type start: str, optional
+
+        .. note:: Valid values are ``cfg``, ``syn``, ``imp`` and ``bit``.
+        """
         steps = ['cfg', 'syn', 'par', 'bit']
         if end not in steps or start not in steps:
             raise ValueError('Invalid steps.')
@@ -197,7 +206,13 @@ class Project:
         raise NotImplementedError('Method is not implemented yet.')
 
     def prog(self, position=1, bitstream=None):
-        """Temp placeholder"""
+        """Program the FPGA
+
+        :param position: position of the device in the JTAG chain
+        :type position: str, optional
+        :param bitstream: bitstream to be programmed
+        :type bitstream: str, optional
+        """
         raise NotImplementedError('Method is not implemented yet.')
 
     def _run(self, command):
