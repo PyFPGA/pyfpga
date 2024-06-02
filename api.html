@@ -21,7 +21,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Tools support" href="tools.html" /> 
+    <link rel="next" title="Tools support" href="tools.html" />
+    <link rel="prev" title="Advanced usage" href="advanced.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,8 +48,6 @@
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="basic.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hooks.html">Hooks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tools.html">Tools support</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#pyfpga.project.Project"><code class="docutils literal notranslate"><span class="pre">Project</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#pyfpga.project.Project.add_cons"><code class="docutils literal notranslate"><span class="pre">Project.add_cons()</span></code></a></li>
@@ -68,6 +67,8 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Tools support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Internals</a></li>
 </ul>
 
         </div>
@@ -114,8 +115,16 @@
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyfpga.project.Project.add_cons">
-<span class="sig-name descname"><span class="pre">add_cons</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.add_cons"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.add_cons" title="Link to this definition"></a></dt>
-<dd><p>Temp placeholder</p>
+<span class="sig-name descname"><span class="pre">add_cons</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.add_cons"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.add_cons" title="Link to this definition"></a></dt>
+<dd><p>Add constraint file/s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pathname</strong> (<em>str</em>) – path to a constraint file (glob compliant)</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>FileNotFoundError</strong> – when pathname is not found</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -135,7 +144,19 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="pyfpga.project.Project.add_hook">
 <span class="sig-name descname"><span class="pre">add_hook</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hook</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.add_hook"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.add_hook" title="Link to this definition"></a></dt>
-<dd><p>Add hook for a specific stage.</p>
+<dd><p>Add a hook in the specific stage.</p>
+<p>A hook is a place that allows you to insert customized code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stage</strong> (<em>str</em>) – where to insert the hook</p></li>
+<li><p><strong>hook</strong> (<em>str</em>) – a tool-specific command</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – when stage is invalid</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -170,31 +191,85 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="pyfpga.project.Project.add_slog">
 <span class="sig-name descname"><span class="pre">add_slog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.add_slog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.add_slog" title="Link to this definition"></a></dt>
-<dd><p>Temp placeholder</p>
+<dd><p>Add System Verilog file/s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pathname</strong> (<em>str</em>) – path to a SV file (glob compliant)</p></li>
+<li><p><strong>options</strong> (<em>str</em><em>, </em><em>optional</em>) – for the underlying tool</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>FileNotFoundError</strong> – when pathname is not found</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyfpga.project.Project.add_vhdl">
 <span class="sig-name descname"><span class="pre">add_vhdl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">library</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.add_vhdl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.add_vhdl" title="Link to this definition"></a></dt>
-<dd><p>Temp placeholder</p>
+<dd><p>Add VHDL file/s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pathname</strong> (<em>str</em>) – path to a SV file (glob compliant)</p></li>
+<li><p><strong>library</strong> (<em>str</em><em>, </em><em>optional</em>) – VHDL library name</p></li>
+<li><p><strong>options</strong> (<em>str</em><em>, </em><em>optional</em>) – for the underlying tool</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>FileNotFoundError</strong> – when pathname is not found</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyfpga.project.Project.add_vlog">
 <span class="sig-name descname"><span class="pre">add_vlog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.add_vlog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.add_vlog" title="Link to this definition"></a></dt>
-<dd><p>Temp placeholder</p>
+<dd><p>Add Verilog file/s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pathname</strong> (<em>str</em>) – path to a SV file (glob compliant)</p></li>
+<li><p><strong>options</strong> (<em>str</em><em>, </em><em>optional</em>) – for the underlying tool</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>FileNotFoundError</strong> – when pathname is not found</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyfpga.project.Project.make">
 <span class="sig-name descname"><span class="pre">make</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bit'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'prj'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.make"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.make" title="Link to this definition"></a></dt>
-<dd><p>Temp placeholder</p>
+<dd><p>Run the underlying tool.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>end</strong> (<em>str</em><em>, </em><em>optional</em>) – last task</p></li>
+<li><p><strong>start</strong> (<em>str</em><em>, </em><em>optional</em>) – first task</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Valid values are <code class="docutils literal notranslate"><span class="pre">cfg</span></code>, <code class="docutils literal notranslate"><span class="pre">syn</span></code>, <code class="docutils literal notranslate"><span class="pre">imp</span></code> and <code class="docutils literal notranslate"><span class="pre">bit</span></code>.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyfpga.project.Project.prog">
 <span class="sig-name descname"><span class="pre">prog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bitstream</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.prog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.prog" title="Link to this definition"></a></dt>
-<dd><p>Temp placeholder</p>
+<dd><p>Program the FPGA</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>position</strong> (<em>str</em><em>, </em><em>optional</em>) – position of the device in the JTAG chain</p></li>
+<li><p><strong>bitstream</strong> (<em>str</em><em>, </em><em>optional</em>) – bitstream to be programmed</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -238,7 +313,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="tools.html" class="btn btn-neutral float-left" title="Tools support" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="advanced.html" class="btn btn-neutral float-left" title="Advanced usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tools.html" class="btn btn-neutral float-right" title="Tools support" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

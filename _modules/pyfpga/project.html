@@ -45,9 +45,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../basic.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../advanced.html">Advanced usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../hooks.html">Hooks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../tools.html">Tools support</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tools.html">Tools support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../internals.html">Internals</a></li>
 </ul>
 
         </div>
@@ -85,7 +85,7 @@
 <span class="sd">Base class that implements agnostic methods to deal with FPGA projects.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="c1"># import glob</span>
+<span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
@@ -137,59 +137,39 @@
 
 
     <span class="k">def</span> <span class="nf">_add_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">,</span> <span class="n">filetype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">library</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># &quot;&quot;&quot;Adds files to the project.</span>
-        <span class="c1">#</span>
-        <span class="c1"># :param pathname: a relative path to a file, which can contain</span>
-        <span class="c1">#  shell-style wildcards (glob compliant)</span>
-        <span class="c1"># :param filetype: specifies the file type</span>
-        <span class="c1"># :param library: an optional VHDL library name</span>
-        <span class="c1"># :param options: to be provided to the underlying tool</span>
-        <span class="c1"># :raises FileNotFoundError: when a file specified as pathname is not</span>
-        <span class="c1">#  found</span>
-        <span class="c1"># :raises ValueError: when *filetype* is unsupported</span>
-        <span class="c1">#</span>
-        <span class="c1"># .. note:: Valid values for *filetype* are ``vhdl``, ``verilog``,</span>
-        <span class="c1"># ``system_verilog``, ``constraint`` (default) and ``block_design``</span>
-        <span class="c1"># (only **Vivado** is currently supported). If None provided, this</span>
-        <span class="c1"># value is automatically discovered based on the extension (</span>
-        <span class="c1"># ``.vhd`` or ``.vhdl``, ``.v`` and ``.sv``).</span>
-        <span class="c1"># &quot;&quot;&quot;</span>
-        <span class="c1"># pathname = os.path.join(self._absdir, pathname)</span>
-        <span class="c1"># pathname = os.path.normpath(pathname)</span>
-        <span class="c1"># _log.debug(&#39;PATHNAME = %s&#39;, pathname)</span>
-        <span class="c1"># files = glob.glob(pathname)</span>
-        <span class="c1"># if len(files) == 0:</span>
-        <span class="c1">#     raise FileNotFoundError(pathname)</span>
-        <span class="c1"># for file in files:</span>
-        <span class="c1">#     if not os.path.exists(file):</span>
-        <span class="c1">#         raise FileNotFoundError(file)</span>
-        <span class="c1">#     if filetype is None:</span>
-        <span class="c1">#         ext = os.path.splitext(file)[1]</span>
-        <span class="c1">#         if ext in [&#39;.vhd&#39;, &#39;.vhdl&#39;]:</span>
-        <span class="c1">#             filetype = &#39;vhdl&#39;</span>
-        <span class="c1">#         elif ext in [&#39;.v&#39;, &#39;.sv&#39;]:</span>
-        <span class="c1">#             filetype = &#39;verilog&#39;</span>
-        <span class="c1">#         else:</span>
-        <span class="c1">#             filetype = &#39;constraint&#39;</span>
-        <span class="c1">#         _log.debug(&#39;add_files: %s filetype detected&#39;, filetype)</span>
-        <span class="c1">#     file = os.path.relpath(file, self.outdir)</span>
-        <span class="c1">#     self.tool.add_file(file, filetype, library, options)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;files&#39;</span><span class="p">,</span> <span class="p">{})[</span><span class="n">pathname</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">filetype</span><span class="p">,</span> <span class="s1">&#39;options&#39;</span><span class="p">:</span> <span class="n">options</span><span class="p">,</span> <span class="s1">&#39;library&#39;</span><span class="p">:</span> <span class="n">library</span>
-        <span class="p">}</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pathname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">pathname</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;files&#39;</span><span class="p">,</span> <span class="p">{})[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">filetype</span><span class="p">,</span> <span class="s1">&#39;options&#39;</span><span class="p">:</span> <span class="n">options</span><span class="p">,</span> <span class="s1">&#39;library&#39;</span><span class="p">:</span> <span class="n">library</span>
+            <span class="p">}</span>
 
 <div class="viewcode-block" id="Project.add_cons">
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project.add_cons">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_cons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">add_cons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add constraint file/s.</span>
+
+<span class="sd">        :param pathname: path to a constraint file (glob compliant)</span>
+<span class="sd">        :type pathname: str</span>
+<span class="sd">        :raises FileNotFoundError: when pathname is not found</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing add_cons&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_add_file</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="n">filetype</span><span class="o">=</span><span class="s1">&#39;cons&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_file</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="n">filetype</span><span class="o">=</span><span class="s1">&#39;cons&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Project.add_slog">
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project.add_slog">[docs]</a>
     <span class="k">def</span> <span class="nf">add_slog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add System Verilog file/s.</span>
+
+<span class="sd">        :param pathname: path to a SV file (glob compliant)</span>
+<span class="sd">        :type pathname: str</span>
+<span class="sd">        :param options: for the underlying tool</span>
+<span class="sd">        :type options: str, optional</span>
+<span class="sd">        :raises FileNotFoundError: when pathname is not found</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing add_slog&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_add_file</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="n">filetype</span><span class="o">=</span><span class="s1">&#39;slog&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span></div>
 
@@ -197,7 +177,16 @@
 <div class="viewcode-block" id="Project.add_vhdl">
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project.add_vhdl">[docs]</a>
     <span class="k">def</span> <span class="nf">add_vhdl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">,</span> <span class="n">library</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add VHDL file/s.</span>
+
+<span class="sd">        :param pathname: path to a SV file (glob compliant)</span>
+<span class="sd">        :type pathname: str</span>
+<span class="sd">        :param library: VHDL library name</span>
+<span class="sd">        :type library: str, optional</span>
+<span class="sd">        :param options: for the underlying tool</span>
+<span class="sd">        :type options: str, optional</span>
+<span class="sd">        :raises FileNotFoundError: when pathname is not found</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing add_vhdl&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_add_file</span><span class="p">(</span>
             <span class="n">pathname</span><span class="p">,</span> <span class="n">filetype</span><span class="o">=</span><span class="s1">&#39;vhdl&#39;</span><span class="p">,</span>
@@ -208,7 +197,14 @@
 <div class="viewcode-block" id="Project.add_vlog">
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project.add_vlog">[docs]</a>
     <span class="k">def</span> <span class="nf">add_vlog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add Verilog file/s.</span>
+
+<span class="sd">        :param pathname: path to a SV file (glob compliant)</span>
+<span class="sd">        :type pathname: str</span>
+<span class="sd">        :param options: for the underlying tool</span>
+<span class="sd">        :type options: str, optional</span>
+<span class="sd">        :raises FileNotFoundError: when pathname is not found</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing add_vlog&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_add_file</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="n">filetype</span><span class="o">=</span><span class="s1">&#39;vlog&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span></div>
 
@@ -225,13 +221,9 @@
 <span class="sd">        :raises NotADirectoryError: if path is not a directory</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing add_include&#39;</span><span class="p">)</span>
-        <span class="c1"># path = os.path.join(self._absdir, path)</span>
-        <span class="c1"># path = os.path.normpath(path)</span>
-        <span class="c1"># if os.path.isdir(path):</span>
-        <span class="c1">#     path = os.path.relpath(path, self.outdir)</span>
-        <span class="c1">#     self.tool.add_vlog_include(path)</span>
-        <span class="c1"># else:</span>
-        <span class="c1">#     raise NotADirectoryError(path)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">NotADirectoryError</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;includes&#39;</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
 
 
@@ -290,7 +282,16 @@
 <div class="viewcode-block" id="Project.add_hook">
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project.add_hook">[docs]</a>
     <span class="k">def</span> <span class="nf">add_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">hook</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add hook for a specific stage.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a hook in the specific stage.</span>
+
+<span class="sd">        A hook is a place that allows you to insert customized code.</span>
+
+<span class="sd">        :param stage: where to insert the hook</span>
+<span class="sd">        :type stage: str</span>
+<span class="sd">        :param hook: a tool-specific command</span>
+<span class="sd">        :type hook: str</span>
+<span class="sd">        :raises ValueError: when stage is invalid</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">stages</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s1">&#39;precfg&#39;</span><span class="p">,</span> <span class="s1">&#39;postcfg&#39;</span><span class="p">,</span> <span class="s1">&#39;presyn&#39;</span><span class="p">,</span> <span class="s1">&#39;postsyn&#39;</span><span class="p">,</span>
             <span class="s1">&#39;prepar&#39;</span><span class="p">,</span> <span class="s1">&#39;postpar&#39;</span><span class="p">,</span> <span class="s1">&#39;prebit&#39;</span><span class="p">,</span> <span class="s1">&#39;postbit&#39;</span>
@@ -303,7 +304,15 @@
 <div class="viewcode-block" id="Project.make">
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project.make">[docs]</a>
     <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;bit&#39;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;prj&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the underlying tool.</span>
+
+<span class="sd">        :param end: last task</span>
+<span class="sd">        :type end: str, optional</span>
+<span class="sd">        :param start: first task</span>
+<span class="sd">        :type start: str, optional</span>
+
+<span class="sd">        .. note:: Valid values are ``cfg``, ``syn``, ``imp`` and ``bit``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cfg&#39;</span><span class="p">,</span> <span class="s1">&#39;syn&#39;</span><span class="p">,</span> <span class="s1">&#39;par&#39;</span><span class="p">,</span> <span class="s1">&#39;bit&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">end</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">steps</span> <span class="ow">or</span> <span class="n">start</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid steps.&#39;</span><span class="p">)</span>
@@ -314,7 +323,13 @@
 <div class="viewcode-block" id="Project.prog">
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project.prog">[docs]</a>
     <span class="k">def</span> <span class="nf">prog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bitstream</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Temp placeholder&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Program the FPGA</span>
+
+<span class="sd">        :param position: position of the device in the JTAG chain</span>
+<span class="sd">        :type position: str, optional</span>
+<span class="sd">        :param bitstream: bitstream to be programmed</span>
+<span class="sd">        :type bitstream: str, optional</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method is not implemented yet.&#39;</span><span class="p">)</span></div>
 
 

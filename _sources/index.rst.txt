@@ -16,6 +16,6 @@ PyFPGA's documentation
    intro
    basic
    advanced
-   hooks
-   tools
    api
+   tools
+   internals
