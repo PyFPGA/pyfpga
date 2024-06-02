@@ -8,13 +8,9 @@
 A factory class to create FPGA projects.
 """
 
-import contextlib
-import glob
 import inspect
 import logging
 import os
-import re
-import time
 
 from fpga.tool.ise import Ise
 from fpga.tool.libero import Libero
@@ -78,142 +74,6 @@ class Project:
         _log.debug('RELDIR = %s', self._reldir)
         self._absdir = os.path.join(self._rundir, self._reldir)
         _log.debug('ABSDIR = %s', self._absdir)
-        self.set_outdir('build')
-
-    def set_outdir(self, outdir):
-        """Sets the OUTput DIRectory (where to put the resulting files).
-
-        :param outdir: path to the output directory
-        """
-        self.outdir = os.path.normpath(os.path.join(self._absdir, outdir))
-        _log.debug('OUTDIR = %s', self.outdir)
-
-    def get_configs(self):
-        """Gets the Project Configurations.
-
-        :returns: a dict which includes ``tool`` and ``project`` names, the
-         ``extension`` of a project file (according to the selected tool) and
-         the ``part`` to be used
-        """
-        return self.tool.get_configs()
-
-    def set_part(self, part):
-        """Set the target FPGA part.
-
-        :param part: the FPGA part as specified by the tool
-        """
-        self.tool.set_part(part)
-
-    def add_param(self, name, value):
-        """Add a Generic/Parameter Value.
-
-        :param name: parameter/generic name
-        :param value: value to be assigned
-        """
-        self.tool.add_param(name, value)
-
-    def add_files(self, pathname, filetype=None, library=None, options=None):
-        """Adds files to the project.
-
-        :param pathname: a relative path to a file, which can contain
-         shell-style wildcards (glob compliant)
-        :param filetype: specifies the file type
-        :param library: an optional VHDL library name
-        :param options: to be provided to the underlying tool
-        :raises FileNotFoundError: when a file specified as pathname is not
-         found
-        :raises ValueError: when *filetype* is unsupported
-
-        .. note:: Valid values for *filetype* are ``vhdl``, ``verilog``,
-        ``system_verilog``, ``constraint`` (default) and ``block_design``
-        (only **Vivado** is currently supported). If None provided, this
-        value is automatically discovered based on the extension (
-        ``.vhd`` or ``.vhdl``, ``.v`` and ``.sv``).
-        """
-        pathname = os.path.join(self._absdir, pathname)
-        pathname = os.path.normpath(pathname)
-        _log.debug('PATHNAME = %s', pathname)
-        files = glob.glob(pathname)
-        if len(files) == 0:
-            raise FileNotFoundError(pathname)
-        for file in files:
-            if not os.path.exists(file):
-                raise FileNotFoundError(file)
-            if filetype is None:
-                ext = os.path.splitext(file)[1]
-                if ext in ['.vhd', '.vhdl']:
-                    filetype = 'vhdl'
-                elif ext in ['.v', '.sv']:
-                    filetype = 'verilog'
-                else:
-                    filetype = 'constraint'
-                _log.debug('add_files: %s filetype detected', filetype)
-            file = os.path.relpath(file, self.outdir)
-            self.tool.add_file(file, filetype, library, options)
-
-    def get_files(self):
-        """Get the files of the project.
-
-        :returns: a list with the files of the project
-        """
-        return self.tool.get_files()
-
-    def add_vlog_include(self, path):
-        """Add a Verilog include path.
-
-        Useful to specify where to search Verilog Included Files or IP
-        repositories.
-
-        :param path: a relative path to a directory
-        :raises NotADirectoryError: when path is not a directory
-        """
-        path = os.path.join(self._absdir, path)
-        path = os.path.normpath(path)
-        if os.path.isdir(path):
-            path = os.path.relpath(path, self.outdir)
-            self.tool.add_vlog_include(path)
-        else:
-            raise NotADirectoryError(path)
-
-    def add_vlog_define(self, name, value):
-        """Add a Verilog define."""
-        raise NotImplementedError()
-
-    def set_vhdl_arch(self, name):
-        """Set the VHDL architecture."""
-        raise NotImplementedError()
-
-    def set_top(self, toplevel):
-        """Set the top level of the project.
-
-        :param toplevel: name or file path of the top level entity/module
-        :raises FileNotFoundError: when toplevel is a not found file
-        """
-        if os.path.splitext(toplevel)[1]:
-            toplevel = os.path.join(self._absdir, toplevel)
-            toplevel = os.path.normpath(toplevel)
-            if os.path.exists(toplevel):
-                with open(toplevel, 'r', encoding='utf-8') as file:
-                    hdl = file.read()
-                # Removing comments, newlines and carriage-returns
-                hdl = re.sub(r'--.*[$\n]|\/\/.*[$\n]', '', hdl)
-                hdl = hdl.replace('\n', '').replace('\r', '')
-                hdl = re.sub(r'\/\*.*\*\/', '', hdl)
-                # Finding modules/entities
-                top = re.findall(r'module\s+(\w+)\s*[#(;]', hdl)
-                top.extend(re.findall(r'entity\s+(\w+)\s+is', hdl))
-                if len(top) > 0:
-                    self.tool.set_top(top[-1])
-                    if len(top) > 1:
-                        _log.warning(
-                            'set_top: more than one Top found (last selected)'
-                        )
-                else:
-                    self.tool.set_top('UNDEFINED')
-            else:
-                raise FileNotFoundError(toplevel)
-        else:
-            self.tool.set_top(toplevel)
 
     def add_hook(self, hook, phase='project'):
         """Adds a hook in the specified phase.
@@ -254,14 +114,13 @@ class Project:
          ``imp`` (to runs implementation) and
          ``bit`` (to generates the bitstream)
         """
-        _log.info(
-            'generating "%s" project using "%s" tool into "%s" directory',
-            self.tool.project, self.tool.get_configs()['tool'], self.outdir
-        )
-        with self._run_in_dir():
-            if capture:
-                _log.info('the execution messages are being captured')
-            return self.tool.generate(to_task, from_task, capture)
+        # _log.info(
+        #     'generating "%s" project using "%s" tool into "%s" directory',
+        #     self.tool.project, self.tool.get_configs()['tool'], self.outdir
+        # )
+        if capture:
+            _log.info('the execution messages are being captured')
+        return self.tool.generate(to_task, from_task, capture)
 
     def set_bitstream(self, path):
         """Set the bitstream file to transfer.
@@ -287,32 +146,8 @@ class Project:
         :raises ValueError: when devtype, position or width are unsupported
         :raises RuntimeError: when the tool to be used is not found
         """
-        _log.info(
-            'transfering "%s" project using "%s" tool from "%s" directory',
-            self.tool.project, self.tool.get_configs()['tool'], self.outdir
-        )
-        with self._run_in_dir():
-            return self.tool.transfer(devtype, position, part, width, True)
-
-    def clean(self):
-        """Clean the generated project files."""
-        _log.info(
-            'cleaning the generated project files into "%s"', self.outdir
-        )
-        with self._run_in_dir():
-            self.tool.clean()
-
-    @contextlib.contextmanager
-    def _run_in_dir(self):
-        """Run the tool in another directory."""
-        start = time.time()
-        try:
-            if not os.path.exists(self.outdir):
-                _log.debug('the output directory did not exist (created)')
-                os.makedirs(self.outdir)
-            os.chdir(self.outdir)
-            yield
-        finally:
-            end = time.time()
-            os.chdir(self._rundir)
-            _log.info('executed in %.3f seconds', end-start)
+        # _log.info(
+        #     'transfering "%s" project using "%s" tool from "%s" directory',
+        #     self.tool.project, self.tool.get_configs()['tool'], self.outdir
+        # )
+        return self.tool.transfer(devtype, position, part, width, True)
