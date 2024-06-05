@@ -4,12 +4,11 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-"""fpga.tool.vivado
-
-Implements the support of Vivado (Xilinx).
+"""
+Implements support for Vivado.
 """
 
-from fpga.tool import Tool, run
+from pyfpga.project import Project
 
 _TEMPLATES = {
     'fpga': """\
@@ -28,58 +27,66 @@ puts [get_hw_devices]
 """
 }
 
+# pylint: disable=too-few-public-methods
 
-class Vivado(Tool):
-    """Implementation of the class to support Vivado."""
 
-    _TOOL = 'vivado'
-    _EXTENSION = 'xpr'
-    _PART = 'xc7k160t-3-fbg484'
-    _GEN_PROGRAM = 'vivado'
-    _GEN_COMMAND = 'vivado -mode batch -notrace -quiet -source vivado.tcl'
-    _TRF_PROGRAM = 'vivado'
-    _TRF_COMMAND = 'vivado -mode batch -notrace -quiet -source vivado-prog.tcl'
-    _BIT_EXT = ['bit']
-    _DEVTYPES = ['fpga', 'detect']
-    _CLEAN = [
-        # directories
-        '*.cache', '*.hw', '*.ip_user_files', '*.runs', '*.sim', '.Xil',
-        # files
-        '*.bit', '*.jou', '*.log', '*.rpt', 'vivado_*.zip',
-        # pyfpga
-        'vivado.tcl', 'vivado-prog.tcl'
-    ]
+class Vivado(Project):
+    """Class to support Vivado."""
 
-    def __init__(self, project, frontend=None):
-        super().__init__(project)
-        if frontend == 'yosys':
-            from fpga.tool.openflow import Openflow
-            self.tool = Openflow(
-                self.project,
-                frontend='yosys',
-                backend='vivado'
-            )
-            self.presynth = True
+    tool = {
+        'program': 'vivado',
+        'command': 'vivado -mode batch -notrace -quiet -source vivado.tcl',
+    }
 
-    def generate(self, to_task, from_task, capture):
-        if self.presynth and from_task in ['prj', 'syn']:
-            self.tool.set_part(self.part['name'])
-            self.tool.set_top(self.top)
-            self.tool.paths = self.paths
-            self.tool.files['vhdl'] = self.files['vhdl']
-            self.tool.files['verilog'] = self.files['verilog']
-            self.tool.params = self.params
-            output1 = self.tool.generate('syn', 'prj', capture)
-            self.set_top(self.project)
-            output2 = super().generate(to_task, from_task, capture)
-            return str(output1) + str(output2)
-        return super().generate(to_task, from_task, capture)
+#     _TOOL = 'vivado'
+#     _EXTENSION = 'xpr'
+#     _PART = 'xc7k160t-3-fbg484'
+#     _GEN_PROGRAM = 'vivado'
+#     _GEN_COMMAND = 'vivado -mode batch -notrace -quiet -source vivado.tcl'
+#     _TRF_PROGRAM = 'vivado'
+#     _TRF_COMMAND =
+#         'vivado -mode batch -notrace -quiet -source vivado-prog.tcl'
+#     _BIT_EXT = ['bit']
+#     _DEVTYPES = ['fpga', 'detect']
+#     _CLEAN = [
+#         # directories
+#         '*.cache', '*.hw', '*.ip_user_files', '*.runs', '*.sim', '.Xil',
+#         # files
+#         '*.bit', '*.jou', '*.log', '*.rpt', 'vivado_*.zip',
+#         # pyfpga
+#         'vivado.tcl', 'vivado-prog.tcl'
+#     ]
 
-    def transfer(self, devtype, position, part, width, capture):
-        super().transfer(devtype, position, part, width, capture)
-        temp = _TEMPLATES[devtype]
-        if devtype != 'detect':
-            temp = temp.replace('#BITSTREAM#', self.bitstream)
-        with open('vivado-prog.tcl', 'w', encoding='utf-8') as file:
-            file.write(temp)
-        return run(self._TRF_COMMAND, capture)
+#     def __init__(self, project, frontend=None):
+#         super().__init__(project)
+#         if frontend == 'yosys':
+#             from fpga.tool.openflow import Openflow
+#             self.tool = Openflow(
+#                 self.project,
+#                 frontend='yosys',
+#                 backend='vivado'
+#             )
+#             self.presynth = True
+
+#     def generate(self, to_task, from_task, capture):
+#         if self.presynth and from_task in ['prj', 'syn']:
+#             self.tool.set_part(self.part['name'])
+#             self.tool.set_top(self.top)
+#             self.tool.paths = self.paths
+#             self.tool.files['vhdl'] = self.files['vhdl']
+#             self.tool.files['verilog'] = self.files['verilog']
+#             self.tool.params = self.params
+#             output1 = self.tool.generate('syn', 'prj', capture)
+#             self.set_top(self.project)
+#             output2 = super().generate(to_task, from_task, capture)
+#             return str(output1) + str(output2)
+#         return super().generate(to_task, from_task, capture)
+
+#     def transfer(self, devtype, position, part, width, capture):
+#         super().transfer(devtype, position, part, width, capture)
+#         temp = _TEMPLATES[devtype]
+#         if devtype != 'detect':
+#             temp = temp.replace('#BITSTREAM#', self.bitstream)
+#         with open('vivado-prog.tcl', 'w', encoding='utf-8') as file:
+#             file.write(temp)
+#         return run(self._TRF_COMMAND, capture)
