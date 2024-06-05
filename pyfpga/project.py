@@ -15,6 +15,7 @@ import subprocess
 
 from datetime import datetime
 from pathlib import Path
+from shutil import which
 from time import time
 
 
@@ -25,8 +26,11 @@ class Project:
     :type name: str, optional
     :param odir: output directory
     :type odir: str, optional
-    :raises NotImplementedError: when a method is not implemented yet
+    :raises ValueError: when an invalid value is specified
+    :raises RuntimeError: when the needed underlying tool is not available
     """
+
+    tool = {}
 
     def __init__(self, name=None, odir='results'):
         """Class constructor."""
@@ -189,31 +193,41 @@ class Project:
             raise ValueError('Invalid stage.')
         self.data.setdefault('hooks', {}).setdefault(stage, []).append(hook)
 
-    def make(self, end='bit', start='prj'):
+    def make(self, last='bit', first='prj'):
         """Run the underlying tool.
 
-        :param end: last task
-        :type end: str, optional
-        :param start: first task
-        :type start: str, optional
+        :param last: last step
+        :type last: str, optional
+        :param first: first step
+        :type first: str, optional
 
-        .. note:: Valid values are ``cfg``, ``syn``, ``imp`` and ``bit``.
+        .. note:: valid steps are ``cfg``, ``syn``, ``imp`` and ``bit``.
         """
         steps = ['cfg', 'syn', 'par', 'bit']
-        if end not in steps or start not in steps:
-            raise ValueError('Invalid steps.')
-        _ = self
-        raise NotImplementedError('Method is not implemented yet.')
+        if last not in steps:
+            raise ValueError('Invalid last step.')
+        if first not in steps:
+            raise ValueError('Invalid first step.')
+        if steps.index(first) > steps.index(last):
+            raise ValueError('Invalid steps combination.')
+        if not which(self.tool['program']):
+            raise RuntimeError(f'{self.tool["program"]} not found.')
+        self._run(self.tool['command'])
 
-    def prog(self, position=1, bitstream=None):
+    def prog(self, bitstream=None, position=1):
         """Program the FPGA
 
-        :param position: position of the device in the JTAG chain
-        :type position: str, optional
         :param bitstream: bitstream to be programmed
         :type bitstream: str, optional
+        :param position: position of the device in the JTAG chain
+        :type position: str, optional
         """
-        raise NotImplementedError('Method is not implemented yet.')
+        if position not in range(1, 9):
+            raise ValueError('Invalid position.')
+        _ = bitstream
+        if not which(self.tool['program']):
+            raise RuntimeError(f'{self.tool["program"]} not found.')
+        self._run(self.tool['command'])
 
     def _run(self, command):
         self.logger.info('Running the underlying tool (%s)', datetime.now())
