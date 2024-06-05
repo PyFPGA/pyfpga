@@ -85,7 +85,6 @@ close_project
 
 {% if SYN or PAR or BIT %}
 open_project $PROJECT
-set_param general.maxThreads [expr {[exec nproc] < 32 ? [exec nproc] : 32}]
 
 {% if SYN %}
 {{ PRESYN }}
