@@ -38,18 +38,14 @@ class Libero(Project):
         'command': 'libero SCRIPT:libero.tcl',
     }
 
-#     _TOOL = 'libero'
-#     _EXTENSION = 'prjx'
-#     _PART = 'mpf100t-1-fcg484'
-#     _GEN_PROGRAM = 'libero'
-#     _GEN_COMMAND = 'libero SCRIPT:libero.tcl'
-#     _DEVTYPES = ['fpga']
-#     _CLEAN = [
-#         # directories
-#         'libero',
-#         # pyfpga
-#         'libero.tcl'
-#     ]
+    tool = {
+        'def-part': 'mpf100t-1-fcg484',
+        'proj-ext': 'prjx',
+        'make-app': 'libero',
+        'make-opt': 'SCRIPT:libero.tcl',
+        'prog-app': '',
+        'prog-opt': ''
+    }
 
 #     def set_part(self, part):
 #         try:

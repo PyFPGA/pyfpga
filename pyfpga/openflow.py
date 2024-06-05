@@ -22,21 +22,15 @@ class Openflow(Project):
         'command': 'bash openflow.sh',
     }
 
-#     _TOOL = 'openflow'
-#     _PART = 'hx8k-ct256'
-#     _GEN_PROGRAM = 'docker'
-#     _GEN_COMMAND = 'bash openflow.sh'
-#     _TRF_PROGRAM = 'docker'
-#     _TRF_COMMAND = 'bash openprog.sh'
-#     _BIT_EXT = ['bit']
-#     _DEVTYPES = ['fpga']
-#     _CLEAN = [
-#         # files
-#         '*.asc', '*.bit', '*.cf', '*.config', '*.edif', '*.json', '*.rpt',
-#         '*.svf',
-#         # pyfpga
-#         '*.sh'
-#     ]
+    tool = {
+        'def-part': 'hx8k-ct256',
+        'proj-ext': '',
+        'make-app': 'docker',
+        'make-cmd': 'bash openflow.sh',
+        'prog-app': 'docker',
+        'prog-cmd': 'bash openprog.sh',
+        'binaries': ['bit']
+    }
 
 #     def __init__(self, project, frontend='yosys', backend='nextpnr'):
 #         # The valid frontends are be ghdl and yosys

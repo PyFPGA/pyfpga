@@ -4,16 +4,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-"""fpga.tool
-
+"""
 Defines the interface to be inherited to support a tool.
 """
-
-
-FILETYPES = ['verilog', 'vhdl', 'constraint', 'design']
-MEMWIDTHS = [1, 2, 4, 8, 16, 32]
-PHASES = ['prefile', 'project', 'preflow', 'postsyn', 'postpar', 'postbit']
-TASKS = ['prj', 'syn', 'par', 'bit']
 
 # def tcl_path(path):
 #     """Returns a Tcl suitable path."""
@@ -23,64 +16,7 @@ TASKS = ['prj', 'syn', 'par', 'bit']
 
 
 class Tool:
-    """Tool interface.
-
-    It is the basic interface for tool implementations.
-    """
-
-#     # Following variables are set in each inheritance (if employed)
-#     _TOOL = None         # tool name
-#     _EXTENSION = None    # project file extension
-#     _PART = None         # default device part name
-#     _GEN_PROGRAM = None  # program used when generate is executed
-#     _GEN_COMMAND = None  # command to run when generate is executed
-#     _TRF_PROGRAM = None  # program used when transfer is executed
-#     _TRF_COMMAND = None  # command to run when transfer is executed
-#     _BIT_EXT = []        # Supported BITstream EXTensions
-#     _DEVTYPES = []       # Supported DEVice TYPES
-#     _CLEAN = []          # Files to be CLEAN
-
-#     def __init__(self, project):
-#         """Initializes the attributes of the class."""
-#         self.bitstream = None
-#         self.cmds = {
-#             'prefile': [],
-#             'project': [],
-#             'preflow': [],
-#             'postsyn': [],
-#             'postpar': [],
-#             'postbit': []
-#         }
-#         self.files = {
-#             'vhdl': [],
-#             'verilog': [],
-#             'constraint': [],
-#             'design': []
-#         }
-#         self.params = []
-#         self.part = {
-#             'name': 'UNSET',
-#             'family': 'UNSET',
-#             'device': 'UNSET',
-#             'package': 'UNSET',
-#             'speed': 'UNSET'
-#         }
-#         self.paths = []
-#         self.presynth = False
-#         self.project = self._TOOL if project is None else project
-#         self.set_part(self._PART)
-#         self.set_top('UNDEFINED')
-#         self._configure()
-
-#     def _configure(self):
-#         """Configures the underlying tools."""
-#         filename = '.pyfpga.yml'
-#         self.configs = {}
-#         if os.path.exists(filename):
-#             with open(filename, 'r', encoding='utf-8') as file:
-#                 data = safe_load(file)
-#                 if self._TOOL in data:
-#                     self.configs = data[self._TOOL]
+    """Tool interface."""
 
 #     def _create_gen_script(self, tasks):
 #         """Create the script for generate execution."""
@@ -167,13 +103,3 @@ class Tool:
 #             if len(bitstream) == 0:
 #                 raise FileNotFoundError('bitStream not found')
 #             self.bitstream = bitstream[0]
-
-#     def clean(self):
-#         """Clean the generated project files."""
-#         for path in self._CLEAN:
-#             elements = glob(path)
-#             for element in elements:
-#                 if os.path.isfile(element):
-#                     os.remove(element)
-#                 else:
-#                     rmtree(element)

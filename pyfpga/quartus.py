@@ -22,24 +22,15 @@ class Quartus(Project):
         'command': 'quartus_sh --script quartus.tcl',
     }
 
-#     _TOOL = 'quartus'
-#     _EXTENSION = 'qpf'
-#     _PART = '10cl120zf780i8g'
-#     _GEN_PROGRAM = 'quartus_sh'
-#     _GEN_COMMAND = 'quartus_sh --script quartus.tcl'
-#     _TRF_PROGRAM = 'quartus_pgm'
-#     _TRF_COMMAND = 'quartus_pgm -c %s --mode jtag -o "p;%s@%s"'
-#     _BIT_EXT = ['sof', 'pof']
-#     _DEVTYPES = ['fpga', 'detect']
-#     _CLEAN = [
-#         # directories
-#         'db', 'incremental_db', 'output_files',
-#         # files
-#         '*.done', '*.jdi', '*.log', '*.pin', '*.pof', '*.qws', '*.rpt',
-#         '*.smsg', '*.sld', '*.sof', '*.sop', '*.summary', '*.txt',
-#         # pyfpga
-#         'quartus.tcl'
-#     ]
+    tool = {
+        'def-part': '10cl120zf780i8g',
+        'proj-ext': 'qpf',
+        'make-app': 'quartus_sh',
+        'make-opt': '--script quartus.tcl',
+        'prog-app': 'quartus_pgm',
+        'prog-opt': '-c %s --mode jtag -o "p;%s@%s"',
+        'binaries': ['sof', 'pof']
+    }
 
 #     def transfer(self, devtype, position, part, width, capture):
 #         super().transfer(devtype, position, part, width, capture)

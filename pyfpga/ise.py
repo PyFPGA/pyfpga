@@ -78,48 +78,17 @@ class Ise(Project):
         'command': 'xtclsh ise.tcl',
     }
 
-#     _TOOL = 'ise'
-#     _EXTENSION = 'xise'
-#     _PART = 'xc7k160t-3-fbg484'
-#     _GEN_PROGRAM = 'xtclsh'
-#     _GEN_COMMAND = 'xtclsh ise.tcl'
-#     _TRF_PROGRAM = 'impact'
-#     _TRF_COMMAND = 'impact -batch ise-prog.impact'
-#     _BIT_EXT = ['bit']
-#     _DEVTYPES = ['fpga', 'spi', 'bpi', 'detect', 'unlock']
-#     _CLEAN = [
-#         # directories
-#         'iseconfig', '_ngo', 'xlnx_auto_0_xdb', '_xmsgs', 'xst',
-#         # files
-#         '*.bgn', '*.bld', '*.bit',
-#         '*.cmd_log', '*.csv',
-#         '*.drc',
-#         '*.gise',
-#         '*.html',
-#         '*.log', '*.lso',
-#         '*.map', '*.mrp',
-#         '*.ncd', '*.ngc', '*.ngd', '*.ngm', '*.ngr',
-#         '*.pad', '*.par', '*.pcf', '*.prj', '*.ptwx',
-#         '*.stx', '*.syr',
-#         '*.twr', '*.twx',
-#         '*.unroutes', '*.ut',
-#         '*.txt',
-#         '*.xml', '*.xpi', '*.xrpt', '*.xst', '*.xwbt',
-#         '_impact*',
-#         # pyfpga
-#         '*.impact', 'ise.tcl'
-#     ]
+    tool = {
+        'def-part': 'xc7k160t-3-fbg484',
+        'proj-ext': 'xise',
+        'make-app': 'xtclsh',
+        'make-opt': 'ise.tcl',
+        'prog-app': 'impact',
+        'prog-opt': '-batch ise-prog.impact',
+        'binaries': ['bit']
+    }
 
-#     def __init__(self, project, frontend=None):
-#         super().__init__(project)
-#         if frontend == 'yosys':
-#             from fpga.tool.openflow import Openflow
-#             self.tool = Openflow(
-#                 self.project,
-#                 frontend='yosys',
-#                 backend='ise'
-#             )
-#             self.presynth = True
+#     _DEVTYPES = ['fpga', 'spi', 'bpi', 'detect', 'unlock']
 
 #     def set_part(self, part):
 #         try:
@@ -137,19 +106,6 @@ class Ise(Project):
 #         self.part['device'] = device
 #         self.part['package'] = package
 #         self.part['speed'] = '-' + speed
-
-#     def generate(self, to_task, from_task, capture):
-#         if self.presynth and from_task in ['prj', 'syn']:
-#             self.tool.set_part(self.part['name'])
-#             self.tool.set_top(self.top)
-#             self.tool.paths = self.paths
-#             self.tool.files['vhdl'] = self.files['vhdl']
-#             self.tool.files['verilog'] = self.files['verilog']
-#             self.tool.params = self.params
-#             output1 = self.tool.generate('syn', 'prj', capture)
-#             output2 = super().generate(to_task, from_task, capture)
-#             return str(output1) + str(output2)
-#         return super().generate(to_task, from_task, capture)
 
 #     def transfer(self, devtype, position, part, width, capture):
 #         super().transfer(devtype, position, part, width, capture)
