@@ -92,6 +92,7 @@
 
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">which</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 
 
@@ -104,8 +105,11 @@
 <span class="sd">    :type name: str, optional</span>
 <span class="sd">    :param odir: output directory</span>
 <span class="sd">    :type odir: str, optional</span>
-<span class="sd">    :raises NotImplementedError: when a method is not implemented yet</span>
+<span class="sd">    :raises ValueError: when an invalid value is specified</span>
+<span class="sd">    :raises RuntimeError: when the needed underlying tool is not available</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">tool</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s1">&#39;results&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Class constructor.&quot;&quot;&quot;</span>
@@ -303,34 +307,44 @@
 
 <div class="viewcode-block" id="Project.make">
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project.make">[docs]</a>
-    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;bit&#39;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;prj&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">last</span><span class="o">=</span><span class="s1">&#39;bit&#39;</span><span class="p">,</span> <span class="n">first</span><span class="o">=</span><span class="s1">&#39;prj&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the underlying tool.</span>
 
-<span class="sd">        :param end: last task</span>
-<span class="sd">        :type end: str, optional</span>
-<span class="sd">        :param start: first task</span>
-<span class="sd">        :type start: str, optional</span>
+<span class="sd">        :param last: last step</span>
+<span class="sd">        :type last: str, optional</span>
+<span class="sd">        :param first: first step</span>
+<span class="sd">        :type first: str, optional</span>
 
-<span class="sd">        .. note:: Valid values are ``cfg``, ``syn``, ``imp`` and ``bit``.</span>
+<span class="sd">        .. note:: valid steps are ``cfg``, ``syn``, ``imp`` and ``bit``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cfg&#39;</span><span class="p">,</span> <span class="s1">&#39;syn&#39;</span><span class="p">,</span> <span class="s1">&#39;par&#39;</span><span class="p">,</span> <span class="s1">&#39;bit&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">end</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">steps</span> <span class="ow">or</span> <span class="n">start</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid steps.&#39;</span><span class="p">)</span>
-        <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method is not implemented yet.&#39;</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">last</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid last step.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">first</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid first step.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">steps</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">first</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">steps</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">last</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid steps combination.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">which</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tool</span><span class="p">[</span><span class="s1">&#39;program&#39;</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tool</span><span class="p">[</span><span class="s2">&quot;program&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> not found.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tool</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="Project.prog">
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project.prog">[docs]</a>
-    <span class="k">def</span> <span class="nf">prog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bitstream</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">prog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bitstream</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Program the FPGA</span>
 
-<span class="sd">        :param position: position of the device in the JTAG chain</span>
-<span class="sd">        :type position: str, optional</span>
 <span class="sd">        :param bitstream: bitstream to be programmed</span>
 <span class="sd">        :type bitstream: str, optional</span>
+<span class="sd">        :param position: position of the device in the JTAG chain</span>
+<span class="sd">        :type position: str, optional</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method is not implemented yet.&#39;</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">position</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid position.&#39;</span><span class="p">)</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">bitstream</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">which</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tool</span><span class="p">[</span><span class="s1">&#39;program&#39;</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tool</span><span class="p">[</span><span class="s2">&quot;program&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> not found.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tool</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">])</span></div>
 
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
