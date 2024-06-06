@@ -12,21 +12,6 @@ Implements support for Libero.
 
 from pyfpga.project import Project
 
-_TEMPLATES = {
-    'fpga': """\
-""",
-    'detect': """\
-"""
-}
-
-# open_project -file {$TEMPDIR/libero.prjx}
-# run_tool -name {CONFIGURE_CHAIN} -script {$TEMPDIR/flashpro.tcl}
-# run_tool -name {PROGRAMDEVICE}
-
-# set flashpro_programmer "configure_flashpro5_prg -vpump {ON} \
-# -clk_mode {free_running_clk} -programming_method {spi_slave} \
-# -force_freq {OFF} -freq {4000000}"
-
 # pylint: disable=too-few-public-methods
 
 
