@@ -1,6 +1,3 @@
-import os
-import pytest
-
 from pathlib import Path
 
 from pyfpga.project import Project
@@ -57,7 +54,7 @@ pattern = {
 }
 
 
-def test_names():
+def test_data():
     prj = Project()
     prj.set_part('PARTNAME')
     prj.set_top('TOPNAME')
