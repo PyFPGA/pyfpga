@@ -17,6 +17,7 @@ from datetime import datetime
 from pathlib import Path
 from shutil import which
 from time import time
+from jinja2 import Environment, FileSystemLoader
 
 
 class Project:
@@ -37,7 +38,6 @@ class Project:
         self.data = {}
         self.name = name
         self.odir = odir
-        # self.odir.mkdir(parents=True, exist_ok=True)
         # logging config
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.setLevel(logging.INFO)
@@ -210,9 +210,10 @@ class Project:
             raise ValueError('Invalid first step.')
         if steps.index(first) > steps.index(last):
             raise ValueError('Invalid steps combination.')
-        if not which(self.tool['program']):
-            raise RuntimeError(f'{self.tool["program"]} not found.')
-        self._run(self.tool['command'])
+        self._make_prepare()
+        if not which(self.tool['make-app']):
+            raise RuntimeError(f'{self.tool["make-app"]} not found.')
+        self._run(self.tool['make-cmd'])
 
     def prog(self, bitstream=None, position=1):
         """Program the FPGA
@@ -225,9 +226,28 @@ class Project:
         if position not in range(1, 9):
             raise ValueError('Invalid position.')
         _ = bitstream
-        if not which(self.tool['program']):
-            raise RuntimeError(f'{self.tool["program"]} not found.')
-        self._run(self.tool['command'])
+        self._prog_prepare()
+        if not which(self.tool['prog-app']):
+            raise RuntimeError(f'{self.tool["prog-app"]} not found.')
+        self._run(self.tool['prog-cmd'])
+
+    def _make_prepare(self):
+        raise NotImplementedError('Tool-dependent')
+
+    def _prog_prepare(self):
+        raise NotImplementedError('Tool-dependent')
+
+    def _create_file(self, basename, extension, context):
+        tempdir = Path(__file__).parent.joinpath('templates')
+        jinja_file_loader = FileSystemLoader(str(tempdir))
+        jinja_env = Environment(loader=jinja_file_loader)
+        jinja_template = jinja_env.get_template(f'{basename}.jinja')
+        content = jinja_template.render(context)
+        directory = Path(self.odir)
+        directory.mkdir(parents=True, exist_ok=True)
+        filename = f'{basename}.{extension}'
+        with open(directory / filename, 'w', encoding='utf-8') as file:
+            file.write(content)
 
     def _run(self, command):
         self.logger.info('Running the underlying tool (%s)', datetime.now())
@@ -237,14 +257,14 @@ class Project:
         start = time.time()
         try:
             os.chdir(new_dir)
-            with open('run.log', 'w', encoding='utf-8') as logfile:
+            with open('run.log', 'w', encoding='utf-8') as file:
                 subprocess.run(
                     command, shell=True, check=True, text=True,
-                    stdout=logfile, stderr=subprocess.STDOUT
+                    stdout=file, stderr=subprocess.STDOUT
                 )
         except subprocess.CalledProcessError:
-            with open('run.log', 'r', encoding='utf-8') as logfile:
-                lines = logfile.readlines()
+            with open('run.log', 'r', encoding='utf-8') as file:
+                lines = file.readlines()
                 last_lines = lines[-10:] if len(lines) >= 10 else lines
                 for line in last_lines:
                     self.logger.error(line.strip())
