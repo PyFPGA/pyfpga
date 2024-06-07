@@ -12,26 +12,22 @@ Implements support for ISE.
 
 from pyfpga.project import Project
 
-# pylint: disable=too-few-public-methods
-
 
 class Ise(Project):
     """Class to support ISE projects."""
 
-    tool = {
-        'program': 'xtclsh',
-        'command': 'xtclsh ise.tcl',
-    }
+    def __init__(self, name='ise', odir='results'):
+        super().__init__(name=name, odir=odir)
+        self.set_part('xc7k160t-3-fbg484')
 
-    tool = {
-        'def-part': 'xc7k160t-3-fbg484',
-        'proj-ext': 'xise',
-        'make-app': 'xtclsh',
-        'make-opt': 'ise.tcl',
-        'prog-app': 'impact',
-        'prog-opt': '-batch ise-prog.impact',
-        'binaries': ['bit']
-    }
+    def _make_prepare(self):
+        self.tool['make-app'] = 'xtclsh'
+        self.tool['make-cmd'] = 'xtclsh ise.tcl'
+
+    def _prog_prepare(self):
+        # binaries = ['bit']
+        self.tool['prog-app'] = 'impact'
+        self.tool['prog-cmd'] = 'impact -batch impact-prog'
 
 #     _DEVTYPES = ['fpga', 'spi', 'bpi', 'detect', 'unlock']
 
@@ -63,7 +59,6 @@ class Ise(Project):
 #         with open('ise-prog.impact', 'w', encoding='utf-8') as file:
 #             file.write(temp)
 #         return run(self._TRF_COMMAND, capture)
-
 
 # def get_family(part):
 #     """Get the Family name from the specified part name."""

@@ -9,28 +9,25 @@ Implements support for Quartus.
 """
 
 # import re
-# import subprocess
 
 from pyfpga.project import Project
 
 
 class Quartus(Project):
-    """Class to support Quartus."""
+    """Class to support Quartus projects."""
 
-    tool = {
-        'program': 'quartus_sh',
-        'command': 'quartus_sh --script quartus.tcl',
-    }
+    def __init__(self, name='quartus', odir='results'):
+        super().__init__(name=name, odir=odir)
+        self.set_part('10cl120zf780i8g')
 
-    tool = {
-        'def-part': '10cl120zf780i8g',
-        'proj-ext': 'qpf',
-        'make-app': 'quartus_sh',
-        'make-opt': '--script quartus.tcl',
-        'prog-app': 'quartus_pgm',
-        'prog-opt': '-c %s --mode jtag -o "p;%s@%s"',
-        'binaries': ['sof', 'pof']
-    }
+    def _make_prepare(self):
+        self.tool['make-app'] = 'quartus_sh'
+        self.tool['make-cmd'] = 'quartus_sh --script quartus.tcl'
+
+    def _prog_prepare(self):
+        # binaries = ['sof', 'pof']
+        self.tool['prog-app'] = 'quartus_pgm'
+        self.tool['prog-cmd'] = 'bash quartus-prog.sh'
 
 #     def transfer(self, devtype, position, part, width, capture):
 #         super().transfer(devtype, position, part, width, capture)

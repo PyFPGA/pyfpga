@@ -8,29 +8,24 @@
 Implements support for an Open Source development flow.
 """
 
-# import os
 from pyfpga.project import Project
-
-# pylint: disable=too-few-public-methods
 
 
 class Openflow(Project):
     """Class to support Openflow."""
 
-    tool = {
-        'program': 'docker',
-        'command': 'bash openflow.sh',
-    }
+    def __init__(self, name='openflow', odir='results'):
+        super().__init__(name=name, odir=odir)
+        self.set_part('hx8k-ct256')
 
-    tool = {
-        'def-part': 'hx8k-ct256',
-        'proj-ext': '',
-        'make-app': 'docker',
-        'make-cmd': 'bash openflow.sh',
-        'prog-app': 'docker',
-        'prog-cmd': 'bash openprog.sh',
-        'binaries': ['bit']
-    }
+    def _make_prepare(self):
+        self.tool['make-app'] = 'docker'
+        self.tool['make-cmd'] = 'bash openflow.sh'
+
+    def _prog_prepare(self):
+        # binaries = ['bit']
+        self.tool['prog-app'] = 'docker'
+        self.tool['prog-cmd'] = 'bash openflow-prog.sh'
 
 #     def __init__(self, project, frontend='yosys', backend='nextpnr'):
 #         # The valid frontends are be ghdl and yosys
@@ -177,7 +172,6 @@ class Openflow(Project):
 #         with open('openprog.sh', 'w', encoding='utf-8') as file:
 #             file.write(text)
 #         return run(self._TRF_COMMAND, capture)
-
 
 # def get_family(part):
 #     """Get the Family name from the specified part name."""

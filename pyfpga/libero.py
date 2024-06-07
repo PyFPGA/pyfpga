@@ -12,25 +12,22 @@ Implements support for Libero.
 
 from pyfpga.project import Project
 
-# pylint: disable=too-few-public-methods
-
 
 class Libero(Project):
     """Class to support Libero."""
 
-    tool = {
-        'program': 'libero',
-        'command': 'libero SCRIPT:libero.tcl',
-    }
+    def __init__(self, name='libero', odir='results'):
+        super().__init__(name=name, odir=odir)
+        self.set_part('mpf100t-1-fcg484')
 
-    tool = {
-        'def-part': 'mpf100t-1-fcg484',
-        'proj-ext': 'prjx',
-        'make-app': 'libero',
-        'make-opt': 'SCRIPT:libero.tcl',
-        'prog-app': '',
-        'prog-opt': ''
-    }
+    def _make_prepare(self):
+        self.tool['make-app'] = 'libero'
+        self.tool['make-cmd'] = 'libero SCRIPT:libero.tcl'
+
+    def _prog_prepare(self):
+        # binaries = ['bit']
+        self.tool['prog-app'] = ''
+        self.tool['prog-cmd'] = ''
 
 #     def set_part(self, part):
 #         try:
@@ -54,7 +51,6 @@ class Libero(Project):
 #     def transfer(self, devtype, position, part, width, capture):
 #         super().transfer(devtype, position, part, width, capture)
 #         raise NotImplementedError('transfer(libero)')
-
 
 # def get_family(part):
 #     """Get the Family name from the specified part name."""
