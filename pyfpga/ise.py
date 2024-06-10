@@ -20,7 +20,7 @@ class Ise(Project):
         super().__init__(name=name, odir=odir)
         self.set_part('xc7k160t-3-fbg484')
 
-    def _make_prepare(self):
+    def _make_prepare(self, steps):
         self.tool['make-app'] = 'xtclsh'
         self.tool['make-cmd'] = 'xtclsh ise.tcl'
 

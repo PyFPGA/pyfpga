@@ -193,7 +193,7 @@ class Project:
             raise ValueError('Invalid stage.')
         self.data.setdefault('hooks', {}).setdefault(stage, []).append(hook)
 
-    def make(self, last='bit', first='prj'):
+    def make(self, last='bit', first='cfg'):
         """Run the underlying tool.
 
         :param last: last step
@@ -208,9 +208,12 @@ class Project:
             raise ValueError('Invalid last step.')
         if first not in steps:
             raise ValueError('Invalid first step.')
-        if steps.index(first) > steps.index(last):
+        first_index = steps.index(first)
+        last_index = steps.index(last)
+        if first_index > last_index:
             raise ValueError('Invalid steps combination.')
-        self._make_prepare()
+        selected_steps = steps[first_index:last_index + 1]
+        self._make_prepare([step.upper() for step in selected_steps])
         if not which(self.tool['make-app']):
             raise RuntimeError(f'{self.tool["make-app"]} not found.')
         self._run(self.tool['make-cmd'])
@@ -231,7 +234,7 @@ class Project:
             raise RuntimeError(f'{self.tool["prog-app"]} not found.')
         self._run(self.tool['prog-cmd'])
 
-    def _make_prepare(self):
+    def _make_prepare(self, steps):
         raise NotImplementedError('Tool-dependent')
 
     def _prog_prepare(self):
@@ -254,7 +257,7 @@ class Project:
         run_error = 0
         old_dir = Path.cwd()
         new_dir = Path(self.odir)
-        start = time.time()
+        start = time()
         try:
             os.chdir(new_dir)
             with open('run.log', 'w', encoding='utf-8') as file:
@@ -271,7 +274,7 @@ class Project:
             run_error = 1
         finally:
             os.chdir(old_dir)
-            end = time.time()
+            end = time()
             self.logger.info('Done (%s)', datetime.now())
             elapsed = end - start
             self.logger.info(

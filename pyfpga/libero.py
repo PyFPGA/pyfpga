@@ -20,7 +20,7 @@ class Libero(Project):
         super().__init__(name=name, odir=odir)
         self.set_part('mpf100t-1-fcg484')
 
-    def _make_prepare(self):
+    def _make_prepare(self, steps):
         self.tool['make-app'] = 'libero'
         self.tool['make-cmd'] = 'libero SCRIPT:libero.tcl'
 

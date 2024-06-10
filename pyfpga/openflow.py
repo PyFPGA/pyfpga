@@ -18,7 +18,7 @@ class Openflow(Project):
         super().__init__(name=name, odir=odir)
         self.set_part('hx8k-ct256')
 
-    def _make_prepare(self):
+    def _make_prepare(self, steps):
         self.tool['make-app'] = 'docker'
         self.tool['make-cmd'] = 'bash openflow.sh'
 

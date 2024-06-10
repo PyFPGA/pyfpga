@@ -6,43 +6,37 @@
 
 set PROJECT  {{ PROJECT }}
 set PART     {{ PART }}
-set FAMILY   {{ FAMILY }}
-set DEVICE   {{ DEVICE }}
-set PACKAGE  {{ PACKAGE }}
-set SPEED    {{ SPEED }}
 set TOP      {{ TOP }}
 
-set PARAMS   [list {{ PARAMS }}]
+# proc fpga_file {FILE {LIBRARY "work"}} {
+#     set message "adding the file '$FILE'"
+#     if { $LIBRARY != "work" } { append message " (into the VHDL library '$LIBRARY')" }
+#     regexp -nocase {\.(\w*)$} $FILE -> ext
+#     if { $ext == "tcl" } {
+#         source $FILE
+#         return
+#     }
+#     if { $LIBRARY != "work" } {
+#         add_files $FILE
+#         set_property library $LIBRARY [get_files $FILE]
+#     } else {
+#         add_files $FILE
+#     }
+# }
 
-proc fpga_file {FILE {LIBRARY "work"}} {
-    set message "adding the file '$FILE'"
-    if { $LIBRARY != "work" } { append message " (into the VHDL library '$LIBRARY')" }
-    regexp -nocase {\.(\w*)$} $FILE -> ext
-    if { $ext == "tcl" } {
-        source $FILE
-        return
-    }
-    if { $LIBRARY != "work" } {
-        add_files $FILE
-        set_property library $LIBRARY [get_files $FILE]
-    } else {
-        add_files $FILE
-    }
-}
+# proc fpga_include {PATH} {
+#     lappend INCLUDED $PATH
+#     # Verilog Included Files are NOT added
+#     set_property "include_dirs" $INCLUDED [current_fileset]
+# }
 
-proc fpga_include {PATH} {
-    lappend INCLUDED $PATH
-    # Verilog Included Files are NOT added
-    set_property "include_dirs" $INCLUDED [current_fileset]
-}
-
-proc fpga_params {} {
-    if { [llength $PARAMS] == 0 } { return }
-    set assigns [list]
-    foreach PARAM $PARAMS { lappend assigns [join $PARAM "="] }
-    set obj [get_filesets sources_1]
-    set_property "generic" "[join $assigns]" -objects $obj
-}
+# proc fpga_params {} {
+#     if { [llength $PARAMS] == 0 } { return }
+#     set assigns [list]
+#     foreach PARAM $PARAMS { lappend assigns [join $PARAM "="] }
+#     set obj [get_filesets sources_1]
+#     set_property "generic" "[join $assigns]" -objects $obj
+# }
 
 #--[ Project configuration ]---------------------------------------------------
 
@@ -88,13 +82,11 @@ open_project $PROJECT
 {% if SYN %}
 {{ PRESYN }}
 
-{% if PRESYNTH %}
-set_property design_mode GateLvl [current_fileset]
-{% else %}
+# PRESYNTH
+# set_property design_mode GateLvl [current_fileset]
 reset_run synth_1
 launch_runs synth_1
 wait_on_run synth_1
-{% endif %}
 
 {{ POSTSYN }}
 {% endif %}
@@ -102,9 +94,6 @@ wait_on_run synth_1
 {% if PAR %}
 {{ PREPAR }}
 
-{% if not PRESYNTH %}
-open_run synth_1
-{% endif %}
 reset_run impl_1
 launch_runs impl_1
 wait_on_run impl_1

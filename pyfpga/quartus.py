@@ -20,7 +20,7 @@ class Quartus(Project):
         super().__init__(name=name, odir=odir)
         self.set_part('10cl120zf780i8g')
 
-    def _make_prepare(self):
+    def _make_prepare(self, steps):
         self.tool['make-app'] = 'quartus_sh'
         self.tool['make-cmd'] = 'quartus_sh --script quartus.tcl'
 
