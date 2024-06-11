@@ -3,6 +3,14 @@ from pyfpga.vivado import Vivado
 
 def test_vivado():
     prj = Vivado()
+
+    prj.set_arch('ARCHNAME')
+    prj.add_include('fakedata/dir1')
+    prj.add_include('fakedata/dir2')
+    prj.add_param('PARAM1', 'VALUE1')
+    prj.add_param('PARAM2', 'VALUE2')
+    prj.add_define('DEFINE1', 'VALUE1')
+    prj.add_define('DEFINE2', 'VALUE2')
     prj.add_hook('precfg', 'HOOK1')
     prj.add_hook('precfg', 'HOOK1')
     prj.add_hook('postcfg', 'HOOK2')

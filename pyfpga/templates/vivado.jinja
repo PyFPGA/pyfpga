@@ -8,38 +8,6 @@ set PROJECT  {{ PROJECT }}
 set PART     {{ PART }}
 set TOP      {{ TOP }}
 
-# proc fpga_file {FILE {LIBRARY "work"}} {
-#     set message "adding the file '$FILE'"
-#     if { $LIBRARY != "work" } { append message " (into the VHDL library '$LIBRARY')" }
-#     regexp -nocase {\.(\w*)$} $FILE -> ext
-#     if { $ext == "tcl" } {
-#         source $FILE
-#         return
-#     }
-#     if { $LIBRARY != "work" } {
-#         add_files $FILE
-#         set_property library $LIBRARY [get_files $FILE]
-#     } else {
-#         add_files $FILE
-#     }
-# }
-
-# proc fpga_include {PATH} {
-#     lappend INCLUDED $PATH
-#     # Verilog Included Files are NOT added
-#     set_property "include_dirs" $INCLUDED [current_fileset]
-# }
-
-# proc fpga_params {} {
-#     if { [llength $PARAMS] == 0 } { return }
-#     set assigns [list]
-#     foreach PARAM $PARAMS { lappend assigns [join $PARAM "="] }
-#     set obj [get_filesets sources_1]
-#     set_property "generic" "[join $assigns]" -objects $obj
-# }
-
-#--[ Project configuration ]---------------------------------------------------
-
 {% if CFG %}
 create_project -force $PROJECT
 set_property source_mgmt_mode None [current_project]
@@ -73,8 +41,6 @@ set_property top_arch {{ ARCH }} [current_fileset]
 
 close_project
 {% endif %}
-
-#--[ Design flow ]-------------------------------------------------------------
 
 {% if SYN or PAR or BIT %}
 open_project $PROJECT
