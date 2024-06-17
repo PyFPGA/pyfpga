@@ -58,6 +58,21 @@ class Project:
         self.logger.debug('Executing set_part')
         self.data['part'] = name
 
+    def add_include(self, path):
+        """Add an Include path.
+
+        Specify where to search for Included Verilog Files, IP repos, etc.
+
+        :param path: path of a directory
+        :type name: str
+        :raises NotADirectoryError: if path is not a directory
+        """
+        self.logger.debug('Executing add_include')
+        path = Path(path).resolve()
+        if not path.is_dir():
+            raise NotADirectoryError(path)
+        self.data.setdefault('includes', []).append(path)
+
     def _add_file(self, pathname, filetype=None, library=None, options=None):
         files = glob.glob(pathname)
         if len(files) == 0:
@@ -119,21 +134,6 @@ class Project:
         self.logger.debug('Executing add_vlog')
         self._add_file(pathname, filetype='vlog', options=options)
 
-    def add_include(self, path):
-        """Add an Include path.
-
-        Specify where to search for Included Verilog Files, IP repos, etc.
-
-        :param path: path of a directory
-        :type name: str
-        :raises NotADirectoryError: if path is not a directory
-        """
-        self.logger.debug('Executing add_include')
-        path = Path(path).resolve()
-        if not path.is_dir():
-            raise NotADirectoryError(path)
-        self.data.setdefault('includes', []).append(path)
-
     def add_param(self, name, value):
         """Add a Parameter/Generic Value.
 
@@ -164,6 +164,18 @@ class Project:
         """
         self.logger.debug('Executing set_arch')
         self.data['arch'] = name
+
+    def add_fileset(self, pathname):
+        """Add fileset file/s.
+
+        :param pathname: path to a fileset file
+        :type pathname: str
+        :raises FileNotFoundError: when pathname is not found
+        """
+        self.logger.debug('Executing add_fileset')
+        if not os.path.exists(pathname):
+            raise FileNotFoundError(pathname)
+        raise NotImplementedError()
 
     def set_top(self, name):
         """Set the name of the top level component.
