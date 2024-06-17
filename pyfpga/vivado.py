@@ -38,7 +38,7 @@ class Vivado(Project):
             context['ARCH'] = self.data['arch']
         if 'defines' in self.data:
             defines = []
-            for key,value in self.data['defines'].items():
+            for key, value in self.data['defines'].items():
                 defines.append(f'{key}={value}')
             context['DEFINES'] = ' '.join(defines)
         if 'includes' in self.data:
@@ -48,7 +48,7 @@ class Vivado(Project):
             context['INCLUDES'] = ' '.join(includes)
         if 'params' in self.data:
             params = []
-            for key,value in self.data['params'].items():
+            for key, value in self.data['params'].items():
                 params.append(f'{key}={value}')
             context['PARAMS'] = ' '.join(params)
         self._create_file('vivado', 'tcl', context)
