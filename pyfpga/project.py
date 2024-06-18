@@ -73,66 +73,68 @@ class Project:
             raise NotADirectoryError(path)
         self.data.setdefault('includes', []).append(path)
 
-    def _add_file(self, pathname, filetype=None, library=None, options=None):
-        files = glob.glob(pathname)
+    def _add_file(self, pathname, filetype=None, library=None):
+        files = glob.glob(pathname, recursive=True)
         if len(files) == 0:
             raise FileNotFoundError(pathname)
         for file in files:
             path = Path(file).resolve()
-            self.data.setdefault('files', {})[path] = {
-                'type': filetype, 'options': options, 'library': library
-            }
+            attr = []
+            if filetype:
+                attr.append(filetype)
+            if library:
+                attr.append(library)
+            self.data.setdefault('files', {})[path] = attr
 
-    def add_cons(self, pathname):
-        """Add constraint file/s.
-
-        :param pathname: path to a constraint file (glob compliant)
-        :type pathname: str
-        :raises FileNotFoundError: when pathname is not found
-        """
-        self.logger.debug('Executing add_cons')
-        self._add_file(pathname, filetype='cons', options=None)
-
-    def add_slog(self, pathname, options=None):
+    def add_slog(self, pathname):
         """Add System Verilog file/s.
 
         :param pathname: path to a SV file (glob compliant)
         :type pathname: str
-        :param options: for the underlying tool
-        :type options: str, optional
         :raises FileNotFoundError: when pathname is not found
         """
         self.logger.debug('Executing add_slog')
-        self._add_file(pathname, filetype='slog', options=options)
+        self._add_file(pathname, 'slog')
 
-    def add_vhdl(self, pathname, library=None, options=None):
+    def add_vhdl(self, pathname, library=None):
         """Add VHDL file/s.
 
         :param pathname: path to a SV file (glob compliant)
         :type pathname: str
         :param library: VHDL library name
         :type library: str, optional
-        :param options: for the underlying tool
-        :type options: str, optional
         :raises FileNotFoundError: when pathname is not found
         """
         self.logger.debug('Executing add_vhdl')
-        self._add_file(
-            pathname, filetype='vhdl',
-            library=library, options=options
-        )
+        self._add_file(pathname, 'vhdl', library)
 
-    def add_vlog(self, pathname, options=None):
+    def add_vlog(self, pathname):
         """Add Verilog file/s.
 
         :param pathname: path to a SV file (glob compliant)
         :type pathname: str
-        :param options: for the underlying tool
-        :type options: str, optional
         :raises FileNotFoundError: when pathname is not found
         """
         self.logger.debug('Executing add_vlog')
-        self._add_file(pathname, filetype='vlog', options=options)
+        self._add_file(pathname, 'vlog')
+
+    def add_constraint(self, path, syn=True, par=True):
+        """Add a constraint file.
+
+        :param pathname: path of a file
+        :type pathname: str
+        :raises FileNotFoundError: if path is not found
+        """
+        self.logger.debug('Executing add_constraint')
+        path = Path(path).resolve()
+        if not path.is_file():
+            raise FileNotFoundError(path)
+        attr = []
+        if syn:
+            attr.append('syn')
+        if par:
+            attr.append('par')
+        self.data.setdefault('constraints', {})[path] = attr
 
     def add_param(self, name, value):
         """Add a Parameter/Generic Value.
@@ -213,7 +215,7 @@ class Project:
         :param first: first step
         :type first: str, optional
 
-        .. note:: valid steps are ``cfg``, ``syn``, ``imp`` and ``bit``.
+        .. note:: valid steps are ``cfg``, ``syn``, ``par`` and ``bit``.
         """
         steps = ['cfg', 'syn', 'par', 'bit']
         if last not in steps:
