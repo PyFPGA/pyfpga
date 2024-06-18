@@ -117,12 +117,15 @@
     <span class="s1">&#39;part&#39;</span><span class="p">:</span> <span class="s1">&#39;PARTNAME&#39;</span><span class="p">,</span>
     <span class="s1">&#39;includes&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;DIR1&#39;</span><span class="p">,</span> <span class="s1">&#39;DIR2&#39;</span><span class="p">,</span> <span class="s1">&#39;DIR3&#39;</span><span class="p">],</span>
     <span class="s1">&#39;files&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;file1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;vhdl&#39;</span><span class="p">,</span> <span class="s1">&#39;options&#39;</span><span class="p">:</span> <span class="s1">&#39;OPT1&#39;</span><span class="p">,</span> <span class="s1">&#39;library&#39;</span><span class="p">:</span> <span class="s1">&#39;LIB1&#39;</span><span class="p">},</span>
-        <span class="s1">&#39;file2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;vlog&#39;</span><span class="p">,</span> <span class="s1">&#39;options&#39;</span><span class="p">:</span> <span class="s1">&#39;OPT2&#39;</span><span class="p">,</span> <span class="s1">&#39;library&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
-        <span class="s1">&#39;file3&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;slog&#39;</span><span class="p">,</span> <span class="s1">&#39;options&#39;</span><span class="p">:</span> <span class="s1">&#39;OPT3&#39;</span><span class="p">,</span> <span class="s1">&#39;library&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
-        <span class="s1">&#39;file4&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;cons&#39;</span><span class="p">,</span> <span class="s1">&#39;options&#39;</span><span class="p">:</span> <span class="s1">&#39;OPT4&#39;</span><span class="p">,</span> <span class="s1">&#39;library&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+        <span class="s1">&#39;FILE1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;vhdl&#39;</span><span class="p">,</span> <span class="s1">&#39;LIB1&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;FILE2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;vlog&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;FILE3&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;slog&#39;</span><span class="p">]</span>
     <span class="p">},</span>
-    <span class="s1">&#39;top&#39;</span><span class="p">:</span> <span class="s1">&#39;TOPNAME&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;constraints&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;FILE1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;syn&#39;</span><span class="p">,</span> <span class="s1">&#39;par&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;FILE2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;syn&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;FILE3&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;par&#39;</span><span class="p">]</span>
+    <span class="p">},</span>
     <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s1">&#39;PAR1&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL1&#39;</span><span class="p">,</span>
         <span class="s1">&#39;PAR2&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL2&#39;</span><span class="p">,</span>
@@ -134,6 +137,7 @@
         <span class="s1">&#39;DEF3&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL3&#39;</span>
     <span class="p">},</span>
     <span class="s1">&#39;arch&#39;</span><span class="p">:</span> <span class="s1">&#39;ARCHNAME&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;top&#39;</span><span class="p">:</span> <span class="s1">&#39;TOPNAME&#39;</span><span class="p">,</span>
     <span class="s1">&#39;hooks&#39;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s1">&#39;precfg&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CMD1&#39;</span><span class="p">,</span> <span class="s1">&#39;CMD2&#39;</span><span class="p">],</span>
         <span class="s1">&#39;postcfg&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CMD1&#39;</span><span class="p">,</span> <span class="s1">&#39;CMD2&#39;</span><span class="p">],</span>
