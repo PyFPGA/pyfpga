@@ -23,12 +23,10 @@ from jinja2 import Environment, FileSystemLoader
 class Project:
     """Base class to manage an FPGA project.
 
-    :param name: project name (tool name by default)
+    :param name: project name (tool name when nothing specified)
     :type name: str, optional
     :param odir: output directory
     :type odir: str, optional
-    :raises ValueError: when an invalid value is specified
-    :raises RuntimeError: when the needed underlying tool is not available
     """
 
     tool = {}
@@ -73,17 +71,17 @@ class Project:
             raise NotADirectoryError(path)
         self.data.setdefault('includes', []).append(path)
 
-    def _add_file(self, pathname, filetype=None, library=None):
+    def _add_file(self, pathname, hdl=None, lib=None):
         files = glob.glob(pathname, recursive=True)
         if len(files) == 0:
             raise FileNotFoundError(pathname)
         for file in files:
             path = Path(file).resolve()
-            attr = []
-            if filetype:
-                attr.append(filetype)
-            if library:
-                attr.append(library)
+            attr = {}
+            if hdl:
+                attr['hdl'] = hdl
+            if lib:
+                attr['lib'] = lib
             self.data.setdefault('files', {})[path] = attr
 
     def add_slog(self, pathname):
@@ -96,17 +94,17 @@ class Project:
         self.logger.debug('Executing add_slog')
         self._add_file(pathname, 'slog')
 
-    def add_vhdl(self, pathname, library=None):
+    def add_vhdl(self, pathname, lib=None):
         """Add VHDL file/s.
 
         :param pathname: path to a SV file (glob compliant)
         :type pathname: str
-        :param library: VHDL library name
-        :type library: str, optional
+        :param lib: VHDL library name
+        :type lib: str, optional
         :raises FileNotFoundError: when pathname is not found
         """
         self.logger.debug('Executing add_vhdl')
-        self._add_file(pathname, 'vhdl', library)
+        self._add_file(pathname, 'vhdl', lib)
 
     def add_vlog(self, pathname):
         """Add Verilog file/s.
@@ -118,23 +116,22 @@ class Project:
         self.logger.debug('Executing add_vlog')
         self._add_file(pathname, 'vlog')
 
-    def add_constraint(self, path, syn=True, par=True):
+    def add_constraint(self, path, when='all'):
         """Add a constraint file.
 
         :param pathname: path of a file
         :type pathname: str
+        :param when: always ('all'), synthesis ('syn') or P&R ('par')
+        :type only: str, optional
         :raises FileNotFoundError: if path is not found
         """
         self.logger.debug('Executing add_constraint')
         path = Path(path).resolve()
         if not path.is_file():
             raise FileNotFoundError(path)
-        attr = []
-        if syn:
-            attr.append('syn')
-        if par:
-            attr.append('par')
-        self.data.setdefault('constraints', {})[path] = attr
+        if when not in ['all', 'syn', 'par']:
+            raise ValueError('Invalid only.')
+        self.data.setdefault('constraints', {})[path] = when
 
     def add_param(self, name, value):
         """Add a Parameter/Generic Value.
@@ -199,6 +196,7 @@ class Project:
         :type hook: str
         :raises ValueError: when stage is invalid
         """
+        self.logger.debug('Executing add_hook')
         stages = [
             'precfg', 'postcfg', 'presyn', 'postsyn',
             'prepar', 'postpar', 'prebit', 'postbit'
@@ -214,9 +212,18 @@ class Project:
         :type last: str, optional
         :param first: first step
         :type first: str, optional
+        :raises ValueError: for missing or wrong values
+        :raises RuntimeError: when the needed underlying tool is not found
 
         .. note:: valid steps are ``cfg``, ``syn``, ``par`` and ``bit``.
         """
+        self.logger.debug('Executing make')
+        if 'part' not in self.data:
+            self.logger.info('No part specified, using a default value')
+        if 'top' not in self.data:
+            self.logger.warning('No top specified')
+        if 'files' not in self.data:
+            self.logger.warning('No files specified')
         steps = ['cfg', 'syn', 'par', 'bit']
         if last not in steps:
             raise ValueError('Invalid last step.')
@@ -239,7 +246,10 @@ class Project:
         :type bitstream: str, optional
         :param position: position of the device in the JTAG chain
         :type position: str, optional
+        :raises ValueError: for missing or wrong values
+        :raises RuntimeError: when the needed underlying tool is not found
         """
+        self.logger.debug('Executing prog')
         if position not in range(1, 9):
             raise ValueError('Invalid position.')
         _ = bitstream

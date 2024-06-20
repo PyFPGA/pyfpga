@@ -10,25 +10,31 @@ pattern = {
         Path('fakedata/dir3').resolve()
     ],
     'files': {
-        Path('fakedata/vhdl0.vhdl').resolve(): ['vhdl', 'LIB'],
-        Path('fakedata/dir1/vhdl1.vhdl').resolve(): ['vhdl', 'LIB'],
-        Path('fakedata/dir2/vhdl2.vhdl').resolve(): ['vhdl', 'LIB'],
-        Path('fakedata/dir3/vhdl3.vhdl').resolve(): ['vhdl', 'LIB'],
-        Path('fakedata/vlog0.v').resolve(): ['vlog'],
-        Path('fakedata/dir1/vlog1.v').resolve(): ['vlog'],
-        Path('fakedata/dir2/vlog2.v').resolve(): ['vlog'],
-        Path('fakedata/dir3/vlog3.v').resolve(): ['vlog'],
-        Path('fakedata/slog0.sv').resolve(): ['slog'],
-        Path('fakedata/dir1/slog1.sv').resolve(): ['slog'],
-        Path('fakedata/dir2/slog2.sv').resolve(): ['slog'],
-        Path('fakedata/dir3/slog3.sv').resolve(): ['slog']
-    },
-    'constraints': {
-        Path('fakedata/cons/all.xdc').resolve(): ['syn', 'par'],
-        Path('fakedata/cons/syn.xdc').resolve(): ['syn'],
-        Path('fakedata/cons/par.xdc').resolve(): ['par']
+        Path('fakedata/vhdl0.vhdl').resolve(): {'hdl': 'vhdl', 'lib': 'LIB'},
+        Path('fakedata/dir1/vhdl1.vhdl').resolve(): {
+            'hdl': 'vhdl', 'lib': 'LIB'
+        },
+        Path('fakedata/dir2/vhdl2.vhdl').resolve(): {
+            'hdl': 'vhdl', 'lib': 'LIB'
+        },
+        Path('fakedata/dir3/vhdl3.vhdl').resolve(): {
+            'hdl': 'vhdl', 'lib': 'LIB'
+        },
+        Path('fakedata/vlog0.v').resolve(): {'hdl': 'vlog'},
+        Path('fakedata/dir1/vlog1.v').resolve(): {'hdl': 'vlog'},
+        Path('fakedata/dir2/vlog2.v').resolve(): {'hdl': 'vlog'},
+        Path('fakedata/dir3/vlog3.v').resolve(): {'hdl': 'vlog'},
+        Path('fakedata/slog0.sv').resolve(): {'hdl': 'slog'},
+        Path('fakedata/dir1/slog1.sv').resolve(): {'hdl': 'slog'},
+        Path('fakedata/dir2/slog2.sv').resolve(): {'hdl': 'slog'},
+        Path('fakedata/dir3/slog3.sv').resolve(): {'hdl': 'slog'}
     },
     'top': 'TOPNAME',
+    'constraints': {
+        Path('fakedata/cons/all.xdc').resolve(): 'all',
+        Path('fakedata/cons/syn.xdc').resolve(): 'syn',
+        Path('fakedata/cons/par.xdc').resolve(): 'par'
+    },
     'params': {
         'PAR1': 'VAL1',
         'PAR2': 'VAL2',
@@ -65,8 +71,8 @@ def test_data():
     prj.add_vhdl('fakedata/**/*.vhdl', 'LIB')
     prj.add_vlog('fakedata/**/*.v')
     prj.add_constraint('fakedata/cons/all.xdc')
-    prj.add_constraint('fakedata/cons/syn.xdc', True, False)
-    prj.add_constraint('fakedata/cons/par.xdc', False, True)
+    prj.add_constraint('fakedata/cons/syn.xdc', 'syn')
+    prj.add_constraint('fakedata/cons/par.xdc', 'par')
     prj.add_param('PAR1', 'VAL1')
     prj.add_param('PAR2', 'VAL2')
     prj.add_param('PAR3', 'VAL3')
