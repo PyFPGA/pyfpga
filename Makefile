@@ -19,7 +19,7 @@ clean:
 	rm -fr build .pytest_cache
 
 submodule-init:
-	git submodule update --init
+	git submodule update --init --recursive
 
 submodule-update:
-	cd resources; git checkout main; git pull
+	cd examples/resources; git checkout main; git pull
