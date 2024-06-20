@@ -4,37 +4,36 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-set PROJECT  {{ PROJECT }}
-set PART     {{ PART }}
-set TOP      {{ TOP }}
+#--[ Project configuration ]--------------------------------------------------
 
 {% if CFG %}
-create_project -force $PROJECT
-set_property source_mgmt_mode None [current_project]
+create_project -force {{ PROJECT }}
+set_property SOURCE_MGMT_MODE None [current_project]
 set_property STEPS.SYNTH_DESIGN.ARGS.ASSERT true [get_runs synth_1]
-
-set_property part $PART [current_project]
+set_property PART {{ PART }} [current_project]
 
 {{ PRECFG }}
 
 {{ FILES }}
 
-set_property top $TOP [current_fileset]
+{% if TOP %}
+set_property TOP {{ TOP }} [current_fileset]
+{% endif %}
 
 {% if DEFINES %}
-set_property verilog_define { {{ DEFINES}} } [current_fileset]
+set_property VERILOG_DEFINE { {{ DEFINES}} } [current_fileset]
 {% endif %}
 
 {% if INCLUDES %}
-set_property include_dirs { {{ INCLUDES}} } [current_fileset]
+set_property INCLUDE_DIRS { {{ INCLUDES}} } [current_fileset]
 {% endif %}
 
 {% if PARAMS %}
-set_property generic { {{ PARAMS }} } -objects [get_filesets sources_1]
+set_property GENERIC { {{ PARAMS }} } -objects [get_filesets sources_1]
 {% endif %}
 
 {% if ARCH %}
-set_property top_arch {{ ARCH }} [current_fileset]
+set_property TOP_ARCH {{ ARCH }} [current_fileset]
 {% endif %}
 
 {{ POSTCFG }}
@@ -42,14 +41,16 @@ set_property top_arch {{ ARCH }} [current_fileset]
 close_project
 {% endif %}
 
+#--[ Design flow ]-------------------------------------------------------------
+
 {% if SYN or PAR or BIT %}
-open_project $PROJECT
+open_project {{ PROJECT }}
 
 {% if SYN %}
 {{ PRESYN }}
 
 # PRESYNTH
-# set_property design_mode GateLvl [current_fileset]
+# set_property DESIGN_MODE GateLvl [current_fileset]
 reset_run synth_1
 launch_runs synth_1
 wait_on_run synth_1
@@ -71,8 +72,8 @@ wait_on_run impl_1
 {{ PREBIT }}
 
 open_run impl_1
-write_bitstream -force $PROJECT
-write_debug_probes -force -quiet $PROJECT.ltx
+write_bitstream -force {{ PROJECT }}
+write_debug_probes -force -quiet {{ PROJECT }}.ltx
 
 {{ POSTBIT }}
 {% endif %}
