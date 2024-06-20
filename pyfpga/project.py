@@ -13,7 +13,6 @@ import logging
 import os
 import subprocess
 
-from datetime import datetime
 from pathlib import Path
 from shutil import which
 from time import time
@@ -277,7 +276,9 @@ class Project:
             file.write(content)
 
     def _run(self, command):
-        self.logger.info('Running the underlying tool (%s)', datetime.now())
+        self.logger.info(
+            'Running the underlying tool (%s)', self.tool['make-app']
+        )
         run_error = 0
         old_dir = Path.cwd()
         new_dir = Path(self.odir)
@@ -299,7 +300,6 @@ class Project:
         finally:
             os.chdir(old_dir)
             end = time()
-            self.logger.info('Done (%s)', datetime.now())
             elapsed = end - start
             self.logger.info(
                 'Elapsed time %dh %dm %.2fs',
