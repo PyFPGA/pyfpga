@@ -40,14 +40,15 @@ Internal data structure
         'part': 'PARTNAME',
         'includes': ['DIR1', 'DIR2', 'DIR3'],
         'files': {
-            'FILE1': ['vhdl', 'LIB1'],
-            'FILE2': ['vlog'],
-            'FILE3': ['slog']
+            'FILE1': {'hdl': 'vhdl', 'lib': 'LIB1'}
+            'FILE2': {'hdl': 'vlog'},
+            'FILE3': {'hdl': 'slog'}
         },
+        'top': 'TOPNAME',
         'constraints': {
-            'FILE1': ['syn', 'par'],
-            'FILE2': ['syn'],
-            'FILE3': ['par']
+            'FILE1': 'all',
+            'FILE2': 'syn',
+            'FILE3': 'par'
         },
         'params': {
             'PAR1': 'VAL1',
@@ -60,7 +61,6 @@ Internal data structure
             'DEF3': 'VAL3'
         },
         'arch': 'ARCHNAME',
-        'top': 'TOPNAME',
         'hooks': {
             'precfg': ['CMD1', 'CMD2'],
             'postcfg': ['CMD1', 'CMD2'],
