@@ -276,6 +276,7 @@ class Project:
             file.write(content)
 
     def _run(self, command):
+        NUM = 20
         error = 0
         old_dir = Path.cwd()
         new_dir = Path(self.odir)
@@ -290,9 +291,11 @@ class Project:
         except subprocess.CalledProcessError:
             with open('run.log', 'r', encoding='utf-8') as file:
                 lines = file.readlines()
-                last_lines = lines[-10:] if len(lines) >= 10 else lines
+                last_lines = lines[-NUM:] if len(lines) >= NUM else lines
                 for line in last_lines:
-                    self.logger.error(line.strip())
+                    message = line.strip()
+                    if len(message):
+                        print(f'>> {message}')
             error = 1
         finally:
             os.chdir(old_dir)
