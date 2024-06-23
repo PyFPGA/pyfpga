@@ -14,7 +14,6 @@ import os
 import subprocess
 
 from pathlib import Path
-from shutil import which
 from time import time
 from jinja2 import Environment, FileSystemLoader
 
@@ -204,39 +203,41 @@ class Project:
             raise ValueError('Invalid stage.')
         self.data.setdefault('hooks', {}).setdefault(stage, []).append(hook)
 
-    def make(self, last='bit', first='cfg'):
+    def make(self, first='cfg', last='bit'):
         """Run the underlying tool.
 
-        :param last: last step
-        :type last: str, optional
         :param first: first step
         :type first: str, optional
+        :param last: last step
+        :type last: str, optional
         :raises ValueError: for missing or wrong values
-        :raises RuntimeError: when the needed underlying tool is not found
+        :raises RuntimeError: error running the needed underlying tool
 
         .. note:: valid steps are ``cfg``, ``syn``, ``par`` and ``bit``.
         """
         self.logger.debug('Executing make')
         if 'part' not in self.data:
-            self.logger.info('No part specified, using a default value')
-        if 'top' not in self.data:
-            self.logger.warning('No top specified')
-        if 'files' not in self.data:
-            self.logger.warning('No files specified')
-        steps = ['cfg', 'syn', 'par', 'bit']
+            self.logger.info('Using the default PART')
+        steps = {
+            'cfg': 'Project Creation',
+            'syn': 'Synthesis',
+            'par': 'Place and Route',
+            'bit': 'Bitstream generation'
+        }
         if last not in steps:
             raise ValueError('Invalid last step.')
         if first not in steps:
             raise ValueError('Invalid first step.')
-        first_index = steps.index(first)
-        last_index = steps.index(last)
-        if first_index > last_index:
+        keys = list(steps.keys())
+        index = [keys.index(first), keys.index(last)]
+        if index[0] > index[1]:
             raise ValueError('Invalid steps combination.')
-        selected_steps = steps[first_index:last_index + 1]
-        self._make_prepare([step.upper() for step in selected_steps])
-        if not which(self.tool['make-app']):
-            raise RuntimeError(f'{self.tool["make-app"]} not found.')
-        self._run(self.tool['make-cmd'])
+        message = f'from {steps[first]} to {steps[last]}'
+        if first == last:
+            message = steps[first]
+        self.logger.info('Running %s', message)
+        selected = [step.upper() for step in keys[index[0]:index[1]+1]]
+        self._run(self._make_prepare(selected))
 
     def prog(self, bitstream=None, position=1):
         """Program the FPGA
@@ -246,16 +247,15 @@ class Project:
         :param position: position of the device in the JTAG chain
         :type position: str, optional
         :raises ValueError: for missing or wrong values
-        :raises RuntimeError: when the needed underlying tool is not found
+        :raises RuntimeError: error running the needed underlying tool
         """
         self.logger.debug('Executing prog')
         if position not in range(1, 9):
             raise ValueError('Invalid position.')
         _ = bitstream
         self._prog_prepare()
-        if not which(self.tool['prog-app']):
-            raise RuntimeError(f'{self.tool["prog-app"]} not found.')
-        self._run(self.tool['prog-cmd'])
+        self.logger.info('Programming')
+        self._run(self._prog_prepare())
 
     def _make_prepare(self, steps):
         raise NotImplementedError('Tool-dependent')
@@ -276,10 +276,7 @@ class Project:
             file.write(content)
 
     def _run(self, command):
-        self.logger.info(
-            'Running the underlying tool (%s)', self.tool['make-app']
-        )
-        run_error = 0
+        error = 0
         old_dir = Path.cwd()
         new_dir = Path(self.odir)
         start = time()
@@ -296,7 +293,7 @@ class Project:
                 last_lines = lines[-10:] if len(lines) >= 10 else lines
                 for line in last_lines:
                     self.logger.error(line.strip())
-            run_error = 1
+            error = 1
         finally:
             os.chdir(old_dir)
             end = time()
@@ -307,5 +304,5 @@ class Project:
                 int((elapsed % 3600) // 60),
                 elapsed % 60
             )
-            if run_error:
-                raise RuntimeError('Error running the underlying tool')
+            if error:
+                raise RuntimeError('Problem with the underlying tool')

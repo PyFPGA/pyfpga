@@ -18,10 +18,6 @@ class Vivado(Project):
     """Class to support Vivado projects."""
 
     def _make_prepare(self, steps):
-        self.tool['make-app'] = 'vivado'
-        self.tool['make-cmd'] = (
-            'vivado -mode batch -notrace -quiet -source vivado.tcl'
-        )
         context = {
             'PROJECT': self.name or 'vivado',
             'PART': self.data.get('part', 'xc7k160t-3-fbg484')
@@ -76,10 +72,8 @@ class Vivado(Project):
             for stage in self.data['hooks']:
                 context[stage.upper()] = '\n'.join(self.data['hooks'][stage])
         self._create_file('vivado', 'tcl', context)
+        return 'vivado -mode batch -notrace -quiet -source vivado.tcl'
 
     def _prog_prepare(self):
         # binaries = ['bit']
-        self.tool['prog-app'] = 'vivado'
-        self.tool['prog-cmd'] = (
-            'vivado -mode batch -notrace -quiet -source vivado-prog.tcl'
-        )
+        return 'vivado -mode batch -notrace -quiet -source vivado-prog.tcl'
