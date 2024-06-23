@@ -9,7 +9,7 @@ parser.add_argument(
     '--action', choices=['make', 'prog', 'all'], default='make'
 )
 parser.add_argument(
-    '--source', choices=['vhdl', 'vlog', 'design'], default='vhdl'
+    '--source', choices=['vlog', 'vhdl', 'slog', 'design'], default='vlog'
 )
 args = parser.parse_args()
 
@@ -18,13 +18,19 @@ prj.set_part('xc7z010-1-clg400')
 
 prj.add_param('FREQ', '125000000')
 if args.source == 'vhdl':
-    prj.add_vhdl('../resources/vhdl/blink.vhdl')
+    prj.add_vhdl('../sources/vhdl/*.vhdl', 'blink_lib')
 if args.source == 'vlog':
-    prj.add_vlog('../resources/vlog/blink.v')
-prj.add_constraint('../resources/constraints/zybo/timing.xdc', 'syn')
-prj.add_constraint('../resources/constraints/zybo/clk.xdc', 'par')
-prj.add_constraint('../resources/constraints/zybo/led.xdc', 'par')
-prj.set_top('Blink')
+    prj.add_include('../sources/vlog/include')
+    prj.add_vlog('../sources/vlog/*.v')
+if args.source == 'slog':
+    prj.add_include('../sources/slog/include')
+    prj.add_vlog('../sources/slog/*.sv')
+if args.source in ['vlog', 'slog']:
+    prj.add_define('DEFINE', '1')
+prj.add_constraint('sources/zybo/timing.xdc', 'syn')
+prj.add_constraint('sources/zybo/clk.xdc', 'par')
+prj.add_constraint('sources/zybo/led.xdc', 'par')
+prj.set_top('Top')
 
 if args.action in ['make', 'all']:
     prj.make()
