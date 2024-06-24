@@ -5,7 +5,6 @@ def test_vivado():
     prj = Vivado()
     prj.set_part('PARTNAME')
     prj.set_top('TOPNAME')
-    prj.set_arch('ARCHNAME')
     prj.add_include('fakedata/dir1')
     prj.add_include('fakedata/dir2')
     prj.add_slog('fakedata/**/*.sv')

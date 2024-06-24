@@ -153,15 +153,6 @@ class Project:
         self.logger.debug('Executing add_define')
         self.data.setdefault('defines', {})[name] = value
 
-    def set_arch(self, name):
-        """Set the VHDL architecture.
-
-        :param name: architecture name
-        :type name: str
-        """
-        self.logger.debug('Executing set_arch')
-        self.data['arch'] = name
-
     def add_fileset(self, pathname):
         """Add fileset file/s.
 

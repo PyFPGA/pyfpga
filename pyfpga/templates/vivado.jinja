@@ -32,10 +32,6 @@ set_property INCLUDE_DIRS { {{ INCLUDES}} } [current_fileset]
 set_property GENERIC { {{ PARAMS }} } -objects [get_filesets sources_1]
 {% endif %}
 
-{% if ARCH %}
-set_property TOP_ARCH {{ ARCH }} [current_fileset]
-{% endif %}
-
 {{ POSTCFG }}
 
 close_project

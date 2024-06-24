@@ -67,8 +67,6 @@ class Vivado(Project):
             for key, value in self.data['params'].items():
                 params.append(f'{key}={value}')
             context['PARAMS'] = ' '.join(params)
-        if 'arch' in self.data:
-            context['ARCH'] = self.data['arch']
         if 'hooks' in self.data:
             for stage in self.data['hooks']:
                 context[stage.upper()] = '\n'.join(self.data['hooks'][stage])

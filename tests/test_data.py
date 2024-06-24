@@ -45,7 +45,6 @@ pattern = {
         'DEF2': 'VAL2',
         'DEF3': 'VAL3'
     },
-    'arch': 'ARCHNAME',
     'hooks': {
         'precfg': ['CMD1', 'CMD2'],
         'postcfg': ['CMD1', 'CMD2'],
@@ -63,7 +62,6 @@ def test_data():
     prj = Project()
     prj.set_part('PARTNAME')
     prj.set_top('TOPNAME')
-    prj.set_arch('ARCHNAME')
     prj.add_include('fakedata/dir1')
     prj.add_include('fakedata/dir2')
     prj.add_include('fakedata/dir3')
