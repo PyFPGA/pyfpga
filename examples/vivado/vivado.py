@@ -27,9 +27,9 @@ if args.source == 'slog':
     prj.add_vlog('../sources/slog/*.sv')
 if args.source in ['vlog', 'slog']:
     prj.add_define('DEFINE', '1')
-prj.add_cons('sources/zybo/timing.xdc', 'syn')
-prj.add_cons('sources/zybo/clk.xdc', 'par')
-prj.add_cons('sources/zybo/led.xdc', 'par')
+prj.add_cons('../sources/zybo/timing.xdc', 'syn')
+prj.add_cons('../sources/zybo/clk.xdc', 'par')
+prj.add_cons('../sources/zybo/led.xdc', 'par')
 prj.set_top('Top')
 
 if args.action in ['make', 'all']:
