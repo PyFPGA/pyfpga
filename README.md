@@ -14,33 +14,22 @@ With PyFPGA, you can create your own FPGA development workflow tailored to your 
 
 Some of its benefits are:
 * It provides a unified API between tools/devices.
-* It's **Version Control Systems** and **Continuous Integration friendly**.
+* It's **Version Control Systems** and **Continuous Integration** friendly.
 * It ensures reproducibility and repeatability.
 * It consumes fewer system resources than GUI-based workflows.
 
 ## Basic example
 
 ```py
-from fpga import Project
+from pyfpga import Vivado
 
-# Specify the backend tool and an optional project name
-prj = Project('vivado', 'example')
-
-# Set the device/part
+prj = Vivado('example')
 prj.set_part('xc7z010-1-clg400')
-
-# Add HDL sources to the project
-prj.add_files('location1/*.v')
-prj.add_files('location2/top.v')
-
-# Optionally add constraint files to the project
-prj.add_files('location3/example.xdc')
-
-# Set the top-level unit name
+prj.add_vlog('location1/*.v')
+prj.add_vlog('location2/top.v')
+prj.add_constraint('location3/example.xdc')
 prj.set_top('Top')
-
-# Generate the bitstream running the tool
-prj.generate()
+prj.make()
 ```
 
 The next steps are to read the [docs](https://pyfpga.github.io/pyfpga) or take a look at [examples](examples).
@@ -54,11 +43,11 @@ For a comprehensive list of supported tools, features and limitations, please re
 
 > **NOTE:**
 > PyFPGA assumes that the underlying tools required for operation are ready to be executed from the running terminal.
-> This includes having the tools installed, properly configured, and licensed (when needed).
+> This includes having the tools installed, properly configured and licensed (when needed).
 
 ## Installation
 
-PyFPGA requires Python>=3.7.
+PyFPGA requires Python>=3.8.
 
 At the moment, it's only available as a git repository hosted on GitHub. It can be installed with pip:
 
