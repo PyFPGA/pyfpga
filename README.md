@@ -27,7 +27,7 @@ prj = Vivado('example')
 prj.set_part('xc7z010-1-clg400')
 prj.add_vlog('location1/*.v')
 prj.add_vlog('location2/top.v')
-prj.add_constraint('location3/example.xdc')
+prj.add_cons('location3/example.xdc')
 prj.set_top('Top')
 prj.make()
 ```

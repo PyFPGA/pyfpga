@@ -114,7 +114,7 @@ class Project:
         self.logger.debug('Executing add_vlog')
         self._add_file(pathname, 'vlog')
 
-    def add_constraint(self, path, when='all'):
+    def add_cons(self, path, when='all'):
         """Add a constraint file.
 
         :param pathname: path of a file
@@ -123,7 +123,7 @@ class Project:
         :type only: str, optional
         :raises FileNotFoundError: if path is not found
         """
-        self.logger.debug('Executing add_constraint')
+        self.logger.debug('Executing add_cons')
         path = Path(path).resolve()
         if not path.is_file():
             raise FileNotFoundError(path)
