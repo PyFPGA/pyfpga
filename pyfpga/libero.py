@@ -24,7 +24,7 @@ class Libero(Project):
         self.tool['make-app'] = 'libero'
         self.tool['make-cmd'] = 'libero SCRIPT:libero.tcl'
 
-    def _prog_prepare(self):
+    def _prog_prepare(self, bitstream, position):
         # binaries = ['bit']
         self.tool['prog-app'] = ''
         self.tool['prog-cmd'] = ''

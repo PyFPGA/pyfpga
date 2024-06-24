@@ -22,7 +22,7 @@ class Openflow(Project):
         self.tool['make-app'] = 'docker'
         self.tool['make-cmd'] = 'bash openflow.sh'
 
-    def _prog_prepare(self):
+    def _prog_prepare(self, bitstream, position):
         # binaries = ['bit']
         self.tool['prog-app'] = 'docker'
         self.tool['prog-cmd'] = 'bash openflow-prog.sh'

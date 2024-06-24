@@ -252,15 +252,13 @@ class Project:
         self.logger.debug('Executing prog')
         if position not in range(1, 9):
             raise ValueError('Invalid position.')
-        _ = bitstream
-        self._prog_prepare()
         self.logger.info('Programming')
-        self._run(self._prog_prepare())
+        self._run(self._prog_prepare(bitstream, position))
 
     def _make_prepare(self, steps):
         raise NotImplementedError('Tool-dependent')
 
-    def _prog_prepare(self):
+    def _prog_prepare(self, bitstream, position):
         raise NotImplementedError('Tool-dependent')
 
     def _create_file(self, basename, extension, context):
@@ -276,7 +274,7 @@ class Project:
             file.write(content)
 
     def _run(self, command):
-        NUM = 20
+        num = 20
         error = 0
         old_dir = Path.cwd()
         new_dir = Path(self.odir)
@@ -291,7 +289,7 @@ class Project:
         except subprocess.CalledProcessError:
             with open('run.log', 'r', encoding='utf-8') as file:
                 lines = file.readlines()
-                last_lines = lines[-NUM:] if len(lines) >= NUM else lines
+                last_lines = lines[-num:] if len(lines) >= num else lines
                 for line in last_lines:
                     message = line.strip()
                     if len(message):

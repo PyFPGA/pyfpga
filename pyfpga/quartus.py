@@ -24,7 +24,7 @@ class Quartus(Project):
         self.tool['make-app'] = 'quartus_sh'
         self.tool['make-cmd'] = 'quartus_sh --script quartus.tcl'
 
-    def _prog_prepare(self):
+    def _prog_prepare(self, bitstream, position):
         # binaries = ['sof', 'pof']
         self.tool['prog-app'] = 'quartus_pgm'
         self.tool['prog-cmd'] = 'bash quartus-prog.sh'

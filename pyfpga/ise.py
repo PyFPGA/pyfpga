@@ -24,7 +24,7 @@ class Ise(Project):
         self.tool['make-app'] = 'xtclsh'
         self.tool['make-cmd'] = 'xtclsh ise.tcl'
 
-    def _prog_prepare(self):
+    def _prog_prepare(self, bitstream, position):
         # binaries = ['bit']
         self.tool['prog-app'] = 'impact'
         self.tool['prog-cmd'] = 'impact -batch impact-prog'
