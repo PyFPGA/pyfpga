@@ -60,7 +60,6 @@ Internal data structure
             'DEF2': 'VAL2',
             'DEF3': 'VAL3'
         },
-        'arch': 'ARCHNAME',
         'hooks': {
             'precfg': ['CMD1', 'CMD2'],
             'postcfg': ['CMD1', 'CMD2'],

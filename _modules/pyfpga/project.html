@@ -256,18 +256,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;defines&#39;</span><span class="p">,</span> <span class="p">{})[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
 
-<div class="viewcode-block" id="Project.set_arch">
-<a class="viewcode-back" href="../../api.html#pyfpga.project.Project.set_arch">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_arch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the VHDL architecture.</span>
-
-<span class="sd">        :param name: architecture name</span>
-<span class="sd">        :type name: str</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing set_arch&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;arch&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span></div>
-
-
 <div class="viewcode-block" id="Project.add_fileset">
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project.add_fileset">[docs]</a>
     <span class="k">def</span> <span class="nf">add_fileset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">):</span>
