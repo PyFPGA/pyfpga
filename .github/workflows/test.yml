@@ -22,6 +22,6 @@ jobs:
       with:
         python-version: ${{ matrix.pyver }}
     - name: Install dependencies
-      run: pip install pytest
+      run: pip install . && pip install pytest
     - name: Run tests
-      run: make test
+      run: source tests/mocks/source-me.sh && make test
