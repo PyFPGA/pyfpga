@@ -1,22 +1,37 @@
-"""Vivado VHDL example project."""
+"""Vivado examples."""
 
 import argparse
 
 from pyfpga.vivado import Vivado
 
+
 parser = argparse.ArgumentParser()
+parser.add_argument(
+    '--board', choices=['zybo', 'arty'], default='zybo'
+)
+parser.add_argument(
+    '--source', choices=['vlog', 'vhdl', 'slog'], default='vlog'
+)
 parser.add_argument(
     '--action', choices=['make', 'prog', 'all'], default='make'
 )
-parser.add_argument(
-    '--source', choices=['vlog', 'vhdl', 'slog', 'design'], default='vlog'
-)
 args = parser.parse_args()
 
-prj = Vivado(odir=f'../build/vivado-{args.source}')
-prj.set_part('xc7z010-1-clg400')
+prj = Vivado(odir=f'../build/vivado')
 
-prj.add_param('FREQ', '125000000')
+if args.board == 'zybo':
+    prj.set_part('xc7z010-1-clg400')
+    prj.add_param('FREQ', '125000000')
+    prj.add_cons('../sources/zybo/ZYBO/timing.xdc', 'syn')
+    prj.add_cons('../sources/zybo/ZYBO/clk.xdc', 'par')
+    prj.add_cons('../sources/zybo/ZYBO/led.xdc', 'par')
+if args.board == 'arty':
+    prj.set_part('xc7a35ticsg324-1L')
+    prj.add_param('FREQ', '100000000')
+    prj.add_cons('../sources/arty/a7-35t/timing.xdc', 'syn')
+    prj.add_cons('../sources/arty/a7-35t/clk.xdc', 'par')
+    prj.add_cons('../sources/arty/a7-35t/led.xdc', 'par')
+
 if args.source == 'vhdl':
     prj.add_vhdl('../sources/vhdl/*.vhdl', 'blink_lib')
 if args.source == 'vlog':
@@ -27,9 +42,7 @@ if args.source == 'slog':
     prj.add_vlog('../sources/slog/*.sv')
 if args.source in ['vlog', 'slog']:
     prj.add_define('DEFINE', '1')
-prj.add_cons('../sources/zybo/timing.xdc', 'syn')
-prj.add_cons('../sources/zybo/clk.xdc', 'par')
-prj.add_cons('../sources/zybo/led.xdc', 'par')
+
 prj.set_top('Top')
 
 if args.action in ['make', 'all']:

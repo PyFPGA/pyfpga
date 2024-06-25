@@ -1,10 +1,16 @@
 #!/bin/bash
 
-ACTIONS=("make" "prog" "all")
-SOURCES=("vlog" "vhdl" "slog" "design")
+set -e
 
-for ACTION in "${ACTIONS[@]}"; do
+BOARDS=("zybo" "arty")
+SOURCES=("vlog" "vhdl" "slog")
+ACTIONS=("make" "prog" "all")
+
+for BOARD in "${BOARDS[@]}"; do
   for SOURCE in "${SOURCES[@]}"; do
-    python3 run.py --action $ACTION --source $SOURCE
+    for ACTION in "${ACTIONS[@]}"; do
+      echo "> $BOARD - $SOURCE - $ACTION"
+      python3 run.py --board $BOARD --source $SOURCE --action $ACTION
+    done
   done
 done
