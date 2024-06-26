@@ -8,19 +8,81 @@
 Implements support for an Open Source development flow.
 """
 
+# pylint: disable=too-many-locals
+# pylint: disable=too-many-branches
+# pylint: disable=duplicate-code
+
 from pyfpga.project import Project
 
 
 class Openflow(Project):
-    """Class to support Openflow."""
-
-    def __init__(self, name='openflow', odir='results'):
-        super().__init__(name=name, odir=odir)
-        self.set_part('hx8k-ct256')
+    """Class to support Open Source tools."""
 
     def _make_prepare(self, steps):
-        self.tool['make-app'] = 'docker'
-        self.tool['make-cmd'] = 'bash openflow.sh'
+        context = {
+            'PROJECT': self.name or 'openflow',
+            'PART': self.data.get('part', 'hx8k-ct256')
+        }
+        for step in steps:
+            context[step] = 1
+        if 'includes' in self.data:
+            includes = []
+            for include in self.data['includes']:
+                includes.append(f'-I{str(include)}')
+            context['INCLUDES'] = ' '.join(includes)
+        files = []
+        if 'files' in self.data:
+            for file in self.data['files']:
+                files.append(f'read_verilog -defer {file}')
+        if files:
+            context['VLOGS'] = '\n'.join(files)
+#            for file in self.data['files']:
+#                if 'lib' in self.data['files'][file]:
+#                    lib = self.data['files'][file]['lib']
+#                    files.append(
+#                        f'set_property library {lib} [get_files {file}]'
+#                    )
+#        if 'constraints' in self.data:
+#            for file in self.data['constraints']:
+#                files.append(f'add_file -fileset constrs_1 {file}')
+#            for file in self.data['constraints']:
+#                if self.data['constraints'][file] == 'syn':
+#                    prop = 'USED_IN_IMPLEMENTATION FALSE'
+#                if self.data['constraints'][file] == 'syn':
+#                    prop = 'USED_IN_SYNTHESIS FALSE'
+#                if self.data['constraints'][file] != 'all':
+#                    files.append(f'set_property {prop} [get_files {file}]')
+#            first = next(iter(self.data['constraints']))
+#            prop = f'TARGET_CONSTRS_FILE {first}'
+#            files.append(f'set_property {prop} [current_fileset -constrset]')
+#        if files:
+#            context['FILES'] = '\n'.join(files)
+        if 'top' in self.data:
+            context['TOP'] = self.data['top']
+        if 'defines' in self.data:
+            defines = []
+            for key, value in self.data['defines'].items():
+                defines.append(f'-D{key}={value}')
+            context['DEFINES'] = ' '.join(defines)
+        if 'params' in self.data:
+            params = []
+            for key, value in self.data['params'].items():
+                params.append(f'-set {key} {value}')
+            context['PARAMS'] = ' '.join(params)
+        if 'hooks' in self.data:
+            for stage in self.data['hooks']:
+                context[stage.upper()] = '\n'.join(self.data['hooks'][stage])
+        self._create_file('openflow', 'sh', context)
+        return 'bash openflow.sh'
+
+#    def _prog_prepare(self, bitstream, position):
+#        _ = position  # Not needed for Vivado
+#        if not bitstream:
+#            basename = self.name or 'vivado'
+#            bitstream = Path(self.odir).resolve() / f'{basename}.bit'
+#        context = {'BITSTREAM': bitstream}
+#        self._create_file('vivado-prog', 'tcl', context)
+#        return 'vivado -mode batch -notrace -quiet -source vivado-prog.tcl'
 
     def _prog_prepare(self, bitstream, position):
         # binaries = ['bit']
