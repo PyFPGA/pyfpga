@@ -1,3 +1,0 @@
-[submodule "examples/resources"]
-	path = examples/resources
-	url = git@github.com:PyFPGA/resources.git
