@@ -1,11 +1,12 @@
 module Blink #(
-  parameter int FREQ = 25000000
+  parameter int FREQ = 25000000,
+  parameter int SECS = 1
 )(
   input  clk_i,
   output led_o
 );
 
-  localparam int          DIV = FREQ;
+  localparam int          DIV = FREQ*SECS;
   logic                   led = 0;
   logic [$clog2(DIV)-1:0] cnt = 0;
 

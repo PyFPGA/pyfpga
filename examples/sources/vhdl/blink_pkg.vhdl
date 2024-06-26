@@ -5,7 +5,8 @@ package blink_pkg is
 
   component Blink is
     generic (
-      FREQ  : natural:=25e6
+      FREQ  : positive := 25e6;
+      SECS  : positive := 1
     );
     port (
       clk_i :  in std_logic;

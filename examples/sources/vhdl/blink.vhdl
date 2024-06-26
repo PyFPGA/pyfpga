@@ -3,7 +3,8 @@ use IEEE.std_logic_1164.all;
 
 entity Blink is
   generic (
-    FREQ  : positive := 25e6
+    FREQ  : positive := 25e6;
+    SECS  : positive := 1
   );
   port (
     clk_i : in  std_logic;
@@ -12,7 +13,7 @@ entity Blink is
 end entity Blink;
 
 architecture RTL of Blink is
-  constant DIV : positive := FREQ;
+  constant DIV : positive := FREQ*SECS;
   signal   led : std_logic := '0';
   signal   cnt : natural range 0 to DIV-1 := 0;
 begin

@@ -1,4 +1,4 @@
-"""Vivado examples."""
+"""Openflow examples."""
 
 import argparse
 
@@ -21,12 +21,15 @@ args = parser.parse_args()
 prj = Openflow(odir='../build/openflow')
 
 prj.add_param('FREQ', '100000000')
+prj.add_param('SECS', '1')
 
 if args.source == 'vlog':
-    prj.add_include('../sources/vlog/include')
+    prj.add_include('../sources/vlog/include1')
+    prj.add_include('../sources/vlog/include2')
     prj.add_vlog('../sources/vlog/*.v')
 if args.source in ['vlog', 'slog']:
-    prj.add_define('DEFINE', '1')
+    prj.add_define('DEFINE1', '1')
+    prj.add_define('DEFINE2', '1')
 
 prj.set_top('Top')
 

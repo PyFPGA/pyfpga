@@ -31,17 +31,21 @@ if args.board == 'arty':
     prj.add_cons('../sources/arty/a7-35t/timing.xdc', 'syn')
     prj.add_cons('../sources/arty/a7-35t/clk.xdc', 'par')
     prj.add_cons('../sources/arty/a7-35t/led.xdc', 'par')
+prj.add_param('SECS', '1')
 
 if args.source == 'vhdl':
     prj.add_vhdl('../sources/vhdl/*.vhdl', 'blink_lib')
 if args.source == 'vlog':
-    prj.add_include('../sources/vlog/include')
+    prj.add_include('../sources/vlog/include1')
+    prj.add_include('../sources/vlog/include2')
     prj.add_vlog('../sources/vlog/*.v')
 if args.source == 'slog':
-    prj.add_include('../sources/slog/include')
+    prj.add_include('../sources/slog/include1')
+    prj.add_include('../sources/slog/include2')
     prj.add_vlog('../sources/slog/*.sv')
 if args.source in ['vlog', 'slog']:
-    prj.add_define('DEFINE', '1')
+    prj.add_define('DEFINE1', '1')
+    prj.add_define('DEFINE2', '1')
 
 prj.set_top('Top')
 
