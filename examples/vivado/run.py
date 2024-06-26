@@ -17,7 +17,7 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-prj = Vivado(odir=f'../build/vivado')
+prj = Vivado(odir='../build/vivado')
 
 if args.board == 'zybo':
     prj.set_part('xc7z010-1-clg400')
