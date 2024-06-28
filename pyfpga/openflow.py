@@ -20,12 +20,12 @@ class Openflow(Project):
     """Class to support Open Source tools."""
 
     def _make_prepare(self, steps):
+        info = get_info(self.data.get('part', 'hx8k-ct256'))
         context = {
             'PROJECT': self.name or 'openflow',
-            'PART': self.data.get('part', 'hx8k-ct256'),
-            'FAMILY': 'ice40',
-            'DEVICE': 'hx8k',
-            'PACKAGE': 'tq144:4k'
+            'FAMILY': info['family'],
+            'DEVICE': info['device'],
+            'PACKAGE': info['package']
         }
         for step in steps:
             context[step] = 1
@@ -78,29 +78,7 @@ class Openflow(Project):
         self._create_file('openflow-prog', 'sh', context)
         return 'bash openflow-prog.sh'
 
-#     def set_part(self, part):
-#         self.part['name'] = part
-#         self.part['family'] = get_family(part)
-#         if self.part['family'] in ['ice40', 'ecp5']:
-#             aux = part.split('-')
-#             if len(aux) == 2:
-#                 self.part['device'] = aux[0]
-#                 self.part['package'] = aux[1]
-#             elif len(aux) == 3:
-#                 self.part['device'] = f'{aux[0]}-{aux[1]}'
-#                 self.part['package'] = aux[2]
-#             else:
-#                 raise ValueError('Part must be DEVICE-PACKAGE')
-#             if self.part['device'].endswith('4k'):
-#                 # See http://www.clifford.at/icestorm/
-#                 self.part['device'] = self.part['device'].replace('4', '8')
-#                 self.part['package'] += ":4k"
-
 #     def _create_gen_script(self, tasks):
-#         # Verilog includes
-#         paths = []
-#         for path in self.paths:
-#             paths.append(f'verilog_defaults -add -I{path}')
 #         # Files
 #         constraints = []
 #         verilogs = []
@@ -119,59 +97,56 @@ class Openflow(Project):
 #             constraints.append(file[0])
 #         if len(vhdls) > 0:
 #             verilogs = [f'ghdl $FLAGS {self.top}']
-#         # Parameters
-#         params = []
-#         for param in self.params:
-#             params.append(f'chparam -set {param[0]} {param[1]} {self.top}')
 
-#     def generate(self, to_task, from_task, capture):
-#         if self.frontend == 'ghdl' or 'verilog' in self.backend:
-#             to_task = 'syn'
-#             from_task = 'syn'
-#         return super().generate(to_task, from_task, capture)
 
-#     def transfer(self, devtype, position, part, width, capture):
-#         super().transfer(devtype, position, part, width, capture)
-#         template = os.path.join(os.path.dirname(__file__), 'openprog.sh')
-#         with open(template, 'r', encoding='utf-8') as file:
-#             text = file.read()
-#         text = text.format(
-#             family=self.part['family'],
-#             project=self.project,
-#             #
-#             oci_engine=self.oci_engine,
-#             cont_iceprog=self.conts['iceprog'],
-#             cont_openocd=self.conts['openocd'],
-#             tool_iceprog=self.tools['iceprog'],
-#             tool_openocd=self.tools['openocd']
-#         )
-#         with open('openprog.sh', 'w', encoding='utf-8') as file:
-#             file.write(text)
-#         return run(self._TRF_COMMAND, capture)
+def get_info(part):
+    """Get info about the FPGA part.
 
-# def get_family(part):
-#     """Get the Family name from the specified part name."""
-#     part = part.lower()
-#     families = [
-#         # From <YOSYS>/techlibs/xilinx/synth_xilinx.cc
-#         'xcup', 'xcu', 'xc7', 'xc6s', 'xc6v', 'xc5v', 'xc4v', 'xc3sda',
-#         'xc3sa', 'xc3se', 'xc3s', 'xc2vp', 'xc2v', 'xcve', 'xcv'
-#     ]
-#     for family in families:
-#         if part.startswith(family):
-#             return family
-#     families = [
-#         # From <nextpnr>/ice40/main.cc
-#         'lp384', 'lp1k', 'lp4k', 'lp8k', 'hx1k', 'hx4k', 'hx8k',
-#         'up3k', 'up5k', 'u1k', 'u2k', 'u4k'
-#     ]
-#     if part.startswith(tuple(families)):
-#         return 'ice40'
-#     families = [
-#         # From <nextpnr>/ecp5/main.cc
-#         '12k', '25k', '45k', '85k', 'um-25k', 'um-45k', 'um-85k',
-#         'um5g-25k', 'um5g-45k', 'um5g-85k'
-#     ]
-#     if part.startswith(tuple(families)):
-#         return 'ecp5'
-#     return 'UNKNOWN'
+    :param part: the FPGA part as specified by the tool
+    :returns: a dictionary with the keys family, device and package
+    """
+    part = part.lower()
+    # Looking for the family
+    family = None
+    families = [
+        # From <YOSYS>/techlibs/xilinx/synth_xilinx.cc
+        'xcup', 'xcu', 'xc7', 'xc6s', 'xc6v', 'xc5v', 'xc4v', 'xc3sda',
+        'xc3sa', 'xc3se', 'xc3s', 'xc2vp', 'xc2v', 'xcve', 'xcv'
+    ]
+    for item in families:
+        if part.startswith(item):
+            family = item
+            break
+    families = [
+        # From <nextpnr>/ice40/main.cc
+        'lp384', 'lp1k', 'lp4k', 'lp8k', 'hx1k', 'hx4k', 'hx8k',
+        'up3k', 'up5k', 'u1k', 'u2k', 'u4k'
+    ]
+    if part.startswith(tuple(families)):
+        family = 'ice40'
+    families = [
+        # From <nextpnr>/ecp5/main.cc
+        '12k', '25k', '45k', '85k', 'um-25k', 'um-45k', 'um-85k',
+        'um5g-25k', 'um5g-45k', 'um5g-85k'
+    ]
+    if part.startswith(tuple(families)):
+        family = 'ecp5'
+    # Looking for the device and package
+    device = None
+    package = None
+    aux = part.split('-')
+    if len(aux) == 2:
+        device = aux[0]
+        package = aux[1]
+    elif len(aux) == 3:
+        device = f'{aux[0]}-{aux[1]}'
+        package = aux[2]
+    else:
+        raise ValueError('Part must be DEVICE-PACKAGE')
+    if family in ['lp4k', 'hx4k']:  # See http://www.clifford.at/icestorm
+        device = device.replace('4', '8')
+        package += ":4k"
+    if family == 'ecp5':
+        package = package.upper()
+    # Finish
+    return {'family': family, 'device': device, 'package': package}

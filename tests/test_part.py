@@ -1,27 +1,38 @@
-from pyfpga.project import Project
+from pyfpga.ise import get_info as get_info_ise
+from pyfpga.libero import get_info as get_info_libero
+from pyfpga.openflow import get_info as get_info_openflow
 
 
-# def get_part(prj):
-#     return prj.get_configs()['part'].lower()
+def test_ise():
+    info = {
+        'family': 'kintex7',
+        'device': 'xc7k160t',
+        'speed': '3',
+        'package': 'fbg484'
+    }
+    assert get_info_ise('xc7k160t-3-fbg484') == info
+    assert get_info_ise('xc7k160t-fbg484-3') == info
 
 
-# def test_ise():
-#     prj = Project('ise')
-#     assert get_part(prj) == "xc7k160t-3-fbg484"
-#     prj.set_part('XC6SLX9-2-CSG324')
-#     assert get_part(prj) == "xc6slx9-2-csg324"
-#     prj.set_part('XC6SLX9-2L-CSG324')
-#     assert get_part(prj) == "xc6slx9-2l-csg324"
-#     prj.set_part('XC6SLX9-CSG324-3')
-#     assert get_part(prj) == "xc6slx9-3-csg324"
+def test_libero():
+    info = {
+        'family': 'SmartFusion2',
+        'device': 'm2s010',
+        'speed': '1',
+        'package': 'tq144'
+    }
+    assert get_info_libero('m2s010-1-tq144') == info
+    assert get_info_libero('m2s010-tq144-1') == info
+    info['speed'] = 'STD'
+    assert get_info_libero('m2s010-tq144') == info
 
 
-# def test_libero():
-#     prj = Project('libero')
-#     assert get_part(prj) == "mpf100t-1-fcg484"
-#     prj.set_part('m2s010-3-tq144')
-#     assert get_part(prj) == "m2s010-3-tq144"
-#     prj.set_part('m2s010-tq144-2')
-#     assert get_part(prj) == "m2s010-2-tq144"
-#     prj.set_part('m2s010-tq144')
-#     assert get_part(prj) == "m2s010-std-tq144"
+def test_openflow():
+    info = {'family': 'xc7', 'device': 'xc7k160t-3', 'package': 'fbg484'}
+    assert get_info_openflow('xc7k160t-3-fbg484') == info
+    info = {'family': 'ice40', 'device': 'hx1k', 'package': 'tq144'}
+    assert get_info_openflow('hx1k-tq144') == info
+    info = {'family': 'ecp5', 'device': '25k', 'package': 'CSFBGA285'}
+    assert get_info_openflow('25k-CSFBGA285') == info
+    info = {'family': 'ecp5', 'device': 'um5g-85k', 'package': 'CABGA381'}
+    assert get_info_openflow('um5g-85k-CABGA381') == info
