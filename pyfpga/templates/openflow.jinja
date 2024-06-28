@@ -6,7 +6,9 @@
 
 set -e
 
-DOCKER="docker run --rm -v $HOME:$HOME -w $PWD"
+DOCKER="docker run --user $(id -u):$(id -g) --rm -v $HOME:$HOME -w $PWD"
+
+# Synthesis -------------------------------------------------------------------
 
 {% if SYN %}
 $DOCKER hdlc/ghdl:yosys /bin/bash -c "
@@ -25,19 +27,82 @@ verilog_defines {{ DEFINES }}
 chparam {{ PARAMS }} {{ TOP }}
 {% endif %}
 synth -top {{ TOP }}
+synth_{{ FAMILY }} -top {{ TOP }} -json {{ PROJECT }}.json
 '
 {{ POSTSYN }}
 "
 {% endif %}
 
-{% if PAR %}
-{{ PREPAR }}
+#SYNTH=
+#WRITE=
+#if [[ $BACKEND == "vivado" ]]; then
+#    SYNTH="synth_xilinx -top $TOP -family $FAMILY"
+#    WRITE="write_edif -pvector bra $PROJECT.edif"
+#elif [[ $BACKEND == "ise" ]]; then
+#    SYNTH="synth_xilinx -top $TOP -family $FAMILY -ise"
+#    WRITE="write_edif -pvector bra $PROJECT.edif"
+#elif [[ $BACKEND == "nextpnr" ]]; then
+#    SYNTH="synth_$FAMILY -top $TOP -json $PROJECT.json"
+#elif [[ $BACKEND == "verilog-nosynth" ]]; then
+#    WRITE="write_verilog $PROJECT.v"
+#else
+#    SYNTH="synth -top $TOP"
+#    WRITE="write_verilog $PROJECT.v"
+#fi
 
+# Place and Route -------------------------------------------------------------
+
+{% if PAR %}
+
+CONSTRAINTS="{{ CONSTRAINTS }}"
+
+{% if FAMILY == 'ice40' %}
+if [ -n "$CONSTRAINTS" ]; then
+  cat $CONSTRAINTS > constraints.pcf
+  CONSTRAINT="--pcf constraints.pcf"
+fi
+$DOCKER hdlc/nextpnr:ice40 /bin/bash -c "
+{{ PREPAR }}
+nextpnr-ice40 --{{ DEVICE }} --package {{ PACKAGE }} $CONSTRAINT --json {{ PROJECT }}.json --asc {{ PROJECT }}.asc
 {{ POSTPAR }}
+"
+$DOCKER hdlc/icestorm /bin/bash -c "
+icetime -d {{ DEVICE }} -mtr {{ PROJECT }}.rpt {{ PROJECT }}.asc
+"
 {% endif %}
 
-{% if BIT %}
-{{ PREBIT }}
+{% if FAMILY == 'ecp5' %}
+if [ -n "$CONSTRAINTS" ]; then
+  cat $CONSTRAINTS > constraints.lpf
+  CONSTRAINT="--lpf constraints.lpf"
+fi
+$DOCKER hdlc/nextpnr:ecp5 /bin/bash -c "
+{{ PREPAR }}
+nextpnr-ecp5 --{{ DEVICE }} --package {{ PACKAGE }} $CONSTRAINT --json {{ PROJECT }}.json --textcfg {{ PROJECT }}.config
+{{ POSTPAR }}
+"
+{% endif %}
 
+{% endif %}
+
+# Bitstream -------------------------------------------------------------------
+
+{% if BIT %}
+
+{% if FAMILY == 'ice40' %}
+$DOCKER hdlc/icestorm /bin/bash -c "
+{{ PREBIT }}
+icepack {{ PROJECT }}.asc {{ PROJECT }}.bit
 {{ POSTBIT }}
+"
+{% endif %}
+
+{% if FAMILY == 'ecp5' %}
+$DOCKER hdlc/icestorm /bin/bash -c "
+{{ PREBIT }}
+ecppack --svf {{ PROJECT }}.svf {{ PROJECT }}.config {{ PROJECT }}.bit
+{{ POSTBIT }}
+"
+{% endif %}
+
 {% endif %}

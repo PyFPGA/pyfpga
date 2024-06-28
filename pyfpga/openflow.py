@@ -12,6 +12,7 @@ Implements support for an Open Source development flow.
 # pylint: disable=too-many-branches
 # pylint: disable=duplicate-code
 
+from pathlib import Path
 from pyfpga.project import Project
 
 
@@ -21,7 +22,10 @@ class Openflow(Project):
     def _make_prepare(self, steps):
         context = {
             'PROJECT': self.name or 'openflow',
-            'PART': self.data.get('part', 'hx8k-ct256')
+            'PART': self.data.get('part', 'hx8k-ct256'),
+            'FAMILY': 'ice40',
+            'DEVICE': 'hx8k',
+            'PACKAGE': 'tq144:4k'
         }
         for step in steps:
             context[step] = 1
@@ -42,21 +46,11 @@ class Openflow(Project):
 #                    files.append(
 #                        f'set_property library {lib} [get_files {file}]'
 #                    )
-#        if 'constraints' in self.data:
-#            for file in self.data['constraints']:
-#                files.append(f'add_file -fileset constrs_1 {file}')
-#            for file in self.data['constraints']:
-#                if self.data['constraints'][file] == 'syn':
-#                    prop = 'USED_IN_IMPLEMENTATION FALSE'
-#                if self.data['constraints'][file] == 'syn':
-#                    prop = 'USED_IN_SYNTHESIS FALSE'
-#                if self.data['constraints'][file] != 'all':
-#                    files.append(f'set_property {prop} [get_files {file}]')
-#            first = next(iter(self.data['constraints']))
-#            prop = f'TARGET_CONSTRS_FILE {first}'
-#            files.append(f'set_property {prop} [current_fileset -constrset]')
-#        if files:
-#            context['FILES'] = '\n'.join(files)
+        if 'constraints' in self.data:
+            constraints = []
+            for constraint in self.data['constraints']:
+                constraints.append(str(constraint))
+            context['CONSTRAINTS'] = ' '.join(constraints)
         if 'top' in self.data:
             context['TOP'] = self.data['top']
         if 'defines' in self.data:
@@ -75,57 +69,14 @@ class Openflow(Project):
         self._create_file('openflow', 'sh', context)
         return 'bash openflow.sh'
 
-#    def _prog_prepare(self, bitstream, position):
-#        _ = position  # Not needed for Vivado
-#        if not bitstream:
-#            basename = self.name or 'vivado'
-#            bitstream = Path(self.odir).resolve() / f'{basename}.bit'
-#        context = {'BITSTREAM': bitstream}
-#        self._create_file('vivado-prog', 'tcl', context)
-#        return 'vivado -mode batch -notrace -quiet -source vivado-prog.tcl'
-
     def _prog_prepare(self, bitstream, position):
-        # binaries = ['bit']
-        self.tool['prog-app'] = 'docker'
-        self.tool['prog-cmd'] = 'bash openflow-prog.sh'
-
-#     def __init__(self, project, frontend='yosys', backend='nextpnr'):
-#         # The valid frontends are be ghdl and yosys
-#         # The valid backends are:
-#         # * For ghdl -> vhdl
-#         # * For yosys -> ise, nextpnr, verilog, verilog-nosynth and vivado
-#         super().__init__(project)
-#         self.backend = backend
-#         self.frontend = frontend
-
-#     def _configure(self):
-#         super()._configure()
-#         # OCI ENGINE
-#         engine = self.configs.get('oci', {}).get('engine', {})
-#         command = engine.get('command', 'docker') + ' run --rm'
-#         volumes =
-#             '-v ' + ('-v ').join(engine.get('volumes', ['$HOME:$HOME']))
-#         work = '-w ' + engine.get('work', '$PWD')
-#         self.oci_engine = f'{command} {volumes} {work}'
-#         # Containers
-#         defaults = {
-#             'ghdl': 'ghdl/synth:beta',
-#             'yosys': 'ghdl/synth:beta',
-#             'nextpnr-ice40': 'ghdl/synth:nextpnr-ice40',
-#             'icetime': 'ghdl/synth:icestorm',
-#             'icepack': 'ghdl/synth:icestorm',
-#             'iceprog': '--device /dev/bus/usb ghdl/synth:prog',
-#             'nextpnr-ecp5': 'ghdl/synth:nextpnr-ecp5',
-#             'ecppack': 'ghdl/synth:trellis',
-#             'openocd': '--device /dev/bus/usb ghdl/synth:prog'
-#         }
-#         self.tools = {}
-#         self.conts = {}
-#         tools = self.configs.get('tools', {})
-#         containers = self.configs.get('oci', {}).get('containers', {})
-#         for tool, container in defaults.items():
-#             self.tools[tool] = tools.get(tool, tool)
-#             self.conts[tool] = containers.get(tool, container)
+        _ = position
+        if not bitstream:
+            basename = self.name or 'openflow'
+            bitstream = Path(self.odir).resolve() / f'{basename}.bit'
+        context = {'BITSTREAM': bitstream}
+        self._create_file('openflow-prog', 'sh', context)
+        return 'bash openflow-prog.sh'
 
 #     def set_part(self, part):
 #         self.part['name'] = part
@@ -172,43 +123,6 @@ class Openflow(Project):
 #         params = []
 #         for param in self.params:
 #             params.append(f'chparam -set {param[0]} {param[1]} {self.top}')
-#         # Script creation
-#         template = os.path.join(os.path.dirname(__file__), 'template.sh')
-#         with open(template, 'r', encoding='utf-8') as file:
-#             text = file.read()
-#         text = text.format(
-#             backend=self.backend,
-#             constraints='\\\n'+'\n'.join(constraints),
-#             device=self.part['device'],
-#             includes='\\\n'+'\n'.join(paths),
-#             family=self.part['family'],
-#             frontend=self.frontend,
-#             package=self.part['package'],
-#             params='\\\n'+'\n'.join(params),
-#             project=self.project,
-#             tasks=tasks,
-#             top=self.top,
-#             verilogs='\\\n'+'\n'.join(verilogs),
-#             vhdls='\\\n'+'\n'.join(vhdls),
-#             #
-#             oci_engine=self.oci_engine,
-#             cont_ghdl=self.conts['ghdl'],
-#             cont_yosys=self.conts['yosys'],
-#             cont_nextpnr_ice40=self.conts['nextpnr-ice40'],
-#             cont_icetime=self.conts['icetime'],
-#             cont_icepack=self.conts['icepack'],
-#             cont_nextpnr_ecp5=self.conts['nextpnr-ecp5'],
-#             cont_ecppack=self.conts['ecppack'],
-#             tool_ghdl=self.tools['ghdl'],
-#             tool_yosys=self.tools['yosys'],
-#             tool_nextpnr_ice40=self.tools['nextpnr-ice40'],
-#             tool_icetime=self.tools['icetime'],
-#             tool_icepack=self.tools['icepack'],
-#             tool_nextpnr_ecp5=self.tools['nextpnr-ecp5'],
-#             tool_ecppack=self.tools['ecppack']
-#         )
-#         with open(f'{self._TOOL}.sh', 'w', encoding='utf-8') as file:
-#             file.write(text)
 
 #     def generate(self, to_task, from_task, capture):
 #         if self.frontend == 'ghdl' or 'verilog' in self.backend:
