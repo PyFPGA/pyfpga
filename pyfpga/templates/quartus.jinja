@@ -4,72 +4,35 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-set PROJECT  {{ PROJECT }}
-set PART     {{ PART }}
-set FAMILY   {{ FAMILY }}
-set DEVICE   {{ DEVICE }}
-set PACKAGE  {{ PACKAGE }}
-set SPEED    {{ SPEED }}
-set TOP      {{ TOP }}
-
-set PARAMS   [list {{ PARAMS }}]
-
-proc fpga_file {FILE {LIBRARY "work"}} {
-    set message "adding the file '$FILE'"
-    if { $LIBRARY != "work" } { append message " (into the VHDL library '$LIBRARY')" }
-    regexp -nocase {\.(\w*)$} $FILE -> ext
-    if { $ext == "tcl" } {
-        source $FILE
-        return
-    }
-    if {$ext == "v"} {
-        set TYPE VERILOG_FILE
-    } elseif {$ext == "sv"} {
-        set TYPE SYSTEMVERILOG_FILE
-    } elseif {$ext == "vhdl" || $ext == "vhd"} {
-        set TYPE VHDL_FILE
-    } elseif {$ext == "sdc"} {
-        set TYPE SDC_FILE
-    } else {
-        set TYPE SOURCE_FILE
-    }
-    if { $LIBRARY != "work" } {
-        set_global_assignment -name $TYPE $FILE -library $LIBRARY
-    } else {
-        set_global_assignment -name $TYPE $FILE
-    }
-}
-
-proc fpga_include {PATH} {
-    lappend INCLUDED $PATH
-    # Verilog Included Files are NOT added
-    foreach INCLUDE $INCLUDED {
-        set_global_assignment -name SEARCH_PATH $INCLUDE
-    }
-}
-
-proc fpga_params {} {
-    if { [llength $PARAMS] == 0 } { return }
-    foreach PARAM $PARAMS {
-        eval "set_parameter -name $PARAM"
-    }
-}
-
 #--[ Project configuration ]---------------------------------------------------
 
 {% if CFG %}
 package require ::quartus::project
-project_new $PROJECT -overwrite
-
-set_global_assignment -name DEVICE $PART
+project_new {{ PROJECT }} -overwrite
+set_global_assignment -name DEVICE {{ PART }}
 
 {{ PRECFG }}
 
-fpga_files
+{{ FILES }}
 
-set_global_assignment -name TOP_LEVEL_ENTITY $TOP
+{% if TOP %}
+set_global_assignment -name TOP_LEVEL_ENTITY {{ TOP }}
+{% endif %}
 
-fpga_params
+{% if DEFINES %}
+set defines [dict create {{ DEFINES }}]
+foreach {key value} $defines {set_global_assignment -name VERILOG_MACRO "$key=$value"}
+{% endif %}
+
+{% if INCLUDES %}
+set includes { {{ INCLUDES}} }
+foreach value $includes {set_global_assignment -name SEARCH_PATH $value}
+{% endif %}
+
+{% if PARAMS %}
+set params [dict create {{ PARAMS }}]
+foreach {key value} $params {set_parameter -name $key $value}
+{% endif %}
 
 {{ POSTCFG }}
 
@@ -80,8 +43,8 @@ project_close
 
 {% if SYN or PAR or BIT %}
 package require ::quartus::flow
-project_open -force $PROJECT.qpf
-set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
+project_open -force {{ PROJECT }}.qpf
+# set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
 
 {% if SYN %}
 {{ PRESYN }}

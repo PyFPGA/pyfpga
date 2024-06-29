@@ -1,36 +1,30 @@
-"""ISE examples."""
+"""Quartus examples."""
 
 import argparse
 
-from pyfpga.ise import Ise
+from pyfpga.quartus import Quartus
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    '--board', choices=['s6micro', 'nexys3'], default='s6micro'
+    '--board', choices=['de10nano'], default='de10nano'
 )
 parser.add_argument(
-    '--source', choices=['vlog', 'vhdl'], default='vlog'
+    '--source', choices=['vlog', 'vhdl', 'slog'], default='vlog'
 )
 parser.add_argument(
     '--action', choices=['make', 'prog', 'all'], default='make'
 )
 args = parser.parse_args()
 
-prj = Ise(odir='../build/ise')
+prj = Quartus(odir='../build/quartus')
 
-if args.board == 's6micro':
-    prj.set_part('xc6slx9-2-csg324')
+if args.board == 'de10nano':
+    prj.set_part('5CSEBA6U23I7')
     prj.add_param('FREQ', '125000000')
-    prj.add_cons('../sources/s6micro/clk.xcf', 'syn')
-    prj.add_cons('../sources/s6micro/clk.ucf', 'par')
-    prj.add_cons('../sources/s6micro/led.ucf', 'par')
-if args.board == 'nexys3':
-    prj.set_part('xc6slx16-3-csg32')
-    prj.add_param('FREQ', '100000000')
-    prj.add_cons('../sources/nexys3/clk.xcf', 'syn')
-    prj.add_cons('../sources/nexys3/clk.ucf', 'par')
-    prj.add_cons('../sources/nexys3/led.ucf', 'par')
+    prj.add_cons('../sources/de10nano/clk.sdc', 'syn')
+    prj.add_cons('../sources/de10nano/clk.tcl', 'par')
+    prj.add_cons('../sources/de10nano/led.tcl', 'par')
 prj.add_param('SECS', '1')
 
 if args.source == 'vhdl':
@@ -39,6 +33,11 @@ if args.source == 'vlog':
     prj.add_include('../sources/vlog/include1')
     prj.add_include('../sources/vlog/include2')
     prj.add_vlog('../sources/vlog/*.v')
+if args.source == 'slog':
+    prj.add_include('../sources/slog/include1')
+    prj.add_include('../sources/slog/include2')
+    prj.add_vlog('../sources/slog/*.sv')
+if args.source in ['vlog', 'slog']:
     prj.add_define('DEFINE1', '1')
     prj.add_define('DEFINE2', '1')
 
