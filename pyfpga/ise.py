@@ -46,8 +46,13 @@ class Ise(Project):
                 else:
                     files.append(f'xfile add {file}')
         if 'constraints' in self.data:
+            constraints = []
             for file in self.data['constraints']:
                 files.append(f'xfile add {file}')
+                if file.suffix == '.xcf':
+                    constraints.append(str(file))
+            if constraints:
+                context['CONSTRAINTS'] = " ".join(constraints)
         if files:
             context['FILES'] = '\n'.join(files)
         if 'top' in self.data:
