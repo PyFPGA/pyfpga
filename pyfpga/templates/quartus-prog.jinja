@@ -4,4 +4,4 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-{{ COMMAND }} -c %s --mode jtag -o "p;{{ BITSTREAM }}@{{ POSITION }}"
+quartus_pgm -c {{ CABLE }} --mode jtag -o "p;{{ BITSTREAM }}@{{ POSITION }}"

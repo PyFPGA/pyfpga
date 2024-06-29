@@ -4,57 +4,49 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-_TEMPLATES = {
-    'fpga': """setMode -bs
+cleancablelock
+
+{% if FPGA %}
+setMode -bs
 setCable -port auto
 Identify -inferir
-assignFile -p #POSITION# -file #BITSTREAM#
-Program -p #POSITION#
+assignFile -p {{ POSITION }} -file  {{ BITSTREAM }}
+Program -p {{ POSITION }}
+{% endif %}
 
-quit
-""",
-    'spi': """setMode -pff
-addConfigDevice -name #NAME# -path .
+{% if SPI %}
+setMode -pff
+addConfigDevice -name {{ NAME }} -path .
 setSubmode -pffspi
 addDesign -version 0 -name 0
 addDeviceChain -index 0
-addDevice -p 1 -file #BITSTREAM#
+addDevice -p 1 -file {{ BITSTREAM }}
 generate -generic
 
 setMode -bs
 setCable -port auto
 Identify
-attachflash -position #POSITION# -spi #NAME#
-assignfiletoattachedflash -position #POSITION# -file ./#NAME#.mcs
-Program -p #POSITION# -dataWidth #WIDTH# -spionly -e -v -loadfpga
+attachflash -position {{ POSITION }} -spi {{ NAME }}
+assignfiletoattachedflash -position {{ POSITION }} -file ./{{ NAME }}.mcs
+Program -p {{ POSITION }} -dataWidth {{ WIDTH }} -spionly -e -v -loadfpga
+{% endif %}
 
-quit
-""",
-    'bpi': """setMode -pff
-addConfigDevice -name #NAME# -path .
+{% if BPI %}
+setMode -pff
+addConfigDevice -name {{ NAME }} -path .
 setSubmode -pffbpi
 addDesign -version 0 -name 0
 addDeviceChain -index 0
-setAttribute -configdevice -attr flashDataWidth -value #WIDTH#
-addDevice -p 1 -file #BITSTREAM#
+setAttribute -configdevice -attr flashDataWidth -value {{ WIDTH }}
+addDevice -p 1 -file {{ BITSTREAM }}
 generate -generic
 
 setMode -bs
 setCable -port auto
 Identify
-attachflash -position #POSITION# -bpi #NAME#
-assignfiletoattachedflash -position #POSITION# -file ./#NAME#.mcs
-Program -p #POSITION# -dataWidth #WIDTH# \
--rs1 NONE -rs0 NONE -bpionly -e -v -loadfpga
+attachflash -position {{ POSITION }} -bpi {{ NAME }}
+assignfiletoattachedflash -position {{ POSITION }} -file ./{{ NAME }}.mcs
+Program -p {{ POSITION }} -dataWidth {{ WIDTH }} -rs1 NONE -rs0 NONE -bpionly -e -v -loadfpga
+{% endif %}
 
 quit
-""",
-    'detect': """setMode -bs
-setCable -port auto
-Identify -inferir
-quit
-""",
-    'unlock': """cleancablelock
-quit
-"""
-}
