@@ -4,66 +4,49 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-set PROJECT  {{ PROJECT }}
-set PART     {{ PART }}
-set FAMILY   {{ FAMILY }}
-set DEVICE   {{ DEVICE }}
-set PACKAGE  {{ PACKAGE }}
-set SPEED    {{ SPEED }}
-set TOP      {{ TOP }}
+#    if {$ext == "xcf"} {
+#        project set "Synthesis Constraints File" $FILE -process "Synthesize - XST"
+#    } elseif { $LIBRARY != "work" } {
+#        lib_vhdl new $LIBRARY
+#        xfile add $FILE -lib_vhdl $LIBRARY
+#    } else {
+#        xfile add $FILE
+#    }
+#}
 
-set PARAMS   [list {{ PARAMS }}]
-
-proc fpga_file {FILE {LIBRARY "work"}} {
-    set message "adding the file '$FILE'"
-    if { $LIBRARY != "work" } { append message " (into the VHDL library '$LIBRARY')" }
-    regexp -nocase {\.(\w*)$} $FILE -> ext
-    if { $ext == "tcl" } {
-        source $FILE
-        return
-    }
-    if {$ext == "xcf"} {
-        project set "Synthesis Constraints File" $FILE -process "Synthesize - XST"
-    } elseif { $LIBRARY != "work" } {
-        lib_vhdl new $LIBRARY
-        xfile add $FILE -lib_vhdl $LIBRARY
-    } else {
-        xfile add $FILE
-    }
-}
-
-proc fpga_include {PATH} {
-    lappend INCLUDED $PATH
-    # Verilog Included Files are NOT added
-    project set "Verilog Include Directories" \
-    [join $INCLUDED "|"] -process "Synthesize - XST"
-}
-
-proc fpga_params {} {
-    if { [llength $PARAMS] == 0 } { return }
-    set assigns [list]
-    foreach PARAM $PARAMS { lappend assigns [join $PARAM "="] }
-    project set "Generics, Parameters" "[join $assigns]" -process "Synthesize - XST"
-}
-
-#--[ Project configuration ]---------------------------------------------------
+#--[ Project configuration ]--------------------------------------------------
 
 {% if CFG %}
-if { [ file exists $PROJECT.xise ] } { file delete $PROJECT.xise }
-project new $PROJECT.xise
-
-project set family  $FAMILY
-project set device  $DEVICE
-project set package $PACKAGE
-project set speed   $SPEED
+if { [ file exists {{ PROJECT }}.xise ] } { file delete {{ PROJECT }}.xise }
+project new {{ PROJECT }}.xise
+project set family  {{ FAMILY }}
+project set device  {{ DEVICE }}
+project set package {{ PACKAGE }}
+project set speed  -{{ SPEED }}
 
 {{ PRECFG }}
 
 {{ FILES }}
+{% if CONSTRAINTS %}
+project set "Synthesis Constraints File" "{{ CONSTRAINTS }}" -process "Synthesize - XST"
+{% endif %}
 
-project set top $TOP
+{% if TOP %}
+project set top {{ TOP }}
+{% endif %}
 
-fpga_params
+{% if DEFINES %}
+project set "Verilog Macros" "{{ DEFINES }}" -process "Synthesize - XST"
+{% endif %}
+
+{% if INCLUDES %}
+project set "Verilog Include Directories" "{{ INCLUDES }}" -process "Synthesize - XST"
+# [join $INCLUDED "|"]
+{% endif %}
+
+{% if PARAMS %}
+project set "Generics, Parameters" "{{ PARAMS }}" -process "Synthesize - XST"
+{% endif %}
 
 {{ POSTCFG }}
 
@@ -73,18 +56,16 @@ project close
 #--[ Design flow ]-------------------------------------------------------------
 
 {% if SYN or PAR or BIT %}
-project open $PROJECT.xise
+project open {{ PROJECT }}.xise
 
 {% if SYN %}
 {{ PRESYN }}
 
-{% if PRESYNTH %}
-project set top_level_module_type "EDIF"
-{% else %}
+# PRESYNTH
+#project set top_level_module_type "EDIF"
 project clean
 process run "Synthesize"
-if { [process get "Synthesize" status] == "errors" } { exit 2 }
-{% endif %}
+if { [process get "Synthesize" status] == "errors" } { exit 1 }
 
 {{ POSTSYN }}
 {% endif %}
@@ -93,11 +74,11 @@ if { [process get "Synthesize" status] == "errors" } { exit 2 }
 {{ PREPAR }}
 
 process run "Translate"
-if { [process get "Translate" status] == "errors" } { exit 2 }
+if { [process get "Translate" status] == "errors" } { exit 1 }
 process run "Map"
-if { [process get "Map" status] == "errors" } { exit 2 }
+if { [process get "Map" status] == "errors" } { exit 1 }
 process run "Place & Route"
-if { [process get "Place & Route" status] == "errors" } { exit 2 }
+if { [process get "Place & Route" status] == "errors" } { exit 1 }
 
 {{ POSTPAR }}
 {% endif %}
@@ -106,8 +87,9 @@ if { [process get "Place & Route" status] == "errors" } { exit 2 }
 {{ PREBIT }}
 
 process run "Generate Programming File"
-if { [process get "Generate Programming File" status] == "errors" } { exit 2 }
-catch { file rename -force $TOP.bit $PROJECT.bit }
+if { [process get "Generate Programming File" status] == "errors" } { exit 1 }
+# catch { file rename -force {{ TOP }}.bit {{ PROJECT }}.bit }
+file rename -force {{ TOP }}.bit {{ PROJECT }}.bit
 
 {{ POSTBIT }}
 {% endif %}

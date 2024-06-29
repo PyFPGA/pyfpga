@@ -20,18 +20,65 @@ from pyfpga.project import Project
 class Ise(Project):
     """Class to support ISE projects."""
 
-    def __init__(self, name='ise', odir='results'):
-        super().__init__(name=name, odir=odir)
-        self.set_part('xc7k160t-3-fbg484')
-
     def _make_prepare(self, steps):
-        self.tool['make-app'] = 'xtclsh'
-        self.tool['make-cmd'] = 'xtclsh ise.tcl'
+        info = get_info(self.data.get('part', 'xc7k160t-3-fbg484'))
+        context = {
+            'PROJECT': self.name or 'ise',
+            'FAMILY': info['family'],
+            'DEVICE': info['device'],
+            'SPEED': info['speed'],
+            'PACKAGE': info['package']
+        }
+        for step in steps:
+            context[step] = 1
+        if 'includes' in self.data:
+            includes = []
+            for include in self.data['includes']:
+                includes.append(str(include))
+            context['INCLUDES'] = '|'.join(includes)
+        files = []
+        if 'files' in self.data:
+            for file in self.data['files']:
+                if 'lib' in self.data['files']:
+                    lib = self.data['files'][file]['lib']
+                    files.append(f'lib_vhdl new {lib}')
+                    files.append(f'xfile add {file} -lib_vhdl {lib}')
+                else:
+                    files.append(f'xfile add {file}')
+        if 'constraints' in self.data:
+            for file in self.data['constraints']:
+                files.append(f'xfile add {file}')
+        if files:
+            context['FILES'] = '\n'.join(files)
+        if 'top' in self.data:
+            context['TOP'] = self.data['top']
+        if 'defines' in self.data:
+            defines = []
+            for key, value in self.data['defines'].items():
+                defines.append(f'{key}={value}')
+            context['DEFINES'] = ' | '.join(defines)
+        if 'params' in self.data:
+            params = []
+            for key, value in self.data['params'].items():
+                params.append(f'{key}={value}')
+            context['PARAMS'] = ' '.join(params)
+        if 'hooks' in self.data:
+            for stage in self.data['hooks']:
+                context[stage.upper()] = '\n'.join(self.data['hooks'][stage])
+        self._create_file('ise', 'tcl', context)
+        return 'xtclsh ise.tcl'
 
     def _prog_prepare(self, bitstream, position):
-        # binaries = ['bit']
-        self.tool['prog-app'] = 'impact'
-        self.tool['prog-cmd'] = 'impact -batch impact-prog'
+        if not bitstream:
+            basename = self.name or 'ise'
+            bitstream = Path(self.odir).resolve() / f'{basename}.bit'
+        context = {'BITSTREAM': bitstream, 'POSITION': position}
+        self._create_file('vivado-prog', 'tcl', context)
+        return 'impact -batch impact-prog'
+
+    def add_slog(self, pathname):
+        """Add System Verilog file/s."""
+        raise NotImplementedError('ISE does not support SystemVerilog')
 
 #     _DEVTYPES = ['fpga', 'spi', 'bpi', 'detect', 'unlock']
 
