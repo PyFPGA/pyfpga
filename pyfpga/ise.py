@@ -14,6 +14,7 @@ Implements support for ISE.
 
 import re
 
+from pathlib import Path
 from pyfpga.project import Project
 
 
