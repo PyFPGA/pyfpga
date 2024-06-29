@@ -29,9 +29,7 @@ class Libero(Project):
         self.tool['make-cmd'] = 'libero SCRIPT:libero.tcl'
 
     def _prog_prepare(self, bitstream, position):
-        # binaries = ['bit']
-        self.tool['prog-app'] = ''
-        self.tool['prog-cmd'] = ''
+        raise NotImplementedError('Libero programming not supported')
 
 
 def get_info(part):
