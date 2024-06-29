@@ -228,7 +228,7 @@ class Project:
             message = steps[first]
         self.logger.info('Running %s', message)
         selected = [step.upper() for step in keys[index[0]:index[1]+1]]
-        self._run(self._make_prepare(selected))
+        self._run(self._make_prepare(selected), 'make.log')
 
     def prog(self, bitstream=None, position=1):
         """Program the FPGA
@@ -244,7 +244,7 @@ class Project:
         if position not in range(1, 9):
             raise ValueError('Invalid position.')
         self.logger.info('Programming')
-        self._run(self._prog_prepare(bitstream, position))
+        self._run(self._prog_prepare(bitstream, position), 'prog.log')
 
     def _make_prepare(self, steps):
         raise NotImplementedError('Tool-dependent')
@@ -264,7 +264,7 @@ class Project:
         with open(directory / filename, 'w', encoding='utf-8') as file:
             file.write(content)
 
-    def _run(self, command):
+    def _run(self, command, logname):
         num = 20
         error = 0
         old_dir = Path.cwd()
@@ -272,13 +272,13 @@ class Project:
         start = time()
         try:
             os.chdir(new_dir)
-            with open('run.log', 'w', encoding='utf-8') as file:
+            with open(logname, 'w', encoding='utf-8') as file:
                 subprocess.run(
                     command, shell=True, check=True, text=True,
                     stdout=file, stderr=subprocess.STDOUT
                 )
         except subprocess.CalledProcessError:
-            with open('run.log', 'r', encoding='utf-8') as file:
+            with open(logname, 'r', encoding='utf-8') as file:
                 lines = file.readlines()
                 last_lines = lines[-num:] if len(lines) >= num else lines
                 for line in last_lines:
