@@ -21,7 +21,7 @@ class Quartus(Project):
     def _make_prepare(self, steps):
         context = {
             'PROJECT': self.name or 'quartus',
-            'PART': self.data.get('part', '10cl120zf780i8g')
+            'PART': self.data.get('part', '10M50SCE144I7G')
         }
         for step in steps:
             context[step] = 1
