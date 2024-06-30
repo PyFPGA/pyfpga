@@ -40,7 +40,7 @@ class Ise(Project):
         files = []
         if 'files' in self.data:
             for file in self.data['files']:
-                if 'lib' in self.data['files']:
+                if 'lib' in self.data['files'][file]:
                     lib = self.data['files'][file]['lib']
                     files.append(f'lib_vhdl new {lib}')
                     files.append(f'xfile add {file} -lib_vhdl {lib}')
