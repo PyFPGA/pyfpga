@@ -89,7 +89,7 @@ prj.make(last='syn')
 if tool not in ['ise', 'openflow']:
     print('INFO: checking System Verilog Support')
     prj = Class()
-    prj.add_vlog('../../examples/sources/slog/*.sv')
+    prj.add_slog('../../examples/sources/slog/*.sv')
     prj.set_top('Top')
     prj.add_include('../../examples/sources/slog/include1')
     prj.add_include('../../examples/sources/slog/include2')
