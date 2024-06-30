@@ -17,11 +17,13 @@ end entity Top;
 architecture ARCH of Top is
 begin
 
-  assert FREQ > 0 report "FREQ not set" severity failure;
-  assert SECS > 0 report "SECS not set" severity failure;
-
   blink_i: Blink
   generic map (FREQ => FREQ, SECS => SECS)
   port map (clk_i => clk_i, led_o => led_o);
+
+  gen_error : if FREQ=0 or SECS=0 generate
+    top_i: entity work.Top
+    port map (clk_i => clk_i, led_o => led_o);
+  end generate gen_error;
 
 end architecture ARCH;
