@@ -50,6 +50,8 @@ open_project {{ PROJECT }}
 reset_run synth_1
 launch_runs synth_1
 wait_on_run synth_1
+#report_property [get_runs synth_1]
+if { [get_property STATUS [get_runs synth_1]] ne "synth_design Complete!" } { exit 1 }
 
 {{ POSTSYN }}
 {% endif %}
@@ -60,6 +62,8 @@ wait_on_run synth_1
 reset_run impl_1
 launch_runs impl_1
 wait_on_run impl_1
+#report_property [get_runs impl_1]
+if { [get_property STATUS [get_runs impl_1]] ne "route_design Complete!" } { exit 1 }
 
 {{ POSTPAR }}
 {% endif %}
