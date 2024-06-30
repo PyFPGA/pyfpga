@@ -24,10 +24,10 @@ Class = classes.get(tool)
 if Class is None:
     sys.exit('Unsupported tool')
 
-print(f'* Class Under Test: {Class.__name__}')
+print(f'INFO: the Class Under Test is {Class.__name__}')
 
 try:
-    print('* Verilog Includes')
+    print('INFO: checking Verilog Includes')
     prj = Class()
     prj.add_vlog('../../examples/sources/vlog/*.v')
     prj.set_top('Top')
@@ -35,15 +35,15 @@ try:
     prj.add_define('DEFINE2', '1')
     prj.add_param('FREQ', '1')
     prj.add_param('SECS', '1')
-    prj.make()
-    sys.exit('* FAIL')
+    prj.make(last='syn')
+    sys.exit('ERROR: something does not work as expected')
 except SystemExit:
     raise
 except:
-    print('* PASS')
+    pass
 
 try:
-    print('* Verilog Defines')
+    print('INFO: checking Verilog Defines')
     prj = Class()
     prj.add_vlog('../../examples/sources/vlog/*.v')
     prj.set_top('Top')
@@ -51,15 +51,15 @@ try:
     prj.add_include('../../examples/sources/vlog/include2')
     prj.add_param('FREQ', '1')
     prj.add_param('SECS', '1')
-    prj.make()
-    sys.exit('* FAIL')
+    prj.make(last='syn')
+    sys.exit('ERROR: something does not work as expected')
 except SystemExit:
     raise
 except:
-    print('* PASS')
+    pass
 
 try:
-    print('* Verilog Parameters')
+    print('INFO: checking Verilog Parameters')
     prj = Class()
     prj.add_vlog('../../examples/sources/vlog/*.v')
     prj.set_top('Top')
@@ -67,14 +67,14 @@ try:
     prj.add_include('../../examples/sources/vlog/include2')
     prj.add_define('DEFINE1', '1')
     prj.add_define('DEFINE2', '1')
-    prj.make()
-    sys.exit('* FAIL')
+    prj.make(last='syn')
+    sys.exit('ERROR: something does not work as expected')
 except SystemExit:
     raise
 except:
-    print('* PASS')
+    pass
 
-print('* Verilog Support')
+print('INFO: checking Verilog Support')
 prj = Class()
 prj.add_vlog('../../examples/sources/vlog/*.v')
 prj.set_top('Top')
@@ -84,11 +84,10 @@ prj.add_define('DEFINE1', '1')
 prj.add_define('DEFINE2', '1')
 prj.add_param('FREQ', '1')
 prj.add_param('SECS', '1')
-prj.make()
-print('* PASS')
+prj.make(last='syn')
 
 if tool not in ['ise', 'openflow']:
-    print('* System Verilog Support')
+    print('INFO: checking System Verilog Support')
     prj = Class()
     prj.add_vlog('../../examples/sources/slog/*.sv')
     prj.set_top('Top')
@@ -98,21 +97,20 @@ if tool not in ['ise', 'openflow']:
     prj.add_define('DEFINE2', '1')
     prj.add_param('FREQ', '1')
     prj.add_param('SECS', '1')
-    prj.make()
-    print('* PASS')
+    prj.make(last='syn')
 
 if tool not in ['openflow']:
     try:
-        print('* VHDL Generics')
+        print('INFO: checking VHDL Generics')
         prj = Class()
         prj.add_vhdl('../../examples/sources/vhdl/*.vhdl', 'blink_lib')
         prj.set_top('Top')
-        prj.make()
-        sys.exit('* FAIL')
+        prj.make(last='syn')
+        sys.exit('ERROR: something does not work as expected')
     except SystemExit:
         raise
     except:
-        print('* PASS')
+        pass
 
     print('* VHDL Support')
     prj = Class()
@@ -120,7 +118,6 @@ if tool not in ['openflow']:
     prj.set_top('Top')
     prj.add_param('FREQ', '1')
     prj.add_param('SECS', '1')
-    prj.make()
-    print('* PASS')
+    prj.make(last='syn')
 
-print(f'* Class Under Test works as expected')
+print(f'INFO: Class Under Test works as expected')
