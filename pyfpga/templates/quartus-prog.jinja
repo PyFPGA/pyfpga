@@ -4,4 +4,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-quartus_pgm -c {{ CABLE }} --mode jtag -o "p;{{ BITSTREAM }}@{{ POSITION }}"
+RESULT=$(jtagconfig)
+echo "$RESULT"
+
+# cable = re.match(r"1\) (.*) \[", result).groups()[0]
+CABLE=$(echo "$RESULT" | awk -F '1\\) | \\[' '/1\)/ {print $2}')
+
+quartus_pgm -c $CABLE --mode jtag -o "p;{{ BITSTREAM }}@{{ POSITION }}"

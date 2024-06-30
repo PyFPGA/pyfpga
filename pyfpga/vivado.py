@@ -11,7 +11,6 @@ Implements support for Vivado.
 # pylint: disable=too-many-locals
 # pylint: disable=too-many-branches
 
-from pathlib import Path
 from pyfpga.project import Project
 
 
@@ -74,10 +73,10 @@ class Vivado(Project):
         return 'vivado -mode batch -notrace -quiet -source vivado.tcl'
 
     def _prog_prepare(self, bitstream, position):
-        _ = position  # Not needed for Vivado
+        _ = position  # Not needed
         if not bitstream:
             basename = self.name or 'vivado'
-            bitstream = Path(self.odir).resolve() / f'{basename}.bit'
+            bitstream = f'{basename}.bit'
         context = {'BITSTREAM': bitstream}
         self._create_file('vivado-prog', 'tcl', context)
         return 'vivado -mode batch -notrace -quiet -source vivado-prog.tcl'

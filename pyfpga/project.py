@@ -27,8 +27,6 @@ class Project:
     :type odir: str, optional
     """
 
-    tool = {}
-
     def __init__(self, name=None, odir='results'):
         """Class constructor."""
         self.data = {}

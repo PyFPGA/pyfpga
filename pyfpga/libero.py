@@ -20,13 +20,58 @@ from pyfpga.project import Project
 class Libero(Project):
     """Class to support Libero."""
 
-    def __init__(self, name='libero', odir='results'):
-        super().__init__(name=name, odir=odir)
-        self.set_part('mpf100t-1-fcg484')
-
     def _make_prepare(self, steps):
-        self.tool['make-app'] = 'libero'
-        self.tool['make-cmd'] = 'libero SCRIPT:libero.tcl'
+        info = get_info(self.data.get('part', 'mpf100t-1-fcg484'))
+        context = {
+            'PROJECT': self.name or 'ise',
+            'FAMILY': info['family'],
+            'DEVICE': info['device'],
+            'SPEED': info['speed'],
+            'PACKAGE': info['package']
+        }
+        for step in steps:
+            context[step] = 1
+        if 'includes' in self.data:
+            includes = []
+            for include in self.data['includes']:
+                includes.append(str(include))
+            context['INCLUDES'] = '|'.join(includes)
+        files = []
+        if 'files' in self.data:
+            for file in self.data['files']:
+                if 'lib' in self.data['files'][file]:
+                    lib = self.data['files'][file]['lib']
+                    files.append(f'lib_vhdl new {lib}')
+                    files.append(f'xfile add {file} -lib_vhdl {lib}')
+                else:
+                    files.append(f'xfile add {file}')
+        if 'constraints' in self.data:
+            constraints = []
+            for file in self.data['constraints']:
+                files.append(f'xfile add {file}')
+                if file.suffix == '.xcf':
+                    constraints.append(str(file))
+            if constraints:
+                context['CONSTRAINTS'] = " ".join(constraints)
+        if files:
+            context['FILES'] = '\n'.join(files)
+        if 'top' in self.data:
+            context['TOP'] = self.data['top']
+        if 'defines' in self.data:
+            defines = []
+            for key, value in self.data['defines'].items():
+                defines.append(f'{key}={value}')
+            context['DEFINES'] = ' | '.join(defines)
+        if 'params' in self.data:
+            params = []
+            for key, value in self.data['params'].items():
+                params.append(f'{key}={value}')
+            context['PARAMS'] = ' '.join(params)
+        if 'hooks' in self.data:
+            for stage in self.data['hooks']:
+                context[stage.upper()] = '\n'.join(self.data['hooks'][stage])
+        self._create_file('ise', 'tcl', context)
+        return 'libero SCRIPT:libero.tcl'
 
     def _prog_prepare(self, bitstream, position):
         raise NotImplementedError('Libero programming not supported')

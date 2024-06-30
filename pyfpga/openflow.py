@@ -12,7 +12,6 @@ Implements support for an Open Source development flow.
 # pylint: disable=too-many-branches
 # pylint: disable=duplicate-code
 
-from pathlib import Path
 from pyfpga.project import Project
 
 
@@ -40,12 +39,18 @@ class Openflow(Project):
                 files.append(f'read_verilog -defer {file}')
         if files:
             context['VLOGS'] = '\n'.join(files)
-#            for file in self.data['files']:
-#                if 'lib' in self.data['files'][file]:
-#                    lib = self.data['files'][file]['lib']
-#                    files.append(
-#                        f'set_property library {lib} [get_files {file}]'
-#                    )
+#         for file in self.files['vhdl']:
+#             lib = ''
+#             if file[1] is not None:
+#                 lib = f'--work={file[1]}'
+#             vhdls.append(f'{self.tools["ghdl"]} -a $FLAGS {lib} {file[0]}')
+#         for file in self.files['verilog']:
+#             if file[0].endswith('.sv'):
+#                 verilogs.append(f'read_verilog -sv -defer {file[0]}')
+#             else:
+#                 verilogs.append(f'read_verilog -defer {file[0]}')
+#         if len(vhdls) > 0:
+#             verilogs = [f'ghdl $FLAGS {self.top}']
         if 'constraints' in self.data:
             constraints = []
             for constraint in self.data['constraints']:
@@ -70,33 +75,13 @@ class Openflow(Project):
         return 'bash openflow.sh'
 
     def _prog_prepare(self, bitstream, position):
-        _ = position
+        _ = position  # Not needed
         if not bitstream:
             basename = self.name or 'openflow'
-            bitstream = Path(self.odir).resolve() / f'{basename}.bit'
+            bitstream = f'{basename}.bit'
         context = {'BITSTREAM': bitstream}
         self._create_file('openflow-prog', 'sh', context)
         return 'bash openflow-prog.sh'
-
-#     def _create_gen_script(self, tasks):
-#         # Files
-#         constraints = []
-#         verilogs = []
-#         vhdls = []
-#         for file in self.files['vhdl']:
-#             lib = ''
-#             if file[1] is not None:
-#                 lib = f'--work={file[1]}'
-#             vhdls.append(f'{self.tools["ghdl"]} -a $FLAGS {lib} {file[0]}')
-#         for file in self.files['verilog']:
-#             if file[0].endswith('.sv'):
-#                 verilogs.append(f'read_verilog -sv -defer {file[0]}')
-#             else:
-#                 verilogs.append(f'read_verilog -defer {file[0]}')
-#         for file in self.files['constraint']:
-#             constraints.append(file[0])
-#         if len(vhdls) > 0:
-#             verilogs = [f'ghdl $FLAGS {self.top}']
 
 
 def get_info(part):

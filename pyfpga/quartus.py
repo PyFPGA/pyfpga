@@ -73,26 +73,11 @@ class Quartus(Project):
         return 'quartus_sh --script quartus.tcl'
 
     def _prog_prepare(self, bitstream, position):
-        # binaries = ['sof', 'pof']
-        _ = position  # Not needed for Vivado
-        # if not bitstream:
-        #     basename = self.name or 'quartus'
-        #     bitstream = Path(self.odir).resolve() / f'{basename}.bit'
-        context = {'BITSTREAM': bitstream}
+        # sof: SRAM Object File
+        # pof: Programming Object File
+        if not bitstream:
+            basename = self.name or 'quartus'
+            bitstream = f'{basename}.sof'
+        context = {'BITSTREAM': bitstream, 'POSITION': position}
         self._create_file('quartus-prog', 'tcl', context)
         return 'bash quartus-prog.sh'
-
-#     def transfer(self, devtype, position, part, width, capture):
-#         super().transfer(devtype, position, part, width, capture)
-#         result = subprocess.run(
-#             'jtagconfig', shell=True, check=True,
-#             stdout=subprocess.PIPE, universal_newlines=True
-#         )
-#         result = result.stdout
-#         if devtype == 'detect':
-#             print(result)
-#         else:
-#             cable = re.match(r"1\) (.*) \[", result).groups()[0]
-#             cmd = self._TRF_COMMAND % (cable, self.bitstream, position)
-#             result = run(cmd, capture)
-#         return result

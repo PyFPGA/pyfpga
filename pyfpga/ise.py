@@ -14,7 +14,6 @@ Implements support for ISE.
 
 import re
 
-from pathlib import Path
 from pyfpga.project import Project
 
 
@@ -77,7 +76,7 @@ class Ise(Project):
     def _prog_prepare(self, bitstream, position):
         if not bitstream:
             basename = self.name or 'ise'
-            bitstream = Path(self.odir).resolve() / f'{basename}.bit'
+            bitstream = f'{basename}.bit'
         context = {'BITSTREAM': bitstream, 'POSITION': position}
         self._create_file('vivado-prog', 'tcl', context)
         return 'impact -batch impact-prog'
@@ -85,20 +84,6 @@ class Ise(Project):
     def add_slog(self, pathname):
         """Add System Verilog file/s."""
         raise NotImplementedError('ISE does not support SystemVerilog')
-
-#     _DEVTYPES = ['fpga', 'spi', 'bpi', 'detect', 'unlock']
-
-#     def transfer(self, devtype, position, part, width, capture):
-#         super().transfer(devtype, position, part, width, capture)
-#         temp = _TEMPLATES[devtype]
-#         if devtype not in ['detect', 'unlock']:
-#             temp = temp.replace('#BITSTREAM#', self.bitstream)
-#             temp = temp.replace('#POSITION#', str(position))
-#             temp = temp.replace('#NAME#', part)
-#             temp = temp.replace('#WIDTH#', str(width))
-#         with open('ise-prog.impact', 'w', encoding='utf-8') as file:
-#             file.write(temp)
-#         return run(self._TRF_COMMAND, capture)
 
 
 def get_info(part):
