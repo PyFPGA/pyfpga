@@ -2,8 +2,8 @@
 
 set -e
 
-BOARDS=("zybo" "arty")
-SOURCES=("vlog" "vhdl" "slog")
+BOARDS=("s6micro" "nexys3")
+SOURCES=("vlog" "vhdl")
 
 for BOARD in "${BOARDS[@]}"; do
   for SOURCE in "${SOURCES[@]}"; do
