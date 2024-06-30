@@ -42,6 +42,21 @@ tool = parser.prog
 tcl = f'''
 proc unknown args {{ }}
 
+proc get_runs {{run_name}} {{
+  return $run_name
+}}
+
+proc get_property {{property run}} {{
+  if {{ $property eq "STATUS" }} {{
+    if {{ $run eq "synth_1" }} {{
+      return "synth_design Complete!"
+    }} elseif {{ $run eq "impl_1" }} {{
+      return "route_design Complete!"
+    }}
+  }}
+  return ""
+}}
+
 source {args.source}
 '''
 
