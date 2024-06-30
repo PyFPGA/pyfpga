@@ -39,7 +39,7 @@ try:
     sys.exit('ERROR: something does not work as expected')
 except SystemExit:
     raise
-except:
+except Exception:
     pass
 
 try:
@@ -55,7 +55,7 @@ try:
     sys.exit('ERROR: something does not work as expected')
 except SystemExit:
     raise
-except:
+except Exception:
     pass
 
 try:
@@ -71,7 +71,7 @@ try:
     sys.exit('ERROR: something does not work as expected')
 except SystemExit:
     raise
-except:
+except Exception:
     pass
 
 print('INFO: checking Verilog Support')
@@ -109,7 +109,7 @@ if tool not in ['openflow']:
         sys.exit('ERROR: something does not work as expected')
     except SystemExit:
         raise
-    except:
+    except Exception:
         pass
 
     print('* VHDL Support')
