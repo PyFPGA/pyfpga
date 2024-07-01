@@ -23,7 +23,7 @@ class Libero(Project):
     def _make_prepare(self, steps):
         info = get_info(self.data.get('part', 'mpf100t-1-fcg484'))
         context = {
-            'PROJECT': self.name or 'ise',
+            'PROJECT': self.name or 'libero',
             'FAMILY': info['family'],
             'DEVICE': info['device'],
             'SPEED': info['speed'],
@@ -35,22 +35,24 @@ class Libero(Project):
             includes = []
             for include in self.data['includes']:
                 includes.append(str(include))
-            context['INCLUDES'] = '|'.join(includes)
+            context['INCLUDES'] = ';'.join(includes)
         files = []
         if 'files' in self.data:
             for file in self.data['files']:
                 if 'lib' in self.data['files'][file]:
                     lib = self.data['files'][file]['lib']
-                    files.append(f'lib_vhdl new {lib}')
-                    files.append(f'xfile add {file} -lib_vhdl {lib}')
+                    files.append(
+                        f'create_links -library {lib} -hdl_source {file}'
+                    )
                 else:
-                    files.append(f'xfile add {file}')
+                    files.append(f'create_links -hdl_source {file}')
         if 'constraints' in self.data:
             constraints = []
             for file in self.data['constraints']:
-                files.append(f'xfile add {file}')
-                if file.suffix == '.xcf':
-                    constraints.append(str(file))
+                if file.suffix == '.sdc':
+                    constraints.append(f'create_links -sdc {file}')
+                else:
+                    constraints.append(f'create_links -io_pdc {file}')
             if constraints:
                 context['CONSTRAINTS'] = " ".join(constraints)
         if files:
@@ -61,7 +63,7 @@ class Libero(Project):
             defines = []
             for key, value in self.data['defines'].items():
                 defines.append(f'{key}={value}')
-            context['DEFINES'] = ' | '.join(defines)
+            context['DEFINES'] = ' '.join(defines)
         if 'params' in self.data:
             params = []
             for key, value in self.data['params'].items():
@@ -70,7 +72,7 @@ class Libero(Project):
         if 'hooks' in self.data:
             for stage in self.data['hooks']:
                 context[stage.upper()] = '\n'.join(self.data['hooks'][stage])
-        self._create_file('ise', 'tcl', context)
+        self._create_file('libero', 'tcl', context)
         return 'libero SCRIPT:libero.tcl'
 
     def _prog_prepare(self, bitstream, position):

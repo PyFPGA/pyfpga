@@ -4,106 +4,76 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-set PROJECT  {{ PROJECT }}
-set PART     {{ PART }}
-set FAMILY   {{ FAMILY }}
-set DEVICE   {{ DEVICE }}
-set PACKAGE  {{ PACKAGE }}
-set SPEED    {{ SPEED }}
-set TOP      {{ TOP }}
-
-set PARAMS   [list {{ PARAMS }}]
-
-proc fpga_file {FILE {LIBRARY "work"}} {
-    set message "adding the file '$FILE'"
-    if { $LIBRARY != "work" } { append message " (into the VHDL library '$LIBRARY')" }
-    regexp -nocase {\.(\w*)$} $FILE -> ext
-    if { $ext == "tcl" } {
-        source $FILE
-        return
-    }
-    global LIBERO_PLACE_CONSTRAINTS
-    global LIBERO_OTHER_CONSTRAINTS
-    if {$ext == "pdc"} {
-        create_links -io_pdc $FILE
-        append LIBERO_PLACE_CONSTRAINTS "-file $FILE "
-    } elseif {$ext == "sdc"} {
-        create_links -sdc $FILE
-        append LIBERO_PLACE_CONSTRAINTS "-file $FILE "
-        append LIBERO_OTHER_CONSTRAINTS "-file $FILE "
-    } else {
-        create_links -library $LIBRARY -hdl_source $FILE
-        build_design_hierarchy
-    }
-}
-
-proc fpga_include {PATH} {
-    lappend INCLUDED $PATH
-    # Verilog Included Files are ALSO added
-    # They must be specified after set_root (see fpga_top)
-    foreach FILE [glob -nocomplain $PATH/*.vh] {
-        create_links -hdl_source $FILE
-    }
-    build_design_hierarchy
-}
-
-proc fpga_params {} {
-    if { [llength $PARAMS] == 0 } { return }
-    # They must be specified after set_root (see fpga_top)
-}
+#proc fpga_include {PATH} {
+#    lappend INCLUDED $PATH
+#    # Verilog Included Files are ALSO added
+#    # They must be specified after set_root (see fpga_top)
+#    foreach FILE [glob -nocomplain $PATH/*.vh] {
+#        create_links -hdl_source $FILE
+#    }
+#    build_design_hierarchy
+#}
 
 #--[ Project configuration ]---------------------------------------------------
 
 {% if CFG %}
-if { [ file exists $PROJECT ] } { file delete -force -- $PROJECT }
-new_project -name $PROJECT -location $PROJECT -hdl {VHDL} -family {SmartFusion2}
+if { [ file exists {{ PROJECT }} ] } { file delete -force -- {{ PROJECT }} }
+new_project -name {{ PROJECT }} -location . -hdl {VHDL} -family {SmartFusion2}
 
-set_device -family $FAMILY -die $DEVICE -package $PACKAGE -speed $SPEED
+set_device -family {{ FAMILY }} -die {{ DEVICE }} -package {{ PACKAGE }} -speed {{ SPEED }}
 
 {{ PRECFG }}
 
-fpga_files
+{{ FILES }}
+build_design_hierarchy
 
-set_root $TOP
-# Verilog Included files
-set cmd "configure_tool -name {SYNTHESIZE} -params {SYNPLIFY_OPTIONS:"
-if { [info exists INCLUDED] && [llength $INCLUDED] > 0 } {
-    # See <ROOT>/poc/include/libero.tcl for details
-    set PATHS "../../"
-    append PATHS [join $INCLUDED ";../../"]
-    append cmd "set_option -include_path \"$PATHS\""
-    append cmd "\n"
+{% if TOP %}
+set_root {{ TOP }}
+{% endif %}
+
+{% if INCLUDES or DEFINES or PARAMS %}
+configure_tool -name {SYNTHESIZE} -params {SYNPLIFY_OPTIONS:
+{% if INCLUDES %}  set_option -include_path "{{ INCLUDES }}"{% endif %}
+{% if DEFINES %}  set_option -hdl_define "{{ DEFINES }}"{% endif %}
+{% if PARAMS %}  set_option -hdl_param "{{ PARAMS }}"{% endif %}
 }
-foreach PARAM $PARAMS {
-    set assign [join $PARAM]
-    append cmd "set_option -hdl_param -set \"$assign\""
-    append cmd "\n"
-}
-append cmd "}"
-eval $cmd
+{% endif %}
+
 # Constraints
 # PDC is only used for PLACEROUTE.
 # SDC is used by ALL (SYNTHESIZE, PLACEROUTE and VERIFYTIMING).
-global LIBERO_PLACE_CONSTRAINTS
-global LIBERO_OTHER_CONSTRAINTS
-if { [info exists LIBERO_OTHER_CONSTRAINTS] } {
-    set cmd "organize_tool_files -tool {SYNTHESIZE} "
-    append cmd $LIBERO_OTHER_CONSTRAINTS
-    append cmd "-module $TOP -input_type {constraint}"
-    eval $cmd
-    set cmd "organize_tool_files -tool {VERIFYTIMING} "
-    append cmd $LIBERO_OTHER_CONSTRAINTS
-    append cmd "-module $TOP -input_type {constraint}"
-    eval $cmd
-}
-if { [info exists LIBERO_PLACE_CONSTRAINTS] } {
-    set cmd "organize_tool_files -tool {PLACEROUTE} "
-    append cmd $LIBERO_PLACE_CONSTRAINTS
-    append cmd "-module $TOP -input_type {constraint}"
-    eval $cmd
-}
+#global LIBERO_PLACE_CONSTRAINTS
+#global LIBERO_OTHER_CONSTRAINTS
+#if { [info exists LIBERO_OTHER_CONSTRAINTS] } {
+#    set cmd "organize_tool_files -tool {SYNTHESIZE} "
+#    append cmd $LIBERO_OTHER_CONSTRAINTS
+#    append cmd "-module {{ TOP }} -input_type {constraint}"
+#    eval $cmd
+#    set cmd "organize_tool_files -tool {VERIFYTIMING} "
+#    append cmd $LIBERO_OTHER_CONSTRAINTS
+#    append cmd "-module {{ TOP }} -input_type {constraint}"
+#    eval $cmd
+#}
+#if { [info exists LIBERO_PLACE_CONSTRAINTS] } {
+#    set cmd "organize_tool_files -tool {PLACEROUTE} "
+#    append cmd $LIBERO_PLACE_CONSTRAINTS
+#    append cmd "-module {{ TOP }} -input_type {constraint}"
+#    eval $cmd
+#}
 
-fpga_params
+#organize_tool_files -tool {SYNTHESIZE} \
+#  -file ../resources/constraints/maker-board/clk.sdc \
+#  -module Blink -input_type {constraint}
+
+#organize_tool_files -tool {PLACEROUTE} \
+#  -file ../resources/constraints/maker-board/clk.sdc \
+#  -file ../resources/constraints/maker-board/clk.pdc \
+#  -file ../resources/constraints/maker-board/led.pdc \
+#  -module Blink -input_type {constraint}
+
+#organize_tool_files -tool {VERIFYTIMING} \
+#  -file ../resources/constraints/maker-board/clk.sdc \
+#  -module Blink -input_type {constraint}
 
 {{ POSTCFG }}
 
@@ -113,7 +83,7 @@ close_project
 #--[ Design flow ]-------------------------------------------------------------
 
 {% if SYN or PAR or BIT %}
-open_project $PROJECT/$PROJECT.prjx
+open_project {{ PROJECT }}/{{ PROJECT }}.prjx
 
 {% if SYN %}
 {{ PRESYN }}
