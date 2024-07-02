@@ -6,6 +6,9 @@ from pyfpga.libero import Libero
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
+    '--board', choices=['maker-board'], default='maker-board'
+)
+parser.add_argument(
     '--source', choices=['vlog', 'vhdl', 'slog'], default='vlog'
 )
 parser.add_argument(
@@ -15,11 +18,12 @@ args = parser.parse_args()
 
 prj = Libero(odir='../build/libero')
 
-prj.set_part('m2s010-1-tq144')
-prj.add_param('FREQ', '125000000')
-prj.add_cons('../sources/maker-board/clk.sdc', 'syn')
-prj.add_cons('../sources/maker-board/clk.pdc', 'par')
-prj.add_cons('../sources/maker-board/led.pdc', 'par')
+if args.board == 'maker-board':
+    prj.set_part('m2s010-1-tq144')
+    prj.add_param('FREQ', '125000000')
+    prj.add_cons('../sources/maker-board/clk.sdc', 'syn')
+    prj.add_cons('../sources/maker-board/clk.pdc', 'par')
+    prj.add_cons('../sources/maker-board/led.pdc', 'par')
 prj.add_param('SECS', '1')
 
 if args.source == 'vhdl':
