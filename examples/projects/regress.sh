@@ -5,7 +5,7 @@ set -e
 declare -A TOOLS
 
 TOOLS["ise"]="s6micro nexys3"
-TOOLS["libero"]="maker-board"
+TOOLS["libero"]="maker"
 TOOLS["openflow"]="icestick edu-ciaa orangecrab ecp5evn"
 TOOLS["quartus"]="de10nano"
 TOOLS["vivado"]="zybo arty"

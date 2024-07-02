@@ -22,9 +22,9 @@ prj = Quartus(odir='../build/quartus')
 if args.board == 'de10nano':
     prj.set_part('5CSEBA6U23I7')
     prj.add_param('FREQ', '125000000')
-    prj.add_cons('../sources/de10nano/clk.sdc', 'syn')
-    prj.add_cons('../sources/de10nano/clk.tcl', 'par')
-    prj.add_cons('../sources/de10nano/led.tcl', 'par')
+    prj.add_cons('../sources/cons/de10nano/clk.sdc', 'syn')
+    prj.add_cons('../sources/cons/de10nano/clk.tcl', 'par')
+    prj.add_cons('../sources/cons/de10nano/led.tcl', 'par')
 prj.add_param('SECS', '1')
 
 if args.source == 'vhdl':

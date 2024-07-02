@@ -22,15 +22,15 @@ prj = Vivado(odir='../build/vivado')
 if args.board == 'zybo':
     prj.set_part('xc7z010-1-clg400')
     prj.add_param('FREQ', '125000000')
-    prj.add_cons('../sources/zybo/ZYBO/timing.xdc', 'syn')
-    prj.add_cons('../sources/zybo/ZYBO/clk.xdc', 'par')
-    prj.add_cons('../sources/zybo/ZYBO/led.xdc', 'par')
+    prj.add_cons('../sources/cons/ZYBO/timing.xdc', 'syn')
+    prj.add_cons('../sources/cons/ZYBO/clk.xdc', 'par')
+    prj.add_cons('../sources/cons/ZYBO/led.xdc', 'par')
 if args.board == 'arty':
     prj.set_part('xc7a35ticsg324-1L')
     prj.add_param('FREQ', '100000000')
-    prj.add_cons('../sources/arty/a7-35t/timing.xdc', 'syn')
-    prj.add_cons('../sources/arty/a7-35t/clk.xdc', 'par')
-    prj.add_cons('../sources/arty/a7-35t/led.xdc', 'par')
+    prj.add_cons('../sources/cons/arty_a7_35t/timing.xdc', 'syn')
+    prj.add_cons('../sources/cons/arty_a7_35t/clk.xdc', 'par')
+    prj.add_cons('../sources/cons/arty_a7_35t/led.xdc', 'par')
 prj.add_param('SECS', '1')
 
 if args.source == 'vhdl':
