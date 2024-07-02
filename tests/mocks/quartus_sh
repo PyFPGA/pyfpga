@@ -20,30 +20,18 @@ args = parser.parse_args()
 tool = parser.prog
 
 tcl = f'''
-lappend auto_path pkg
-
 proc unknown args {{ }}
+
+package provide ::quartus::project 1.0
+namespace eval ::quartus::project {{ }}
+
+package provide ::quartus::flow 1.0
+namespace eval ::quartus::flow {{ }}
 
 source {args.script}
 '''
 
 with open(f'{tool}-mock.tcl', 'w', encoding='utf-8') as file:
-    file.write(tcl)
-
-tcl = f'''
-namespace eval ::quartus {{
-  namespace export project
-}}
-'''
-
-if not os.path.exists('pkg'):
-    os.makedirs('pkg')
-
-package ifneeded ::quartus 1.0 [list source quartus-pkg.tcl]
-
-pkgIndex.tcl
-
-with open(f'pkg/quartus.tcl', 'w', encoding='utf-8') as file:
     file.write(tcl)
 
 subprocess.run(
