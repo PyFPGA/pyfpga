@@ -98,7 +98,7 @@ icepack {{ PROJECT }}.asc {{ PROJECT }}.bit
 {% endif %}
 
 {% if FAMILY == 'ecp5' %}
-$DOCKER hdlc/icestorm /bin/bash -c "
+$DOCKER hdlc/prjtrellis /bin/bash -c "
 {{ PREBIT }}
 ecppack --svf {{ PROJECT }}.svf {{ PROJECT }}.config {{ PROJECT }}.bit
 {{ POSTBIT }}
