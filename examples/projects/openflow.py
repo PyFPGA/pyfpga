@@ -40,8 +40,6 @@ if args.board == 'ecp5evn':
     prj.add_param('FREQ', '100000000')
     prj.add_cons('../sources/cons/ecp5evn/clk.lpf', 'par')
     prj.add_cons('../sources/cons/ecp5evn/led.lpf', 'par')
-
-prj.add_param('FREQ', '100000000')
 prj.add_param('SECS', '1')
 
 if args.source == 'vhdl':
