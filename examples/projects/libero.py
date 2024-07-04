@@ -28,6 +28,7 @@ prj.add_param('SECS', '1')
 
 if args.source == 'vhdl':
     prj.add_vhdl('../sources/vhdl/*.vhdl', 'blink_lib')
+    prj.add_vhdl('../sources/vhdl/top.vhdl')
 if args.source == 'vlog':
     prj.add_include('../sources/vlog/include1')
     prj.add_include('../sources/vlog/include2')
