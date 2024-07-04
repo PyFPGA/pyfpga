@@ -18,7 +18,7 @@ args = parser.parse_args()
 
 prj = Libero(odir='../build/libero')
 
-if args.board == 'maker-board':
+if args.board == 'maker':
     prj.set_part('m2s010-1-tq144')
     prj.add_param('FREQ', '125000000')
     prj.add_cons('../sources/cons/maker/clk.sdc', 'syn')
