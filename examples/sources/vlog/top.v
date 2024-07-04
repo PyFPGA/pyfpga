@@ -12,24 +12,44 @@ module Top #(
   Blink #(.FREQ (FREQ), .SECS (SECS)) dut (.clk_i (clk_i), .led_o (led_o));
 
 `ifndef INCLUDE1
-  Top Top (.clk_i (clk_i), .led_o (led_o));
+  reg led;
+  always @(posedge clk_i) led <= 1'b0;
+  always @(posedge clk_i) led <= 1'b1;
+  assign led_o = led;
+  initial begin $stop; end
 `endif
 
 `ifndef INCLUDE2
-  Top Top (.clk_i (clk_i), .led_o (led_o));
+  reg led;
+  always @(posedge clk_i) led <= 1'b0;
+  always @(posedge clk_i) led <= 1'b1;
+  assign led_o = led;
+  initial begin $stop; end
 `endif
 
 `ifndef DEFINE1
-  Top Top (.clk_i (clk_i), .led_o (led_o));
+  reg led;
+  always @(posedge clk_i) led <= 1'b0;
+  always @(posedge clk_i) led <= 1'b1;
+  assign led_o = led;
+  initial begin $stop; end
 `endif
 
 `ifndef DEFINE2
-  Top Top (.clk_i (clk_i), .led_o (led_o));
+  reg led;
+  always @(posedge clk_i) led <= 1'b0;
+  always @(posedge clk_i) led <= 1'b1;
+  assign led_o = led;
+  initial begin $stop; end
 `endif
 
   generate
-    if (!FREQ || !SECS) begin: gen_error
-      Top Top (.clk_i (clk_i), .led_o (led_o));
+    if (!FREQ || !SECS) begin
+      reg led;
+      always @(posedge clk_i) led <= 1'b0;
+      always @(posedge clk_i) led <= 1'b1;
+      assign led_o = led;
+      initial begin $stop; end
     end
   endgenerate
 
