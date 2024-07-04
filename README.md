@@ -65,3 +65,11 @@ pip install -e .
 
 > With `-e` (`--editable`) your application is installed into site-packages via a kind of symlink.
 > That allows pulling changes through git or changing the branch, avoiding the need to reinstall the package.
+
+## Similar projects
+
+* [edalize](https://github.com/olofk/edalize): an abstraction library for interfacing EDA tools.
+* [Hdlmake](https://ohwr.org/project/hdl-make): tool for generating multi-purpose makefiles for FPGA projects.
+* HDL On Git ([Hog](https://gitlab.com/hog-cern/Hog)): a set of Tcl/Shell scripts plus a suitable methodology to handle HDL designs in a GitLab repository.
+* IPbus Builder ([IPBB](https://github.com/ipbus/ipbb)): a tool for streamlining the synthesis, implementation and simulation of modular firmware projects over multiple platforms.
+* [tsfpa](https://github.com/tsfpga/tsfpga): a flexible and scalable development platform for modern FPGA projects.
