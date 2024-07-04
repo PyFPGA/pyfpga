@@ -4,40 +4,43 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-#proc fpga_include {PATH} {
-#    lappend INCLUDED $PATH
-#    # Verilog Included Files are ALSO added
-#    # They must be specified after set_root (see fpga_top)
-#    foreach FILE [glob -nocomplain $PATH/*.vh] {
-#        create_links -hdl_source $FILE
-#    }
-#    build_design_hierarchy
-#}
-
 #--[ Project configuration ]---------------------------------------------------
 
 {% if CFG %}
 if { [ file exists {{ PROJECT }} ] } { file delete -force -- {{ PROJECT }} }
-new_project -name {{ PROJECT }} -location . -hdl {VHDL} -family {SmartFusion2}
+new_project -name {{ PROJECT }} -location {libero} -hdl {VERILOG} -family {SmartFusion2}
 
 set_device -family {{ FAMILY }} -die {{ DEVICE }} -package {{ PACKAGE }} -speed {{ SPEED }}
 
 {{ PRECFG }}
 
+{% if INCLUDES %}set_global_include_path_order -paths "{{ INCLUDES | join(' ') }}"{% endif %}
+
 {{ FILES }}
 build_design_hierarchy
 
-{% if TOP %}
-set_root {{ TOP }}
-{% endif %}
+{% if TOP %}set_root {{ TOP }}{% endif %}
 
 {% if INCLUDES or DEFINES or PARAMS %}
 configure_tool -name {SYNTHESIZE} -params {SYNPLIFY_OPTIONS:
-{% if INCLUDES %}  set_option -include_path "{{ INCLUDES }}"{% endif %}
-{% if DEFINES %}  set_option -hdl_define "{{ DEFINES }}"{% endif %}
-{% if PARAMS %}  set_option -hdl_param "{{ PARAMS }}"{% endif %}
+{% if INCLUDES %}
+{% for INCLUDE in INCLUDES %}
+  set_option -include_path "{{ INCLUDE }}"
+{% endfor %}
+{% endif %}
+{% if DEFINES %}
+{% for KEY, VALUE in DEFINES.items() %}
+  set_option -hdl_define -set {{ KEY }}={{ VALUE }}
+{% endfor %}
+{% endif %}
+{% if PARAMS %}
+{% for KEY, VALUE in PARAMS.items() %}
+  set_option -hdl_param -set {{ KEY }}={{ VALUE }}
+{% endfor %}
+{% endif %}
 }
 {% endif %}
+
 
 # Constraints
 # PDC is only used for PLACEROUTE.

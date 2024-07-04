@@ -31,11 +31,6 @@ class Libero(Project):
         }
         for step in steps:
             context[step] = 1
-        if 'includes' in self.data:
-            includes = []
-            for include in self.data['includes']:
-                includes.append(str(include))
-            context['INCLUDES'] = ';'.join(includes)
         files = []
         if 'files' in self.data:
             for file in self.data['files']:
@@ -57,21 +52,19 @@ class Libero(Project):
                 context['CONSTRAINTS'] = " ".join(constraints)
         if files:
             context['FILES'] = '\n'.join(files)
-        if 'top' in self.data:
-            context['TOP'] = self.data['top']
-        if 'defines' in self.data:
-            defines = []
-            for key, value in self.data['defines'].items():
-                defines.append(f'{key}={value}')
-            context['DEFINES'] = ' '.join(defines)
-        if 'params' in self.data:
-            params = []
-            for key, value in self.data['params'].items():
-                params.append(f'{key}={value}')
-            context['PARAMS'] = ' '.join(params)
+        context['INCLUDES'] = self.data.get('includes', None) # ';'.join(includes)
+        context['TOP'] = self.data.get('top', None)
+        context['DEFINES'] = self.data.get('defines', None)
+        context['PARAMS'] = self.data.get('params', None)
         if 'hooks' in self.data:
-            for stage in self.data['hooks']:
-                context[stage.upper()] = '\n'.join(self.data['hooks'][stage])
+            context['PRECFG'] = self.data['hooks'].get('precfg', None)
+            context['POSTCFG'] = self.data['hooks'].get('postcfg', None)
+            context['PRESYN'] = self.data['hooks'].get('presyn', None)
+            context['POSTSYN'] = self.data['hooks'].get('postsyn', None)
+            context['PREPAR'] = self.data['hooks'].get('prepar', None)
+            context['POSTPAR'] = self.data['hooks'].get('postpar', None)
+            context['PRESBIT'] = self.data['hooks'].get('prebit', None)
+            context['POSTBIT'] = self.data['hooks'].get('postbit', None)
         self._create_file('libero', 'tcl', context)
         return 'libero SCRIPT:libero.tcl'
 
@@ -118,10 +111,10 @@ def get_info(part):
     elif len(aux) == 3:
         device = aux[0]
         if len(aux[1]) < len(aux[2]):
-            speed = aux[1]
+            speed = f'-{aux[1]}'
             package = aux[2]
         else:
-            speed = aux[2]
+            speed = f'-{aux[2]}'
             package = aux[1]
     else:
         raise ValueError(
