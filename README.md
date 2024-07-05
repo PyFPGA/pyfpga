@@ -1,8 +1,8 @@
 # PyFPGA [![License](https://img.shields.io/badge/License-GPL--3.0-darkgreen?style=flat-square)](LICENSE)
 
-![Vivado](https://img.shields.io/badge/Vivado-2019.2-blue.svg?style=flat-square)
-![Quartus](https://img.shields.io/badge/Quartus--Prime-19.1-blue.svg?style=flat-square)
-![Libero](https://img.shields.io/badge/Libero--Soc-12.2-blue.svg?style=flat-square)
+![Vivado](https://img.shields.io/badge/Vivado-2022.1-blue.svg?style=flat-square)
+![Quartus](https://img.shields.io/badge/Quartus--Prime-23.1-blue.svg?style=flat-square)
+![Libero](https://img.shields.io/badge/Libero--Soc-2024.1-blue.svg?style=flat-square)
 ![ISE](https://img.shields.io/badge/ISE-14.7-blue.svg?style=flat-square)
 ![Openflow](https://img.shields.io/badge/Openflow-GHDL%20%7C%20Yosys%20%7C%20nextpnr%20%7C%20icestorm%20%7C%20prjtrellis-darkgreen.svg?style=flat-square)
 
