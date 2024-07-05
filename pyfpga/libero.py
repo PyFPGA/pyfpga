@@ -31,28 +31,9 @@ class Libero(Project):
         }
         for step in steps:
             context[step] = 1
-        files = []
-        if 'files' in self.data:
-            for file in self.data['files']:
-                if 'lib' in self.data['files'][file]:
-                    lib = self.data['files'][file]['lib']
-                    files.append(
-                        f'create_links -library {lib} -hdl_source {file}'
-                    )
-                else:
-                    files.append(f'create_links -hdl_source {file}')
-        if 'constraints' in self.data:
-            constraints = []
-            for file in self.data['constraints']:
-                if file.suffix == '.sdc':
-                    constraints.append(f'create_links -sdc {file}')
-                else:
-                    constraints.append(f'create_links -io_pdc {file}')
-            if constraints:
-                context['CONSTRAINTS'] = " ".join(constraints)
-        if files:
-            context['FILES'] = '\n'.join(files)
-        context['INCLUDES'] = self.data.get('includes', None) # ';'.join(includes)
+        context['FILES'] = self.data.get('files', None)
+        context['CONSTRAINTS'] = self.data.get('constraints', None)
+        context['INCLUDES'] = self.data.get('includes', None)
         context['TOP'] = self.data.get('top', None)
         context['DEFINES'] = self.data.get('defines', None)
         context['PARAMS'] = self.data.get('params', None)
