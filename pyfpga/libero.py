@@ -31,9 +31,9 @@ class Libero(Project):
         }
         for step in steps:
             context[step] = 1
+        context['INCLUDES'] = self.data.get('includes', None)
         context['FILES'] = self.data.get('files', None)
         context['CONSTRAINTS'] = self.data.get('constraints', None)
-        context['INCLUDES'] = self.data.get('includes', None)
         context['TOP'] = self.data.get('top', None)
         context['DEFINES'] = self.data.get('defines', None)
         context['PARAMS'] = self.data.get('params', None)
