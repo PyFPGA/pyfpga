@@ -18,7 +18,7 @@ def test_libero():
     info = {
         'family': 'SmartFusion2',
         'device': 'm2s010',
-        'speed': '1',
+        'speed': '-1',
         'package': 'tq144'
     }
     assert get_info_libero('m2s010-1-tq144') == info
