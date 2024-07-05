@@ -13,26 +13,37 @@ set_global_assignment -name DEVICE {{ PART }}
 
 {{ PRECFG }}
 
-{{ FILES }}
-
-{% if TOP %}
-set_global_assignment -name TOP_LEVEL_ENTITY {{ TOP }}
+{% if FILES %}{% for NAME, ATTR in FILES.items() %}
+{% if ATTR.hdl == "vhdl" %}
+set_global_assignment -name VHDL_FILE {{ NAME }} {% if 'lib' in ATTR %} -library {{ ATTR.lib }}{% endif %}
+{% elif ATTR.hdl == "vlog" %}
+set_global_assignment -name VERILOG_FILE {{ NAME }}
+{% elif ATTR.hdl == "slog" %}
+set_global_assignment -name SYSTEMVERILOG_FILE {{ NAME }}
 {% endif %}
+{% endfor %}{% endif %}
 
-{% if DEFINES %}
-set defines [dict create {{ DEFINES }}]
-foreach {key value} $defines {set_global_assignment -name VERILOG_MACRO "$key=$value"}
+{% if CONSTRAINTS %}{% for name, attr in CONSTRAINTS.items() %}{% set name_str = name|string %}
+{% if name_str.endswith('.sdc') %}
+set_global_assignment -name SDC_FILE {{ name_str }}
+{% else %}
+source {{ name_str }}
 {% endif %}
+{% endfor %}{% endif %}
 
-{% if INCLUDES %}
-set includes { {{ INCLUDES}} }
-foreach value $includes {set_global_assignment -name SEARCH_PATH $value}
-{% endif %}
+{% if TOP %}set_global_assignment -name TOP_LEVEL_ENTITY {{ TOP }}{% endif %}
 
-{% if PARAMS %}
-set params [dict create {{ PARAMS }}]
-foreach {key value} $params {set_parameter -name $key $value}
-{% endif %}
+{% if INCLUDES %}{% for INCLUDE in INCLUDES %}
+set_global_assignment -name SEARCH_PATH {{ INCLUDE }}
+{% endfor %}{% endif %}
+
+{% if DEFINES %}{% for KEY, VALUE in DEFINES.items() %}
+set_global_assignment -name VERILOG_MACRO {{ KEY }}={{ VALUE }}
+{% endfor %}{% endif %}
+
+{% if PARAMS %}{% for KEY, VALUE in PARAMS.items() %}
+set_parameter -name {{ KEY }} {{ VALUE }}
+{% endfor %}{% endif %}
 
 {{ POSTCFG }}
 
