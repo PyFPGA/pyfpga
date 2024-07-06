@@ -13,18 +13,22 @@ DOCKER="docker run --user $(id -u):$(id -g) --rm -v $HOME:$HOME -w $PWD"
 {% if SYN %}
 $DOCKER hdlc/ghdl:yosys /bin/bash -c "
 {{ PRESYN }}
-{{ VHDLS }}
 yosys -Q -m ghdl -p '
 {% if INCLUDES %}
-verilog_defaults -add {{ INCLUDES }}
+verilog_defaults -add{% for path in INCLUDES %} -I{{ path }}{% endfor %}
 {% endif %}
 {% if DEFINES %}
-verilog_defines {{ DEFINES }}
+verilog_defines{% for key, value in DEFINES.items() %} -D{{ key }}={{ value }}{% endfor %}
 {% endif %}
-{{ VLOGS }}
-{{ SLOGS }}
+{% if FILES %}{% for name, attr in FILES.items() %}
+{% if attr.hdl == "vlog" %}
+read_verilog -defer {{ name }}
+{% elif attr.hdl == "slog" %}
+read_verilog -defer -sv {{ name }}
+{% endif %}
+{% endfor %}{% endif %}
 {% if PARAMS %}
-chparam {{ PARAMS }} {{ TOP }}
+chparam{% for key, value in PARAMS.items() %} -set {{ key }} {{ value }}{% endfor %}
 {% endif %}
 synth -top {{ TOP }}
 synth_{{ FAMILY }} -top {{ TOP }} -json {{ PROJECT }}.json
@@ -54,7 +58,7 @@ synth_{{ FAMILY }} -top {{ TOP }} -json {{ PROJECT }}.json
 
 {% if PAR %}
 
-CONSTRAINTS="{{ CONSTRAINTS }}"
+CONSTRAINTS="{{ CONSTRAINTS | join(' ') }}"
 
 {% if FAMILY == 'ice40' %}
 if [ -n "$CONSTRAINTS" ]; then
