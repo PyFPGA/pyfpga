@@ -43,11 +43,11 @@ configure_tool -name {SYNTHESIZE} -params {SYNPLIFY_OPTIONS:
 {% if INCLUDES %}{% for INCLUDE in INCLUDES %}
   set_option -include_path "{{ INCLUDE }}"
 {% endfor %}{% endif %}
-{% if DEFINES %}{% for KEY, VALUE in DEFINES.items() %}
-  set_option -hdl_define -set {{ KEY }}={{ VALUE }}
+{% if DEFINES %}{% for key, value in DEFINES.items() %}
+  set_option -hdl_define -set {{ key }}={{ value }}
 {% endfor %}{% endif %}
-{% if PARAMS %}{% for KEY, VALUE in PARAMS.items() %}
-  set_option -hdl_param -set {{ KEY }}={{ VALUE }}
+{% if PARAMS %}{% for key, value in PARAMS.items() %}
+  set_option -hdl_param -set {{ key }}={{ value }}
 {% endfor %}{% endif %}
 }
 {% endif %}
