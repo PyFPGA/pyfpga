@@ -14,22 +14,33 @@ set_property PART {{ PART }} [current_project]
 
 {{ PRECFG }}
 
-{{ FILES }}
+{% if FILES %}{% for name, attr in FILES.items() %}
+add_file {{ name }}
+{% if 'lib' in attr %}set_property library {{ attr.lib }} [get_files {{ name }}]{% endif %}
+{% endfor %}{% endif %}
 
-{% if TOP %}
-set_property TOP {{ TOP }} [current_fileset]
+{% if CONSTRAINTS %}{% for name, attr in CONSTRAINTS.items() %}
+add_file -fileset constrs_1 {{ name }}
+{% if attr == "syn" %}
+set_property USED_IN_IMPLEMENTATION FALSE [get_files {{ name }}]
+{% elif attr == "par" %}
+set_property USED_IN_SYNTHESIS FALSE [get_files {{ name }}]
+{% endif %}
+{% if loop.first %}set_property TARGET_CONSTRS_FILE {{ name }} [current_fileset -constrset]{% endif %}
+{% endfor %}{% endif %}
+
+{% if TOP %}set_property TOP {{ TOP }} [current_fileset]{% endif %}
+
+{% if INCLUDES %}
+set_property INCLUDE_DIRS { {{ INCLUDES | join(' ') }} } [current_fileset]
 {% endif %}
 
 {% if DEFINES %}
-set_property VERILOG_DEFINE { {{ DEFINES}} } [current_fileset]
-{% endif %}
-
-{% if INCLUDES %}
-set_property INCLUDE_DIRS { {{ INCLUDES}} } [current_fileset]
+set_property VERILOG_DEFINE { {{ DEFINES.items() | map('join', '=') | join(' ') }} }  [current_fileset]
 {% endif %}
 
 {% if PARAMS %}
-set_property GENERIC { {{ PARAMS }} } -objects [get_filesets sources_1]
+set_property GENERIC { {{ PARAMS.items() | map('join', '=') | join(' ') }} } -objects [get_filesets sources_1]
 {% endif %}
 
 {{ POSTCFG }}
