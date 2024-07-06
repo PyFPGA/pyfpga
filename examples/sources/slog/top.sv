@@ -16,7 +16,7 @@ module Top #(
   always @(posedge clk_i) led <= 1'b0;
   always @(posedge clk_i) led <= 1'b1;
   assign led_o = led;
-  initial begin $stop; end
+  initial begin $stop; $error("intentional"); end
 `endif
 
 `ifndef INCLUDE2
@@ -24,7 +24,7 @@ module Top #(
   always @(posedge clk_i) led <= 1'b0;
   always @(posedge clk_i) led <= 1'b1;
   assign led_o = led;
-  initial begin $stop; end
+  initial begin $stop; $error("intentional"); end
 `endif
 
 `ifndef DEFINE1
@@ -32,7 +32,7 @@ module Top #(
   always @(posedge clk_i) led <= 1'b0;
   always @(posedge clk_i) led <= 1'b1;
   assign led_o = led;
-  initial begin $stop; end
+  initial begin $stop; $error("intentional"); end
 `endif
 
 `ifndef DEFINE2
@@ -40,7 +40,7 @@ module Top #(
   always @(posedge clk_i) led <= 1'b0;
   always @(posedge clk_i) led <= 1'b1;
   assign led_o = led;
-  initial begin $stop; end
+  initial begin $stop; $error("intentional"); end
 `endif
 
   generate
@@ -49,7 +49,7 @@ module Top #(
       always @(posedge clk_i) led <= 1'b0;
       always @(posedge clk_i) led <= 1'b1;
       assign led_o = led;
-      initial begin $stop; end
+      initial begin $stop; $error("intentional"); end
     end
   endgenerate
 
