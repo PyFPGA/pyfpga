@@ -42,7 +42,7 @@ if args.source == 'vlog':
 if args.source == 'slog':
     prj.add_include('../sources/slog/include1')
     prj.add_include('../sources/slog/include2')
-    prj.add_vlog('../sources/slog/*.sv')
+    prj.add_slog('../sources/slog/*.sv')
 if args.source in ['vlog', 'slog']:
     prj.add_define('DEFINE1', '1')
     prj.add_define('DEFINE2', '1')
