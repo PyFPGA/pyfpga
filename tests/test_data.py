@@ -5,35 +5,37 @@ from pyfpga.project import Project
 pattern = {
     'part': 'PARTNAME',
     'includes': [
-        Path('fakedata/dir1').resolve(),
-        Path('fakedata/dir2').resolve(),
-        Path('fakedata/dir3').resolve()
+        Path('fakedata/dir1').resolve().as_posix(),
+        Path('fakedata/dir2').resolve().as_posix(),
+        Path('fakedata/dir3').resolve().as_posix()
     ],
     'files': {
-        Path('fakedata/vhdl0.vhdl').resolve(): {'hdl': 'vhdl', 'lib': 'LIB'},
-        Path('fakedata/dir1/vhdl1.vhdl').resolve(): {
+        Path('fakedata/vhdl0.vhdl').resolve().as_posix(): {
             'hdl': 'vhdl', 'lib': 'LIB'
         },
-        Path('fakedata/dir2/vhdl2.vhdl').resolve(): {
+        Path('fakedata/dir1/vhdl1.vhdl').resolve().as_posix(): {
             'hdl': 'vhdl', 'lib': 'LIB'
         },
-        Path('fakedata/dir3/vhdl3.vhdl').resolve(): {
+        Path('fakedata/dir2/vhdl2.vhdl').resolve().as_posix(): {
             'hdl': 'vhdl', 'lib': 'LIB'
         },
-        Path('fakedata/vlog0.v').resolve(): {'hdl': 'vlog'},
-        Path('fakedata/dir1/vlog1.v').resolve(): {'hdl': 'vlog'},
-        Path('fakedata/dir2/vlog2.v').resolve(): {'hdl': 'vlog'},
-        Path('fakedata/dir3/vlog3.v').resolve(): {'hdl': 'vlog'},
-        Path('fakedata/slog0.sv').resolve(): {'hdl': 'slog'},
-        Path('fakedata/dir1/slog1.sv').resolve(): {'hdl': 'slog'},
-        Path('fakedata/dir2/slog2.sv').resolve(): {'hdl': 'slog'},
-        Path('fakedata/dir3/slog3.sv').resolve(): {'hdl': 'slog'}
+        Path('fakedata/dir3/vhdl3.vhdl').resolve().as_posix(): {
+            'hdl': 'vhdl', 'lib': 'LIB'
+        },
+        Path('fakedata/vlog0.v').resolve().as_posix(): {'hdl': 'vlog'},
+        Path('fakedata/dir1/vlog1.v').resolve().as_posix(): {'hdl': 'vlog'},
+        Path('fakedata/dir2/vlog2.v').resolve().as_posix(): {'hdl': 'vlog'},
+        Path('fakedata/dir3/vlog3.v').resolve().as_posix(): {'hdl': 'vlog'},
+        Path('fakedata/slog0.sv').resolve().as_posix(): {'hdl': 'slog'},
+        Path('fakedata/dir1/slog1.sv').resolve().as_posix(): {'hdl': 'slog'},
+        Path('fakedata/dir2/slog2.sv').resolve().as_posix(): {'hdl': 'slog'},
+        Path('fakedata/dir3/slog3.sv').resolve().as_posix(): {'hdl': 'slog'}
     },
     'top': 'TOPNAME',
     'constraints': {
-        Path('fakedata/cons/all.xdc').resolve(): 'all',
-        Path('fakedata/cons/syn.xdc').resolve(): 'syn',
-        Path('fakedata/cons/par.xdc').resolve(): 'par'
+        Path('fakedata/cons/all.xdc').resolve().as_posix(): 'all',
+        Path('fakedata/cons/syn.xdc').resolve().as_posix(): 'syn',
+        Path('fakedata/cons/par.xdc').resolve().as_posix(): 'par'
     },
     'params': {
         'PAR1': 'VAL1',

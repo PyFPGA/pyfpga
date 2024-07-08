@@ -32,11 +32,10 @@ set_global_assignment -name SYSTEMVERILOG_FILE {{ name }}
 
 {% if CONSTRAINTS %}
 {% for name, attr in CONSTRAINTS.items() %}
-{% set name_str = name|string %}
-{% if name_str.endswith('.sdc') %}
-set_global_assignment -name SDC_FILE {{ name_str }}
+{% if name.endswith('.sdc') %}
+set_global_assignment -name SDC_FILE {{ name }}
 {% else %}
-source {{ name_str }}
+source {{ name }}
 {% endif %}
 {% endfor %}
 {% endif %}

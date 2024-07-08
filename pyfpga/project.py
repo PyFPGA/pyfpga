@@ -66,7 +66,7 @@ class Project:
         path = Path(path).resolve()
         if not path.is_dir():
             raise NotADirectoryError(path)
-        self.data.setdefault('includes', []).append(path)
+        self.data.setdefault('includes', []).append(path.as_posix())
 
     def _add_file(self, pathname, hdl=None, lib=None):
         files = glob.glob(pathname, recursive=True)
@@ -79,7 +79,7 @@ class Project:
                 attr['hdl'] = hdl
             if lib:
                 attr['lib'] = lib
-            self.data.setdefault('files', {})[path] = attr
+            self.data.setdefault('files', {})[path.as_posix()] = attr
 
     def add_slog(self, pathname):
         """Add System Verilog file/s.
@@ -128,7 +128,7 @@ class Project:
             raise FileNotFoundError(path)
         if when not in ['all', 'syn', 'par']:
             raise ValueError('Invalid only.')
-        self.data.setdefault('constraints', {})[path] = when
+        self.data.setdefault('constraints', {})[path.as_posix()] = when
 
     def add_param(self, name, value):
         """Add a Parameter/Generic Value.

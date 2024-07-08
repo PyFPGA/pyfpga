@@ -30,10 +30,9 @@ xfile add {{ name }}{% if 'lib' in attr %} -lib_vhdl {{ attr.lib }}{% endif %}
 
 {% if CONSTRAINTS %}
 {% for name, attr in CONSTRAINTS.items() %}
-{% set name_str = name|string %}
-xfile add {{ name_str }}
-{% if name_str.endswith('.xcf') %}
-project set "Synthesis Constraints File" "{{ name_str }}" -process "Synthesize - XST"
+xfile add {{ name }}
+{% if name.endswith('.xcf') %}
+project set "Synthesis Constraints File" "{{ name }}" -process "Synthesize - XST"
 {% endif %}
 {% endfor %}
 {% endif %}

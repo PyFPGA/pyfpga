@@ -30,8 +30,7 @@ create_links -hdl_source {{ name }}{% if 'lib' in attr %} -library {{ attr.lib }
 
 {% if CONSTRAINTS %}
 {% for name, attr in CONSTRAINTS.items() %}
-{% set name_str = name|string %}
-create_links {% if name_str.endswith('.sdc') %}-sdc{% else %}-io_pdc{% endif %} {{ name_str }}
+create_links {% if name.endswith('.sdc') %}-sdc{% else %}-io_pdc{% endif %} {{ name }}
 {% endfor %}
 {% endif %}
 
@@ -45,11 +44,10 @@ set_root {{ TOP }}
 {% set sdc_files = [] %}
 {% set pdc_files = [] %}
 {% for name, attr in CONSTRAINTS.items() %}
-{% set name_str = name|string %}
-{% if name_str.endswith('.sdc') %}
-{% set _ = sdc_files.append(name_str) %}
+{% if name.endswith('.sdc') %}
+{% set _ = sdc_files.append(name) %}
 {% endif %}
-{% set _ = pdc_files.append(name_str) %}
+{% set _ = pdc_files.append(name) %}
 {% endfor %}
 {% endif %}
 
