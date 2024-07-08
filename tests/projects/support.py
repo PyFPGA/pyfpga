@@ -93,7 +93,7 @@ except SystemExit:
 except Exception:
     pass
 
-if args.tool not in ['ise', 'openflow']:
+if args.tool not in ['ise']:
     print('INFO: checking basic System Verilog Support')
     prj = tools[args.tool]()
     prj.add_slog('../../examples/sources/slog/blink.sv')
