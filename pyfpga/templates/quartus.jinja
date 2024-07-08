@@ -1,19 +1,25 @@
+{#
 #
 # Copyright (C) 2015-2024 Rodrigo A. Melo
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
+#}
 
-#--[ Project configuration ]---------------------------------------------------
+{# ------------------------------------------------------------------------- #}
+{# Project configuration                                                     #}
+{# ------------------------------------------------------------------------- #}
 
 {% if CFG %}
+
 package require ::quartus::project
 project_new {{ PROJECT }} -overwrite
 set_global_assignment -name DEVICE {{ PART }}
 
 {{ PRECFG }}
 
-{% if FILES %}{% for name, attr in FILES.items() %}
+{% if FILES %}
+{% for name, attr in FILES.items() %}
 {% if attr.hdl == "vhdl" %}
 set_global_assignment -name VHDL_FILE {{ name }} {% if 'lib' in attr %} -library {{ attr.lib }}{% endif %}
 {% elif attr.hdl == "vlog" %}
@@ -21,66 +27,97 @@ set_global_assignment -name VERILOG_FILE {{ name }}
 {% elif attr.hdl == "slog" %}
 set_global_assignment -name SYSTEMVERILOG_FILE {{ name }}
 {% endif %}
-{% endfor %}{% endif %}
+{% endfor %}
+{% endif %}
 
-{% if CONSTRAINTS %}{% for name, attr in CONSTRAINTS.items() %}{% set name_str = name|string %}
+{% if CONSTRAINTS %}
+{% for name, attr in CONSTRAINTS.items() %}
+{% set name_str = name|string %}
 {% if name_str.endswith('.sdc') %}
 set_global_assignment -name SDC_FILE {{ name_str }}
 {% else %}
 source {{ name_str }}
 {% endif %}
-{% endfor %}{% endif %}
+{% endfor %}
+{% endif %}
 
-{% if TOP %}set_global_assignment -name TOP_LEVEL_ENTITY {{ TOP }}{% endif %}
+{% if TOP %}
+set_global_assignment -name TOP_LEVEL_ENTITY {{ TOP }}
+{% endif %}
 
-{% if INCLUDES %}{% for INCLUDE in INCLUDES %}
+{% if INCLUDES %}
+{% for INCLUDE in INCLUDES %}
 set_global_assignment -name SEARCH_PATH {{ INCLUDE }}
-{% endfor %}{% endif %}
+{% endfor %}
+{% endif %}
 
-{% if DEFINES %}{% for key, value in DEFINES.items() %}
+{% if DEFINES %}
+{% for key, value in DEFINES.items() %}
 set_global_assignment -name VERILOG_MACRO {{ key }}={{ value }}
-{% endfor %}{% endif %}
+{% endfor %}
+{% endif %}
 
-{% if PARAMS %}{% for key, value in PARAMS.items() %}
+{% if PARAMS %}
+{% for key, value in PARAMS.items() %}
 set_parameter -name {{ key }} {{ value }}
-{% endfor %}{% endif %}
+{% endfor %}
+{% endif %}
 
 {{ POSTCFG }}
 
 project_close
+
 {% endif %}
 
-#--[ Design flow ]-------------------------------------------------------------
+{# ------------------------------------------------------------------------- #}
+{# Design flow                                                               #}
+{# ------------------------------------------------------------------------- #}
 
 {% if SYN or PAR or BIT %}
+
 package require ::quartus::flow
 project_open -force {{ PROJECT }}.qpf
 # set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
 
+{# Synthesis --------------------------------------------------------------- #}
+
 {% if SYN %}
+
 {{ PRESYN }}
 
 execute_module -tool map
 
 {{ POSTSYN }}
+
 {% endif %}
 
+{# Place and Route --------------------------------------------------------- #}
+
 {% if PAR %}
+
 {{ PREPAR }}
 
 execute_module -tool fit
 execute_module -tool sta
 
 {{ POSTPAR }}
+
 {% endif %}
 
+{# Bitstream generation ---------------------------------------------------- #}
+
 {% if BIT %}
+
 {{ PREBIT }}
 
 execute_module -tool asm
 
 {{ POSTBIT }}
+
 {% endif %}
 
+{# ------------------------------------------------------------------------- #}
+
 project_close
+
 {% endif %}

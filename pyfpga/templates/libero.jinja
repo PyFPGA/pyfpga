@@ -1,36 +1,55 @@
+{#
 #
 # Copyright (C) 2015-2024 Rodrigo A. Melo
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
+#}
 
-#--[ Project configuration ]---------------------------------------------------
+{# ------------------------------------------------------------------------- #}
+{# Project configuration                                                     #}
+{# ------------------------------------------------------------------------- #}
 
 {% if CFG %}
+
 if { [ file exists {{ PROJECT }} ] } { file delete -force -- {{ PROJECT }} }
 new_project -name {{ PROJECT }} -location {libero} -hdl {VERILOG} -family {SmartFusion2}
 set_device -family {{ FAMILY }} -die {{ DEVICE }} -package {{ PACKAGE }} -speed {{ SPEED }}
 
 {{ PRECFG }}
 
-{% if INCLUDES %}set_global_include_path_order -paths "{{ INCLUDES | join(' ') }}"{% endif %}
+{% if INCLUDES %}
+set_global_include_path_order -paths "{{ INCLUDES | join(' ') }}"
+{% endif %}
 
-{% if FILES %}{% for name, attr in FILES.items() %}
+{% if FILES %}
+{% for name, attr in FILES.items() %}
 create_links -hdl_source {{ name }}{% if 'lib' in attr %} -library {{ attr.lib }}{% endif %}
-{% endfor %}{% endif %}
+{% endfor %}
+{% endif %}
 
-{% if CONSTRAINTS %}{% for name, attr in CONSTRAINTS.items() %}{% set name_str = name|string %}
+{% if CONSTRAINTS %}
+{% for name, attr in CONSTRAINTS.items() %}
+{% set name_str = name|string %}
 create_links {% if name_str.endswith('.sdc') %}-sdc{% else %}-io_pdc{% endif %} {{ name_str }}
-{% endfor %}{% endif %}
+{% endfor %}
+{% endif %}
 
 build_design_hierarchy
 
-{% if TOP %}set_root {{ TOP }}{% endif %}
+{% if TOP %}
+set_root {{ TOP }}
+{% endif %}
 
 {% if CONSTRAINTS %}
-{% set sdc_files = [] %}{% set pdc_files = [] %}
-{% for name, attr in CONSTRAINTS.items() %}{% set name_str = name|string %}
-{% if name_str.endswith('.sdc') %}{% set _ = sdc_files.append(name_str) %}{% endif %}{% set _ = pdc_files.append(name_str) %}
+{% set sdc_files = [] %}
+{% set pdc_files = [] %}
+{% for name, attr in CONSTRAINTS.items() %}
+{% set name_str = name|string %}
+{% if name_str.endswith('.sdc') %}
+{% set _ = sdc_files.append(name_str) %}
+{% endif %}
+{% set _ = pdc_files.append(name_str) %}
 {% endfor %}
 {% endif %}
 
@@ -40,52 +59,81 @@ build_design_hierarchy
 
 {% if INCLUDES or DEFINES or PARAMS %}
 configure_tool -name {SYNTHESIZE} -params {SYNPLIFY_OPTIONS:
-{% if INCLUDES %}{% for INCLUDE in INCLUDES %}
+
+{% if INCLUDES %}
+{% for INCLUDE in INCLUDES %}
   set_option -include_path "{{ INCLUDE }}"
-{% endfor %}{% endif %}
-{% if DEFINES %}{% for key, value in DEFINES.items() %}
+{% endfor %}
+{% endif %}
+
+{% if DEFINES %}
+{% for key, value in DEFINES.items() %}
   set_option -hdl_define -set {{ key }}={{ value }}
-{% endfor %}{% endif %}
-{% if PARAMS %}{% for key, value in PARAMS.items() %}
+{% endfor %}
+{% endif %}
+
+{% if PARAMS %}
+{% for key, value in PARAMS.items() %}
   set_option -hdl_param -set {{ key }}={{ value }}
-{% endfor %}{% endif %}
+{% endfor %}
+{% endif %}
+
 }
 {% endif %}
 
 {{ POSTCFG }}
 
 close_project
+
 {% endif %}
 
-#--[ Design flow ]-------------------------------------------------------------
+{# ------------------------------------------------------------------------- #}
+{# Design flow                                                               #}
+{# ------------------------------------------------------------------------- #}
 
 {% if SYN or PAR or BIT %}
+
 open_project {{ PROJECT }}/{{ PROJECT }}.prjx
 
+{# Synthesis --------------------------------------------------------------- #}
+
 {% if SYN %}
+
 {{ PRESYN }}
 
 run_tool -name {SYNTHESIZE}
 
 {{ POSTSYN }}
+
 {% endif %}
 
+{# Place and Route --------------------------------------------------------- #}
+
 {% if PAR %}
+
 {{ PREPAR }}
 
 run_tool -name {PLACEROUTE}
 run_tool -name {VERIFYTIMING}
 
 {{ POSTPAR }}
+
 {% endif %}
 
+{# Bitstream generation ---------------------------------------------------- #}
+
 {% if BIT %}
+
 {{ PREBIT }}
 
 run_tool -name {GENERATEPROGRAMMINGFILE}
 
 {{ POSTBIT }}
+
 {% endif %}
 
+{# ------------------------------------------------------------------------- #}
+
 close_project
+
 {% endif %}

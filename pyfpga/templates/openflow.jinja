@@ -1,35 +1,48 @@
+{#
 #
 # Copyright (C) 2020-2024 Rodrigo A. Melo
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
+#}
 
 set -e
 
 DOCKER="docker run --user $(id -u):$(id -g) --rm -v $HOME:$HOME -w $PWD"
 
-# Synthesis -------------------------------------------------------------------
+{# ------------------------------------------------------------------------- #}
+{# Design flow                                                               #}
+{# ------------------------------------------------------------------------- #}
+
+{# Synthesis --------------------------------------------------------------- #}
 
 {% if SYN %}
 $DOCKER hdlc/ghdl:yosys /bin/bash -c "
 {{ PRESYN }}
 yosys -Q -m ghdl -p '
+
 {% if INCLUDES %}
 verilog_defaults -add{% for path in INCLUDES %} -I{{ path }}{% endfor %}
 {% endif %}
+
 {% if DEFINES %}
 verilog_defines{% for key, value in DEFINES.items() %} -D{{ key }}={{ value }}{% endfor %}
 {% endif %}
-{% if FILES %}{% for name, attr in FILES.items() %}
+
+{% if FILES %}
+{% for name, attr in FILES.items() %}
 {% if attr.hdl == "vlog" %}
 read_verilog -defer {{ name }}
 {% elif attr.hdl == "slog" %}
 read_verilog -defer -sv {{ name }}
 {% endif %}
-{% endfor %}{% endif %}
+{% endfor %}
+{% endif %}
+
 {% if PARAMS %}
 chparam{% for key, value in PARAMS.items() %} -set {{ key }} {{ value }}{% endfor %}
 {% endif %}
+
 synth -top {{ TOP }}
 synth_{{ FAMILY }} -top {{ TOP }} -json {{ PROJECT }}.json
 '
@@ -37,6 +50,7 @@ synth_{{ FAMILY }} -top {{ TOP }} -json {{ PROJECT }}.json
 "
 {% endif %}
 
+{#
 #SYNTH=
 #WRITE=
 #if [[ $BACKEND == "vivado" ]]; then
@@ -53,8 +67,9 @@ synth_{{ FAMILY }} -top {{ TOP }} -json {{ PROJECT }}.json
 #    SYNTH="synth -top $TOP"
 #    WRITE="write_verilog $PROJECT.v"
 #fi
+#}
 
-# Place and Route -------------------------------------------------------------
+{# Place and Route --------------------------------------------------------- #}
 
 {% if PAR %}
 
@@ -89,7 +104,7 @@ nextpnr-ecp5 --{{ DEVICE }} --package {{ PACKAGE }} $CONSTRAINT --json {{ PROJEC
 
 {% endif %}
 
-# Bitstream -------------------------------------------------------------------
+{# Bitstream generation ---------------------------------------------------- #}
 
 {% if BIT %}
 
