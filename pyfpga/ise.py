@@ -29,23 +29,14 @@ class Ise(Project):
             'speed': info['speed'],
             'package': info['package']
         }
-        for step in steps:
-            context[step] = 1
+        context['steps'] = steps
         context['includes'] = self.data.get('includes', None)
         context['files'] = self.data.get('files', None)
         context['constraints'] = self.data.get('constraints', None)
         context['top'] = self.data.get('top', None)
         context['defines'] = self.data.get('defines', None)
         context['params'] = self.data.get('params', None)
-        if 'hooks' in self.data:
-            context['precfg'] = self.data['hooks'].get('precfg', None)
-            context['postcfg'] = self.data['hooks'].get('postcfg', None)
-            context['presyn'] = self.data['hooks'].get('presyn', None)
-            context['postsyn'] = self.data['hooks'].get('postsyn', None)
-            context['prepar'] = self.data['hooks'].get('prepar', None)
-            context['postpar'] = self.data['hooks'].get('postpar', None)
-            context['presbit'] = self.data['hooks'].get('prebit', None)
-            context['postbit'] = self.data['hooks'].get('postbit', None)
+        context['hooks'] = self.data.get('hooks', None)
         self._create_file('ise', 'tcl', context)
         return 'xtclsh ise.tcl'
 

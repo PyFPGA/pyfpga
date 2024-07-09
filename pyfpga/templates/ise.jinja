@@ -6,7 +6,7 @@
 #
 #}
 
-{% if cfg %}# Project configuration -------------------------------------------------------
+{% if 'cfg' in steps %}# Project configuration -------------------------------------------------------
 
 if { [ file exists {{ project }}.xise ] } { file delete {{ project }}.xise }
 project new {{ project }}.xise
@@ -15,7 +15,7 @@ project set device  {{ device }}
 project set package {{ package }}
 project set speed  -{{ speed }}
 
-{{ precfg }}
+{{ hooks.precfg | join('\n') }}
 
 {% if files %}# Files inclusion
 {% for name, attr in files.items() %}
@@ -49,19 +49,19 @@ project set "Verilog Macros" "{{ defines.items() | map('join', '=') | join(' | '
 project set "Generics, Parameters" "{{ params.items() | map('join', '=') | join(' ') }}" -process "Synthesize - XST"
 {% endif %}
 
-{{ postcfg }}
+{{ hooks.postcfg | join('\n') }}
 
 project close
 
 {% endif %}
 
-{% if syn or par or bit %}# Design flow -----------------------------------------------------------------
+{% if 'syn' in steps or 'par' in steps or 'bit' in steps %}# Design flow -----------------------------------------------------------------
 
 project open {{ project }}.xise
 
-{% if syn %}# Synthesis
+{% if 'syn' in steps %}# Synthesis
 
-{{ presyn }}
+{{ hooks.presyn | join('\n') }}
 
 # PRESYNTH
 #project set top_level_module_type "EDIF"
@@ -69,13 +69,13 @@ project clean
 process run "Synthesize"
 if { [process get "Synthesize" status] == "errors" } { exit 1 }
 
-{{ postsyn }}
+{{ hooks.postsyn | join('\n') }}
 
 {% endif %}
 
-{% if par %}# Place and Route
+{% if 'par' in steps %}# Place and Route
 
-{{ prepar }}
+{{ hooks.prepar | join('\n') }}
 
 process run "Translate"
 if { [process get "Translate" status] == "errors" } { exit 1 }
@@ -84,19 +84,19 @@ if { [process get "Map" status] == "errors" } { exit 1 }
 process run "Place & Route"
 if { [process get "Place & Route" status] == "errors" } { exit 1 }
 
-{{ postpar }}
+{{ hooks.postpar | join('\n') }}
 
 {% endif %}
 
-{% if bit %}# Bitstream generation
+{% if 'bit' in steps %}# Bitstream generation
 
-{{ prebit }}
+{{ hooks.prebit | join('\n') }}
 
 process run "Generate Programming File"
 if { [process get "Generate Programming File" status] == "errors" } { exit 1 }
 catch { file rename -force {{ top }}.bit {{ project }}.bit }
 
-{{ postbit }}
+{{ hooks.postbit | join('\n') }}
 
 {% endif %}
 

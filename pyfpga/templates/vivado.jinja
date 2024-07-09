@@ -6,14 +6,14 @@
 #
 #}
 
-{% if cfg %}# Project configuration -------------------------------------------------------
+{% if 'cfg' in steps %}# Project configuration -------------------------------------------------------
 
 create_project -force {{ project }}
 set_property SOURCE_MGMT_MODE None [current_project]
 set_property STEPS.SYNTH_DESIGN.ARGS.ASSERT true [get_runs synth_1]
 set_property PART {{ part }} [current_project]
 
-{{ precfg }}
+{{ hooks.precfg | join('\n') }}
 
 {% if files %}# Files inclusion
 {% for name, attr in files.items() %}
@@ -50,19 +50,19 @@ set_property VERILOG_DEFINE { {{ defines.items() | map('join', '=') | join(' ') 
 set_property GENERIC { {{ params.items() | map('join', '=') | join(' ') }} } -objects [get_filesets sources_1]
 {% endif %}
 
-{{ postcfg }}
+{{ hooks.postcfg | join('\n') }}
 
 close_project
 
 {% endif %}
 
-{% if syn or par or bit %}# Design flow -----------------------------------------------------------------
+{% if 'syn' in steps or 'par' in steps or 'bit' in steps %}# Design flow -----------------------------------------------------------------
 
 open_project {{ project }}
 
-{% if syn %}# Synthesis
+{% if 'syn' in steps %}# Synthesis
 
-{{ presyn }}
+{{ hooks.presyn | join('\n') }}
 
 # PRESYNTH
 # set_property DESIGN_MODE GateLvl [current_fileset]
@@ -70,16 +70,15 @@ reset_run synth_1
 launch_runs synth_1
 wait_on_run synth_1
 #report_property [get_runs synth_1]
-
 if { [get_property STATUS [get_runs synth_1]] ne "synth_design Complete!" } { exit 1 }
 
-{{ postsyn }}
+{{ hooks.postsyn | join('\n') }}
 
 {% endif %}
 
-{% if par %}# Place and Route
+{% if 'par' in steps %}# Place and Route
 
-{{ prepar }}
+{{ hooks.prepar | join('\n') }}
 
 reset_run impl_1
 launch_runs impl_1
@@ -87,19 +86,19 @@ wait_on_run impl_1
 #report_property [get_runs impl_1]
 if { [get_property STATUS [get_runs impl_1]] ne "route_design Complete!" } { exit 1 }
 
-{{ postpar }}
+{{ hooks.postpar | join('\n') }}
 
 {% endif %}
 
-{% if bit %}# Bitstream generation
+{% if 'bit' in steps %}# Bitstream generation
 
-{{ prebit }}
+{{ hooks.prebit | join('\n') }}
 
 open_run impl_1
 write_bitstream -force {{ project }}
 write_debug_probes -force -quiet {{ project }}.ltx
 
-{{ postbit }}
+{{ hooks.postbit | join('\n') }}
 
 {% endif %}
 

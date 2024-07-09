@@ -10,9 +10,9 @@ set -e
 
 DOCKER="docker run --user $(id -u):$(id -g) --rm -v $HOME:$HOME -w $PWD"
 
-{% if syn %}# Synthesis
+{% if 'syn' in steps %}# Synthesis
 $DOCKER hdlc/ghdl:yosys /bin/bash -c "
-{{ presyn }}
+{{ hooks.presyn | join('\n') }}
 yosys -Q -m ghdl -p '
 
 {% if includes %}
@@ -40,7 +40,7 @@ chparam{% for key, value in params.items() %} -set {{ key }} {{ value }}{% endfo
 synth -top {{ top }}
 synth_{{ family }} -top {{ top }} -json {{ project }}.json
 '
-{{ postsyn }}
+{{ hooks.postsyn | join('\n') }}
 "
 {% endif %}
 
@@ -63,7 +63,7 @@ synth_{{ family }} -top {{ top }} -json {{ project }}.json
 #fi
 #}
 
-{% if par %}# Place and Route
+{% if 'par' in steps %}# Place and Route
 
 CONSTRAINTS="{{ constraints | join(' ') }}"
 
@@ -73,9 +73,9 @@ if [ -n "$CONSTRAINTS" ]; then
   CONSTRAINT="--pcf constraints.pcf"
 fi
 $DOCKER hdlc/nextpnr:ice40 /bin/bash -c "
-{{ prepar }}
+{{ hooks.prepar | join('\n') }}
 nextpnr-ice40 --{{ device }} --package {{ package }} $CONSTRAINT --json {{ project }}.json --asc {{ project }}.asc
-{{ postpar }}
+{{ hooks.postpar | join('\n') }}
 "
 $DOCKER hdlc/icestorm /bin/bash -c "
 icetime -d {{ device }} -mtr {{ project }}.rpt {{ project }}.asc
@@ -88,29 +88,29 @@ if [ -n "$CONSTRAINTS" ]; then
   CONSTRAINT="--lpf constraints.lpf"
 fi
 $DOCKER hdlc/nextpnr:ecp5 /bin/bash -c "
-{{ prepar }}
+{{ hooks.prepar | join('\n') }}
 nextpnr-ecp5 --{{ device }} --package {{ package }} $CONSTRAINT --json {{ project }}.json --textcfg {{ project }}.config
-{{ postpar }}
+{{ hooks.postpar | join('\n') }}
 "
 {% endif %}
 
 {% endif %}
 
-{% if bit %}# Bitstream generation
+{% if 'bit' in steps %}# Bitstream generation
 
 {% if family == 'ice40' %}
 $DOCKER hdlc/icestorm /bin/bash -c "
-{{ prebit }}
+{{ hooks.prebit | join('\n') }}
 icepack {{ project }}.asc {{ project }}.bit
-{{ postbit }}
+{{ hooks.postbit | join('\n') }}
 "
 {% endif %}
 
 {% if family == 'ecp5' %}
 $DOCKER hdlc/prjtrellis /bin/bash -c "
-{{ prebit }}
+{{ prebit | join('\n') }}
 ecppack --svf {{ project }}.svf {{ project }}.config {{ project }}.bit
-{{ postbit }}
+{{ postbit | join('\n') }}
 "
 {% endif %}
 

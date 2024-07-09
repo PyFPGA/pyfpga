@@ -6,13 +6,13 @@
 #
 #}
 
-{% if cfg %}# Project configuration -------------------------------------------------------
+{% if 'cfg' in steps %}# Project configuration -------------------------------------------------------
 
 package require ::quartus::project
 project_new {{ project }} -overwrite
 set_global_assignment -name DEVICE {{ part }}
 
-{{ precfg }}
+{{ hooks.precfg | join('\n') }}
 
 {% if files %}# Files inclusion
 {% for name, attr in files.items() %}
@@ -58,46 +58,46 @@ set_parameter -name {{ key }} {{ value }}
 {% endfor %}
 {% endif %}
 
-{{ postcfg }}
+{{ hooks.postcfg | join('\n') }}
 
 project_close
 
 {% endif %}
 
-{% if syn or par or bit %}# Design flow -----------------------------------------------------------------
+{% if 'syn' in steps or 'par' in steps or 'bit' in steps %}# Design flow -----------------------------------------------------------------
 
 package require ::quartus::flow
 project_open -force {{ project }}.qpf
 # set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
 
-{% if syn %}# Synthesis
+{% if 'syn' in steps %}# Synthesis
 
-{{ presyn }}
+{{ hooks.presyn | join('\n') }}
 
 execute_module -tool map
 
-{{ postsyn }}
+{{ hooks.postsyn | join('\n') }}
 
 {% endif %}
 
-{% if par %}# Place and Route
+{% if 'par' in steps %}# Place and Route
 
-{{ prepar }}
+{{ hooks.prepar | join('\n') }}
 
 execute_module -tool fit
 execute_module -tool sta
 
-{{ postpar }}
+{{ hooks.postpar | join('\n') }}
 
 {% endif %}
 
-{% if bit %}# Bitstream generation
+{% if 'bit' in steps %}# Bitstream generation
 
-{{ prebit }}
+{{ hooks.prebit | join('\n') }}
 
 execute_module -tool asm
 
-{{ postbit }}
+{{ hooks.postbit | join('\n') }}
 
 {% endif %}
 
