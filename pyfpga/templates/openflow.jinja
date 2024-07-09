@@ -10,21 +10,21 @@ set -e
 
 DOCKER="docker run --user $(id -u):$(id -g) --rm -v $HOME:$HOME -w $PWD"
 
-{% if SYN %}# Synthesis
+{% if syn %}# Synthesis
 $DOCKER hdlc/ghdl:yosys /bin/bash -c "
-{{ PRESYN }}
+{{ presyn }}
 yosys -Q -m ghdl -p '
 
-{% if INCLUDES %}
-verilog_defaults -add{% for path in INCLUDES %} -I{{ path }}{% endfor %}
+{% if includes %}
+verilog_defaults -add{% for path in includes %} -I{{ path }}{% endfor %}
 {% endif %}
 
-{% if DEFINES %}
-verilog_defines{% for key, value in DEFINES.items() %} -D{{ key }}={{ value }}{% endfor %}
+{% if defines %}
+verilog_defines{% for key, value in defines.items() %} -D{{ key }}={{ value }}{% endfor %}
 {% endif %}
 
-{% if FILES %}
-{% for name, attr in FILES.items() %}
+{% if files %}
+{% for name, attr in files.items() %}
 {% if attr.hdl == "vlog" %}
 read_verilog -defer {{ name }}
 {% elif attr.hdl == "slog" %}
@@ -33,14 +33,14 @@ read_verilog -defer -sv {{ name }}
 {% endfor %}
 {% endif %}
 
-{% if PARAMS %}
-chparam{% for key, value in PARAMS.items() %} -set {{ key }} {{ value }}{% endfor %}
+{% if params %}
+chparam{% for key, value in params.items() %} -set {{ key }} {{ value }}{% endfor %}
 {% endif %}
 
-synth -top {{ TOP }}
-synth_{{ FAMILY }} -top {{ TOP }} -json {{ PROJECT }}.json
+synth -top {{ top }}
+synth_{{ family }} -top {{ top }} -json {{ project }}.json
 '
-{{ POSTSYN }}
+{{ postsyn }}
 "
 {% endif %}
 
@@ -63,54 +63,54 @@ synth_{{ FAMILY }} -top {{ TOP }} -json {{ PROJECT }}.json
 #fi
 #}
 
-{% if PAR %}# Place and Route
+{% if par %}# Place and Route
 
-CONSTRAINTS="{{ CONSTRAINTS | join(' ') }}"
+CONSTRAINTS="{{ constraints | join(' ') }}"
 
-{% if FAMILY == 'ice40' %}
+{% if family == 'ice40' %}
 if [ -n "$CONSTRAINTS" ]; then
   cat $CONSTRAINTS > constraints.pcf
   CONSTRAINT="--pcf constraints.pcf"
 fi
 $DOCKER hdlc/nextpnr:ice40 /bin/bash -c "
-{{ PREPAR }}
-nextpnr-ice40 --{{ DEVICE }} --package {{ PACKAGE }} $CONSTRAINT --json {{ PROJECT }}.json --asc {{ PROJECT }}.asc
-{{ POSTPAR }}
+{{ prepar }}
+nextpnr-ice40 --{{ device }} --package {{ package }} $CONSTRAINT --json {{ project }}.json --asc {{ project }}.asc
+{{ postpar }}
 "
 $DOCKER hdlc/icestorm /bin/bash -c "
-icetime -d {{ DEVICE }} -mtr {{ PROJECT }}.rpt {{ PROJECT }}.asc
+icetime -d {{ device }} -mtr {{ project }}.rpt {{ project }}.asc
 "
 {% endif %}
 
-{% if FAMILY == 'ecp5' %}
+{% if family == 'ecp5' %}
 if [ -n "$CONSTRAINTS" ]; then
   cat $CONSTRAINTS > constraints.lpf
   CONSTRAINT="--lpf constraints.lpf"
 fi
 $DOCKER hdlc/nextpnr:ecp5 /bin/bash -c "
-{{ PREPAR }}
-nextpnr-ecp5 --{{ DEVICE }} --package {{ PACKAGE }} $CONSTRAINT --json {{ PROJECT }}.json --textcfg {{ PROJECT }}.config
-{{ POSTPAR }}
+{{ prepar }}
+nextpnr-ecp5 --{{ device }} --package {{ package }} $CONSTRAINT --json {{ project }}.json --textcfg {{ project }}.config
+{{ postpar }}
 "
 {% endif %}
 
 {% endif %}
 
-{% if BIT %}# Bitstream generation
+{% if bit %}# Bitstream generation
 
-{% if FAMILY == 'ice40' %}
+{% if family == 'ice40' %}
 $DOCKER hdlc/icestorm /bin/bash -c "
-{{ PREBIT }}
-icepack {{ PROJECT }}.asc {{ PROJECT }}.bit
-{{ POSTBIT }}
+{{ prebit }}
+icepack {{ project }}.asc {{ project }}.bit
+{{ postbit }}
 "
 {% endif %}
 
-{% if FAMILY == 'ecp5' %}
+{% if family == 'ecp5' %}
 $DOCKER hdlc/prjtrellis /bin/bash -c "
-{{ PREBIT }}
-ecppack --svf {{ PROJECT }}.svf {{ PROJECT }}.config {{ PROJECT }}.bit
-{{ POSTBIT }}
+{{ prebit }}
+ecppack --svf {{ project }}.svf {{ project }}.config {{ project }}.bit
+{{ postbit }}
 "
 {% endif %}
 

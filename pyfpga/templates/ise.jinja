@@ -6,26 +6,26 @@
 #
 #}
 
-{% if CFG %}# Project configuration -------------------------------------------------------
+{% if cfg %}# Project configuration -------------------------------------------------------
 
-if { [ file exists {{ PROJECT }}.xise ] } { file delete {{ PROJECT }}.xise }
-project new {{ PROJECT }}.xise
-project set family  {{ FAMILY }}
-project set device  {{ DEVICE }}
-project set package {{ PACKAGE }}
-project set speed  -{{ SPEED }}
+if { [ file exists {{ project }}.xise ] } { file delete {{ project }}.xise }
+project new {{ project }}.xise
+project set family  {{ family }}
+project set device  {{ device }}
+project set package {{ package }}
+project set speed  -{{ speed }}
 
-{{ PRECFG }}
+{{ precfg }}
 
-{% if FILES %}# Files inclusion
-{% for name, attr in FILES.items() %}
+{% if files %}# Files inclusion
+{% for name, attr in files.items() %}
 {% if 'lib' in attr %}lib_vhdl new {{ attr.lib }}{% endif %}
 xfile add {{ name }}{% if 'lib' in attr %} -lib_vhdl {{ attr.lib }}{% endif %}
 {% endfor %}
 {% endif %}
 
-{% if CONSTRAINTS %}# Constraints inclusion
-{% for name, attr in CONSTRAINTS.items() %}
+{% if constraints %}# Constraints inclusion
+{% for name, attr in constraints.items() %}
 xfile add {{ name }}
 {% if name.endswith('.xcf') %}
 project set "Synthesis Constraints File" "{{ name }}" -process "Synthesize - XST"
@@ -33,35 +33,35 @@ project set "Synthesis Constraints File" "{{ name }}" -process "Synthesize - XST
 {% endfor %}
 {% endif %}
 
-{% if TOP %}# Top-level specification
-project set top {{ TOP }}
+{% if top %}# Top-level specification
+project set top {{ top }}
 {% endif %}
 
-{% if INCLUDES %}# Verilog Includes
-project set "Verilog Include Directories" "{{ INCLUDES | join('|') }}" -process "Synthesize - XST"
+{% if includes %}# Verilog Includes
+project set "Verilog Include Directories" "{{ includes | join('|') }}" -process "Synthesize - XST"
 {% endif %}
 
-{% if DEFINES %}# Verilog Defines
-project set "Verilog Macros" "{{ DEFINES.items() | map('join', '=') | join(' | ') }}" -process "Synthesize - XST"
+{% if defines %}# Verilog Defines
+project set "Verilog Macros" "{{ defines.items() | map('join', '=') | join(' | ') }}" -process "Synthesize - XST"
 {% endif %}
 
-{% if PARAMS %}# Verilog Parameters / VHDL Generics
-project set "Generics, Parameters" "{{ PARAMS.items() | map('join', '=') | join(' ') }}" -process "Synthesize - XST"
+{% if params %}# Verilog Parameters / VHDL Generics
+project set "Generics, Parameters" "{{ params.items() | map('join', '=') | join(' ') }}" -process "Synthesize - XST"
 {% endif %}
 
-{{ POSTCFG }}
+{{ postcfg }}
 
 project close
 
 {% endif %}
 
-{% if SYN or PAR or BIT %}# Design flow -----------------------------------------------------------------
+{% if syn or par or bit %}# Design flow -----------------------------------------------------------------
 
-project open {{ PROJECT }}.xise
+project open {{ project }}.xise
 
-{% if SYN %}# Synthesis
+{% if syn %}# Synthesis
 
-{{ PRESYN }}
+{{ presyn }}
 
 # PRESYNTH
 #project set top_level_module_type "EDIF"
@@ -69,13 +69,13 @@ project clean
 process run "Synthesize"
 if { [process get "Synthesize" status] == "errors" } { exit 1 }
 
-{{ POSTSYN }}
+{{ postsyn }}
 
 {% endif %}
 
-{% if PAR %}# Place and Route
+{% if par %}# Place and Route
 
-{{ PREPAR }}
+{{ prepar }}
 
 process run "Translate"
 if { [process get "Translate" status] == "errors" } { exit 1 }
@@ -84,19 +84,19 @@ if { [process get "Map" status] == "errors" } { exit 1 }
 process run "Place & Route"
 if { [process get "Place & Route" status] == "errors" } { exit 1 }
 
-{{ POSTPAR }}
+{{ postpar }}
 
 {% endif %}
 
-{% if BIT %}# Bitstream generation
+{% if bit %}# Bitstream generation
 
-{{ PREBIT }}
+{{ prebit }}
 
 process run "Generate Programming File"
 if { [process get "Generate Programming File" status] == "errors" } { exit 1 }
-catch { file rename -force {{ TOP }}.bit {{ PROJECT }}.bit }
+catch { file rename -force {{ top }}.bit {{ project }}.bit }
 
-{{ POSTBIT }}
+{{ postbit }}
 
 {% endif %}
 

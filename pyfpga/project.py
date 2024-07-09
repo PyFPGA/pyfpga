@@ -226,7 +226,7 @@ class Project:
         if first == last:
             message = steps[first]
         self.logger.info('Running %s', message)
-        selected = [step.upper() for step in keys[index[0]:index[1]+1]]
+        selected = keys[index[0]:index[1]+1]
         self._run(self._make_prepare(selected), 'make.log')
 
     def prog(self, bitstream=None, position=1):

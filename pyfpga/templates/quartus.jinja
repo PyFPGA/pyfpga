@@ -6,16 +6,16 @@
 #
 #}
 
-{% if CFG %}# Project configuration -------------------------------------------------------
+{% if cfg %}# Project configuration -------------------------------------------------------
 
 package require ::quartus::project
-project_new {{ PROJECT }} -overwrite
-set_global_assignment -name DEVICE {{ PART }}
+project_new {{ project }} -overwrite
+set_global_assignment -name DEVICE {{ part }}
 
-{{ PRECFG }}
+{{ precfg }}
 
-{% if FILES %}# Files inclusion
-{% for name, attr in FILES.items() %}
+{% if files %}# Files inclusion
+{% for name, attr in files.items() %}
 {% if attr.hdl == "vhdl" %}
 set_global_assignment -name VHDL_FILE {{ name }} {% if 'lib' in attr %} -library {{ attr.lib }}{% endif %}
 {% elif attr.hdl == "vlog" %}
@@ -26,8 +26,8 @@ set_global_assignment -name SYSTEMVERILOG_FILE {{ name }}
 {% endfor %}
 {% endif %}
 
-{% if CONSTRAINTS %}# Constraints inclusion
-{% for name, attr in CONSTRAINTS.items() %}
+{% if constraints %}# Constraints inclusion
+{% for name, attr in constraints.items() %}
 {% if name.endswith('.sdc') %}
 set_global_assignment -name SDC_FILE {{ name }}
 {% else %}
@@ -36,68 +36,68 @@ source {{ name }}
 {% endfor %}
 {% endif %}
 
-{% if TOP %}# Top-level specification
-set_global_assignment -name TOP_LEVEL_ENTITY {{ TOP }}
+{% if top %}# Top-level specification
+set_global_assignment -name TOP_LEVEL_ENTITY {{ top }}
 {% endif %}
 
-{% if INCLUDES %}# Verilog Includes
-{% for INCLUDE in INCLUDES %}
-set_global_assignment -name SEARCH_PATH {{ INCLUDE }}
+{% if includes %}# Verilog Includes
+{% for include in includes %}
+set_global_assignment -name SEARCH_PATH {{ include }}
 {% endfor %}
 {% endif %}
 
-{% if DEFINES %}# Verilog Defines
-{% for key, value in DEFINES.items() %}
+{% if defines %}# Verilog Defines
+{% for key, value in defines.items() %}
 set_global_assignment -name VERILOG_MACRO {{ key }}={{ value }}
 {% endfor %}
 {% endif %}
 
-{% if PARAMS %}# Verilog Parameters / VHDL Generics
-{% for key, value in PARAMS.items() %}
+{% if params %}# Verilog Parameters / VHDL Generics
+{% for key, value in params.items() %}
 set_parameter -name {{ key }} {{ value }}
 {% endfor %}
 {% endif %}
 
-{{ POSTCFG }}
+{{ postcfg }}
 
 project_close
 
 {% endif %}
 
-{% if SYN or PAR or BIT %}# Design flow -----------------------------------------------------------------
+{% if syn or par or bit %}# Design flow -----------------------------------------------------------------
 
 package require ::quartus::flow
-project_open -force {{ PROJECT }}.qpf
+project_open -force {{ project }}.qpf
 # set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
 
-{% if SYN %}# Synthesis
+{% if syn %}# Synthesis
 
-{{ PRESYN }}
+{{ presyn }}
 
 execute_module -tool map
 
-{{ POSTSYN }}
+{{ postsyn }}
 
 {% endif %}
 
-{% if PAR %}# Place and Route
+{% if par %}# Place and Route
 
-{{ PREPAR }}
+{{ prepar }}
 
 execute_module -tool fit
 execute_module -tool sta
 
-{{ POSTPAR }}
+{{ postpar }}
 
 {% endif %}
 
-{% if BIT %}# Bitstream generation
+{% if bit %}# Bitstream generation
 
-{{ PREBIT }}
+{{ prebit }}
 
 execute_module -tool asm
 
-{{ POSTBIT }}
+{{ postbit }}
 
 {% endif %}
 

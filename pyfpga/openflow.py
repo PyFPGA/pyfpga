@@ -21,28 +21,28 @@ class Openflow(Project):
     def _make_prepare(self, steps):
         info = get_info(self.data.get('part', 'hx8k-ct256'))
         context = {
-            'PROJECT': self.name or 'openflow',
-            'FAMILY': info['family'],
-            'DEVICE': info['device'],
-            'PACKAGE': info['package']
+            'project': self.name or 'openflow',
+            'family': info['family'],
+            'device': info['device'],
+            'package': info['package']
         }
         for step in steps:
             context[step] = 1
-        context['INCLUDES'] = self.data.get('includes', None)
-        context['FILES'] = self.data.get('files', None)
-        context['CONSTRAINTS'] = self.data.get('constraints', None)
-        context['TOP'] = self.data.get('top', None)
-        context['DEFINES'] = self.data.get('defines', None)
-        context['PARAMS'] = self.data.get('params', None)
+        context['includes'] = self.data.get('includes', None)
+        context['files'] = self.data.get('files', None)
+        context['constraints'] = self.data.get('constraints', None)
+        context['top'] = self.data.get('top', None)
+        context['defines'] = self.data.get('defines', None)
+        context['params'] = self.data.get('params', None)
         if 'hooks' in self.data:
-            context['PRECFG'] = self.data['hooks'].get('precfg', None)
-            context['POSTCFG'] = self.data['hooks'].get('postcfg', None)
-            context['PRESYN'] = self.data['hooks'].get('presyn', None)
-            context['POSTSYN'] = self.data['hooks'].get('postsyn', None)
-            context['PREPAR'] = self.data['hooks'].get('prepar', None)
-            context['POSTPAR'] = self.data['hooks'].get('postpar', None)
-            context['PRESBIT'] = self.data['hooks'].get('prebit', None)
-            context['POSTBIT'] = self.data['hooks'].get('postbit', None)
+            context['precfg'] = self.data['hooks'].get('precfg', None)
+            context['postcfg'] = self.data['hooks'].get('postcfg', None)
+            context['presyn'] = self.data['hooks'].get('presyn', None)
+            context['postsyn'] = self.data['hooks'].get('postsyn', None)
+            context['prepar'] = self.data['hooks'].get('prepar', None)
+            context['postpar'] = self.data['hooks'].get('postpar', None)
+            context['presbit'] = self.data['hooks'].get('prebit', None)
+            context['postbit'] = self.data['hooks'].get('postbit', None)
         self._create_file('openflow', 'sh', context)
         return 'bash openflow.sh'
 
@@ -51,7 +51,7 @@ class Openflow(Project):
         if not bitstream:
             basename = self.name or 'openflow'
             bitstream = f'{basename}.bit'
-        context = {'BITSTREAM': bitstream}
+        context = {'bitstream': bitstream}
         self._create_file('openflow-prog', 'sh', context)
         return 'bash openflow-prog.sh'
 

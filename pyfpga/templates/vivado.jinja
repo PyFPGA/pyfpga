@@ -6,24 +6,24 @@
 #
 #}
 
-{% if CFG %}# Project configuration -------------------------------------------------------
+{% if cfg %}# Project configuration -------------------------------------------------------
 
-create_project -force {{ PROJECT }}
+create_project -force {{ project }}
 set_property SOURCE_MGMT_MODE None [current_project]
 set_property STEPS.SYNTH_DESIGN.ARGS.ASSERT true [get_runs synth_1]
-set_property PART {{ PART }} [current_project]
+set_property PART {{ part }} [current_project]
 
-{{ PRECFG }}
+{{ precfg }}
 
-{% if FILES %}# Files inclusion
-{% for name, attr in FILES.items() %}
+{% if files %}# Files inclusion
+{% for name, attr in files.items() %}
 add_file {{ name }}
 {% if 'lib' in attr %}set_property library {{ attr.lib }} [get_files {{ name }}]{% endif %}
 {% endfor %}
 {% endif %}
 
-{% if CONSTRAINTS %}# Constraints inclusion
-{% for name, attr in CONSTRAINTS.items() %}
+{% if constraints %}# Constraints inclusion
+{% for name, attr in constraints.items() %}
 add_file -fileset constrs_1 {{ name }}
 {% if attr == "syn" %}
 set_property USED_IN_IMPLEMENTATION FALSE [get_files {{ name }}]
@@ -34,35 +34,35 @@ set_property USED_IN_SYNTHESIS FALSE [get_files {{ name }}]
 {% endfor %}
 {% endif %}
 
-{% if TOP %}# Top-level specification
-set_property TOP {{ TOP }} [current_fileset]
+{% if top %}# Top-level specification
+set_property TOP {{ top }} [current_fileset]
 {% endif %}
 
-{% if INCLUDES %}# Verilog Includes
-set_property INCLUDE_DIRS { {{ INCLUDES | join(' ') }} } [current_fileset]
+{% if includes %}# Verilog Includes
+set_property INCLUDE_DIRS { {{ includes | join(' ') }} } [current_fileset]
 {% endif %}
 
-{% if DEFINES %}# Verilog Defines
-set_property VERILOG_DEFINE { {{ DEFINES.items() | map('join', '=') | join(' ') }} } [current_fileset]
+{% if defines %}# Verilog Defines
+set_property VERILOG_DEFINE { {{ defines.items() | map('join', '=') | join(' ') }} } [current_fileset]
 {% endif %}
 
-{% if PARAMS %}# Verilog Parameters / VHDL Generics
-set_property GENERIC { {{ PARAMS.items() | map('join', '=') | join(' ') }} } -objects [get_filesets sources_1]
+{% if params %}# Verilog Parameters / VHDL Generics
+set_property GENERIC { {{ params.items() | map('join', '=') | join(' ') }} } -objects [get_filesets sources_1]
 {% endif %}
 
-{{ POSTCFG }}
+{{ postcfg }}
 
 close_project
 
 {% endif %}
 
-{% if SYN or PAR or BIT %}# Design flow -----------------------------------------------------------------
+{% if syn or par or bit %}# Design flow -----------------------------------------------------------------
 
-open_project {{ PROJECT }}
+open_project {{ project }}
 
-{% if SYN %}# Synthesis
+{% if syn %}# Synthesis
 
-{{ PRESYN }}
+{{ presyn }}
 
 # PRESYNTH
 # set_property DESIGN_MODE GateLvl [current_fileset]
@@ -73,13 +73,13 @@ wait_on_run synth_1
 
 if { [get_property STATUS [get_runs synth_1]] ne "synth_design Complete!" } { exit 1 }
 
-{{ POSTSYN }}
+{{ postsyn }}
 
 {% endif %}
 
-{% if PAR %}# Place and Route
+{% if par %}# Place and Route
 
-{{ PREPAR }}
+{{ prepar }}
 
 reset_run impl_1
 launch_runs impl_1
@@ -87,19 +87,19 @@ wait_on_run impl_1
 #report_property [get_runs impl_1]
 if { [get_property STATUS [get_runs impl_1]] ne "route_design Complete!" } { exit 1 }
 
-{{ POSTPAR }}
+{{ postpar }}
 
 {% endif %}
 
-{% if BIT %}# Bitstream generation
+{% if bit %}# Bitstream generation
 
-{{ PREBIT }}
+{{ prebit }}
 
 open_run impl_1
-write_bitstream -force {{ PROJECT }}
-write_debug_probes -force -quiet {{ PROJECT }}.ltx
+write_bitstream -force {{ project }}
+write_debug_probes -force -quiet {{ project }}.ltx
 
-{{ POSTBIT }}
+{{ postbit }}
 
 {% endif %}
 
