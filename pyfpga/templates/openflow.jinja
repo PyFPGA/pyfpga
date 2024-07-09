@@ -10,13 +10,7 @@ set -e
 
 DOCKER="docker run --user $(id -u):$(id -g) --rm -v $HOME:$HOME -w $PWD"
 
-{# ------------------------------------------------------------------------- #}
-{# Design flow                                                               #}
-{# ------------------------------------------------------------------------- #}
-
-{# Synthesis --------------------------------------------------------------- #}
-
-{% if SYN %}
+{% if SYN %}# Synthesis
 $DOCKER hdlc/ghdl:yosys /bin/bash -c "
 {{ PRESYN }}
 yosys -Q -m ghdl -p '
@@ -69,9 +63,7 @@ synth_{{ FAMILY }} -top {{ TOP }} -json {{ PROJECT }}.json
 #fi
 #}
 
-{# Place and Route --------------------------------------------------------- #}
-
-{% if PAR %}
+{% if PAR %}# Place and Route
 
 CONSTRAINTS="{{ CONSTRAINTS | join(' ') }}"
 
@@ -104,9 +96,7 @@ nextpnr-ecp5 --{{ DEVICE }} --package {{ PACKAGE }} $CONSTRAINT --json {{ PROJEC
 
 {% endif %}
 
-{# Bitstream generation ---------------------------------------------------- #}
-
-{% if BIT %}
+{% if BIT %}# Bitstream generation
 
 {% if FAMILY == 'ice40' %}
 $DOCKER hdlc/icestorm /bin/bash -c "

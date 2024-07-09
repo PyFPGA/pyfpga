@@ -6,11 +6,7 @@
 #
 #}
 
-{# ------------------------------------------------------------------------- #}
-{# Project configuration                                                     #}
-{# ------------------------------------------------------------------------- #}
-
-{% if CFG %}
+{% if CFG %}# Project configuration -------------------------------------------------------
 
 package require ::quartus::project
 project_new {{ PROJECT }} -overwrite
@@ -18,7 +14,7 @@ set_global_assignment -name DEVICE {{ PART }}
 
 {{ PRECFG }}
 
-{% if FILES %}
+{% if FILES %}# Files inclusion
 {% for name, attr in FILES.items() %}
 {% if attr.hdl == "vhdl" %}
 set_global_assignment -name VHDL_FILE {{ name }} {% if 'lib' in attr %} -library {{ attr.lib }}{% endif %}
@@ -30,7 +26,7 @@ set_global_assignment -name SYSTEMVERILOG_FILE {{ name }}
 {% endfor %}
 {% endif %}
 
-{% if CONSTRAINTS %}
+{% if CONSTRAINTS %}# Constraints inclusion
 {% for name, attr in CONSTRAINTS.items() %}
 {% if name.endswith('.sdc') %}
 set_global_assignment -name SDC_FILE {{ name }}
@@ -40,23 +36,23 @@ source {{ name }}
 {% endfor %}
 {% endif %}
 
-{% if TOP %}
+{% if TOP %}# Top-level specification
 set_global_assignment -name TOP_LEVEL_ENTITY {{ TOP }}
 {% endif %}
 
-{% if INCLUDES %}
+{% if INCLUDES %}# Verilog Includes
 {% for INCLUDE in INCLUDES %}
 set_global_assignment -name SEARCH_PATH {{ INCLUDE }}
 {% endfor %}
 {% endif %}
 
-{% if DEFINES %}
+{% if DEFINES %}# Verilog Defines
 {% for key, value in DEFINES.items() %}
 set_global_assignment -name VERILOG_MACRO {{ key }}={{ value }}
 {% endfor %}
 {% endif %}
 
-{% if PARAMS %}
+{% if PARAMS %}# Verilog Parameters / VHDL Generics
 {% for key, value in PARAMS.items() %}
 set_parameter -name {{ key }} {{ value }}
 {% endfor %}
@@ -68,19 +64,13 @@ project_close
 
 {% endif %}
 
-{# ------------------------------------------------------------------------- #}
-{# Design flow                                                               #}
-{# ------------------------------------------------------------------------- #}
-
-{% if SYN or PAR or BIT %}
+{% if SYN or PAR or BIT %}# Design flow -----------------------------------------------------------------
 
 package require ::quartus::flow
 project_open -force {{ PROJECT }}.qpf
 # set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
 
-{# Synthesis --------------------------------------------------------------- #}
-
-{% if SYN %}
+{% if SYN %}# Synthesis
 
 {{ PRESYN }}
 
@@ -90,9 +80,7 @@ execute_module -tool map
 
 {% endif %}
 
-{# Place and Route --------------------------------------------------------- #}
-
-{% if PAR %}
+{% if PAR %}# Place and Route
 
 {{ PREPAR }}
 
@@ -103,9 +91,7 @@ execute_module -tool sta
 
 {% endif %}
 
-{# Bitstream generation ---------------------------------------------------- #}
-
-{% if BIT %}
+{% if BIT %}# Bitstream generation
 
 {{ PREBIT }}
 
@@ -114,8 +100,6 @@ execute_module -tool asm
 {{ POSTBIT }}
 
 {% endif %}
-
-{# ------------------------------------------------------------------------- #}
 
 project_close
 

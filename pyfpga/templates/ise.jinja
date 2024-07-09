@@ -6,11 +6,7 @@
 #
 #}
 
-{# ------------------------------------------------------------------------- #}
-{# Project configuration                                                     #}
-{# ------------------------------------------------------------------------- #}
-
-{% if CFG %}
+{% if CFG %}# Project configuration -------------------------------------------------------
 
 if { [ file exists {{ PROJECT }}.xise ] } { file delete {{ PROJECT }}.xise }
 project new {{ PROJECT }}.xise
@@ -21,14 +17,14 @@ project set speed  -{{ SPEED }}
 
 {{ PRECFG }}
 
-{% if FILES %}
+{% if FILES %}# Files inclusion
 {% for name, attr in FILES.items() %}
 {% if 'lib' in attr %}lib_vhdl new {{ attr.lib }}{% endif %}
 xfile add {{ name }}{% if 'lib' in attr %} -lib_vhdl {{ attr.lib }}{% endif %}
 {% endfor %}
 {% endif %}
 
-{% if CONSTRAINTS %}
+{% if CONSTRAINTS %}# Constraints inclusion
 {% for name, attr in CONSTRAINTS.items() %}
 xfile add {{ name }}
 {% if name.endswith('.xcf') %}
@@ -37,19 +33,19 @@ project set "Synthesis Constraints File" "{{ name }}" -process "Synthesize - XST
 {% endfor %}
 {% endif %}
 
-{% if TOP %}
+{% if TOP %}# Top-level specification
 project set top {{ TOP }}
 {% endif %}
 
-{% if INCLUDES %}
+{% if INCLUDES %}# Verilog Includes
 project set "Verilog Include Directories" "{{ INCLUDES | join('|') }}" -process "Synthesize - XST"
 {% endif %}
 
-{% if DEFINES %}
+{% if DEFINES %}# Verilog Defines
 project set "Verilog Macros" "{{ DEFINES.items() | map('join', '=') | join(' | ') }}" -process "Synthesize - XST"
 {% endif %}
 
-{% if PARAMS %}
+{% if PARAMS %}# Verilog Parameters / VHDL Generics
 project set "Generics, Parameters" "{{ PARAMS.items() | map('join', '=') | join(' ') }}" -process "Synthesize - XST"
 {% endif %}
 
@@ -59,17 +55,11 @@ project close
 
 {% endif %}
 
-{# ------------------------------------------------------------------------- #}
-{# Design flow                                                               #}
-{# ------------------------------------------------------------------------- #}
-
-{% if SYN or PAR or BIT %}
+{% if SYN or PAR or BIT %}# Design flow -----------------------------------------------------------------
 
 project open {{ PROJECT }}.xise
 
-{# Synthesis --------------------------------------------------------------- #}
-
-{% if SYN %}
+{% if SYN %}# Synthesis
 
 {{ PRESYN }}
 
@@ -83,9 +73,7 @@ if { [process get "Synthesize" status] == "errors" } { exit 1 }
 
 {% endif %}
 
-{# Place and Route --------------------------------------------------------- #}
-
-{% if PAR %}
+{% if PAR %}# Place and Route
 
 {{ PREPAR }}
 
@@ -100,9 +88,7 @@ if { [process get "Place & Route" status] == "errors" } { exit 1 }
 
 {% endif %}
 
-{# Bitstream generation ---------------------------------------------------- #}
-
-{% if BIT %}
+{% if BIT %}# Bitstream generation
 
 {{ PREBIT }}
 
@@ -113,8 +99,6 @@ catch { file rename -force {{ TOP }}.bit {{ PROJECT }}.bit }
 {{ POSTBIT }}
 
 {% endif %}
-
-{# ------------------------------------------------------------------------- #}
 
 project close
 
