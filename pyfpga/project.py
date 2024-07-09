@@ -29,8 +29,10 @@ class Project:
 
     def __init__(self, name=None, odir='results'):
         """Class constructor."""
+        self.conf = {}
         self.data = {}
-        self.name = name
+        self._configure()
+        self.data['project'] = name or self.conf['tool']
         self.odir = odir
         # logging config
         self.logger = logging.getLogger(self.__class__.__name__)
@@ -226,8 +228,10 @@ class Project:
         if first == last:
             message = steps[first]
         self.logger.info('Running %s', message)
-        selected = keys[index[0]:index[1]+1]
-        self._run(self._make_prepare(selected), 'make.log')
+        self.data['steps'] = keys[index[0]:index[1]+1]
+        self._make_custom()
+        self._create_file(self.conf['tool'], self.conf['make_ext'])
+        self._run(self.conf['make_cmd'], 'make.log')
 
     def prog(self, bitstream=None, position=1):
         """Program the FPGA
@@ -243,20 +247,27 @@ class Project:
         if position not in range(1, 9):
             raise ValueError('Invalid position.')
         self.logger.info('Programming')
-        self._run(self._prog_prepare(bitstream, position), 'prog.log')
+        if not bitstream:
+            bitstream = f'{self.data["project"]}.{self.conf["prog_bit"]}'
+        self._prog_custom()
+        self._create_file(f'{self.conf["tool"]}-prog', self.conf['prog_ext'])
+        self._run(self.conf['prog_cmd'], 'prog.log')
 
-    def _make_prepare(self, steps):
+    def _configure(self):
         raise NotImplementedError('Tool-dependent')
 
-    def _prog_prepare(self, bitstream, position):
-        raise NotImplementedError('Tool-dependent')
+    def _make_custom(self):
+        pass
 
-    def _create_file(self, basename, extension, context):
+    def _prog_custom(self):
+        pass
+
+    def _create_file(self, basename, extension):
         tempdir = Path(__file__).parent.joinpath('templates')
         jinja_file_loader = FileSystemLoader(str(tempdir))
         jinja_env = Environment(loader=jinja_file_loader)
         jinja_template = jinja_env.get_template(f'{basename}.jinja')
-        content = jinja_template.render(context)
+        content = jinja_template.render(self.data)
         directory = Path(self.odir)
         directory.mkdir(parents=True, exist_ok=True)
         filename = f'{basename}.{extension}'

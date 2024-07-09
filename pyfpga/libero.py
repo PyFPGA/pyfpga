@@ -8,10 +8,6 @@
 Implements support for Libero.
 """
 
-# pylint: disable=too-many-locals
-# pylint: disable=too-many-branches
-# pylint: disable=duplicate-code
-
 import re
 
 from pyfpga.project import Project
@@ -20,29 +16,27 @@ from pyfpga.project import Project
 class Libero(Project):
     """Class to support Libero."""
 
-    def _make_prepare(self, steps):
-        info = get_info(self.data.get('part', 'mpf100t-1-fcg484'))
-        context = {
-            'project': self.name or 'libero',
-            'family': info['family'],
-            'device': info['device'],
-            'speed': info['speed'],
-            'package': info['package']
-        }
-        context['steps'] = steps
-        context['includes'] = self.data.get('includes', None)
-        context['files'] = self.data.get('files', None)
-        context['constraints'] = self.data.get('constraints', None)
-        context['top'] = self.data.get('top', None)
-        context['defines'] = self.data.get('defines', None)
-        context['params'] = self.data.get('params', None)
-        context['hooks'] = self.data.get('hooks', None)
-        self._create_file('libero', 'tcl', context)
-        return 'libero SCRIPT:libero.tcl'
+    def _configure(self):
+        tool = 'libero'
+        self.conf['tool'] = tool
+        self.conf['make_cmd'] = f'{tool} SCRIPT:{tool}.tcl'
+        self.conf['make_ext'] = 'tcl'
+        self.conf['prog_bit'] = None
+        self.conf['prog_cmd'] = None
+        self.conf['prog_ext'] = None
 
-    def _prog_prepare(self, bitstream, position):
+    def _make_custom(self):
+        info = get_info(self.data.get('part', 'mpf100t-1-fcg484'))
+        self.data['family'] = info['family']
+        self.data['device'] = info['device']
+        self.data['speed'] = info['speed']
+        self.data['package'] = info['package']
+
+    def _prog_custom(self):
         raise NotImplementedError('Libero programming not supported')
 
+
+# pylint: disable=duplicate-code
 
 def get_info(part):
     """Get info about the FPGA part.

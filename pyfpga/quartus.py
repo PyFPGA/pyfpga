@@ -8,38 +8,21 @@
 Implements support for Quartus.
 """
 
-# pylint: disable=too-many-locals
-# pylint: disable=too-many-branches
-# pylint: disable=duplicate-code
-
 from pyfpga.project import Project
 
 
 class Quartus(Project):
     """Class to support Quartus projects."""
 
-    def _make_prepare(self, steps):
-        context = {
-            'project': self.name or 'quartus',
-            'part': self.data.get('part', '10M50SCE144I7G')
-        }
-        context['steps'] = steps
-        context['includes'] = self.data.get('includes', None)
-        context['files'] = self.data.get('files', None)
-        context['constraints'] = self.data.get('constraints', None)
-        context['top'] = self.data.get('top', None)
-        context['defines'] = self.data.get('defines', None)
-        context['params'] = self.data.get('params', None)
-        context['hooks'] = self.data.get('hooks', None)
-        self._create_file('quartus', 'tcl', context)
-        return 'quartus_sh --script quartus.tcl'
+    def _configure(self):
+        tool = 'quartus'
+        self.conf['tool'] = tool
+        self.conf['make_cmd'] = f'quartus_sh --script {tool}.tcl'
+        self.conf['make_ext'] = 'tcl'
+        self.conf['prog_bit'] = 'sof'
+        self.conf['prog_cmd'] = f'bash {tool}-prog.tcl'
+        self.conf['prog_ext'] = 'tcl'
 
-    def _prog_prepare(self, bitstream, position):
-        # sof: SRAM Object File
-        # pof: Programming Object File
-        if not bitstream:
-            basename = self.name or 'quartus'
-            bitstream = f'{basename}.sof'
-        context = {'bitstream': bitstream, 'position': position}
-        self._create_file('quartus-prog', 'tcl', context)
-        return 'bash quartus-prog.sh'
+    def _make_custom(self):
+        if 'part' not in self.data:
+            self.data['part'] = '10M50SCE144I7G'

@@ -8,10 +8,6 @@
 Implements support for ISE.
 """
 
-# pylint: disable=too-many-locals
-# pylint: disable=too-many-branches
-# pylint: disable=duplicate-code
-
 import re
 
 from pyfpga.project import Project
@@ -20,38 +16,28 @@ from pyfpga.project import Project
 class Ise(Project):
     """Class to support ISE projects."""
 
-    def _make_prepare(self, steps):
-        info = get_info(self.data.get('part', 'xc7k160t-3-fbg484'))
-        context = {
-            'project': self.name or 'ise',
-            'family': info['family'],
-            'device': info['device'],
-            'speed': info['speed'],
-            'package': info['package']
-        }
-        context['steps'] = steps
-        context['includes'] = self.data.get('includes', None)
-        context['files'] = self.data.get('files', None)
-        context['constraints'] = self.data.get('constraints', None)
-        context['top'] = self.data.get('top', None)
-        context['defines'] = self.data.get('defines', None)
-        context['params'] = self.data.get('params', None)
-        context['hooks'] = self.data.get('hooks', None)
-        self._create_file('ise', 'tcl', context)
-        return 'xtclsh ise.tcl'
+    def _configure(self):
+        tool = 'ise'
+        self.conf['tool'] = tool
+        self.conf['make_cmd'] = f'xtclsh {tool}.tcl'
+        self.conf['make_ext'] = 'tcl'
+        self.conf['prog_bit'] = 'bit'
+        self.conf['prog_cmd'] = f'impact -batch {tool}-prog.tcl'
+        self.conf['prog_ext'] = 'tcl'
 
-    def _prog_prepare(self, bitstream, position):
-        if not bitstream:
-            basename = self.name or 'ise'
-            bitstream = f'{basename}.bit'
-        context = {'bitstream': bitstream, 'position': position}
-        self._create_file('vivado-prog', 'tcl', context)
-        return 'impact -batch impact-prog'
+    def _make_custom(self):
+        info = get_info(self.data.get('part', 'xc7k160t-3-fbg484'))
+        self.data['family'] = info['family']
+        self.data['device'] = info['device']
+        self.data['speed'] = info['speed']
+        self.data['package'] = info['package']
 
     def add_slog(self, pathname):
         """Add System Verilog file/s."""
         raise NotImplementedError('ISE does not support SystemVerilog')
 
+
+# pylint: disable=duplicate-code
 
 def get_info(part):
     """Get info about the FPGA part.

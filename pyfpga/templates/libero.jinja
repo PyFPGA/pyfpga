@@ -12,7 +12,7 @@ if { [ file exists {{ project }} ] } { file delete -force -- {{ project }} }
 new_project -name {{ project }} -location {libero} -hdl {VERILOG} -family {SmartFusion2}
 set_device -family {{ family }} -die {{ device }} -package {{ package }} -speed {{ speed }}
 
-{{ hooks.precfg | join('\n') }}
+{% if hooks %}{{ hooks.precfg | join('\n') }}{% endif %}
 
 {% if includes %}# Verilog Includes (Libero)
 set_global_include_path_order -paths "{{ includes | join(' ') }}"
@@ -75,7 +75,7 @@ configure_tool -name {SYNTHESIZE} -params {SYNPLIFY_OPTIONS:
 }
 {% endif %}
 
-{{ hooks.postcfg | join('\n') }}
+{% if hooks %}{{ hooks.postcfg | join('\n') }}{% endif %}
 
 close_project
 
@@ -87,32 +87,32 @@ open_project {{ project }}/{{ project }}.prjx
 
 {% if 'syn' in steps %}# Synthesis
 
-{{ hooks.presyn | join('\n') }}
+{% if hooks %}{{ hooks.presyn | join('\n') }}{% endif %}
 
 run_tool -name {SYNTHESIZE}
 
-{{ hooks.postsyn | join('\n') }}
+{% if hooks %}{{ hooks.postsyn | join('\n') }}{% endif %}
 
 {% endif %}
 
 {% if 'par' in steps %}# Place and Route
 
-{{ hooks.prepar | join('\n') }}
+{% if hooks %}{{ hooks.prepar | join('\n') }}{% endif %}
 
 run_tool -name {PLACEROUTE}
 run_tool -name {VERIFYTIMING}
 
-{{ hooks.postpar | join('\n') }}
+{% if hooks %}{{ hooks.postpar | join('\n') }}{% endif %}
 
 {% endif %}
 
 {% if 'bit' in steps %}# Bitstream generation
 
-{{ hooks.prebit | join('\n') }}
+{% if hooks %}{{ hooks.prebit | join('\n') }}{% endif %}
 
 run_tool -name {GENERATEPROGRAMMINGFILE}
 
-{{ hooks.postbit | join('\n') }}
+{% if hooks %}{{ hooks.postbit | join('\n') }}{% endif %}
 
 {% endif %}
 

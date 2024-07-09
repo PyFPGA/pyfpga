@@ -8,43 +8,26 @@
 Implements support for an Open Source development flow.
 """
 
-# pylint: disable=too-many-locals
-# pylint: disable=too-many-branches
-# pylint: disable=duplicate-code
-
 from pyfpga.project import Project
 
 
 class Openflow(Project):
     """Class to support Open Source tools."""
 
-    def _make_prepare(self, steps):
-        info = get_info(self.data.get('part', 'hx8k-ct256'))
-        context = {
-            'project': self.name or 'openflow',
-            'family': info['family'],
-            'device': info['device'],
-            'package': info['package']
-        }
-        context['steps'] = steps
-        context['includes'] = self.data.get('includes', None)
-        context['files'] = self.data.get('files', None)
-        context['constraints'] = self.data.get('constraints', None)
-        context['top'] = self.data.get('top', None)
-        context['defines'] = self.data.get('defines', None)
-        context['params'] = self.data.get('params', None)
-        context['hooks'] = self.data.get('hooks', None)
-        self._create_file('openflow', 'sh', context)
-        return 'bash openflow.sh'
+    def _configure(self):
+        tool = 'openflow'
+        self.conf['tool'] = tool
+        self.conf['make_cmd'] = f'bash {tool}.sh'
+        self.conf['make_ext'] = 'sh'
+        self.conf['prog_bit'] = 'bit'
+        self.conf['prog_cmd'] = f'bash {tool}-prog.sh'
+        self.conf['prog_ext'] = 'sh'
 
-    def _prog_prepare(self, bitstream, position):
-        _ = position  # Not needed
-        if not bitstream:
-            basename = self.name or 'openflow'
-            bitstream = f'{basename}.bit'
-        context = {'bitstream': bitstream}
-        self._create_file('openflow-prog', 'sh', context)
-        return 'bash openflow-prog.sh'
+    def _make_custom(self):
+        info = get_info(self.data.get('part', 'hx8k-ct256'))
+        self.data['family'] = info['family']
+        self.data['device'] = info['device']
+        self.data['package'] = info['package']
 
 
 def get_info(part):

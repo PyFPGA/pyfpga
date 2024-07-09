@@ -12,7 +12,7 @@ DOCKER="docker run --user $(id -u):$(id -g) --rm -v $HOME:$HOME -w $PWD"
 
 {% if 'syn' in steps %}# Synthesis
 $DOCKER hdlc/ghdl:yosys /bin/bash -c "
-{{ hooks.presyn | join('\n') }}
+{% if hooks %}{{ hooks.presyn | join('\n') }}{% endif %}
 yosys -Q -m ghdl -p '
 
 {% if includes %}
@@ -40,7 +40,7 @@ chparam{% for key, value in params.items() %} -set {{ key }} {{ value }}{% endfo
 synth -top {{ top }}
 synth_{{ family }} -top {{ top }} -json {{ project }}.json
 '
-{{ hooks.postsyn | join('\n') }}
+{% if hooks %}{{ hooks.postsyn | join('\n') }}{% endif %}
 "
 {% endif %}
 
@@ -73,9 +73,9 @@ if [ -n "$CONSTRAINTS" ]; then
   CONSTRAINT="--pcf constraints.pcf"
 fi
 $DOCKER hdlc/nextpnr:ice40 /bin/bash -c "
-{{ hooks.prepar | join('\n') }}
+{% if hooks %}{{ hooks.prepar | join('\n') }}{% endif %}
 nextpnr-ice40 --{{ device }} --package {{ package }} $CONSTRAINT --json {{ project }}.json --asc {{ project }}.asc
-{{ hooks.postpar | join('\n') }}
+{% if hooks %}{{ hooks.postpar | join('\n') }}{% endif %}
 "
 $DOCKER hdlc/icestorm /bin/bash -c "
 icetime -d {{ device }} -mtr {{ project }}.rpt {{ project }}.asc
@@ -88,9 +88,9 @@ if [ -n "$CONSTRAINTS" ]; then
   CONSTRAINT="--lpf constraints.lpf"
 fi
 $DOCKER hdlc/nextpnr:ecp5 /bin/bash -c "
-{{ hooks.prepar | join('\n') }}
+{% if hooks %}{{ hooks.prepar | join('\n') }}{% endif %}
 nextpnr-ecp5 --{{ device }} --package {{ package }} $CONSTRAINT --json {{ project }}.json --textcfg {{ project }}.config
-{{ hooks.postpar | join('\n') }}
+{% if hooks %}{{ hooks.postpar | join('\n') }}{% endif %}
 "
 {% endif %}
 
@@ -100,17 +100,17 @@ nextpnr-ecp5 --{{ device }} --package {{ package }} $CONSTRAINT --json {{ projec
 
 {% if family == 'ice40' %}
 $DOCKER hdlc/icestorm /bin/bash -c "
-{{ hooks.prebit | join('\n') }}
+{% if hooks %}{{ hooks.prebit | join('\n') }}{% endif %}
 icepack {{ project }}.asc {{ project }}.bit
-{{ hooks.postbit | join('\n') }}
+{% if hooks %}{{ hooks.postbit | join('\n') }}{% endif %}
 "
 {% endif %}
 
 {% if family == 'ecp5' %}
 $DOCKER hdlc/prjtrellis /bin/bash -c "
-{{ prebit | join('\n') }}
+{% if hooks %}{{ prebit | join('\n') }}{% endif %}
 ecppack --svf {{ project }}.svf {{ project }}.config {{ project }}.bit
-{{ postbit | join('\n') }}
+{% if hooks %}{{ postbit | join('\n') }}{% endif %}
 "
 {% endif %}
 
