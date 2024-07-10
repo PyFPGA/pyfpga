@@ -13,20 +13,26 @@ tools = {
     'vivado': Vivado
 }
 
+
 def test_ise():
     generate('ise')
+
 
 def test_libero():
     generate('libero')
 
+
 def test_openflow():
     generate('openflow')
+
 
 def test_quartus():
     generate('quartus')
 
+
 def test_vivado():
     generate('vivado')
+
 
 def generate(tool):
     prj = tools[tool](odir=f'results/{tool}')
