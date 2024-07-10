@@ -1,8 +1,9 @@
 from pathlib import Path
 
-from pyfpga.project import Project
+from pyfpga.vivado import Vivado
 
 pattern = {
+    'project': 'EXAMPLE',
     'part': 'PARTNAME',
     'includes': [
         Path('fakedata/dir1').resolve().as_posix(),
@@ -61,7 +62,7 @@ pattern = {
 
 
 def test_data():
-    prj = Project()
+    prj = Vivado('EXAMPLE')
     prj.set_part('PARTNAME')
     prj.set_top('TOPNAME')
     prj.add_include('fakedata/dir1')
