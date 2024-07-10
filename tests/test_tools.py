@@ -1,3 +1,4 @@
+from pathlib import Path
 from pyfpga.ise import Ise
 from pyfpga.libero import Libero
 from pyfpga.openflow import Openflow
@@ -15,28 +16,47 @@ tools = {
 
 
 def test_ise():
-    generate('ise')
+    tool = 'ise'
+    generate(tool, 'DEVICE-PACKAGE-SPEED')
+    base = f'results/{tool}/{tool}'
+    assert Path(f'{base}.tcl').exists(), 'file not found'
+    assert Path(f'{base}-prog.tcl').exists(), 'file not found'
 
 
 def test_libero():
-    generate('libero')
+    tool = 'libero'
+    generate(tool, 'DEVICE-PACKAGE-SPEED')
+    base = f'results/{tool}/{tool}'
+    assert Path(f'{base}.tcl').exists(), 'file not found'
 
 
 def test_openflow():
-    generate('openflow')
+    tool = 'openflow'
+    generate(tool, 'DEVICE-PACKAGE')
+    base = f'results/{tool}/{tool}'
+    assert Path(f'{base}.sh').exists(), 'file not found'
+    assert Path(f'{base}-prog.sh').exists(), 'file not found'
 
 
 def test_quartus():
-    generate('quartus')
+    tool = 'quartus'
+    generate(tool, 'PARTNAME')
+    base = f'results/{tool}/{tool}'
+    assert Path(f'{base}.tcl').exists(), 'file not found'
+    assert Path(f'{base}-prog.tcl').exists(), 'file not found'
 
 
 def test_vivado():
-    generate('vivado')
+    tool = 'vivado'
+    generate(tool, 'PARTNAME')
+    base = f'results/{tool}/{tool}'
+    assert Path(f'{base}.tcl').exists(), 'file not found'
+    assert Path(f'{base}-prog.tcl').exists(), 'file not found'
 
 
-def generate(tool):
+def generate(tool, part):
     prj = tools[tool](odir=f'results/{tool}')
-    prj.set_part('PARTNAME')
+    prj.set_part(part)
     prj.set_top('TOPNAME')
     prj.add_include('fakedata/dir1')
     prj.add_include('fakedata/dir2')
