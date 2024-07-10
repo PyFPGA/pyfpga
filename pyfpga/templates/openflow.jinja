@@ -37,7 +37,10 @@ read_verilog -defer -sv {{ name }}
 chparam{% for key, value in params.items() %} -set {{ key }} {{ value }}{% endfor %}
 {% endif %}
 
+{% if top%}
 synth -top {{ top }}
+{% endif %}
+
 synth_{{ family }} -top {{ top }} -json {{ project }}.json
 '
 {% if hooks %}{{ hooks.postsyn | join('\n') }}{% endif %}
