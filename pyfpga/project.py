@@ -21,18 +21,18 @@ from jinja2 import Environment, FileSystemLoader
 class Project:
     """Base class to manage an FPGA project.
 
-    :param name: project name (tool name when nothing specified)
-    :type name: str, optional
+    :param project: project name (tool name when nothing specified)
+    :type project: str, optional
     :param odir: output directory
     :type odir: str, optional
     """
 
-    def __init__(self, name=None, odir='results'):
+    def __init__(self, project=None, odir='results'):
         """Class constructor."""
         self.conf = {}
         self.data = {}
         self._configure()
-        self.data['project'] = name or self.conf['tool']
+        self.data['project'] = project or self.conf['tool']
         self.odir = odir
         # logging config
         self.logger = logging.getLogger(self.__class__.__name__)
