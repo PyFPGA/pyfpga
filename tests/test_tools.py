@@ -1,18 +1,5 @@
 from pathlib import Path
-from pyfpga.ise import Ise
-from pyfpga.libero import Libero
-from pyfpga.openflow import Openflow
-from pyfpga.quartus import Quartus
-from pyfpga.vivado import Vivado
-
-
-tools = {
-    'ise': Ise,
-    'libero': Libero,
-    'openflow': Openflow,
-    'quartus': Quartus,
-    'vivado': Vivado
-}
+from pyfpga.factory import Factory
 
 
 def test_ise():
@@ -55,7 +42,7 @@ def test_vivado():
 
 
 def generate(tool, part):
-    prj = tools[tool](odir=f'results/{tool}')
+    prj = Factory(tool, odir=f'results/{tool}')
     prj.set_part(part)
     prj.set_top('TOPNAME')
     prj.add_include('fakedata/dir1')

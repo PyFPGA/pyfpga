@@ -1,0 +1,40 @@
+#
+# Copyright (C) 2024 Rodrigo A. Melo
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+"""
+A factory class to create FPGA projects.
+"""
+
+# pylint: disable=too-few-public-methods
+
+from pyfpga.ise import Ise
+from pyfpga.libero import Libero
+from pyfpga.openflow import Openflow
+from pyfpga.quartus import Quartus
+from pyfpga.vivado import Vivado
+
+
+tools = {
+    'ise': Ise,
+    'libero': Libero,
+    'openflow': Openflow,
+    'quartus': Quartus,
+    'vivado': Vivado
+}
+
+
+class Factory:
+    """A factory class to create FPGA projects."""
+
+    def __init__(self, tool='vivado', project=None, odir='results'):
+        """Class constructor."""
+        if tool not in tools:
+            raise NotImplementedError(f'{tool} is unsupported')
+        self._instance = tools[tool](project, odir)
+
+    def __getattr__(self, name):
+        """Delegate attribute access to the tool instance."""
+        return getattr(self._instance, name)
