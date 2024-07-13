@@ -9,26 +9,25 @@ Underlying tool steps
     create project
     config project
     part
-    precfg hook
+    precfg (hook)
     params
     defines
     includes
     files
-    arch
     top
-    postcfg hook
+    postcfg (hook)
     close project
 
     open project
-    presyn hook
+    presyn (hook)
     synthesis
-    postsyn hook
-    prepar hook
+    postsyn (hook)
+    prepar (hook)
     place_and_route
-    postpar hook
-    prebit hook
+    postpar (hook)
+    prebit (hook)
     bitstream
-    postbit hook
+    postbit (hook)
     close project
 
 Internal data structure
