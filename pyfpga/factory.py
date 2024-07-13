@@ -17,7 +17,7 @@ from pyfpga.quartus import Quartus
 from pyfpga.vivado import Vivado
 
 
-tools = {
+TOOLS = {
     'ise': Ise,
     'libero': Libero,
     'openflow': Openflow,
@@ -31,9 +31,9 @@ class Factory:
 
     def __init__(self, tool='vivado', project=None, odir='results'):
         """Class constructor."""
-        if tool not in tools:
+        if tool not in TOOLS:
             raise NotImplementedError(f'{tool} is unsupported')
-        self._instance = tools[tool](project, odir)
+        self._instance = TOOLS[tool](project, odir)
 
     def __getattr__(self, name):
         """Delegate attribute access to the tool instance."""
