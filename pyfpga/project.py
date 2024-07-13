@@ -18,6 +18,14 @@ from time import time
 from jinja2 import Environment, FileSystemLoader
 
 
+STEPS = {
+    'cfg': 'Project Creation',
+    'syn': 'Synthesis',
+    'par': 'Place and Route',
+    'bit': 'Bitstream generation'
+}
+
+
 class Project:
     """Base class to manage an FPGA project.
 
@@ -210,23 +218,17 @@ class Project:
         self.logger.debug('Executing make')
         if 'part' not in self.data:
             self.logger.info('Using the default PART')
-        steps = {
-            'cfg': 'Project Creation',
-            'syn': 'Synthesis',
-            'par': 'Place and Route',
-            'bit': 'Bitstream generation'
-        }
-        if last not in steps:
+        if last not in STEPS:
             raise ValueError('Invalid last step.')
-        if first not in steps:
+        if first not in STEPS:
             raise ValueError('Invalid first step.')
-        keys = list(steps.keys())
+        keys = list(STEPS.keys())
         index = [keys.index(first), keys.index(last)]
         if index[0] > index[1]:
             raise ValueError('Invalid steps combination.')
-        message = f'from {steps[first]} to {steps[last]}'
+        message = f'from {STEPS[first]} to {STEPS[last]}'
         if first == last:
-            message = steps[first]
+            message = STEPS[first]
         self.logger.info('Running %s', message)
         self.data['steps'] = keys[index[0]:index[1]+1]
         self._make_custom()
