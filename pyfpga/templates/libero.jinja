@@ -83,7 +83,9 @@ close_project
 
 {% if 'syn' in steps or 'par' in steps or 'bit' in steps %}# Design flow -----------------------------------------------------------------
 
-open_project {{ project }}/{{ project }}.prjx
+if { [catch {open_project {{ project }}/{{ project }}.prjx} ] } {
+  open_project {{ project }}.prjx
+}
 
 {% if 'syn' in steps %}# Synthesis
 
