@@ -1,38 +1,35 @@
 #!/usr/bin/env python3
 #
-# Copyright (C) 2020 PyFPGA Project
+# Copyright (C) 2020-2024 PyFPGA Project
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
 """
-A CLI helper utility to go from FPGA design files to a bitstream.
+A CLI helper utility to transform HDL design files into a bitstream.
 """
 
 import argparse
-import logging
 import sys
 
-from fpga import __version__ as version
-from fpga.project import Project, TOOLS
-from fpga.tool import TASKS
+from pathlib import Path
+from pyfpga import __version__ as version
+from pyfpga.factory import Factory, TOOLS
+from pyfpga.project import STEPS
 
-logging.basicConfig()
-logging.getLogger('fpga.project').level = logging.INFO
+tools = list(TOOLS.keys())
+steps = list(STEPS.keys())
 
-EPILOGUE = """
+EPILOGUE = f"""
 Supported values of arguments with choices:
-* TOOL = {}
-* TASK = {}
+* TOOL = {'|'.join(tools)}
+* STEP = {'|'.join(steps)}
 
 Notes:
 * PATH and FILE must be relative to the execution directory.
 * The default PART name and how to specify it depends on the selected TOOL.
 * More than one '--file', '--include' or '--param' arguments can be specified.
-""".format(
-    " | ".join(TOOLS),
-    " | ".join(TASKS[1:len(TASKS)])
-)
+"""
 
 
 def main():
@@ -49,28 +46,22 @@ def main():
     parser.add_argument(
         '-v', '--version',
         action='version',
-        version='v{}'.format(version)
-    )
-
-    parser.add_argument(
-        'top',
-        metavar='TOPFILE',
-        help='a top-level file'
+        version=f'v{version}'
     )
 
     parser.add_argument(
         '-t', '--tool',
         metavar='TOOL',
         default='vivado',
-        choices=TOOLS,
+        choices=tools,
         help='backend tool to be used [vivado]'
     )
 
     parser.add_argument(
-        '-o', '--outdir',
+        '-o', '--odir',
         metavar='PATH',
-        default='temp',
-        help='where to generate files [temp]'
+        default='results',
+        help='where to generate files [results]'
     )
 
     parser.add_argument(
@@ -81,67 +72,105 @@ def main():
 
     parser.add_argument(
         '-f', '--file',
-        metavar='FILE[,PACKAGE]',
+        metavar='FILE[,LIBRARY]',
         action='append',
-        help='add a design file (specifying an optional VHDL package)'
+        help='add a design file (optionally specifying a VHDL library)'
     )
 
     parser.add_argument(
         '-i', '--include',
         metavar='PATH',
         action='append',
-        help='specify where to search Verilog included files'
+        help='specify a Verilog Include directory'
+    )
+
+    parser.add_argument(
+        '--define',
+        metavar=('DEFINE', 'VALUE'),
+        action='append',
+        nargs=2,
+        help='define and set the value of a Verilog Define'
     )
 
     parser.add_argument(
         '--param',
-        metavar=('GENERIC/PARAMETER', 'VALUE'),
+        metavar=('PARAMETER', 'VALUE'),
         action='append',
         nargs=2,
-        help='set the value of a generic/parameter of the top-level'
+        help='set the value of a Generic/Parameter of the top-level'
     )
 
     parser.add_argument(
-        '--run',
-        metavar='TASK',
-        choices=TASKS[1:len(TASKS)],
+        '--project',
+        metavar='PROJECT',
+        help='optional PROJECT name'
+    )
+
+    parser.add_argument(
+        '--last',
+        metavar='STEP',
+        choices=steps,
         default='bit',
-        help='task to perform [{}]'.format('bit')
+        help=f'last step to perform [{steps[-1]}] ({"|".join(steps)})'
+    )
+
+    parser.add_argument(
+        'toplevel',
+        metavar='TOPLEVEL',
+        help='the top-level name'
     )
 
     args = parser.parse_args()
 
+    # -------------------------------------------------------------------------
     # Solving with PyFPGA
+    # -------------------------------------------------------------------------
 
-    prj = Project(args.tool, relative_to_script=False)
-    prj.set_outdir(args.outdir)
+    project = args.project or args.tool
+
+    prj = Factory(args.tool, project, odir=args.odir)
 
     if args.part is not None:
         prj.set_part(args.part)
 
     if args.include is not None:
         for include in args.include:
-            prj.add_vlog_include(include)
+            prj.add_include(include)
 
     if args.file is not None:
         for file in args.file:
-            file = file.split(',')
-            if len(file) > 1:
-                prj.add_files(file[0], library=file[1])
+            aux = file.split(',')
+            file = aux[0]
+            lib = aux[1] if len(aux) > 1 else None
+            ext = Path(file).suffix.lower()
+            if ext == '.v':
+                print(f'* Adding Verilog file: {file}')
+                prj.add_vlog(file)
+            elif ext == '.sv':
+                print(f'* Adding System Verilog file: {file}')
+                prj.add_slog(file)
+            elif ext in ['.vhd', '.vhdl']:
+                if lib:
+                    print(f'* Adding VHDL file: {file} (library={lib})')
+                else:
+                    print(f'* Adding VHDL file: {file}')
+                prj.add_vhdl(file, lib)
             else:
-                prj.add_files(file[0])
+                print(f'* Adding Constraint file: {file}')
+                prj.add_cons(file)
+
+    if args.define is not None:
+        for define in args.define:
+            prj.add_define(define[0], define[1])
 
     if args.param is not None:
         for param in args.param:
             prj.add_param(param[0], param[1])
 
-    prj.add_files(args.top)
-    prj.set_top(args.top)
+    prj.set_top(args.toplevel)
 
     try:
-        prj.generate(args.run)
-    except RuntimeError:
-        logging.error('{} not found'.format(args.tool))
+        prj.make(last=args.last)
     except Exception as e:
         sys.exit('{} ({})'.format(type(e).__name__, e))
 

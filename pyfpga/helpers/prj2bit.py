@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (C) 2020 PyFPGA Project
+# Copyright (C) 2020-2024 PyFPGA Project
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
@@ -10,16 +10,14 @@ A CLI helper utility to deal with a vendor FPGA Project file.
 """
 
 import argparse
-import logging
-import os
 import sys
 
-from fpga import __version__ as version
-from fpga.project import Project
-from fpga.tool import TASKS
+from pathlib import Path
+from pyfpga import __version__ as version
+from pyfpga.factory import Factory, TOOLS
+from pyfpga.project import STEPS
 
-logging.basicConfig()
-logging.getLogger('fpga.project').level = logging.INFO
+steps = list(STEPS.keys())[1:len(STEPS)]
 
 
 def main():
@@ -34,29 +32,21 @@ def main():
     parser.add_argument(
         '-v', '--version',
         action='version',
-        version='v{}'.format(version)
+        version=f'v{version}'
     )
 
     parser.add_argument(
-        'project',
-        metavar='PRJFILE',
-        help='a vendor project file'
-    )
-
-    parser.add_argument(
-        '--run',
-        metavar='TASK',
-        choices=TASKS[1:len(TASKS)],
+        '--last',
+        metavar='STEP',
+        choices=steps,
         default='bit',
-        help='task to perform [{}] ({})'.format(
-            'bit', " | ".join(TASKS[1:len(TASKS)])
-        )
+        help=f'last step to perform [{steps[-1]}] ({"|".join(steps)})'
     )
 
     parser.add_argument(
-        '--clean',
-        action='store_true',
-        help='clean the generated project files'
+        'prjfile',
+        metavar='PRJFILE',
+        help='a vendor Project File'
     )
 
     args = parser.parse_args()
@@ -70,34 +60,30 @@ def main():
         '.xpr': 'vivado'
     }
 
-    if not os.path.exists(args.project):
-        sys.exit('Project file not found')
+    prjfile = Path(args.prjfile)
 
-    outdir = os.path.dirname(args.project)
-    project, extension = os.path.splitext(args.project)
-    project = os.path.basename(project)
+    if not prjfile.exists():
+        sys.exit('file not found.')
+
+    directory = prjfile.parent
+    base_name = prjfile.stem
+    extension = prjfile.suffix
 
     tool = ''
     if extension in tool_per_ext:
         tool = tool_per_ext[extension]
-        print('{} Project file found.'.format(tool))
+        print(f'* {tool} project file found.')
     else:
-        sys.exit('Unknown Project file extension')
+        sys.exit('Unknown project file extension')
 
+    # -------------------------------------------------------------------------
     # Solving with PyFPGA
+    # -------------------------------------------------------------------------
 
-    prj = Project(tool, project=project, relative_to_script=False)
-    prj.set_outdir(outdir)
-
-    prj.set_top(project)
+    prj = Factory(tool, base_name, directory)
 
     try:
-        if args.clean:
-            prj.clean()
-        else:
-            prj.generate(args.run, 'syn')
-    except RuntimeError:
-        logging.error('{} not found'.format(tool))
+        prj.make('syn', args.last)
     except Exception as e:
         sys.exit('{} ({})'.format(type(e).__name__, e))
 
