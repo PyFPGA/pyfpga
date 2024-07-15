@@ -95,6 +95,14 @@
 <span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">FileSystemLoader</span>
 
 
+<span class="n">STEPS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;cfg&#39;</span><span class="p">:</span> <span class="s1">&#39;Project Creation&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;syn&#39;</span><span class="p">:</span> <span class="s1">&#39;Synthesis&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;par&#39;</span><span class="p">:</span> <span class="s1">&#39;Place and Route&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;bit&#39;</span><span class="p">:</span> <span class="s1">&#39;Bitstream generation&#39;</span>
+<span class="p">}</span>
+
+
 <div class="viewcode-block" id="Project">
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project">[docs]</a>
 <span class="k">class</span> <span class="nc">Project</span><span class="p">:</span>
@@ -322,25 +330,17 @@
 <span class="sd">        .. note:: valid steps are ``cfg``, ``syn``, ``par`` and ``bit``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing make&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s1">&#39;part&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Using the default PART&#39;</span><span class="p">)</span>
-        <span class="n">steps</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;cfg&#39;</span><span class="p">:</span> <span class="s1">&#39;Project Creation&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;syn&#39;</span><span class="p">:</span> <span class="s1">&#39;Synthesis&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;par&#39;</span><span class="p">:</span> <span class="s1">&#39;Place and Route&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;bit&#39;</span><span class="p">:</span> <span class="s1">&#39;Bitstream generation&#39;</span>
-        <span class="p">}</span>
-        <span class="k">if</span> <span class="n">last</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">last</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">STEPS</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid last step.&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">first</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">first</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">STEPS</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid first step.&#39;</span><span class="p">)</span>
-        <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">steps</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">STEPS</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="n">keys</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">first</span><span class="p">),</span> <span class="n">keys</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">last</span><span class="p">)]</span>
         <span class="k">if</span> <span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">index</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid steps combination.&#39;</span><span class="p">)</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;from </span><span class="si">{</span><span class="n">steps</span><span class="p">[</span><span class="n">first</span><span class="p">]</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">steps</span><span class="p">[</span><span class="n">last</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;from </span><span class="si">{</span><span class="n">STEPS</span><span class="p">[</span><span class="n">first</span><span class="p">]</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">STEPS</span><span class="p">[</span><span class="n">last</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="k">if</span> <span class="n">first</span> <span class="o">==</span> <span class="n">last</span><span class="p">:</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="n">steps</span><span class="p">[</span><span class="n">first</span><span class="p">]</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">STEPS</span><span class="p">[</span><span class="n">first</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Running </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">keys</span><span class="p">[</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_make_custom</span><span class="p">()</span>
