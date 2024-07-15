@@ -17,5 +17,6 @@ PyFPGA's documentation
    basic
    advanced
    api
+   helpers
    tools
    internals

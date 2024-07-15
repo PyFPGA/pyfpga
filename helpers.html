@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Helpers &mdash; PyFPGA  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tools support" href="tools.html" />
+    <link rel="prev" title="API Reference" href="api.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            PyFPGA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basic.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Helpers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#hdl2bit">hdl2bit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prj2bit">prj2bit</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Tools support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Internals</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PyFPGA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Helpers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/helpers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="helpers">
+<h1>Helpers<a class="headerlink" href="#helpers" title="Link to this heading"></a></h1>
+<section id="hdl2bit">
+<h2>hdl2bit<a class="headerlink" href="#hdl2bit" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">hdl2bit</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t</span> <span class="n">TOOL</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">PATH</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span> <span class="n">PART</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">f</span> <span class="n">FILE</span><span class="p">[,</span><span class="n">LIBRARY</span><span class="p">]]</span>
+                  <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="n">PATH</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">define</span> <span class="n">DEFINE</span> <span class="n">VALUE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">param</span> <span class="n">PARAMETER</span> <span class="n">VALUE</span><span class="p">]</span>
+                  <span class="p">[</span><span class="o">--</span><span class="n">project</span> <span class="n">PROJECT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">last</span> <span class="n">STEP</span><span class="p">]</span>
+                  <span class="n">TOPLEVEL</span>
+
+<span class="n">A</span> <span class="n">CLI</span> <span class="n">helper</span> <span class="n">utility</span> <span class="n">to</span> <span class="n">transform</span> <span class="n">HDL</span> <span class="n">design</span> <span class="n">files</span> <span class="n">into</span> <span class="n">a</span> <span class="n">bitstream</span><span class="o">.</span>
+
+<span class="n">positional</span> <span class="n">arguments</span><span class="p">:</span>
+  <span class="n">TOPLEVEL</span>              <span class="n">the</span> <span class="n">top</span><span class="o">-</span><span class="n">level</span> <span class="n">name</span>
+
+<span class="n">options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>            <span class="n">show</span> <span class="n">this</span> <span class="n">help</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span>
+  <span class="o">-</span><span class="n">v</span><span class="p">,</span> <span class="o">--</span><span class="n">version</span>         <span class="n">show</span> <span class="n">program</span><span class="s1">&#39;s version number and exit</span>
+  <span class="o">-</span><span class="n">t</span> <span class="n">TOOL</span><span class="p">,</span> <span class="o">--</span><span class="n">tool</span> <span class="n">TOOL</span>  <span class="n">backend</span> <span class="n">tool</span> <span class="n">to</span> <span class="n">be</span> <span class="n">used</span> <span class="p">[</span><span class="n">vivado</span><span class="p">]</span>
+  <span class="o">-</span><span class="n">o</span> <span class="n">PATH</span><span class="p">,</span> <span class="o">--</span><span class="n">odir</span> <span class="n">PATH</span>  <span class="n">where</span> <span class="n">to</span> <span class="n">generate</span> <span class="n">files</span> <span class="p">[</span><span class="n">results</span><span class="p">]</span>
+  <span class="o">-</span><span class="n">p</span> <span class="n">PART</span><span class="p">,</span> <span class="o">--</span><span class="n">part</span> <span class="n">PART</span>  <span class="n">the</span> <span class="n">target</span> <span class="n">device</span>
+  <span class="o">-</span><span class="n">f</span> <span class="n">FILE</span><span class="p">[,</span><span class="n">LIBRARY</span><span class="p">],</span> <span class="o">--</span><span class="n">file</span> <span class="n">FILE</span><span class="p">[,</span><span class="n">LIBRARY</span><span class="p">]</span>
+                        <span class="n">add</span> <span class="n">a</span> <span class="n">design</span> <span class="n">file</span> <span class="p">(</span><span class="n">optionally</span> <span class="n">specifying</span> <span class="n">a</span> <span class="n">VHDL</span>
+                        <span class="n">library</span><span class="p">)</span>
+  <span class="o">-</span><span class="n">i</span> <span class="n">PATH</span><span class="p">,</span> <span class="o">--</span><span class="n">include</span> <span class="n">PATH</span>
+                        <span class="n">specify</span> <span class="n">a</span> <span class="n">Verilog</span> <span class="n">Include</span> <span class="n">directory</span>
+  <span class="o">--</span><span class="n">define</span> <span class="n">DEFINE</span> <span class="n">VALUE</span>
+                        <span class="n">define</span> <span class="ow">and</span> <span class="nb">set</span> <span class="n">the</span> <span class="n">value</span> <span class="n">of</span> <span class="n">a</span> <span class="n">Verilog</span> <span class="n">Define</span>
+  <span class="o">--</span><span class="n">param</span> <span class="n">PARAMETER</span> <span class="n">VALUE</span>
+                        <span class="nb">set</span> <span class="n">the</span> <span class="n">value</span> <span class="n">of</span> <span class="n">a</span> <span class="n">Generic</span><span class="o">/</span><span class="n">Parameter</span> <span class="n">of</span> <span class="n">the</span> <span class="n">top</span><span class="o">-</span><span class="n">level</span>
+  <span class="o">--</span><span class="n">project</span> <span class="n">PROJECT</span>     <span class="n">optional</span> <span class="n">PROJECT</span> <span class="n">name</span>
+  <span class="o">--</span><span class="n">last</span> <span class="n">STEP</span>           <span class="n">last</span> <span class="n">step</span> <span class="n">to</span> <span class="n">perform</span> <span class="p">[</span><span class="n">bit</span><span class="p">]</span> <span class="p">(</span><span class="n">cfg</span><span class="o">|</span><span class="n">syn</span><span class="o">|</span><span class="n">par</span><span class="o">|</span><span class="n">bit</span><span class="p">)</span>
+
+<span class="n">Supported</span> <span class="n">values</span> <span class="n">of</span> <span class="n">arguments</span> <span class="k">with</span> <span class="n">choices</span><span class="p">:</span>
+<span class="o">*</span> <span class="n">TOOL</span> <span class="o">=</span> <span class="n">ise</span><span class="o">|</span><span class="n">libero</span><span class="o">|</span><span class="n">openflow</span><span class="o">|</span><span class="n">quartus</span><span class="o">|</span><span class="n">vivado</span>
+<span class="o">*</span> <span class="n">STEP</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">|</span><span class="n">syn</span><span class="o">|</span><span class="n">par</span><span class="o">|</span><span class="n">bit</span>
+
+<span class="n">Notes</span><span class="p">:</span>
+<span class="o">*</span> <span class="n">PATH</span> <span class="ow">and</span> <span class="n">FILE</span> <span class="n">must</span> <span class="n">be</span> <span class="n">relative</span> <span class="n">to</span> <span class="n">the</span> <span class="n">execution</span> <span class="n">directory</span><span class="o">.</span>
+<span class="o">*</span> <span class="n">The</span> <span class="n">default</span> <span class="n">PART</span> <span class="n">name</span> <span class="ow">and</span> <span class="n">how</span> <span class="n">to</span> <span class="n">specify</span> <span class="n">it</span> <span class="n">depends</span> <span class="n">on</span> <span class="n">the</span> <span class="n">selected</span> <span class="n">TOOL</span><span class="o">.</span>
+<span class="o">*</span> <span class="n">More</span> <span class="n">than</span> <span class="n">one</span> <span class="s1">&#39;--file&#39;</span><span class="p">,</span> <span class="s1">&#39;--include&#39;</span> <span class="ow">or</span> <span class="s1">&#39;--param&#39;</span> <span class="n">arguments</span> <span class="n">can</span> <span class="n">be</span> <span class="n">specified</span><span class="o">.</span>
+</pre></div>
+</div>
+</section>
+<section id="prj2bit">
+<h2>prj2bit<a class="headerlink" href="#prj2bit" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">prj2bit</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">last</span> <span class="n">STEP</span><span class="p">]</span> <span class="n">PRJFILE</span>
+
+<span class="n">A</span> <span class="n">CLI</span> <span class="n">helper</span> <span class="n">utility</span> <span class="n">to</span> <span class="n">deal</span> <span class="k">with</span> <span class="n">a</span> <span class="n">vendor</span> <span class="n">FPGA</span> <span class="n">Project</span> <span class="n">file</span><span class="o">.</span>
+
+<span class="n">positional</span> <span class="n">arguments</span><span class="p">:</span>
+  <span class="n">PRJFILE</span>        <span class="n">a</span> <span class="n">vendor</span> <span class="n">Project</span> <span class="n">File</span>
+
+<span class="n">options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>     <span class="n">show</span> <span class="n">this</span> <span class="n">help</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span>
+  <span class="o">-</span><span class="n">v</span><span class="p">,</span> <span class="o">--</span><span class="n">version</span>  <span class="n">show</span> <span class="n">program</span><span class="s1">&#39;s version number and exit</span>
+  <span class="o">--</span><span class="n">last</span> <span class="n">STEP</span>    <span class="n">last</span> <span class="n">step</span> <span class="n">to</span> <span class="n">perform</span> <span class="p">[</span><span class="n">bit</span><span class="p">]</span> <span class="p">(</span><span class="n">syn</span><span class="o">|</span><span class="n">par</span><span class="o">|</span><span class="n">bit</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="api.html" class="btn btn-neutral float-left" title="API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tools.html" class="btn btn-neutral float-right" title="Tools support" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Rodrigo Alejandro Melo.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
