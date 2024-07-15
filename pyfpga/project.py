@@ -216,8 +216,6 @@ class Project:
         .. note:: valid steps are ``cfg``, ``syn``, ``par`` and ``bit``.
         """
         self.logger.debug('Executing make')
-        if 'part' not in self.data:
-            self.logger.info('Using the default PART')
         if last not in STEPS:
             raise ValueError('Invalid last step.')
         if first not in STEPS:
