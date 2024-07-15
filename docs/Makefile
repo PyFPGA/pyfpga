@@ -14,7 +14,11 @@ help:
 
 .PHONY: help Makefile
 
+$(BUILDDIR)/hdl2bit $(BUILDDIR)/prj2bit:
+	@mkdir -p $(@D)
+	@python3 ../pyfpga/helpers/$(@F).py -h > $@
+
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
-%: Makefile
+%: Makefile $(BUILDDIR)/hdl2bit $(BUILDDIR)/prj2bit
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)

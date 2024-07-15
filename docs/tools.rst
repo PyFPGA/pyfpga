@@ -1,24 +1,19 @@
 Tools support
 =============
 
-.. ATTENTION::
-
-  (2024-05-31) To be updated.
-
 +---------------+-----------+---------+-----+-----------------------------------------------+
 | Tools         | Vendor    | Version | Tcl | Comment                                       |
 +===============+===========+=========+=====+===============================================+
 | ISE           | Xilinx    | 14.7    | 8.4 | Discontinued in 2013                          |
 +---------------+-----------+---------+-----+-----------------------------------------------+
-| Libero-SoC    | Microsemi | 12.2    | 8.5 | Important changes in version 12.0 (2019)      |
+| Libero-SoC    | Microsemi | 2024.1  | 8.5 | Important changes in version 12.0 (2019)      |
 +---------------+-----------+---------+-----+-----------------------------------------------+
-| Quartus Prime | Intel     | 19.1    | 8.6 | Known as Quartus II until version 15.0 (2015) |
+| Openflow      |           |         |     |                                               |
 +---------------+-----------+---------+-----+-----------------------------------------------+
-| Vivado        | Xilinx    | 2019.1  | 8.5 | Introduced in 2012, it superseded ISE         |
+| Quartus Prime | Intel     | 23.1    | 8.6 | Known as Quartus II until version 15.0 (2015) |
 +---------------+-----------+---------+-----+-----------------------------------------------+
-| Yosys         |           | 0.9-dev | 8.6 | The open-source synthesizer                   |
+| Vivado        | Xilinx    | 2022.1  | 8.5 | Introduced in 2012, it superseded ISE         |
 +---------------+-----------+---------+-----+-----------------------------------------------+
-
 
 * ISE supports devices starting from Spartan 3/Virtex 4 until some first members of the 7 series.
   Previous Spartan/Virtex devices were supported until version 10. Vivado supports devices starting
