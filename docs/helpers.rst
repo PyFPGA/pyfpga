@@ -10,3 +10,8 @@ prj2bit
 -------
 
 .. literalinclude:: _build/prj2bit
+
+bitprog
+-------
+
+.. literalinclude:: _build/bitprog
