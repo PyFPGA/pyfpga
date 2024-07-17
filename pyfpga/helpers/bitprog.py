@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (C) 2020 PyFPGA Project
+# Copyright (C) 2020-2024 PyFPGA Project
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
@@ -10,34 +10,25 @@ A CLI helper utility to transfer a bitstream to a supported device.
 """
 
 import argparse
-import logging
 import sys
 
-from fpga import __version__ as version
-from fpga.project import Project, TOOLS
-from fpga.tool import MEMWIDTHS
+from pathlib import Path
+from pyfpga import __version__ as version
+from pyfpga.factory import Factory, TOOLS
+from pyfpga.project import STEPS
 
-logging.basicConfig()
-logging.getLogger('fpga.project').level = logging.INFO
+tools = list(TOOLS.keys())
+devs = ['fpga', 'spi', 'bpi']
+positions = range(1, 10)
+widths = [2**i for i in range(6)]
 
-DEVS = ['fpga', 'spi', 'bpi']
-POSITIONS = range(1, 10)
-ACTIONS = ['program', 'detect', 'unlock']
-
-EPILOGUE = """
+EPILOGUE = f"""
 Supported values of arguments with choices:
-* TOOL = {}
-* DEVTYPE = {}
-* POSITIONS = {}
-* MEMWIDTH = {}
-* ACTION = {}
-""".format(
-    " | ".join(TOOLS),
-    " | ".join(DEVS),
-    " | ".join(str(x) for x in POSITIONS),
-    " | ".join(str(x) for x in MEMWIDTHS),
-    " | ".join(ACTIONS)
-)
+* TOOL = {'|'.join(tools)}
+* TYPE = {'|'.join(devs)}
+* POSITION = {'|'.join(map(str, positions))}
+* WIDTH = {'|'.join(map(str, widths))}
+"""
 
 
 def main():
@@ -54,43 +45,36 @@ def main():
     parser.add_argument(
         '-v', '--version',
         action='version',
-        version='v{}'.format(version)
-    )
-
-    parser.add_argument(
-        'bit',
-        metavar='BITFILE',
-        nargs='?',
-        help='a bitstream file'
+        version=f'v{version}'
     )
 
     parser.add_argument(
         '-t', '--tool',
         metavar='TOOL',
         default='vivado',
-        choices=TOOLS,
+        choices=tools,
         help='backend tool to be used [vivado]'
     )
 
     parser.add_argument(
-        '-o', '--outdir',
+        '-o', '--odir',
         metavar='PATH',
-        default='temp',
-        help='where to generate files [temp]'
+        default='results',
+        help='where to generate files [results]'
     )
 
     parser.add_argument(
         '-d', '--device',
-        metavar='DEVTYPE',
-        choices=DEVS,
-        default=DEVS[0],
-        help='the target device type [{}]'.format(DEVS[0])
+        metavar='TYPE',
+        choices=devs,
+        default=devs[0],
+        help=f'the target device type [{devs[0]}]'
     )
 
     parser.add_argument(
         '-p', '--position',
         metavar='POSITION',
-        choices=POSITIONS,
+        choices=positions,
         type=int,
         default=1,
         help='the device position into the JTAG chain [1]'
@@ -98,47 +82,40 @@ def main():
 
     parser.add_argument(
         '-m', '--memname',
-        metavar='MEMNAME',
-        default='',
-        help='memory name if spi or bpi selected'
+        metavar='NAME',
+        help='memory name for SPI or BPI devices [None]'
     )
 
     parser.add_argument(
         '-w', '--width',
-        metavar='MEMWIDTH',
-        choices=MEMWIDTHS,
+        metavar='WIDTH',
+        choices=widths,
         type=int,
         default=1,
-        help='memory width if spi or bpi selected [1]'
+        help='memory width for SPI or BPI devices [1]'
     )
 
     parser.add_argument(
-        '--run',
-        metavar='ACTION',
-        choices=ACTIONS,
-        default=ACTIONS[0],
-        help='action to perform [{}]'.format(ACTIONS[0])
+        'bit',
+        metavar='BITFILE',
+        help='a bitstream file'
     )
 
     args = parser.parse_args()
 
+    # -------------------------------------------------------------------------
     # Solving with PyFPGA
+    # -------------------------------------------------------------------------
 
-    prj = Project(args.tool, relative_to_script=False)
-    prj.set_outdir(args.outdir)
-
-    if args.run == 'program':
-        devtype = args.device
-        prj.set_bitstream(args.bit)
-    elif args.run == 'detect':
-        devtype = 'detect'
-    else:  # args.run == 'unlock'
-        devtype = 'unlock'
+    prj = Factory(args.tool, odir=args.odir)
 
     try:
-        prj.transfer(devtype, args.position, args.memname, args.width)
-    except RuntimeError:
-        logging.error('{} not found'.format(args.tool))
+        if args.device == 'fpga':
+            prj.prog(args.bit, args.position)
+        if args.device == 'spi':
+            prj.prog_spi(args.bit, args.position, args.width, args.memname)
+        if args.device == 'bpi':
+            prj.prog_bpi(args.bit, args.position, args.width, args.memname)
     except Exception as e:
         sys.exit('{} ({})'.format(type(e).__name__, e))
 
