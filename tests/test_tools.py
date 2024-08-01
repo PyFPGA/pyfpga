@@ -4,6 +4,13 @@ from pyfpga.factory import Factory
 tdir = Path(__file__).parent.resolve()
 
 
+def test_diamond():
+    tool = 'diamond'
+    generate(tool, 'PARTNAME')
+    base = f'results/{tool}/{tool}'
+    assert Path(f'{base}.tcl').exists(), 'file not found'
+
+
 def test_ise():
     tool = 'ise'
     generate(tool, 'DEVICE-PACKAGE-SPEED')
