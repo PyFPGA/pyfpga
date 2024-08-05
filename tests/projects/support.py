@@ -3,12 +3,13 @@
 import argparse
 import sys
 
-from pyfpga.factory import Factory
+from pyfpga.factory import Factory, TOOLS
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
     '--tool', default='openflow',
-    choices=['ise', 'libero', 'quartus', 'openflow', 'vivado']
+    choices=list(TOOLS.keys())
 )
 args = parser.parse_args()
 
