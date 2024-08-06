@@ -1,6 +1,8 @@
 from pathlib import Path
 from pyfpga.factory import Factory
 
+tdir = Path(__file__).parent.resolve()
+
 
 def test_ise():
     tool = 'ise'
@@ -45,15 +47,15 @@ def generate(tool, part):
     prj = Factory(tool, odir=f'results/{tool}')
     prj.set_part(part)
     prj.set_top('TOPNAME')
-    prj.add_include('fakedata/dir1')
-    prj.add_include('fakedata/dir2')
+    prj.add_include(str(tdir / 'fakedata/dir1'))
+    prj.add_include(str(tdir / 'fakedata/dir2'))
     if tool != 'ise':
-        prj.add_slog('fakedata/**/*.sv')
-    prj.add_vhdl('fakedata/**/*.vhdl', 'LIB')
-    prj.add_vlog('fakedata/**/*.v')
-    prj.add_cons('fakedata/cons/all.xdc')
-    prj.add_cons('fakedata/cons/syn.xdc', 'syn')
-    prj.add_cons('fakedata/cons/par.xdc', 'par')
+        prj.add_slog(str(tdir / 'fakedata/**/*.sv'))
+    prj.add_vhdl(str(tdir / 'fakedata/**/*.vhdl'), 'LIB')
+    prj.add_vlog(str(tdir / 'fakedata/**/*.v'))
+    prj.add_cons(str(tdir / 'fakedata/cons/all.xdc'))
+    prj.add_cons(str(tdir / 'fakedata/cons/syn.xdc'), 'syn')
+    prj.add_cons(str(tdir / 'fakedata/cons/par.xdc'), 'par')
     prj.add_param('PAR1', 'VAL1')
     prj.add_param('PAR2', 'VAL2')
     prj.add_define('DEF1', 'VAL1')
