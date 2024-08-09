@@ -16,7 +16,8 @@ PyFPGA's documentation
    intro
    basic
    advanced
-   api
    helpers
+   api
    tools
    internals
+   extending
