@@ -18,7 +18,6 @@ PyFPGA's documentation
    advanced
    helpers
    api
-   support
+   tools
    internals
-   hacking
    extending
