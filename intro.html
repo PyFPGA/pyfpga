@@ -81,6 +81,30 @@
              
   <section id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h1>
+<p>PyFPGA is a Python package that provides an abstraction layer for working with FPGA development tools in a vendor-agnostic, programmatic way. It includes:</p>
+<ul class="simple">
+<li><p>A <strong>class</strong> for each supported tool, enabling <strong>project creation</strong>, <strong>synthesis</strong>, <strong>place and route</strong>, <strong>bitstream generation</strong>, and <strong>programming</strong>.</p></li>
+<li><p>A set of <strong>command-line</strong> helpers for simple projects or quick evaluations.</p></li>
+</ul>
+<p>With PyFPGA, you can create your own FPGA development workflow tailored to your needs. Some of its key benefits include:</p>
+<ul class="simple">
+<li><p>A unified API across different tools and devices.</p></li>
+<li><p>Compatibility with <em>Version Control Systems</em> and <em>Continuous Integration</em>.</p></li>
+<li><p>Ensured reproducibility and repeatability.</p></li>
+<li><p>Lower resource consumption compared to GUI-based workflows.</p></li>
+</ul>
+<p>It currently supports vendor tools such as <code class="docutils literal notranslate"><span class="pre">Diamond</span></code>, <code class="docutils literal notranslate"><span class="pre">Ise</span></code>, <code class="docutils literal notranslate"><span class="pre">Quartus</span></code>, <code class="docutils literal notranslate"><span class="pre">Libero</span></code>, and <code class="docutils literal notranslate"><span class="pre">Vivado</span></code>, as well as <code class="docutils literal notranslate"><span class="pre">Openflow</span></code>, a solution based on <em>Free/Libre and Open Source Software</em> (<strong>FLOSS</strong>).</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>PyFPGA assumes that the backend tool is ready to run.
+This implies, depending on the operating system, the following:</p>
+<ul class="simple">
+<li><p>The tool is installed.</p></li>
+<li><p>A valid license, if needed, is configured.</p></li>
+<li><p>The tool is available in the system PATH.</p></li>
+<li><p>On GNU/Linux: required packages are installed, environment variables are set, and permissions are granted for devices (to transfer the bitstream).</p></li>
+</ul>
+</div>
 </section>
 
 

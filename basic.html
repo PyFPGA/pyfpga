@@ -89,7 +89,7 @@
 <h1>Basic usage<a class="headerlink" href="#basic-usage" title="Link to this heading"></a></h1>
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
-<p>(2024-05-31) To be updated.</p>
+<p>(2024-08-08) To be updated.</p>
 </div>
 <section id="project-creation">
 <h2>Project Creation<a class="headerlink" href="#project-creation" title="Link to this heading"></a></h2>
@@ -100,23 +100,6 @@ name is used when <em>no name</em> is provided).</p>
 
 <span class="n">prj</span> <span class="o">=</span> <span class="n">Project</span><span class="p">(</span><span class="s1">&#39;vivado&#39;</span><span class="p">,</span> <span class="s1">&#39;projectName&#39;</span><span class="p">)</span>
 </pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The supported tool are: <code class="docutils literal notranslate"><span class="pre">ghdl</span></code>, <code class="docutils literal notranslate"><span class="pre">ise</span></code>, <code class="docutils literal notranslate"><span class="pre">libero</span></code>, <code class="docutils literal notranslate"><span class="pre">openflow</span></code>,
-<code class="docutils literal notranslate"><span class="pre">quartus</span></code>, <code class="docutils literal notranslate"><span class="pre">vivado</span></code>, <code class="docutils literal notranslate"><span class="pre">yosys</span></code>, <code class="docutils literal notranslate"><span class="pre">yosys-ise</span></code> and <code class="docutils literal notranslate"><span class="pre">yosys-vivado</span></code>.</p>
-</div>
-<div class="admonition attention">
-<p class="admonition-title">Attention</p>
-<p>PyFPGA assumes that the backend Tool is ready to run.
-This implies, depending on the operating system, things such as:</p>
-<ul class="simple">
-<li><p>Tool installed.</p></li>
-<li><p>A valid License configured.</p></li>
-<li><p>Tool available in the system PATH.</p></li>
-<li><p>GNU/Linux: extra packages installed, environment variables assigned
-and permissions granted on devices (to transfer the bitstream).</p></li>
-</ul>
 </div>
 <p>By default, the directory where the project is generated is called <code class="docutils literal notranslate"><span class="pre">build</span></code>
 and is located in the same place that the script, but another name and location

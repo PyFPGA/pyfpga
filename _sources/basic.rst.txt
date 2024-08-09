@@ -3,7 +3,7 @@ Basic usage
 
 .. ATTENTION::
 
-  (2024-05-31) To be updated.
+  (2024-08-08) To be updated.
 
 Project Creation
 ----------------
@@ -17,22 +17,6 @@ name is used when *no name* is provided).
    from fpga.project import Project
 
    prj = Project('vivado', 'projectName')
-
-.. NOTE::
-
-  The supported tool are: ``ghdl``, ``ise``, ``libero``, ``openflow``,
-  ``quartus``, ``vivado``, ``yosys``, ``yosys-ise`` and ``yosys-vivado``.
-
-.. ATTENTION::
-
-  PyFPGA assumes that the backend Tool is ready to run.
-  This implies, depending on the operating system, things such as:
-
-  * Tool installed.
-  * A valid License configured.
-  * Tool available in the system PATH.
-  * GNU/Linux: extra packages installed, environment variables assigned
-    and permissions granted on devices (to transfer the bitstream).
 
 By default, the directory where the project is generated is called ``build``
 and is located in the same place that the script, but another name and location
