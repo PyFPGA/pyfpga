@@ -39,15 +39,15 @@ Internal data structure
         'part': 'PARTNAME',
         'includes': ['DIR1', 'DIR2', 'DIR3'],
         'files': {
-            'FILE1': {'hdl': 'vhdl', 'lib': 'LIB1'}
-            'FILE2': {'hdl': 'vlog'},
-            'FILE3': {'hdl': 'slog'}
+            'FILE1': {'hdl': 'vhdl', 'lib': 'LIB1', 'opt': 'OPTS'},
+            'FILE2': {'hdl': 'vlog', 'opt': 'OPTS'},
+            'FILE3': {'hdl': 'slog', 'opt': 'OPTS'}
         },
         'top': 'TOPNAME',
         'constraints': {
-            'FILE1': 'all',
-            'FILE2': 'syn',
-            'FILE3': 'par'
+            'FILE1': {'opt': 'OPTS'},
+            'FILE2': {'opt': 'OPTS'},
+            'FILE3': {'opt': 'OPTS'}
         },
         'params': {
             'PAR1': 'VAL1',
