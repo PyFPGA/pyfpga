@@ -25,11 +25,6 @@ add_file {{ name }}
 {% if constraints %}# Constraints inclusion
 {% for name, attr in constraints.items() %}
 add_file -fileset constrs_1 {{ name }}
-{% if attr == "syn" %}
-set_property USED_IN_IMPLEMENTATION FALSE [get_files {{ name }}]
-{% elif attr == "par" %}
-set_property USED_IN_SYNTHESIS FALSE [get_files {{ name }}]
-{% endif %}
 {% if loop.first %}set_property TARGET_CONSTRS_FILE {{ name }} [current_fileset -constrset]{% endif %}
 {% endfor %}
 {% endif %}

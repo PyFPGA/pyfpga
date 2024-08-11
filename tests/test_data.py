@@ -52,9 +52,9 @@ pattern = {
     },
     'top': 'TOPNAME',
     'constraints': {
-        Path(tdir / 'fakedata/cons/all.xdc').resolve().as_posix(): 'all',
-        Path(tdir / 'fakedata/cons/syn.xdc').resolve().as_posix(): 'syn',
-        Path(tdir / 'fakedata/cons/par.xdc').resolve().as_posix(): 'par'
+        Path(tdir / 'fakedata/cons/all.xdc').resolve().as_posix(): {},
+        Path(tdir / 'fakedata/cons/syn.xdc').resolve().as_posix(): {},
+        Path(tdir / 'fakedata/cons/par.xdc').resolve().as_posix(): {}
     },
     'params': {
         'PAR1': 'VAL1',
@@ -90,8 +90,8 @@ def test_data():
     prj.add_vhdl(str(tdir / 'fakedata/**/*.vhdl'), 'LIB')
     prj.add_vlog(str(tdir / 'fakedata/**/*.v'))
     prj.add_cons(str(tdir / 'fakedata/cons/all.xdc'))
-    prj.add_cons(str(tdir / 'fakedata/cons/syn.xdc'), 'syn')
-    prj.add_cons(str(tdir / 'fakedata/cons/par.xdc'), 'par')
+    prj.add_cons(str(tdir / 'fakedata/cons/syn.xdc'))
+    prj.add_cons(str(tdir / 'fakedata/cons/par.xdc'))
     prj.add_param('PAR1', 'VAL1')
     prj.add_param('PAR2', 'VAL2')
     prj.add_param('PAR3', 'VAL3')

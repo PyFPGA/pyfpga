@@ -22,15 +22,15 @@ prj = Ise(odir='../build/ise')
 if args.board == 's6micro':
     prj.set_part('xc6slx9-2-csg324')
     prj.add_param('FREQ', '125000000')
-    prj.add_cons('../sources/cons/s6micro/clk.xcf', 'syn')
-    prj.add_cons('../sources/cons/s6micro/clk.ucf', 'par')
-    prj.add_cons('../sources/cons/s6micro/led.ucf', 'par')
+    prj.add_cons('../sources/cons/s6micro/clk.xcf')
+    prj.add_cons('../sources/cons/s6micro/clk.ucf')
+    prj.add_cons('../sources/cons/s6micro/led.ucf')
 if args.board == 'nexys3':
     prj.set_part('xc6slx16-3-csg32')
     prj.add_param('FREQ', '100000000')
-    prj.add_cons('../sources/cons/nexys3/clk.xcf', 'syn')
-    prj.add_cons('../sources/cons/nexys3/clk.ucf', 'par')
-    prj.add_cons('../sources/cons/nexys3/led.ucf', 'par')
+    prj.add_cons('../sources/cons/nexys3/clk.xcf')
+    prj.add_cons('../sources/cons/nexys3/clk.ucf')
+    prj.add_cons('../sources/cons/nexys3/led.ucf')
 prj.add_param('SECS', '1')
 
 if args.source == 'vhdl':

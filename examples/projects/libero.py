@@ -21,9 +21,9 @@ prj = Libero(odir='../build/libero')
 if args.board == 'maker':
     prj.set_part('m2s010-1-tq144')
     prj.add_param('FREQ', '125000000')
-    prj.add_cons('../sources/cons/maker/clk.sdc', 'syn')
-    prj.add_cons('../sources/cons/maker/clk.pdc', 'par')
-    prj.add_cons('../sources/cons/maker/led.pdc', 'par')
+    prj.add_cons('../sources/cons/maker/clk.sdc')
+    prj.add_cons('../sources/cons/maker/clk.pdc')
+    prj.add_cons('../sources/cons/maker/led.pdc')
 prj.add_param('SECS', '1')
 
 if args.source == 'vhdl':

@@ -33,9 +33,10 @@ set_property strategy "Area_Explore" $obj
 set_property "steps.opt_design.args.directive" "ExploreArea" $obj
 ''')
 
+place = ['../sources/cons/ZYBO/clk.xdc', '../sources/cons/ZYBO/led.xdc']
 prj.add_hook('postcfg', f'''
-set_property USED_IN_SYNTHESIS FALSE [get_files {Path('../sources/cons/ZYBO/clk.xdc').resolve()}]
-set_property USED_IN_SYNTHESIS FALSE [get_files {Path('../sources/cons/ZYBO/led.xdc').resolve()}]
+set_property USED_IN_SYNTHESIS FALSE [get_files {Path(place[0]).resolve()}]
+set_property USED_IN_SYNTHESIS FALSE [get_files {Path(place[1]).resolve()}]
 ''')
 
 prj.make()

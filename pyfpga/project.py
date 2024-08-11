@@ -123,22 +123,19 @@ class Project:
         self.logger.debug('Executing add_vlog')
         self._add_file(pathname, 'vlog')
 
-    def add_cons(self, path, when='all'):
+    def add_cons(self, path):
         """Add a constraint file.
 
         :param pathname: path of a file
         :type pathname: str
-        :param when: always ('all'), synthesis ('syn') or P&R ('par')
-        :type only: str, optional
         :raises FileNotFoundError: if path is not found
         """
         self.logger.debug('Executing add_cons')
         path = Path(path).resolve()
         if not path.is_file():
             raise FileNotFoundError(path)
-        if when not in ['all', 'syn', 'par']:
-            raise ValueError('Invalid only.')
-        self.data.setdefault('constraints', {})[path.as_posix()] = when
+        attr = {}
+        self.data.setdefault('constraints', {})[path.as_posix()] = attr
 
     def add_param(self, name, value):
         """Add a Parameter/Generic Value.

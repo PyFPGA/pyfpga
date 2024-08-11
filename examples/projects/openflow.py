@@ -23,23 +23,23 @@ prj = Openflow(odir='../build/openflow')
 if args.board == 'icestick':
     prj.set_part('hx1k-tq144')
     prj.add_param('FREQ', '100000000')
-    prj.add_cons('../sources/cons/icestick/clk.pcf', 'par')
-    prj.add_cons('../sources/cons/icestick/led.pcf', 'par')
+    prj.add_cons('../sources/cons/icestick/clk.pcf')
+    prj.add_cons('../sources/cons/icestick/led.pcf')
 if args.board == 'edu-ciaa':
     prj.set_part('hx1k-tq144')
     prj.add_param('FREQ', '100000000')
-    prj.add_cons('../sources/cons/edu-ciaa/clk.pcf', 'par')
-    prj.add_cons('../sources/cons/edu-ciaa/led.pcf', 'par')
+    prj.add_cons('../sources/cons/edu-ciaa/clk.pcf')
+    prj.add_cons('../sources/cons/edu-ciaa/led.pcf')
 if args.board == 'orangecrab':
     prj.set_part('25k-CSFBGA285')
     prj.add_param('FREQ', '100000000')
-    prj.add_cons('../sources/cons/orangecrab/clk.lpf', 'par')
-    prj.add_cons('../sources/cons/orangecrab/led.lpf', 'par')
+    prj.add_cons('../sources/cons/orangecrab/clk.lpf')
+    prj.add_cons('../sources/cons/orangecrab/led.lpf')
 if args.board == 'ecp5evn':
     prj.set_part('um5g-85k-CABGA381')
     prj.add_param('FREQ', '100000000')
-    prj.add_cons('../sources/cons/ecp5evn/clk.lpf', 'par')
-    prj.add_cons('../sources/cons/ecp5evn/led.lpf', 'par')
+    prj.add_cons('../sources/cons/ecp5evn/clk.lpf')
+    prj.add_cons('../sources/cons/ecp5evn/led.lpf')
 prj.add_param('SECS', '1')
 
 if args.source == 'vhdl':
