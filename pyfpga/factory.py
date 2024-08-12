@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2024 Rodrigo A. Melo
+# Copyright (C) 2024 PyFPGA Project
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
