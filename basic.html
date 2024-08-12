@@ -47,10 +47,10 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Basic usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#project-creation">Project Creation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#project-generation">Project generation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bitstream-transfer">Bitstream transfer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#logging-capabilities">Logging capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#project-configuration">Project Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bitstream-generation">Bitstream generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bitstream-programming">Bitstream programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#debugging">Debugging</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced usage</a></li>
@@ -87,136 +87,106 @@
              
   <section id="basic-usage">
 <h1>Basic usage<a class="headerlink" href="#basic-usage" title="Link to this heading"></a></h1>
-<div class="admonition attention">
-<p class="admonition-title">Attention</p>
-<p>(2024-08-08) To be updated.</p>
-</div>
-<section id="project-creation">
-<h2>Project Creation<a class="headerlink" href="#project-creation" title="Link to this heading"></a></h2>
-<p>The first steps are import the module and instantiate the <code class="docutils literal notranslate"><span class="pre">Project</span></code> <em>class</em>,
-specifying the <em>TOOL</em> to use and, optionally, a <em>PROJECT NAME</em> (the <em>tool</em>
-name is used when <em>no name</em> is provided).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fpga.project</span> <span class="kn">import</span> <span class="n">Project</span>
+<section id="project-configuration">
+<h2>Project Configuration<a class="headerlink" href="#project-configuration" title="Link to this heading"></a></h2>
+<p>The first steps involve importing the necessary module to support the desired tool and instantiating the corresponding <em>class</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyfpga.vivado</span> <span class="kn">import</span> <span class="n">Vivado</span>
 
-<span class="n">prj</span> <span class="o">=</span> <span class="n">Project</span><span class="p">(</span><span class="s1">&#39;vivado&#39;</span><span class="p">,</span> <span class="s1">&#39;projectName&#39;</span><span class="p">)</span>
+<span class="n">prj</span> <span class="o">=</span> <span class="n">Vivado</span><span class="p">(</span><span class="s1">&#39;PRJNAME&#39;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s1">&#39;OUTDIR&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>By default, the directory where the project is generated is called <code class="docutils literal notranslate"><span class="pre">build</span></code>
-and is located in the same place that the script, but another name and location
-can be specified.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">set_outdir</span><span class="p">(</span><span class="s1">&#39;../temp&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Next, the FPGA part would be specified:</p>
+<p>In the example, we are using Vivado, specifying the optional parameter <em>project name</em> (<em>tool name</em> if omitted) and <em>output directory</em> (<em>results</em> by default).</p>
+<p>Next step is to specify the target FPGA device:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">set_part</span><span class="p">(</span><span class="s1">&#39;xc7k160t-3-fbg484&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>You can use the default FPGA part for a quick test or make a lazy comparison
-between tools, but generally, you will want to specify a particular one.
-Examples about how to specify a part according the tool, are (default values
-when <code class="docutils literal notranslate"><span class="pre">set_part</span></code> is not employed):</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>Ise:</strong> <code class="docutils literal notranslate"><span class="pre">xc7k160t-3-fbg484</span></code> (<em>device-speed-package</em>)</p></li>
-<li><p><strong>Libero:</strong> <code class="docutils literal notranslate"><span class="pre">mpf100t-1-fcg484</span></code> (<em>device-speed-package</em>)</p></li>
-<li><p><strong>Openflow:</strong> <code class="docutils literal notranslate"><span class="pre">hx8k-ct256</span></code> (<em>device-package</em>)</p></li>
-<li><p><strong>Quartus:</strong> <code class="docutils literal notranslate"><span class="pre">10cl120zf780i8g</span></code> (<em>part</em>)</p></li>
-<li><p><strong>Vivado:</strong> <code class="docutils literal notranslate"><span class="pre">xc7k160t-3-fbg484</span></code> (<em>part</em>)</p></li>
-</ul>
-</div></blockquote>
+<p>Default parts are provided for each supported tool.</p>
 </div>
-<p>The files addition method allows specifying one or more HDL or constraint files
-(also block designs in case of Vivado).
-It uses <code class="docutils literal notranslate"><span class="pre">glob</span></code> internally, which makes available the use of wildcards.
-The path to their location must be relative to the Python script, and there
-are optional parameters to indicate the file type (<code class="docutils literal notranslate"><span class="pre">vhdl</span></code>, <code class="docutils literal notranslate"><span class="pre">verilog</span></code>,
-<code class="docutils literal notranslate"><span class="pre">constraint</span></code> or <code class="docutils literal notranslate"><span class="pre">design</span></code>), which is automatically detected based on the
-file extension, and if it is a member of a VHDL package.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">add_files</span><span class="p">(</span><span class="s1">&#39;hdl/blinking.vhdl&#39;</span><span class="p">,</span> <span class="n">library</span><span class="o">=</span><span class="s1">&#39;examples&#39;</span><span class="p">)</span>
-<span class="n">prj</span><span class="o">.</span><span class="n">add_files</span><span class="p">(</span><span class="s1">&#39;hdl/examples_pkg.vhdl&#39;</span><span class="p">,</span> <span class="n">library</span><span class="o">=</span><span class="s1">&#39;examples&#39;</span><span class="p">)</span>
-<span class="n">prj</span><span class="o">.</span><span class="n">add_files</span><span class="p">(</span><span class="s1">&#39;hdl/top.vhdl&#39;</span><span class="p">)</span>
+<p>HDL source files are added using one of the following methods:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">add_vhdl</span><span class="p">(</span><span class="s1">&#39;PATH_TO_FILES_GLOB_COMPATIBLE&#39;</span><span class="p">,</span> <span class="s1">&#39;OPTIONAL_LIBNAME&#39;</span><span class="p">)</span>
+<span class="n">prj</span><span class="o">.</span><span class="n">add_vlog</span><span class="p">(</span><span class="s1">&#39;PATH_TO_FILES_GLOB_COMPATIBLE&#39;</span><span class="p">)</span>
+<span class="n">prj</span><span class="o">.</span><span class="n">add_slog</span><span class="p">(</span><span class="s1">&#39;PATH_TO_FILES_GLOB_COMPATIBLE&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>In these methods, you provide a path to the files. The path can include wildcards (like <cite>*.vhdl</cite>), allowing you to match multiple files at once.</p>
+<p>For <cite>add_vhdl</cite>, you can also optionally specify a library name where the files will be included.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>In some cases, the files order could be a problem, so take into account to
-change the order if needed.</p></li>
-<li><p>If a file seems unsupported, you can always use the <code class="docutils literal notranslate"><span class="pre">prefile</span></code> or
-<code class="docutils literal notranslate"><span class="pre">project</span></code> <a class="reference internal" href="advanced.html#hooks"><span class="std std-ref">Hooks</span></a>.</p></li>
-<li><p>In case of Verilog, <code class="docutils literal notranslate"><span class="pre">add_vlog_include</span></code> can be used to specify where to
-search for included files.</p></li>
-</ul>
+<blockquote>
+<div><p>Internally, the methods that specify files use <a class="reference external" href="https://docs.python.org/3/library/glob.html">glob</a> to support wildcards and <a class="reference external" href="https://docs.python.org/3/library/pathlib.html">Path</a> to obtain absolute paths.</p>
+</div></blockquote>
 </div>
-<p>Finally, the top-level must be specified:</p>
+<p>Generics/parameters can be specified with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">add_param</span><span class="p">(</span><span class="s1">&#39;PARAMNAME&#39;</span><span class="p">,</span> <span class="s1">&#39;PARAMVALUE&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For Verilog and SystemVerilog, the following methods are also available:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">add_include</span><span class="p">(</span><span class="s1">&#39;PATH_TO_A_DIRECTORY&#39;</span><span class="p">)</span>
+<span class="n">prj</span><span class="o">.</span><span class="n">add_define</span><span class="p">(</span><span class="s1">&#39;DEFNAME&#39;</span><span class="p">,</span> <span class="s1">&#39;DEFVALUE&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Constraint source files are included using the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">add_cons</span><span class="p">(</span><span class="s1">&#39;PATH_TO_FILES_GLOB_COMPATIBLE&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, the top-level can be specified as follows:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">set_top</span><span class="p">(</span><span class="s1">&#39;Top&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>A relative path to a valid VHDL/Verilog file is also accepted by <code class="docutils literal notranslate"><span class="pre">set_top</span></code>,
-to automatically extract the top-level name.</p>
+<p>The order of the methods described in this section is not significant.
+They will be arranged in the required order by the underlying template.</p>
 </div>
 </section>
-<section id="project-generation">
-<h2>Project generation<a class="headerlink" href="#project-generation" title="Link to this heading"></a></h2>
-<p>Next step if to generate the project. In the most basic form, you can run the
-following to get a bitstream:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<section id="bitstream-generation">
+<h2>Bitstream generation<a class="headerlink" href="#bitstream-generation" title="Link to this heading"></a></h2>
+<p>After configuring the project, you can run the following to generate a bitstream:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">make</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Additionally, you can specify which task to perform:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="s1">&#39;syn&#39;</span><span class="p">)</span>
+<p>By default, this method performs <em>project creation</em>, <em>synthesis</em>, <em>place and route</em>, and <em>bitstream generation</em>.
+However, you can optionally specify both the initial and final stages, as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s1">&#39;syn&#39;</span><span class="p">,</span> <span class="n">last</span><span class="o">=</span><span class="s1">&#39;par&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The valid values are:</p>
+<p>Valid values are:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">prj</span></code>: to generate only a project file (only supported for privative tools)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">syn</span></code>: to performs synthesis.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">imp</span></code>: to performs synthesis and implementation (place and route,
-optimizations and static timming analysis when available).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">bit</span></code>: (default) to perform synthesis, implementation and bitstream generation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cfg</span></code>: generates the project file</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">syn</span></code>: performs synthesis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">par</span></code>: performs place and route</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bit</span></code>: performs bitstream generation</p></li>
 </ul>
 </div>
-</section>
-<section id="bitstream-transfer">
-<h2>Bitstream transfer<a class="headerlink" href="#bitstream-transfer" title="Link to this heading"></a></h2>
-<p>This method is in charge of run the needed tool to transfer a bitstream to a
-device (commonly an FPGA, but memories are also supported in some cases).
-It has up to four main optional parameters:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">transfer</span><span class="p">(</span><span class="n">devtype</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">part</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Where <em>devtype</em> is <code class="docutils literal notranslate"><span class="pre">fpga</span></code> by default but can also be <code class="docutils literal notranslate"><span class="pre">spi</span></code>, <code class="docutils literal notranslate"><span class="pre">bpi</span></code>, etc, if
-supported. An integer number can be used to specify the <em>position</em> (1) in the
-Jtag chain. When a memory is used as <em>devtype</em>, the <em>part</em> name and the
-<em>width</em> in bits must be also specified.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>In Xilinx, <cite>spi</cite> and <cite>bpi</cite> memories are out of the Jtag chain and are
-programmed through the FPGA. You must specify the FPGA <em>position</em>.</p></li>
-<li><p>In a Linux systems, you need to have permission over the device
-(udev rule, be a part of a group, etc).</p></li>
-</ul>
+<p>After executing this method, you will find the file <cite>&lt;TOOL&gt;.tcl</cite> (or <cite>sh</cite> in some cases) in the output directory.
+For debugging purposes, if things do not work as expected, you can review this file.</p>
 </div>
 </section>
-<section id="logging-capabilities">
-<h2>Logging capabilities<a class="headerlink" href="#logging-capabilities" title="Link to this heading"></a></h2>
-<p>PyFPGA uses the <a class="reference external" href="https://docs.python.org/3/library/logging.html">logging</a>
-module, with a <em>NULL</em> handler and the <em>INFO</em> level by default.
-Messages can be enabled with:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
-
-<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
+<section id="bitstream-programming">
+<h2>Bitstream programming<a class="headerlink" href="#bitstream-programming" title="Link to this heading"></a></h2>
+<p>The final step is programming the FPGA:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">prog</span><span class="p">(</span><span class="s1">&#39;BITSTREAM&#39;</span><span class="p">,</span> <span class="s1">&#39;POSITION&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>You can enable <em>DEBUG</em> messages adding:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;fpga.project&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span>
+<p>Both <cite>BITSTREAM</cite> and <cite>POSITION</cite> are optional.
+If <cite>BITSTREAM</cite> is not specified, PyFPGA will attempt to discover it based on project information.
+The <cite>POSITION</cite> parameter is not always required (depends on the tool being used).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>After executing this method, you will find the file <cite>&lt;TOOL&gt;prog.tcl</cite> (or <cite>sh</cite> in some cases) in the output directory.
+For debugging purposes, if things do not work as expected, you can review this file.</p>
+</div>
+</section>
+<section id="debugging">
+<h2>Debugging<a class="headerlink" href="#debugging" title="Link to this heading"></a></h2>
+<p>Under the hood, <a class="reference external" href="https://docs.python.org/3/library/logging.html">logging</a> is employed. To enable debug messages, you can use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">set_debug</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>

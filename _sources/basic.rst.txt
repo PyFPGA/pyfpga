@@ -1,148 +1,133 @@
 Basic usage
 ===========
 
-.. ATTENTION::
+Project Configuration
+---------------------
 
-  (2024-08-08) To be updated.
-
-Project Creation
-----------------
-
-The first steps are import the module and instantiate the ``Project`` *class*,
-specifying the *TOOL* to use and, optionally, a *PROJECT NAME* (the *tool*
-name is used when *no name* is provided).
+The first steps involve importing the necessary module to support the desired tool and instantiating the corresponding *class*:
 
 .. code-block:: python
 
-   from fpga.project import Project
+   from pyfpga.vivado import Vivado
 
-   prj = Project('vivado', 'projectName')
+   prj = Vivado('PRJNAME', odir='OUTDIR')
 
-By default, the directory where the project is generated is called ``build``
-and is located in the same place that the script, but another name and location
-can be specified.
+In the example, we are using Vivado, specifying the optional parameter *project name* (*tool name* if omitted) and *output directory* (*results* by default).
 
-.. code-block:: python
-
-   prj.set_outdir('../temp')
-
-Next, the FPGA part would be specified:
+Next step is to specify the target FPGA device:
 
 .. code-block:: python
 
    prj.set_part('xc7k160t-3-fbg484')
 
-.. NOTE::
+.. note::
 
-  You can use the default FPGA part for a quick test or make a lazy comparison
-  between tools, but generally, you will want to specify a particular one.
-  Examples about how to specify a part according the tool, are (default values
-  when ``set_part`` is not employed):
+  Default parts are provided for each supported tool.
 
-    * **Ise:** ``xc7k160t-3-fbg484`` (*device-speed-package*)
-    * **Libero:** ``mpf100t-1-fcg484`` (*device-speed-package*)
-    * **Openflow:** ``hx8k-ct256`` (*device-package*)
-    * **Quartus:** ``10cl120zf780i8g`` (*part*)
-    * **Vivado:** ``xc7k160t-3-fbg484`` (*part*)
-
-The files addition method allows specifying one or more HDL or constraint files
-(also block designs in case of Vivado).
-It uses ``glob`` internally, which makes available the use of wildcards.
-The path to their location must be relative to the Python script, and there
-are optional parameters to indicate the file type (``vhdl``, ``verilog``,
-``constraint`` or ``design``), which is automatically detected based on the
-file extension, and if it is a member of a VHDL package.
+HDL source files are added using one of the following methods:
 
 .. code-block:: python
 
-   prj.add_files('hdl/blinking.vhdl', library='examples')
-   prj.add_files('hdl/examples_pkg.vhdl', library='examples')
-   prj.add_files('hdl/top.vhdl')
+   prj.add_vhdl('PATH_TO_FILES_GLOB_COMPATIBLE', 'OPTIONAL_LIBNAME')
+   prj.add_vlog('PATH_TO_FILES_GLOB_COMPATIBLE')
+   prj.add_slog('PATH_TO_FILES_GLOB_COMPATIBLE')
 
-.. NOTE::
+In these methods, you provide a path to the files. The path can include wildcards (like `*.vhdl`), allowing you to match multiple files at once.
 
-  * In some cases, the files order could be a problem, so take into account to
-    change the order if needed.
-  * If a file seems unsupported, you can always use the ``prefile`` or
-    ``project`` :ref:`hooks`.
-  * In case of Verilog, ``add_vlog_include`` can be used to specify where to
-    search for included files.
+For `add_vhdl`, you can also optionally specify a library name where the files will be included.
 
-Finally, the top-level must be specified:
+.. note::
+
+   Internally, the methods that specify files use `glob`_ to support wildcards and `Path`_ to obtain absolute paths.
+
+  .. _glob: https://docs.python.org/3/library/glob.html
+  .. _Path: https://docs.python.org/3/library/pathlib.html
+
+Generics/parameters can be specified with:
+
+.. code-block:: python
+
+   prj.add_param('PARAMNAME', 'PARAMVALUE')
+
+For Verilog and SystemVerilog, the following methods are also available:
+
+.. code-block:: python
+
+   prj.add_include('PATH_TO_A_DIRECTORY')
+   prj.add_define('DEFNAME', 'DEFVALUE')
+
+Constraint source files are included using the following:
+
+.. code-block:: python
+
+   prj.add_cons('PATH_TO_FILES_GLOB_COMPATIBLE')
+
+Finally, the top-level can be specified as follows:
 
 .. code-block:: python
 
    prj.set_top('Top')
 
-.. NOTE::
+.. note::
 
-  A relative path to a valid VHDL/Verilog file is also accepted by ``set_top``,
-  to automatically extract the top-level name.
+   The order of the methods described in this section is not significant.
+   They will be arranged in the required order by the underlying template.
 
-Project generation
-------------------
-
-Next step if to generate the project. In the most basic form, you can run the
-following to get a bitstream:
-
-.. code-block:: python
-
-   prj.generate()
-
-Additionally, you can specify which task to perform:
-
-.. code-block:: python
-
-   prj.generate('syn')
-
-.. NOTE::
-
-  The valid values are:
-
-  * ``prj``: to generate only a project file (only supported for privative tools)
-  * ``syn``: to performs synthesis.
-  * ``imp``: to performs synthesis and implementation (place and route,
-    optimizations and static timming analysis when available).
-  * ``bit``: (default) to perform synthesis, implementation and bitstream generation.
-
-Bitstream transfer
-------------------
-
-This method is in charge of run the needed tool to transfer a bitstream to a
-device (commonly an FPGA, but memories are also supported in some cases).
-It has up to four main optional parameters:
-
-.. code-block:: python
-
-   prj.transfer(devtype, position, part, width)
-
-Where *devtype* is ``fpga`` by default but can also be ``spi``, ``bpi``, etc, if
-supported. An integer number can be used to specify the *position* (1) in the
-Jtag chain. When a memory is used as *devtype*, the *part* name and the
-*width* in bits must be also specified.
-
-.. NOTE::
-
-  * In Xilinx, `spi` and `bpi` memories are out of the Jtag chain and are
-    programmed through the FPGA. You must specify the FPGA *position*.
-  * In a Linux systems, you need to have permission over the device
-    (udev rule, be a part of a group, etc).
-
-Logging capabilities
+Bitstream generation
 --------------------
 
-PyFPGA uses the `logging <https://docs.python.org/3/library/logging.html>`_
-module, with a *NULL* handler and the *INFO* level by default.
-Messages can be enabled with:
+After configuring the project, you can run the following to generate a bitstream:
 
 .. code-block:: python
 
-   import logging
+   prj.make()
 
-   logging.basicConfig()
-
-You can enable *DEBUG* messages adding:
+By default, this method performs *project creation*, *synthesis*, *place and route*, and *bitstream generation*.
+However, you can optionally specify both the initial and final stages, as follows:
 
 .. code-block:: python
 
-   logging.getLogger('fpga.project').level = logging.DEBUG
+   prj.make(first='syn', last='par')
+
+.. note::
+
+   Valid values are:
+
+   * ``cfg``: generates the project file
+   * ``syn``: performs synthesis
+   * ``par``: performs place and route
+   * ``bit``: performs bitstream generation
+
+.. note::
+
+   After executing this method, you will find the file `<TOOL>.tcl` (or `sh` in some cases) in the output directory.
+   For debugging purposes, if things do not work as expected, you can review this file.
+
+Bitstream programming
+---------------------
+
+The final step is programming the FPGA:
+
+.. code-block:: python
+
+   prj.prog('BITSTREAM', 'POSITION')
+
+Both `BITSTREAM` and `POSITION` are optional.
+If `BITSTREAM` is not specified, PyFPGA will attempt to discover it based on project information.
+The `POSITION` parameter is not always required (depends on the tool being used).
+
+.. note::
+
+   After executing this method, you will find the file `<TOOL>prog.tcl` (or `sh` in some cases) in the output directory.
+   For debugging purposes, if things do not work as expected, you can review this file.
+
+Debugging
+---------
+
+Under the hood, `logging`_ is employed. To enable debug messages, you can use:
+
+.. code-block:: python
+
+   prj.set_debug()
+
+.. _logging: https://docs.python.org/3/library/logging.html
