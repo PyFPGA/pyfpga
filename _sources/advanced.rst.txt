@@ -1,161 +1,61 @@
 Advanced usage
 ==============
 
-.. ATTENTION::
+PyFPGA offers advanced features for more customized and flexible control over FPGA project management.
+This section covers two key advanced features:
 
-  (2024-05-31) To be updated.
+1. **Hooks**: These are points in the code where you can insert custom code to extend or modify the behavior of the tool.
+Hooks provide a way to integrate additional functionality or perform specific actions at predefined stages of the project lifecycle.
 
-Multi project managment
------------------------
-
-.. code-block:: python
-
-   PROJECTS = {
-       '<NAME1>': Project(
-           '<TOOLNAME>',
-           '<PROJECTNAME>',
-           {
-               'outdir': '<DIRNAME>',
-               'part': '<PARTNAME>'
-               'paths': [
-                   '<PATHNAME1>',
-                   ...
-                   '<PATHNAMEn>'
-               ],
-               'vhdl': [
-                   ['<FILENAME1>', '<LIBRARYNAME1>'],
-                   '<FILENAME2>',
-                   ...
-                   '<FILENAMEn>'
-               ],
-               'verilog': [
-                   '<FILENAME1>',
-                   ...
-                   '<FILENAMEn>'
-               ],
-               'constraint': [
-                   '<FILENAME1>',
-                   ...
-                   '<FILENAMEn>'
-               ],
-               'params': {
-                   '<PARAMNAME1>': '<VALUE1>',
-                   ...
-                   '<PARAMNAMEn>': '<VALUEn>'
-               },
-               'top': '<TOPNAME>'
-           }
-       )
-       '<NAME2>': Project(
-           ...
-       )
-   }
-
-.. _hooks:
+2. **Options**: This feature allows you to specify additional options to fine-tune the tool's behavior.
+Options provide greater control over the tool's operation and enable you to customize the processing according to your specific requirements.
 
 Hooks
 -----
 
-The following table depicts the parts of the *Project Creation* and the
-*Design Flow* internally performed by PyFPGA.
+Hooks allow you to insert custom code at specific stages of the project lifecycle. The available hooks are:
 
-+--------------------------+----------------------+
-| Project Creation         | Design Flow          |
-+==========================+======================+
-| Part specification       | **preflow** hook     |
-+--------------------------+----------------------+
-| **prefile** hook         | Synthesis            |
-+--------------------------+----------------------+
-| Files addition           | **postsyn** hook     |
-+--------------------------+----------------------+
-| Top specification        | Place and Route      |
-+--------------------------+----------------------+
-| Parameters specification | **postpar** hook     |
-+--------------------------+----------------------+
-| **project** hook         | Bitstream generation |
-+--------------------------+----------------------+
-|                          | **postbit** hook     |
-+--------------------------+----------------------+
++---------+---------------------------------------------------------------------------------------------+
+| Stage   | Description                                                                                 |
++=========+=============================================================================================+
+| precfg  | Code inserted after project creation and before files inclusion (e.g., specify HDL version) |
++---------+---------------------------------------------------------------------------------------------+
+| postcfg | Code inserted after files inclusion (e.g., additional project configurations)               |
++---------+---------------------------------------------------------------------------------------------+
+| presyn  | Code inserted before synthesis (e.g., synthesis-specific options)                           |
++---------+---------------------------------------------------------------------------------------------+
+| postsyn | Code inserted after synthesis (e.g., report generation)                                     |
++---------+---------------------------------------------------------------------------------------------+
+| prepar  | Code inserted before place and route (e.g., place-and-route-specific options)               |
++---------+---------------------------------------------------------------------------------------------+
+| postpar | Code inserted after place and route (e.g., report generation)                               |
++---------+---------------------------------------------------------------------------------------------+
+| prebit  | Code inserted before bitstream generation (e.g., bitstream-specific options)                |
++---------+---------------------------------------------------------------------------------------------+
+| postbit | Code inserted after bitstream generation (e.g., report generation)                          |
++---------+---------------------------------------------------------------------------------------------+
 
-If the provided API if not enough or suitable for your project, you can
-specify additional *hooks* in different parts of the flow, using:
-
-.. code-block:: python
-
-   prj.add_hook(hook, phase)
-
-.. NOTE::
-
-  * Valid vaues for *phase* are ``prefile``, ``project`` (default), ``preflow``,
-    ``postsyn``, ``postpar`` and ``postbit``.
-  * The *hook* string must be a valid command (supported by the used tool).
-  * If more than one *hook* is needed in the same *phase*, you can call this
-    method several times (the commands will be executed in order).
-
-Parameters
-----------
-
-The generics/parameters of the project can be optionally changed with:
+You can specify hooks for a specific stage either line-by-line:
 
 .. code-block:: python
 
-   prj.add_param('param1', value1)
-   ...
-   prj.add_param('paramN', valueN)
+   prj.add_hook('presyn', 'COMMAND1')
+   prj.add_hook('presyn', 'COMMAND2')
+   prj.add_hook('presyn', 'COMMAND3')
 
-Generate options
-----------------
-
-The method ``generate`` (previously seen at the end of
-[Basic usage](#basic-usage) section) has optional parameters:
+Or in a multi-line format:
 
 .. code-block:: python
 
-   prj.generate(to_task, from_task, capture)
+   prj.add_hook('presyn', """
+   COMMAND1
+   COMMAND2
+   COMMAND3
+   """)
 
-With *to_task* and *from_taks* (with default values ``bit`` and ``prj``),
-you are selecting the first and last task to execute when `generate` is
-invoqued. The order and available tasks are ``prj``, ``syn``, ``par`` and ``bit``.
-It can be useful in at least two cases:
+Options
+-------
 
-* Maybe you created a file project with the GUI of the Tool and only want to
-  run the Design Flow, so you can use: ``generate(to_task='bit', from_task='syn')``
+.. ATTENTION::
 
-* Despite that a method to insert particular commands is provided, you would
-  want to perform some processing from Python between tasks, using something
-  like:
-
-.. code-block:: python
-
-   prj.generate(to_task='syn', from_task='prj')
-   #Some other Python commands here
-   prj.generate(to_task='bit', from_task='syn')
-
-In case of *capture*, it is useful to catch execution messages to be
-post-processed or saved to a file:
-
-.. code-block:: python
-
-   result = prj.generate(capture=True)
-   print(result)
-
-In case of *capture*, it is useful to catch execution messages to be
-post-processed or saved to a file.
-
-Exceptions
-----------
-
-Finally, you must run the bitstream generation or its transfer. Both of them
-are time-consuming tasks, performed by a backend tool, which could fail.
-Exceptions are raised in such cases, that should be ideally caught to avoid
-abnormal program termination.
-
-.. code-block:: python
-
-   try:
-       prj.generate()
-       prj.transfer()
-   except Exception as e:
-       print('{} ({})'.format(type(e).__name__, e))
-
-And wait for the backend Tool to accomplish its task.
+   WIP feature.
