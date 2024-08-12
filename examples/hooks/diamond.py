@@ -47,6 +47,6 @@ prj.add_define('DEFINE2', '1')
 prj.set_top('Top')
 
 for hook_name, hook in hooks.items():
-	prj.add_hook('postpar', hook)
+    prj.add_hook('postpar', hook)
 
 prj.make()
