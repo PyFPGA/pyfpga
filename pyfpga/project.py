@@ -200,6 +200,10 @@ class Project:
             raise ValueError('Invalid stage.')
         self.data.setdefault('hooks', {}).setdefault(stage, []).append(hook)
 
+    def set_debug(self):
+        """Enables debug messages."""
+        self.logger.setLevel(logging.DEBUG)
+
     def make(self, first='cfg', last='bit'):
         """Run the underlying tool.
 
