@@ -80,6 +80,44 @@
              
   <section id="extending">
 <h1>Extending<a class="headerlink" href="#extending" title="Link to this heading"></a></h1>
+<ol class="arabic simple">
+<li><p>Add support for the new tool:</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pyfpga</span><span class="o">/</span><span class="n">templates</span><span class="o">/&lt;</span><span class="n">NEWTOOL</span><span class="o">&gt;.</span><span class="n">jinja</span>
+<span class="n">pyfpga</span><span class="o">/</span><span class="n">templates</span><span class="o">/&lt;</span><span class="n">NEWTOOL</span><span class="o">&gt;-</span><span class="n">prog</span><span class="o">.</span><span class="n">jinja</span>
+<span class="n">pyfpga</span><span class="o">/&lt;</span><span class="n">NEWTOOL</span><span class="o">&gt;.</span><span class="n">py</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Include the new tool on Factory:</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pyfpga</span><span class="o">/</span><span class="n">factory</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Add tests and a tool mock-up:</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tests</span><span class="o">/</span><span class="n">test_tools</span><span class="o">.</span><span class="n">py</span>
+<span class="n">tests</span><span class="o">/</span><span class="n">mocks</span><span class="o">/&lt;</span><span class="n">NEWTOOL_EXECUTABLE</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Updated the project’s documentation:</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">README</span><span class="o">.</span><span class="n">md</span>
+<span class="n">docs</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>[OPTIONAL] Add examples:</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">examples</span><span class="o">/</span><span class="n">sources</span><span class="o">/</span><span class="n">cons</span><span class="o">/&lt;</span><span class="n">NEWBOARD</span><span class="o">&gt;/</span><span class="n">timing</span><span class="o">.&lt;</span><span class="n">EXT</span><span class="o">&gt;</span>
+<span class="n">examples</span><span class="o">/</span><span class="n">sources</span><span class="o">/</span><span class="n">cons</span><span class="o">/&lt;</span><span class="n">NEWBOARD</span><span class="o">&gt;/</span><span class="n">clk</span><span class="o">.&lt;</span><span class="n">EXT</span><span class="o">&gt;</span>
+<span class="n">examples</span><span class="o">/</span><span class="n">sources</span><span class="o">/</span><span class="n">cons</span><span class="o">/&lt;</span><span class="n">NEWBOARD</span><span class="o">&gt;/</span><span class="n">led</span><span class="o">.&lt;</span><span class="n">EXT</span><span class="o">&gt;</span>
+<span class="n">examples</span><span class="o">/</span><span class="n">projects</span><span class="o">/&lt;</span><span class="n">NEWTOOL</span><span class="o">&gt;.</span><span class="n">py</span>
+<span class="n">examples</span><span class="o">/</span><span class="n">hooks</span><span class="o">/&lt;</span><span class="n">NEWTOOL</span><span class="o">&gt;.</span><span class="n">py</span>
+</pre></div>
+</div>
 </section>
 
 
