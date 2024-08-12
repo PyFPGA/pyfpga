@@ -1,5 +1,6 @@
 # PyFPGA [![License](https://img.shields.io/badge/License-GPL--3.0-darkgreen?style=flat-square)](LICENSE)
 
+![Diamond](https://img.shields.io/badge/Diamond-3.13-blue.svg?style=flat-square)
 ![ISE](https://img.shields.io/badge/ISE-14.7-blue.svg?style=flat-square)
 ![Libero](https://img.shields.io/badge/Libero--Soc-2024.1-blue.svg?style=flat-square)
 ![Quartus](https://img.shields.io/badge/Quartus--Prime-23.1-blue.svg?style=flat-square)
