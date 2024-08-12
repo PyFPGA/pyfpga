@@ -33,9 +33,8 @@ prj.set_part('LFXP2-5E-5TN144C')
 prj.add_param('FREQ', '50000000')
 prj.add_param('SECS', '1')
 
-prj.add_cons('../sources/cons/brevia2/clk.lpf', 'syn')
-prj.add_cons('../sources/cons/brevia2/clk.lpf', 'par')
-prj.add_cons('../sources/cons/brevia2/io.lpf', 'par')
+prj.add_cons('../sources/cons/brevia2/clk.lpf')
+prj.add_cons('../sources/cons/brevia2/led.lpf')
 
 prj.add_include('../sources/vlog/include1')
 prj.add_include('../sources/vlog/include2')
