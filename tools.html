@@ -51,7 +51,12 @@
 <li class="toctree-l1"><a class="reference internal" href="helpers.html">Helpers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Tools</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#detailed-support">Detailed support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#diamond">Diamond</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ise">ISE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#libero">Libero</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#openflow">Openflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quartus">Quartus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vivado">Vivado</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="internals.html">Internals</a></li>
@@ -84,273 +89,133 @@
              
   <section id="tools">
 <h1>Tools<a class="headerlink" href="#tools" title="Link to this heading"></a></h1>
-<table class="docutils align-default">
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Default PyFPGA’s parts per tool</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
 <thead>
-<tr class="row-odd"><th class="head"><p>Tools</p></th>
+<tr class="row-odd"><th class="head"><p>Tool</p></th>
 <th class="head"><p>Vendor</p></th>
-<th class="head"><p>Version</p></th>
-<th class="head"><p>Tcl</p></th>
-<th class="head"><p>Comment</p></th>
+<th class="head"><p>Default device</p></th>
+<th class="head"><p>Name format</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>ISE</p></td>
+<tr class="row-even"><td><p>Diamond</p></td>
+<td><p>Lattice</p></td>
+<td><p>LFXP2-5E-5TN144C</p></td>
+<td><p>device-speed-package</p></td>
+</tr>
+<tr class="row-odd"><td><p>ISE</p></td>
 <td><p>Xilinx</p></td>
-<td><p>14.7</p></td>
-<td><p>8.4</p></td>
-<td><p>Discontinued in 2013</p></td>
+<td><p>XC7K160T-3-FBG484</p></td>
+<td><p>device-speed-package</p></td>
 </tr>
-<tr class="row-odd"><td><p>Libero-SoC</p></td>
-<td><p>Microsemi</p></td>
-<td><p>2024.1</p></td>
-<td><p>8.5</p></td>
-<td><p>Important changes in version 12.0 (2019)</p></td>
+<tr class="row-even"><td><p>Libero</p></td>
+<td><p>Microchip/Microsemi</p></td>
+<td><p>MPF100T-1-FCG484</p></td>
+<td><p>device-speed-package</p></td>
 </tr>
-<tr class="row-even"><td><p>Openflow</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<tr class="row-odd"><td><p>Openflow</p></td>
+<td><p>FLOSS</p></td>
+<td><p>HX8K-CT256</p></td>
+<td><p>device-package</p></td>
 </tr>
-<tr class="row-odd"><td><p>Quartus Prime</p></td>
-<td><p>Intel</p></td>
-<td><p>23.1</p></td>
-<td><p>8.6</p></td>
-<td><p>Known as Quartus II until version 15.0 (2015)</p></td>
+<tr class="row-even"><td><p>Quartus</p></td>
+<td><p>Intel/Altera</p></td>
+<td><p>10M50SCE144I7G</p></td>
+<td><p>part</p></td>
 </tr>
-<tr class="row-even"><td><p>Vivado</p></td>
-<td><p>Xilinx</p></td>
-<td><p>2022.1</p></td>
-<td><p>8.5</p></td>
-<td><p>Introduced in 2012, it superseded ISE</p></td>
+<tr class="row-odd"><td><p>Vivado</p></td>
+<td><p>AMD/Xilinx</p></td>
+<td><p>XC7K160T-3-FBG484</p></td>
+<td><p>device-speed-package</p></td>
 </tr>
 </tbody>
 </table>
+<section id="diamond">
+<h2>Diamond<a class="headerlink" href="#diamond" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://www.latticesemi.com/latticediamond">Diamond downloads</a></p>
+<p>Diamond is the previous generation EDA tool from Lattice.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyfpga.diamond</span> <span class="kn">import</span> <span class="n">Diamond</span>
+
+<span class="n">prj</span> <span class="o">=</span> <span class="n">Diamond</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="ise">
+<h2>ISE<a class="headerlink" href="#ise" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools/archive-ise.html">ISE downloads</a></p>
+<p>ISE (<em>Integrated Software Environment</em>) is the previous Xilinx’s EDA, superseded by Vivado.
+The last version is ISE 14.7, launched in October 2013.
+It supports devices starting from Spartan 3/Virtex 4 until some of the first members of the 7 series (all the 7 series and above are supported by Vivado).
+Previous Spartan/Virtex devices were supported until version 10.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>ISE supports Verilog 2001 and VHDL 1993, but not SystemVerilog.</p>
+</div>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyfpga.ise</span> <span class="kn">import</span> <span class="n">Ise</span>
+
+<span class="n">prj</span> <span class="o">=</span> <span class="n">Ise</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="libero">
+<h2>Libero<a class="headerlink" href="#libero" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://www.microchip.com/en-us/products/fpgas-and-plds/fpga-and-soc-design-tools/fpga/libero-software-later-versions">Libero downloads</a></p>
+<p>Libero-SoC (Microsemi, acquired by Microchip in 2018) is the evolution of Libero-IDE (Actel, acquired by Microsemi in 2010).
+PyFPGA supports Libero-SoC starting from 12.0, which supports most modern families.
+For other devices, Libero-SoC 11.9 or Libero-IDE v9.2 are needed, but these versions are not supported by PyFPGA.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyfpga.libero</span> <span class="kn">import</span> <span class="n">Libero</span>
+
+<span class="n">prj</span> <span class="o">=</span> <span class="n">Libero</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="openflow">
+<h2>Openflow<a class="headerlink" href="#openflow" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://docs.docker.com/engine/install/">Docker downloads</a></p>
+<p>Openflow is the combination of different Free/Libre and Open Source (FLOSS) tools:</p>
 <ul class="simple">
-<li><p>ISE supports devices starting from Spartan 3/Virtex 4 until some first members of the 7 series.
-Previous Spartan/Virtex devices were supported until version 10. Vivado supports devices starting
-from the 7 series.</p></li>
-<li><p>Libero-SoC had a fork for PolarFire devices which was merged in version 12.0 (2019).
-Libero SoC v12.0 and later supports PolarFire, RTG4, SmartFusion2 and IGLOO2 FPGA families.
-Libero SoC v11.9 and earlier are the alternative to work with SmartFusion, IGLOO, ProASIC3 and
-Fusion families.
-Libero IDE v9.2 (2016) was the last version of the previous tool to work with antifuse and older
-flash devices.</p></li>
-<li><p>Since the change from Quartus II to Prime, three editions are available: Pro (for Agilex,
-Stratix 10, Arria 10 and Cyclone GX devices), Standard (for Cyclone 10 LP and earlier devices)
-and Lite (a high-volume low-end subset of the Standard edition).</p></li>
+<li><p>Yosys for synthesis, with ghdl-yosys-plugin for VHDL support.</p></li>
+<li><p>nextpnr in its ice40 and ecp5 versions.</p></li>
+<li><p>Projects icestorm and Trellis.</p></li>
 </ul>
-<section id="detailed-support">
-<h2>Detailed support<a class="headerlink" href="#detailed-support" title="Link to this heading"></a></h2>
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"></th>
-<th class="head"><p>ISE</p></th>
-<th class="head"><p>Libero</p></th>
-<th class="head"><p>Openflow</p></th>
-<th class="head"><p>Quartus</p></th>
-<th class="head"><p>Vivado</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><strong>add_files</strong></p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">vhdl</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">verilog</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">system_verilog</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">constraint</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">block_design</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">NY</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">NY</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">NY</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">NY</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><strong>add_param</strong></p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">boolean</span></code> (<em>VHDL/Verilog</em>)</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">integer</span></code> (<em>VHDL/Verilog</em>)</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">string</span></code> (<em>VHDL/Verilog</em>)</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">real</span></code> (<em>VHDL/Verilog</em>)</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">std_logic</span></code> (<em>VHDL</em>)</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">std_logic_vector</span></code> (<em>VHDL</em>)</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>add_vlog_include</strong></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><strong>add_vlog_define</strong></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBI</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBI</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBI</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBI</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBI</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>set_vhdl_arch</strong></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBI</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBI</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBI</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBI</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TBI</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><strong>generate</strong></p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">prj</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">No</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">syn</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">par</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bit</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>transfer</strong></p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fpga</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">NY</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">spi</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">NY</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">NY</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">NY</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">NY</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bpi</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">NY</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">NY</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">NY</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">NY</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">detect</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">NY</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">NY</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">unlock</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">No</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">No</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">No</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">No</span></code></p></td>
-</tr>
-</tbody>
-</table>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Yes</span></code>: already supported</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">No</span></code>: no plans (or unneeded)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">NY</span></code>: Not yet, but maybe someday</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">TBD</span></code>: To Be Defined</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">TBI</span></code>: To Be Implemented</p></li>
-</ul>
+<p>It relies on Docker and fine-grain containers.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>It is currently the only flow not solved using Tcl (it uses docker in a bash script instead).</p>
+</div>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyfpga.openflow</span> <span class="kn">import</span> <span class="n">Openflow</span>
+
+<span class="n">prj</span> <span class="o">=</span> <span class="n">Openflow</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="quartus">
+<h2>Quartus<a class="headerlink" href="#quartus" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://www.intel.com/content/www/us/en/products/details/fpga/development-tools/quartus-prime/resource.html">Quartus downloads</a></p>
+<p>Quartus Prime (Intel) is the continuation of Quartus II (Altera) and is divided into the Pro, Standard, and Lite editions, each supporting different families.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyfpga.quartus</span> <span class="kn">import</span> <span class="n">Quartus</span>
+
+<span class="n">prj</span> <span class="o">=</span> <span class="n">Quartus</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="vivado">
+<h2>Vivado<a class="headerlink" href="#vivado" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://www.xilinx.com/support/download.html">Vivado downloads</a></p>
+<p>Vivado is the current EDA tool from Xilinx, which has superseded ISE and supports the 7 series and above.
+It is included with Vitis, the SDK for embedded applications.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyfpga.vivado</span> <span class="kn">import</span> <span class="n">Vivado</span>
+
+<span class="n">prj</span> <span class="o">=</span> <span class="n">Vivado</span><span class="p">()</span>
+</pre></div>
+</div>
 </section>
 </section>
 
