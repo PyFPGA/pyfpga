@@ -1,14 +1,7 @@
 Advanced usage
 ==============
 
-PyFPGA offers advanced features for more customized and flexible control over FPGA project management.
-This section covers two key advanced features:
-
-1. **Hooks**: These are points in the code where you can insert custom code to extend or modify the behavior of the tool.
-Hooks provide a way to integrate additional functionality or perform specific actions at predefined stages of the project lifecycle.
-
-2. **Options**: This feature allows you to specify additional options to fine-tune the tool's behavior.
-Options provide greater control over the tool's operation and enable you to customize the processing according to your specific requirements.
+The flow implemented by PyFPGA should be sufficient for most cases, but further customizations are possible and discussed in this section.
 
 Hooks
 -----
@@ -56,6 +49,8 @@ Or in a multi-line format:
 Options
 -------
 
+Options allow you to specify additional settings to fine-tune certain commands. The available options are:
+
 .. ATTENTION::
 
-   WIP feature.
+   This feature is WIP.
