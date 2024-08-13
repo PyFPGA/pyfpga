@@ -1,98 +1,144 @@
 Tools
 =====
 
-+---------------+-----------+---------+-----+-----------------------------------------------+
-| Tools         | Vendor    | Version | Tcl | Comment                                       |
-+===============+===========+=========+=====+===============================================+
-| ISE           | Xilinx    | 14.7    | 8.4 | Discontinued in 2013                          |
-+---------------+-----------+---------+-----+-----------------------------------------------+
-| Libero-SoC    | Microsemi | 2024.1  | 8.5 | Important changes in version 12.0 (2019)      |
-+---------------+-----------+---------+-----+-----------------------------------------------+
-| Openflow      |           |         |     |                                               |
-+---------------+-----------+---------+-----+-----------------------------------------------+
-| Quartus Prime | Intel     | 23.1    | 8.6 | Known as Quartus II until version 15.0 (2015) |
-+---------------+-----------+---------+-----+-----------------------------------------------+
-| Vivado        | Xilinx    | 2022.1  | 8.5 | Introduced in 2012, it superseded ISE         |
-+---------------+-----------+---------+-----+-----------------------------------------------+
+.. list-table:: Default PyFPGA's parts per tool
+   :header-rows: 1
 
-* ISE supports devices starting from Spartan 3/Virtex 4 until some first members of the 7 series.
-  Previous Spartan/Virtex devices were supported until version 10. Vivado supports devices starting
-  from the 7 series.
+   * - Tool
+     - Vendor
+     - Default device
+     - Name format
+   * - Diamond
+     - Lattice
+     - LFXP2-5E-5TN144C
+     - device-speed-package
+   * - ISE
+     - Xilinx
+     - XC7K160T-3-FBG484
+     - device-speed-package
+   * - Libero
+     - Microchip/Microsemi
+     - MPF100T-1-FCG484
+     - device-speed-package
+   * - Openflow
+     - FLOSS
+     - HX8K-CT256
+     - device-package
+   * - Quartus
+     - Intel/Altera
+     - 10M50SCE144I7G
+     - part
+   * - Vivado
+     - AMD/Xilinx
+     - XC7K160T-3-FBG484
+     - device-speed-package
 
-* Libero-SoC had a fork for PolarFire devices which was merged in version 12.0 (2019).
-  Libero SoC v12.0 and later supports PolarFire, RTG4, SmartFusion2 and IGLOO2 FPGA families.
-  Libero SoC v11.9 and earlier are the alternative to work with SmartFusion, IGLOO, ProASIC3 and
-  Fusion families.
-  Libero IDE v9.2 (2016) was the last version of the previous tool to work with antifuse and older
-  flash devices.
+Diamond
+-------
 
-* Since the change from Quartus II to Prime, three editions are available: Pro (for Agilex,
-  Stratix 10, Arria 10 and Cyclone GX devices), Standard (for Cyclone 10 LP and earlier devices)
-  and Lite (a high-volume low-end subset of the Standard edition).
+`Diamond downloads <https://www.latticesemi.com/latticediamond>`_
 
-Detailed support
-----------------
+Diamond is the previous generation EDA tool from Lattice.
 
-+------------------------------+---------+----------+------------+-----------+----------+
-|                              | ISE     | Libero   | Openflow   | Quartus   | Vivado   |
-+==============================+=========+==========+============+===========+==========+
-|**add_files**                 |         |          |            |           |          |
-+------------------------------+---------+----------+------------+-----------+----------+
-|``vhdl``                      | ``Yes`` | ``Yes``  | ``Yes``    | ``Yes``   | ``Yes``  |
-+------------------------------+---------+----------+------------+-----------+----------+
-|``verilog``                   | ``Yes`` | ``Yes``  | ``Yes``    | ``Yes``   | ``Yes``  |
-+------------------------------+---------+----------+------------+-----------+----------+
-|``system_verilog``            | ``TBD`` | ``TBD``  | ``TBD``    | ``TBD``   | ``TBD``  |
-+------------------------------+---------+----------+------------+-----------+----------+
-|``constraint``                | ``Yes`` | ``Yes``  | ``Yes``    | ``Yes``   | ``Yes``  |
-+------------------------------+---------+----------+------------+-----------+----------+
-|``block_design``              | ``NY``  | ``NY``   | ``NY``     | ``NY``    | ``Yes``  |
-+------------------------------+---------+----------+------------+-----------+----------+
-|**add_param**                 |         |          |            |           |          |
-+------------------------------+---------+----------+------------+-----------+----------+
-|``boolean`` (*VHDL/Verilog*)  | ``TBD`` | ``TBD``  |``TBD``     | ``TBD``   | ``TBD``  |
-+------------------------------+---------+----------+------------+-----------+----------+
-|``integer`` (*VHDL/Verilog*)  | ``TBD`` | ``TBD``  |``TBD``     | ``TBD``   | ``TBD``  |
-+------------------------------+---------+----------+------------+-----------+----------+
-|``string`` (*VHDL/Verilog*)   | ``TBD`` | ``TBD``  |``TBD``     | ``TBD``   | ``TBD``  |
-+------------------------------+---------+----------+------------+-----------+----------+
-|``real`` (*VHDL/Verilog*)     | ``TBD`` | ``TBD``  |``TBD``     | ``TBD``   | ``TBD``  |
-+------------------------------+---------+----------+------------+-----------+----------+
-|``std_logic`` (*VHDL*)        | ``TBD`` | ``TBD``  |``TBD``     | ``TBD``   | ``TBD``  |
-+------------------------------+---------+----------+------------+-----------+----------+
-|``std_logic_vector`` (*VHDL*) | ``TBD`` | ``TBD``  |``TBD``     | ``TBD``   | ``TBD``  |
-+------------------------------+---------+----------+------------+-----------+----------+
-|**add_vlog_include**          | ``Yes`` | ``Yes``  | ``Yes``    | ``Yes``   | ``Yes``  |
-+------------------------------+---------+----------+------------+-----------+----------+
-|**add_vlog_define**           | ``TBI`` | ``TBI``  | ``TBI``    | ``TBI``   | ``TBI``  |
-+------------------------------+---------+----------+------------+-----------+----------+
-|**set_vhdl_arch**             | ``TBI`` | ``TBI``  | ``TBI``    | ``TBI``   | ``TBI``  |
-+------------------------------+---------+----------+------------+-----------+----------+
-|**generate**                  |         |          |            |           |          |
-+------------------------------+---------+----------+------------+-----------+----------+
-|``prj``                       | ``Yes`` | ``Yes``  | ``No``     | ``Yes``   | ``Yes``  |
-+------------------------------+---------+----------+------------+-----------+----------+
-|``syn``                       | ``Yes`` | ``Yes``  | ``Yes``    | ``Yes``   | ``Yes``  |
-+------------------------------+---------+----------+------------+-----------+----------+
-|``par``                       | ``Yes`` | ``Yes``  | ``Yes``    | ``Yes``   | ``Yes``  |
-+------------------------------+---------+----------+------------+-----------+----------+
-|``bit``                       | ``Yes`` | ``Yes``  | ``Yes``    | ``Yes``   | ``Yes``  |
-+------------------------------+---------+----------+------------+-----------+----------+
-|**transfer**                  |         |          |            |           |          |
-+------------------------------+---------+----------+------------+-----------+----------+
-|``fpga``                      | ``Yes`` | ``NY``   | ``Yes``    | ``Yes``   | ``Yes``  |
-+------------------------------+---------+----------+------------+-----------+----------+
-|``spi``                       | ``Yes`` | ``NY``   | ``NY``     | ``NY``    | ``NY``   |
-+------------------------------+---------+----------+------------+-----------+----------+
-|``bpi``                       | ``Yes`` | ``NY``   | ``NY``     | ``NY``    | ``NY``   |
-+------------------------------+---------+----------+------------+-----------+----------+
-|``detect``                    | ``Yes`` | ``NY``   | ``NY``     | ``Yes``   | ``Yes``  |
-+------------------------------+---------+----------+------------+-----------+----------+
-|``unlock``                    | ``Yes`` | ``No``   | ``No``     | ``No``    | ``No``   |
-+------------------------------+---------+----------+------------+-----------+----------+
+Example:
 
-* ``Yes``: already supported
-* ``No``: no plans (or unneeded)
-* ``NY``: Not yet, but maybe someday
-* ``TBD``: To Be Defined
-* ``TBI``: To Be Implemented
+.. code::
+
+   from pyfpga.diamond import Diamond
+
+   prj = Diamond()
+
+ISE
+---
+
+`ISE downloads <https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools/archive-ise.html>`_
+
+ISE (*Integrated Software Environment*) is the previous Xilinx's EDA, superseded by Vivado.
+The last version is ISE 14.7, launched in October 2013.
+It supports devices starting from Spartan 3/Virtex 4 until some of the first members of the 7 series (all the 7 series and above are supported by Vivado).
+Previous Spartan/Virtex devices were supported until version 10.
+
+.. attention::
+
+   ISE supports Verilog 2001 and VHDL 1993, but not SystemVerilog.
+
+Example:
+
+.. code::
+
+   from pyfpga.ise import Ise
+
+   prj = Ise()
+
+Libero
+------
+
+`Libero downloads <https://www.microchip.com/en-us/products/fpgas-and-plds/fpga-and-soc-design-tools/fpga/libero-software-later-versions>`_
+
+Libero-SoC (Microsemi, acquired by Microchip in 2018) is the evolution of Libero-IDE (Actel, acquired by Microsemi in 2010).
+PyFPGA supports Libero-SoC starting from 12.0, which supports most modern families.
+For other devices, Libero-SoC 11.9 or Libero-IDE v9.2 are needed, but these versions are not supported by PyFPGA.
+
+Example:
+
+.. code::
+
+   from pyfpga.libero import Libero
+
+   prj = Libero()
+
+Openflow
+--------
+
+`Docker downloads <https://docs.docker.com/engine/install/>`_
+
+Openflow is the combination of different Free/Libre and Open Source (FLOSS) tools:
+
+* Yosys for synthesis, with ghdl-yosys-plugin for VHDL support.
+* nextpnr in its ice40 and ecp5 versions.
+* Projects icestorm and Trellis.
+
+It relies on Docker and fine-grain containers.
+
+.. attention::
+
+   It is currently the only flow not solved using Tcl (it uses docker in a bash script instead).
+
+Example:
+
+.. code::
+
+   from pyfpga.openflow import Openflow
+
+   prj = Openflow()
+
+Quartus
+-------
+
+`Quartus downloads <https://www.intel.com/content/www/us/en/products/details/fpga/development-tools/quartus-prime/resource.html>`_
+
+Quartus Prime (Intel) is the continuation of Quartus II (Altera) and is divided into the Pro, Standard, and Lite editions, each supporting different families.
+
+Example:
+
+.. code::
+
+   from pyfpga.quartus import Quartus
+
+   prj = Quartus()
+
+Vivado
+------
+
+`Vivado downloads <https://www.xilinx.com/support/download.html>`_
+
+Vivado is the current EDA tool from Xilinx, which has superseded ISE and supports the 7 series and above.
+It is included with Vitis, the SDK for embedded applications.
+
+Example:
+
+.. code::
+
+   from pyfpga.vivado import Vivado
+
+   prj = Vivado()
