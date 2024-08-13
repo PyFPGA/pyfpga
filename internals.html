@@ -52,7 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tools.html">Tools</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Internals</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#underlying-tool-steps">Underlying tool steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#underlying-steps">Underlying steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#internal-data-structure">Internal data structure</a></li>
 </ul>
 </li>
@@ -85,31 +85,31 @@
              
   <section id="internals">
 <h1>Internals<a class="headerlink" href="#internals" title="Link to this heading"></a></h1>
-<section id="underlying-tool-steps">
-<h2>Underlying tool steps<a class="headerlink" href="#underlying-tool-steps" title="Link to this heading"></a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">create</span> <span class="n">project</span>
-<span class="n">config</span> <span class="n">project</span>
+<section id="underlying-steps">
+<h2>Underlying steps<a class="headerlink" href="#underlying-steps" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">project</span> <span class="n">creation</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span>
+<span class="n">project</span> <span class="n">configuration</span>
 <span class="n">part</span>
-<span class="n">precfg</span> <span class="p">(</span><span class="n">hook</span><span class="p">)</span>
+<span class="n">precfg</span> <span class="n">hook</span>
 <span class="n">params</span>
 <span class="n">defines</span>
 <span class="n">includes</span>
-<span class="n">files</span>
+<span class="n">files</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span>
 <span class="n">top</span>
-<span class="n">postcfg</span> <span class="p">(</span><span class="n">hook</span><span class="p">)</span>
-<span class="n">close</span> <span class="n">project</span>
+<span class="n">postcfg</span> <span class="n">hook</span>
+<span class="n">project</span> <span class="n">close</span>
 
-<span class="nb">open</span> <span class="n">project</span>
-<span class="n">presyn</span> <span class="p">(</span><span class="n">hook</span><span class="p">)</span>
-<span class="n">synthesis</span>
-<span class="n">postsyn</span> <span class="p">(</span><span class="n">hook</span><span class="p">)</span>
-<span class="n">prepar</span> <span class="p">(</span><span class="n">hook</span><span class="p">)</span>
-<span class="n">place_and_route</span>
-<span class="n">postpar</span> <span class="p">(</span><span class="n">hook</span><span class="p">)</span>
-<span class="n">prebit</span> <span class="p">(</span><span class="n">hook</span><span class="p">)</span>
-<span class="n">bitstream</span>
-<span class="n">postbit</span> <span class="p">(</span><span class="n">hook</span><span class="p">)</span>
-<span class="n">close</span> <span class="n">project</span>
+<span class="n">project</span> <span class="nb">open</span>
+<span class="n">presyn</span> <span class="n">hook</span>
+<span class="n">synthesis</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span>
+<span class="n">postsyn</span> <span class="n">hook</span>
+<span class="n">prepar</span> <span class="n">hook</span>
+<span class="n">place_and_route</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span>
+<span class="n">postpar</span> <span class="n">hook</span>
+<span class="n">prebit</span> <span class="n">hook</span>
+<span class="n">bitstream</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span>
+<span class="n">postbit</span> <span class="n">hook</span>
+<span class="n">project</span> <span class="n">close</span>
 </pre></div>
 </div>
 </section>
@@ -148,6 +148,12 @@
         <span class="s1">&#39;postpar&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CMD1&#39;</span><span class="p">,</span> <span class="s1">&#39;CMD2&#39;</span><span class="p">],</span>
         <span class="s1">&#39;prebit&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CMD1&#39;</span><span class="p">,</span> <span class="s1">&#39;CMD2&#39;</span><span class="p">],</span>
         <span class="s1">&#39;postbit&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CMD1&#39;</span><span class="p">,</span> <span class="s1">&#39;CMD2&#39;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;options&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;prj&#39;</span><span class="p">:</span> <span class="s1">&#39;OPTS&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;syn&#39;</span><span class="p">:</span> <span class="s1">&#39;OPTS&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;pre&#39;</span><span class="p">:</span> <span class="s1">&#39;OPTS&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;pre&#39;</span><span class="p">:</span> <span class="s1">&#39;OPTS&#39;</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
