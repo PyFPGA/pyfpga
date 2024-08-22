@@ -25,7 +25,7 @@ prj_src add {% if 'lib' in attr %}-work {{ attr.lib }}{% else %}{% endif %} {{ n
 # Constraints inclusion
 #   Diamond only supports one constraints file, so we need to combine them into the default diamond.lpf.
 #   We can't just do `prj_src add <constraints-file>` multiple times.
-set fileId [open diamond.lpf "w"]
+set fileId [open {{ project }}.lpf "w"]
 {% for name, attr in constraints.items() %}
 set fp [open "{{ name }}" r]
 set file_data [read $fp]
