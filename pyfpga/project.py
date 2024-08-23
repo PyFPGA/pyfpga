@@ -78,7 +78,7 @@ class Project:
             raise NotADirectoryError(path)
         self.data.setdefault('includes', []).append(path.as_posix())
 
-    def _add_file(self, pathname, hdl=None, lib=None):
+    def _add_file(self, pathname, hdl=None, lib=None, options=None):
         files = glob.glob(pathname, recursive=True)
         if len(files) == 0:
             raise FileNotFoundError(pathname)
@@ -89,45 +89,55 @@ class Project:
                 attr['hdl'] = hdl
             if lib:
                 attr['lib'] = lib
+            if options:
+                attr['opt'] = options
             self.data.setdefault('files', {})[path.as_posix()] = attr
 
-    def add_slog(self, pathname):
+    def add_slog(self, pathname, options=None):
         """Add System Verilog file/s.
 
         :param pathname: path to a SV file (glob compliant)
         :type pathname: str
+        :param options: extra options for the underlying command
+        :type options: str, optional
         :raises FileNotFoundError: when pathname is not found
         """
         self.logger.debug('Executing add_slog')
-        self._add_file(pathname, 'slog')
+        self._add_file(pathname, 'slog', options)
 
-    def add_vhdl(self, pathname, lib=None):
+    def add_vhdl(self, pathname, lib=None, options=None):
         """Add VHDL file/s.
 
         :param pathname: path to a SV file (glob compliant)
         :type pathname: str
         :param lib: VHDL library name
         :type lib: str, optional
+        :param options: extra options for the underlying command
+        :type options: str, optional
         :raises FileNotFoundError: when pathname is not found
         """
         self.logger.debug('Executing add_vhdl')
-        self._add_file(pathname, 'vhdl', lib)
+        self._add_file(pathname, 'vhdl', lib, options)
 
-    def add_vlog(self, pathname):
+    def add_vlog(self, pathname, options=None):
         """Add Verilog file/s.
 
         :param pathname: path to a SV file (glob compliant)
         :type pathname: str
+        :param options: extra options for the underlying command
+        :type options: str, optional
         :raises FileNotFoundError: when pathname is not found
         """
         self.logger.debug('Executing add_vlog')
-        self._add_file(pathname, 'vlog')
+        self._add_file(pathname, 'vlog', options)
 
-    def add_cons(self, path):
+    def add_cons(self, path, options=None):
         """Add a constraint file.
 
-        :param pathname: path of a file
+        :param pathname: path to a constraint file
         :type pathname: str
+        :param options: extra options for the underlying command
+        :type options: str, optional
         :raises FileNotFoundError: if path is not found
         """
         self.logger.debug('Executing add_cons')
@@ -135,6 +145,8 @@ class Project:
         if not path.is_file():
             raise FileNotFoundError(path)
         attr = {}
+        if options:
+            attr['opt'] = options
         self.data.setdefault('constraints', {})[path.as_posix()] = attr
 
     def add_param(self, name, value):
@@ -199,6 +211,23 @@ class Project:
         if stage not in stages:
             raise ValueError('Invalid stage.')
         self.data.setdefault('hooks', {}).setdefault(stage, []).append(hook)
+
+    def add_options(self, command, options):
+        """Add options for the specified underlying command.
+
+        :param command: command where to apply the options
+        :type command: str
+        :param options: extra options for the underlying command
+        :type options: str
+        :raises ValueError: when command is invalid
+        """
+        self.logger.debug('Executing add_options')
+        commands = ['prj', 'syn', 'par', 'bit']
+        if command not in commands:
+            raise ValueError('Invalid command.')
+        self.data.setdefault('options', {}).setdefault(command, []).append(
+            options
+        )
 
     def set_debug(self):
         """Enables debug messages."""
