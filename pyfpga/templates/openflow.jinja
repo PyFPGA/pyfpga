@@ -37,7 +37,7 @@ read_verilog -defer -sv {{ name }}
 chparam{% for key, value in params.items() %} -set {{ key }} {{ value }}{% endfor %}
 {% endif %}
 
-{% if top%}
+{% if top %}
 synth -top {{ top }}
 {% endif %}
 
@@ -71,10 +71,10 @@ synth_{{ family }} -top {{ top }} -json {{ project }}.json
 CONSTRAINTS="{{ constraints | join(' ') }}"
 
 {% if family == 'ice40' %}
-if [ -n "$CONSTRAINTS" ]; then
-  cat $CONSTRAINTS > constraints.pcf
-  CONSTRAINT="--pcf constraints.pcf"
-fi
+{% if constraints %}
+cat $CONSTRAINTS > {{ project }}.pcf
+CONSTRAINT="--pcf {{ project }}.pcf"
+{% endif %}
 $DOCKER hdlc/nextpnr:ice40 /bin/bash -c "
 {% if hooks %}{{ hooks.prepar | join('\n') }}{% endif %}
 nextpnr-ice40 --{{ device }} --package {{ package }} $CONSTRAINT --json {{ project }}.json --asc {{ project }}.asc
@@ -86,10 +86,10 @@ icetime -d {{ device }} -mtr {{ project }}.rpt {{ project }}.asc
 {% endif %}
 
 {% if family == 'ecp5' %}
-if [ -n "$CONSTRAINTS" ]; then
-  cat $CONSTRAINTS > constraints.lpf
-  CONSTRAINT="--lpf constraints.lpf"
-fi
+{% if constraints %}
+cat $CONSTRAINTS > {{ project }}.lpf
+CONSTRAINT="--lpf {{ project }}.lpf"
+{% endif %}
 $DOCKER hdlc/nextpnr:ecp5 /bin/bash -c "
 {% if hooks %}{{ hooks.prepar | join('\n') }}{% endif %}
 nextpnr-ecp5 --{{ device }} --package {{ package }} $CONSTRAINT --json {{ project }}.json --textcfg {{ project }}.config
