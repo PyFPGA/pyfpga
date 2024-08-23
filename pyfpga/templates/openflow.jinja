@@ -15,15 +15,15 @@ $DOCKER hdlc/ghdl:yosys /bin/bash -c "
 {% if hooks %}{{ hooks.presyn | join('\n') }}{% endif %}
 yosys -Q -m ghdl -p '
 
-{% if includes %}
+{% if includes %}# Verilog Includes
 verilog_defaults -add{% for path in includes %} -I{{ path }}{% endfor %}
 {% endif %}
 
-{% if defines %}
+{% if defines %}# Verilog Defines
 verilog_defines{% for key, value in defines.items() %} -D{{ key }}={{ value }}{% endfor %}
 {% endif %}
 
-{% if files %}
+{% if files %}# Files inclusion
 {% for name, attr in files.items() %}
 {% if attr.hdl == "vlog" %}
 read_verilog -defer {{ name }}
@@ -33,11 +33,11 @@ read_verilog -defer -sv {{ name }}
 {% endfor %}
 {% endif %}
 
-{% if params %}
+{% if params %}# Verilog Parameters / VHDL Generics
 chparam{% for key, value in params.items() %} -set {{ key }} {{ value }}{% endfor %}
 {% endif %}
 
-{% if top %}
+{% if top %}# Top-level specification
 synth -top {{ top }}
 {% endif %}
 
