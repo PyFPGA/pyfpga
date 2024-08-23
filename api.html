@@ -56,6 +56,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#pyfpga.project.Project.add_fileset"><code class="docutils literal notranslate"><span class="pre">Project.add_fileset()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pyfpga.project.Project.add_hook"><code class="docutils literal notranslate"><span class="pre">Project.add_hook()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pyfpga.project.Project.add_include"><code class="docutils literal notranslate"><span class="pre">Project.add_include()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyfpga.project.Project.add_options"><code class="docutils literal notranslate"><span class="pre">Project.add_options()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pyfpga.project.Project.add_param"><code class="docutils literal notranslate"><span class="pre">Project.add_param()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pyfpga.project.Project.add_slog"><code class="docutils literal notranslate"><span class="pre">Project.add_slog()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pyfpga.project.Project.add_vhdl"><code class="docutils literal notranslate"><span class="pre">Project.add_vhdl()</span></code></a></li>
@@ -115,11 +116,14 @@
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyfpga.project.Project.add_cons">
-<span class="sig-name descname"><span class="pre">add_cons</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.add_cons"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.add_cons" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_cons</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.add_cons"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.add_cons" title="Link to this definition"></a></dt>
 <dd><p>Add a constraint file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pathname</strong> (<em>str</em>) – path of a file</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pathname</strong> (<em>str</em>) – path to a constraint file</p></li>
+<li><p><strong>options</strong> (<em>str</em><em>, </em><em>optional</em>) – extra options for the underlying command</p></li>
+</ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>FileNotFoundError</strong> – if path is not found</p>
@@ -189,6 +193,23 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pyfpga.project.Project.add_options">
+<span class="sig-name descname"><span class="pre">add_options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.add_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.add_options" title="Link to this definition"></a></dt>
+<dd><p>Add options for the specified underlying command.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command</strong> (<em>str</em>) – command where to apply the options</p></li>
+<li><p><strong>options</strong> (<em>str</em>) – extra options for the underlying command</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – when command is invalid</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pyfpga.project.Project.add_param">
 <span class="sig-name descname"><span class="pre">add_param</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.add_param"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.add_param" title="Link to this definition"></a></dt>
 <dd><p>Add a Parameter/Generic Value.</p>
@@ -204,11 +225,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyfpga.project.Project.add_slog">
-<span class="sig-name descname"><span class="pre">add_slog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.add_slog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.add_slog" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_slog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.add_slog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.add_slog" title="Link to this definition"></a></dt>
 <dd><p>Add System Verilog file/s.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pathname</strong> (<em>str</em>) – path to a SV file (glob compliant)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pathname</strong> (<em>str</em>) – path to a SV file (glob compliant)</p></li>
+<li><p><strong>options</strong> (<em>str</em><em>, </em><em>optional</em>) – extra options for the underlying command</p></li>
+</ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>FileNotFoundError</strong> – when pathname is not found</p>
@@ -218,13 +242,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyfpga.project.Project.add_vhdl">
-<span class="sig-name descname"><span class="pre">add_vhdl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.add_vhdl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.add_vhdl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_vhdl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.add_vhdl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.add_vhdl" title="Link to this definition"></a></dt>
 <dd><p>Add VHDL file/s.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pathname</strong> (<em>str</em>) – path to a SV file (glob compliant)</p></li>
 <li><p><strong>lib</strong> (<em>str</em><em>, </em><em>optional</em>) – VHDL library name</p></li>
+<li><p><strong>options</strong> (<em>str</em><em>, </em><em>optional</em>) – extra options for the underlying command</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
@@ -235,11 +260,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyfpga.project.Project.add_vlog">
-<span class="sig-name descname"><span class="pre">add_vlog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.add_vlog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.add_vlog" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_vlog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfpga/project.html#Project.add_vlog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfpga.project.Project.add_vlog" title="Link to this definition"></a></dt>
 <dd><p>Add Verilog file/s.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pathname</strong> (<em>str</em>) – path to a SV file (glob compliant)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pathname</strong> (<em>str</em>) – path to a SV file (glob compliant)</p></li>
+<li><p><strong>options</strong> (<em>str</em><em>, </em><em>optional</em>) – extra options for the underlying command</p></li>
+</ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>FileNotFoundError</strong> – when pathname is not found</p>
