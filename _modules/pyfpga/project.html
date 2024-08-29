@@ -143,7 +143,7 @@
 <span class="sd">        :param name: FPGA part name</span>
 <span class="sd">        :type name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing set_part&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Executing set_part: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;part&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span></div>
 
 
@@ -158,7 +158,7 @@
 <span class="sd">        :type name: str</span>
 <span class="sd">        :raises NotADirectoryError: if path is not a directory</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing add_include&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Executing add_include: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
             <span class="k">raise</span> <span class="ne">NotADirectoryError</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
@@ -187,7 +187,7 @@
 <span class="sd">        :type pathname: str</span>
 <span class="sd">        :raises FileNotFoundError: when pathname is not found</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing add_slog&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Executing add_slog: </span><span class="si">{</span><span class="n">pathname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_add_file</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="s1">&#39;slog&#39;</span><span class="p">)</span></div>
 
 
@@ -202,7 +202,8 @@
 <span class="sd">        :type lib: str, optional</span>
 <span class="sd">        :raises FileNotFoundError: when pathname is not found</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing add_vhdl&#39;</span><span class="p">)</span>
+        <span class="n">lib_str</span> <span class="o">=</span> <span class="s1">&#39;default library&#39;</span> <span class="k">if</span> <span class="n">lib</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">lib</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Executing add_vhdl: </span><span class="si">{</span><span class="n">lib_str</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="n">pathname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_add_file</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="s1">&#39;vhdl&#39;</span><span class="p">,</span> <span class="n">lib</span><span class="p">)</span></div>
 
 
@@ -215,7 +216,7 @@
 <span class="sd">        :type pathname: str</span>
 <span class="sd">        :raises FileNotFoundError: when pathname is not found</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing add_vlog&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Executing add_vlog: </span><span class="si">{</span><span class="n">pathname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_add_file</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="s1">&#39;vlog&#39;</span><span class="p">)</span></div>
 
 
@@ -228,7 +229,7 @@
 <span class="sd">        :type pathname: str</span>
 <span class="sd">        :raises FileNotFoundError: if path is not found</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing add_cons&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Executing add_cons: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
@@ -246,7 +247,7 @@
 <span class="sd">        :param value: parameter/generic value</span>
 <span class="sd">        :type name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing add_param&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Executing add_param: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;params&#39;</span><span class="p">,</span> <span class="p">{})[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
 
@@ -260,7 +261,7 @@
 <span class="sd">        :param value: define value</span>
 <span class="sd">        :type name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing add_define&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Executing add_define: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;defines&#39;</span><span class="p">,</span> <span class="p">{})[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
 
@@ -273,7 +274,7 @@
 <span class="sd">        :type pathname: str</span>
 <span class="sd">        :raises FileNotFoundError: when pathname is not found</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing add_fileset&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Executing add_fileset: </span><span class="si">{</span><span class="n">pathname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">pathname</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">pathname</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
@@ -287,7 +288,7 @@
 <span class="sd">        :param name: top-level name</span>
 <span class="sd">        :type name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing set_top&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Executing set_top: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span></div>
 
 
@@ -304,7 +305,7 @@
 <span class="sd">        :type hook: str</span>
 <span class="sd">        :raises ValueError: when stage is invalid</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing add_hook&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Executing add_hook: </span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="n">hook</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">stages</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s1">&#39;precfg&#39;</span><span class="p">,</span> <span class="s1">&#39;postcfg&#39;</span><span class="p">,</span> <span class="s1">&#39;presyn&#39;</span><span class="p">,</span> <span class="s1">&#39;postsyn&#39;</span><span class="p">,</span>
             <span class="s1">&#39;prepar&#39;</span><span class="p">,</span> <span class="s1">&#39;postpar&#39;</span><span class="p">,</span> <span class="s1">&#39;prebit&#39;</span><span class="p">,</span> <span class="s1">&#39;postbit&#39;</span>
