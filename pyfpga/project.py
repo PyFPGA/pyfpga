@@ -60,7 +60,7 @@ class Project:
         :param name: FPGA part name
         :type name: str
         """
-        self.logger.debug(f'Executing set_part: {name}')
+        self.logger.debug('Executing set_part: %s', name)
         self.data['part'] = name
 
     def add_include(self, path):
@@ -72,7 +72,7 @@ class Project:
         :type name: str
         :raises NotADirectoryError: if path is not a directory
         """
-        self.logger.debug(f'Executing add_include: {path}')
+        self.logger.debug('Executing add_include: %s', path)
         path = Path(path).resolve()
         if not path.is_dir():
             raise NotADirectoryError(path)
@@ -98,7 +98,7 @@ class Project:
         :type pathname: str
         :raises FileNotFoundError: when pathname is not found
         """
-        self.logger.debug(f'Executing add_slog: {pathname}')
+        self.logger.debug('Executing add_slog: %s', pathname)
         self._add_file(pathname, 'slog')
 
     def add_vhdl(self, pathname, lib=None):
@@ -111,7 +111,7 @@ class Project:
         :raises FileNotFoundError: when pathname is not found
         """
         lib_str = 'default library' if lib is None else lib
-        self.logger.debug(f'Executing add_vhdl: {lib_str} : {pathname}')
+        self.logger.debug('Executing add_vhdl: %s : %s', lib_str, pathname)
         self._add_file(pathname, 'vhdl', lib)
 
     def add_vlog(self, pathname):
@@ -121,7 +121,7 @@ class Project:
         :type pathname: str
         :raises FileNotFoundError: when pathname is not found
         """
-        self.logger.debug(f'Executing add_vlog: {pathname}')
+        self.logger.debug('Executing add_vlog: %s', pathname)
         self._add_file(pathname, 'vlog')
 
     def add_cons(self, path):
@@ -131,7 +131,7 @@ class Project:
         :type pathname: str
         :raises FileNotFoundError: if path is not found
         """
-        self.logger.debug(f'Executing add_cons: {path}')
+        self.logger.debug('Executing add_cons: %s', path)
         path = Path(path).resolve()
         if not path.is_file():
             raise FileNotFoundError(path)
@@ -146,7 +146,7 @@ class Project:
         :param value: parameter/generic value
         :type name: str
         """
-        self.logger.debug(f'Executing add_param: {name} : {value}')
+        self.logger.debug('Executing add_param: %s : %s', name, value)
         self.data.setdefault('params', {})[name] = value
 
     def add_define(self, name, value):
@@ -157,7 +157,7 @@ class Project:
         :param value: define value
         :type name: str
         """
-        self.logger.debug(f'Executing add_define: {name} : {value}')
+        self.logger.debug('Executing add_define: %s : %s', name, value)
         self.data.setdefault('defines', {})[name] = value
 
     def add_fileset(self, pathname):
@@ -167,7 +167,7 @@ class Project:
         :type pathname: str
         :raises FileNotFoundError: when pathname is not found
         """
-        self.logger.debug(f'Executing add_fileset: {pathname}')
+        self.logger.debug('Executing add_fileset: %s', pathname)
         if not os.path.exists(pathname):
             raise FileNotFoundError(pathname)
         raise NotImplementedError()
@@ -178,7 +178,7 @@ class Project:
         :param name: top-level name
         :type name: str
         """
-        self.logger.debug(f'Executing set_top: {name}')
+        self.logger.debug('Executing set_top: %s', name)
         self.data['top'] = name
 
     def add_hook(self, stage, hook):
@@ -192,7 +192,7 @@ class Project:
         :type hook: str
         :raises ValueError: when stage is invalid
         """
-        self.logger.debug(f'Executing add_hook: {stage} : {hook}')
+        self.logger.debug('Executing add_hook: %s : %s', stage, hook)
         stages = [
             'precfg', 'postcfg', 'presyn', 'postsyn',
             'prepar', 'postpar', 'prebit', 'postbit'
