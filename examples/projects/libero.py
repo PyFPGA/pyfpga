@@ -16,7 +16,7 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-prj = Libero(odir='../build/libero')
+prj = Libero(odir=f'results/libero/{args.source}/{args.board}')
 
 if args.board == 'maker':
     prj.set_part('m2s010-1-tq144')

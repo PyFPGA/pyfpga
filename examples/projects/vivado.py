@@ -17,7 +17,7 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-prj = Vivado(odir='../build/vivado')
+prj = Vivado(odir=f'results/vivado/{args.source}/{args.board}')
 
 if args.board == 'zybo':
     prj.set_part('xc7z010-1-clg400')
@@ -35,6 +35,7 @@ prj.add_param('SECS', '1')
 
 if args.source == 'vhdl':
     prj.add_vhdl('../sources/vhdl/*.vhdl', 'blink_lib')
+    prj.add_vhdl('../sources/vhdl/top.vhdl')
 if args.source == 'vlog':
     prj.add_include('../sources/vlog/include1')
     prj.add_include('../sources/vlog/include2')
