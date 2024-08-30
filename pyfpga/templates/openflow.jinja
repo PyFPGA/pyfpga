@@ -37,34 +37,23 @@ read_verilog -defer -sv {{ name }}
 chparam{% for key, value in params.items() %} -set {{ key }} {{ value }}{% endfor %}
 {% endif %}
 
-{% if top %}# Top-level specification
-synth -top {{ top }}
-{% endif %}
-
+# Top-level specification and Syntesis
+{% if family in ['ice40', 'ecp5'] %}
 synth_{{ family }} -top {{ top }} -json {{ project }}.json
+{% elif family in ['xc6s', 'xc6v', 'xc5v', 'xc4v', 'xc3sda', 'xc3sa', 'xc3se', 'xc3s', 'xc2vp', 'xc2v', 'xcve', 'xcv'] %}
+synth_xilinx -top {{ top }} -family {{ family }}
+write_edif -pvector bra {{ project }}.edif -ise
+{% elif family %}
+synth_xilinx -top {{ top }} -family {{ family }}
+write_edif -pvector bra {{ project }}.edif
+{% else %}
+synth -top {{ top }}
+write_verilog {{ project }}.v
+{% endif %}
 '
 {% if hooks %}{{ hooks.postsyn | join('\n') }}{% endif %}
 "
 {% endif %}
-
-{#
-#SYNTH=
-#WRITE=
-#if [[ $BACKEND == "vivado" ]]; then
-#    SYNTH="synth_xilinx -top $TOP -family $FAMILY"
-#    WRITE="write_edif -pvector bra $PROJECT.edif"
-#elif [[ $BACKEND == "ise" ]]; then
-#    SYNTH="synth_xilinx -top $TOP -family $FAMILY -ise"
-#    WRITE="write_edif -pvector bra $PROJECT.edif"
-#elif [[ $BACKEND == "nextpnr" ]]; then
-#    SYNTH="synth_$FAMILY -top $TOP -json $PROJECT.json"
-#elif [[ $BACKEND == "verilog-nosynth" ]]; then
-#    WRITE="write_verilog $PROJECT.v"
-#else
-#    SYNTH="synth -top $TOP"
-#    WRITE="write_verilog $PROJECT.v"
-#fi
-#}
 
 {% if 'par' in steps %}# Place and Route
 
