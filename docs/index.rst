@@ -16,3 +16,9 @@ PyFPGA's documentation
    tools
    internals
    extending
+
+.. |timestamp| date:: %Y-%m-%d %H:%M (%Z)
+
+.. note::
+
+   Documentation generated on |timestamp|.
