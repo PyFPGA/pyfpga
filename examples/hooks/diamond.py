@@ -1,8 +1,8 @@
-"""Diamond example hooks."""
+"""Diamond hooks examples."""
 
 from pyfpga.diamond import Diamond
 
-prj = Diamond(odir='../build/diamond')
+prj = Diamond()
 
 hooks = {
     "reports": """
