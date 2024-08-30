@@ -4,6 +4,7 @@ set -e
 
 declare -A TOOLS
 
+TOOLS["diamond"]="brevia2"
 TOOLS["ise"]="s6micro nexys3"
 TOOLS["libero"]="maker"
 TOOLS["openflow"]="icestick edu-ciaa orangecrab ecp5evn"
@@ -19,7 +20,7 @@ for TOOL in "${!TOOLS[@]}"; do
       if [[ "$TOOL" == "ise" && "$SOURCE" == "slog" ]]; then
         continue
       fi
-      if [[ "$TOOL" == "openflow" && "$SOURCE" != "vlog" ]]; then
+      if [[ "$TOOL" == "openflow" && "$SOURCE" == "vhdl" ]]; then
         continue
       fi
       echo "> $TOOL - $BOARD - $SOURCE"
