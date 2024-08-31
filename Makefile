@@ -16,7 +16,9 @@ test:
 clean:
 	py3clean .
 	cd docs; make clean
-	rm -fr build .pytest_cache
+	rm -fr .pytest_cache
+	rm -fr `find . -name results`
+	rm -fr `find . -name __pycache__`
 
 submodule-init:
 	git submodule update --init --recursive
