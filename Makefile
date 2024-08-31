@@ -17,7 +17,7 @@ test:
 
 clean:
 	py3clean .
-	cd docs; make clean
+	rm -fr docs/build
 	rm -fr .pytest_cache
 	rm -fr `find . -name results`
 	rm -fr `find . -name __pycache__`
