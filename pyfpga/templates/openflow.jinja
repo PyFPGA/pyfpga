@@ -42,19 +42,18 @@ read_verilog -defer {{ name }}
 read_verilog -defer -sv {{ name }}
 {% elif attr.hdl == "vhdl" %}
 {% if loop.first %}
-# VHDL Generics
-{% set generics = "-gFREQ=125000000 -gSECS=1" %}
-ghdl {{ gflags }} {{ generics }} {{ top }}
+{% if params %}# VHDL Generics
+ghdl {{ gflags }}{% for key, value in params.items() %} -g{{ key }}={{ value }}{% endfor %} {{ top }}
+{% else %}
+ghdl {{ gflags }} {{ top }}
 {% endif %}
+{% endif %}
+{% endif %}
+{% if loop.last and attr.hdl in ["vlog", "slog"] and params %}# Verilog Parameters
+chparam{% for key, value in params.items() %} -set {{ key }} {{ value }}{% endfor %}
 {% endif %}
 {% endfor %}
 {% endif %}
-
-{#
-{% if params %}# Verilog Parameters
-chparam{% for key, value in params.items() %} -set {{ key }} {{ value }}{% endfor %}
-{% endif %}
-#}
 
 # Top-level specification and Syntesis
 {% if family in ['ice40', 'ecp5'] %}
