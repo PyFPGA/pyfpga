@@ -14,7 +14,7 @@ set_device -family {{ family }} -die {{ device }} -package {{ package }} -speed 
 
 {% if hooks %}{{ hooks.precfg | join('\n') }}{% endif %}
 
-{% if includes %}# Verilog Includes (Libero)
+{% if includes %}# Verilog Includes
 set_global_include_path_order -paths "{{ includes | join(' ') }}"
 {% endif %}
 
