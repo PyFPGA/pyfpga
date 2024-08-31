@@ -13,6 +13,17 @@ DOCKER="docker run --user $(id -u):$(id -g) --rm -v $HOME:$HOME -w $PWD"
 {% if 'syn' in steps %}# Synthesis
 $DOCKER hdlc/ghdl:yosys /bin/bash -c "
 {% if hooks %}{{ hooks.presyn | join('\n') }}{% endif %}
+
+{% set gflags = '--std=08 -fsynopsys -fexplicit -frelaxed' %}
+{% if files %}# Files inclusion
+{% for name, attr in files.items() %}
+{% if attr.hdl == "vhdl" %}
+ghdl -a {{ gflags }}{% if 'lib' in attr %} --work={{ attr.lib }}{% endif %} {{ name }}
+{% endif %}
+{% endfor %}
+{% endif %}
+ghdl -a --std=08 -fsynopsys -fexplicit -frelaxed /home/rodrigo/repos-ram/PyFPGA/pyfpga/examples/sources/vhdl/top.vhdl
+
 yosys -Q -m ghdl -p '
 
 {% if includes %}# Verilog Includes
@@ -29,13 +40,21 @@ verilog_defines{% for key, value in defines.items() %} -D{{ key }}={{ value }}{%
 read_verilog -defer {{ name }}
 {% elif attr.hdl == "slog" %}
 read_verilog -defer -sv {{ name }}
+{% elif attr.hdl == "vhdl" %}
+{% if loop.first %}
+# VHDL Generics
+{% set generics = "-gFREQ=125000000 -gSECS=1" %}
+ghdl {{ gflags }} {{ generics }} {{ top }}
+{% endif %}
 {% endif %}
 {% endfor %}
 {% endif %}
 
-{% if params %}# Verilog Parameters / VHDL Generics
+{#
+{% if params %}# Verilog Parameters
 chparam{% for key, value in params.items() %} -set {{ key }} {{ value }}{% endfor %}
 {% endif %}
+#}
 
 # Top-level specification and Syntesis
 {% if family in ['ice40', 'ecp5'] %}
