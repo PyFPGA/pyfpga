@@ -89,13 +89,15 @@
 <h1>Basic usage<a class="headerlink" href="#basic-usage" title="Link to this heading"></a></h1>
 <section id="project-configuration">
 <h2>Project Configuration<a class="headerlink" href="#project-configuration" title="Link to this heading"></a></h2>
-<p>The first steps involve importing the necessary module to support the desired tool and instantiating the corresponding <em>class</em>:</p>
+<p>The first steps involve importing the necessary module to support the desired tool and instantiating the corresponding <code class="docutils literal notranslate"><span class="pre">class</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyfpga.vivado</span> <span class="kn">import</span> <span class="n">Vivado</span>
 
 <span class="n">prj</span> <span class="o">=</span> <span class="n">Vivado</span><span class="p">(</span><span class="s1">&#39;PRJNAME&#39;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s1">&#39;OUTDIR&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>In the example, we are using Vivado, specifying the optional parameter <em>project name</em> (<em>tool name</em> if omitted) and <em>output directory</em> (<em>results</em> by default).</p>
+<p>In the example, we are using Vivado, specifying the optional parameters
+<code class="docutils literal notranslate"><span class="pre">project</span> <span class="pre">name</span></code> (<code class="docutils literal notranslate"><span class="pre">tool</span> <span class="pre">name</span></code> if omitted) and <code class="docutils literal notranslate"><span class="pre">output</span> <span class="pre">directory</span></code>
+(<code class="docutils literal notranslate"><span class="pre">results</span></code> by default).</p>
 <p>Next step is to specify the target FPGA device:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">set_part</span><span class="p">(</span><span class="s1">&#39;xc7k160t-3-fbg484&#39;</span><span class="p">)</span>
 </pre></div>
@@ -110,13 +112,22 @@
 <span class="n">prj</span><span class="o">.</span><span class="n">add_slog</span><span class="p">(</span><span class="s1">&#39;PATH_TO_FILES_GLOB_COMPATIBLE&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>In these methods, you provide a path to the files. The path can include wildcards (like <cite>*.vhdl</cite>), allowing you to match multiple files at once.</p>
-<p>For <cite>add_vhdl</cite>, you can also optionally specify a library name where the files will be included.</p>
+<p>In these methods, you provide a path to the files. The path can include wildcards (like <code class="docutils literal notranslate"><span class="pre">*.vhdl</span></code>), allowing you to match multiple files at once.
+In case of <code class="docutils literal notranslate"><span class="pre">add_vhdl</span></code>, you can also optionally specify a library name where the files will be included.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <blockquote>
 <div><p>Internally, the methods that specify files use <a class="reference external" href="https://docs.python.org/3/library/glob.html">glob</a> to support wildcards and <a class="reference external" href="https://docs.python.org/3/library/pathlib.html">Path</a> to obtain absolute paths.</p>
 </div></blockquote>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Files are processed in the order they are added. If a file is specified more than once,
+it is removed from its previous position and placed at the end of the list.
+This allows you to ensure that a file is processed after others when necessary
+(e.g., placing a top-level at the end) or to customize options
+(e.g., removing a VHDL library specification in case of a top-level)
+when multiple files are added using a wildcard.</p>
 </div>
 <p>Generics/parameters can be specified with:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">add_param</span><span class="p">(</span><span class="s1">&#39;PARAMNAME&#39;</span><span class="p">,</span> <span class="s1">&#39;PARAMVALUE&#39;</span><span class="p">)</span>
@@ -147,7 +158,8 @@ They will be arranged in the required order by the underlying template.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">make</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>By default, this method performs <em>project creation</em>, <em>synthesis</em>, <em>place and route</em>, and <em>bitstream generation</em>.
+<p>By default, this method performs <strong>project creation</strong>, <strong>synthesis</strong>, <strong>place and route</strong>,
+and <strong>bitstream generation</strong>.
 However, you can optionally specify both the initial and final stages, as follows:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s1">&#39;syn&#39;</span><span class="p">,</span> <span class="n">last</span><span class="o">=</span><span class="s1">&#39;par&#39;</span><span class="p">)</span>
 </pre></div>
@@ -164,7 +176,8 @@ However, you can optionally specify both the initial and final stages, as follow
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>After executing this method, you will find the file <cite>&lt;TOOL&gt;.tcl</cite> (or <cite>sh</cite> in some cases) in the output directory.
+<p>After executing this method, you will find the file <code class="docutils literal notranslate"><span class="pre">&lt;TOOL&gt;.tcl</span></code>
+(<code class="docutils literal notranslate"><span class="pre">&lt;TOOL&gt;.sh</span></code> in some cases) in the output directory.
 For debugging purposes, if things do not work as expected, you can review this file.</p>
 </div>
 </section>
@@ -174,12 +187,13 @@ For debugging purposes, if things do not work as expected, you can review this f
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prj</span><span class="o">.</span><span class="n">prog</span><span class="p">(</span><span class="s1">&#39;BITSTREAM&#39;</span><span class="p">,</span> <span class="s1">&#39;POSITION&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Both <cite>BITSTREAM</cite> and <cite>POSITION</cite> are optional.
-If <cite>BITSTREAM</cite> is not specified, PyFPGA will attempt to discover it based on project information.
-The <cite>POSITION</cite> parameter is not always required (depends on the tool being used).</p>
+<p>Both <code class="docutils literal notranslate"><span class="pre">BITSTREAM</span></code> and <code class="docutils literal notranslate"><span class="pre">POSITION</span></code> are optional.
+If <code class="docutils literal notranslate"><span class="pre">BITSTREAM</span></code> is not specified, PyFPGA will attempt to discover it based on project information.
+The <code class="docutils literal notranslate"><span class="pre">POSITION</span></code> parameter is not always required (depends on the tool being used).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>After executing this method, you will find the file <cite>&lt;TOOL&gt;prog.tcl</cite> (or <cite>sh</cite> in some cases) in the output directory.
+<p>After executing this method, you will find the file <code class="docutils literal notranslate"><span class="pre">&lt;TOOL&gt;prog.tcl</span></code>
+(<code class="docutils literal notranslate"><span class="pre">&lt;TOOL&gt;-prog.sh</span></code> in some cases) in the output directory.
 For debugging purposes, if things do not work as expected, you can review this file.</p>
 </div>
 </section>

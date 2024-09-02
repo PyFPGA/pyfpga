@@ -3,7 +3,7 @@ Extending
 
 .. note::
 
-   All <TOOL> classes inherit from project.py.
+   All <TOOL> classes inherit from ``Project`` (``project.py``).
 
 This is a guide on how to add support for a new TOOL.
 

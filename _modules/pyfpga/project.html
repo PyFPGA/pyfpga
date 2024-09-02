@@ -170,13 +170,15 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">pathname</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-            <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
             <span class="n">attr</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">if</span> <span class="n">hdl</span><span class="p">:</span>
                 <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;hdl&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdl</span>
             <span class="k">if</span> <span class="n">lib</span><span class="p">:</span>
                 <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;lib&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lib</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;files&#39;</span><span class="p">,</span> <span class="p">{})[</span><span class="n">path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()]</span> <span class="o">=</span> <span class="n">attr</span>
+            <span class="k">if</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;files&#39;</span><span class="p">,</span> <span class="p">{}):</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;files&#39;</span><span class="p">][</span><span class="n">path</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;files&#39;</span><span class="p">,</span> <span class="p">{})[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="n">attr</span>
 
 <div class="viewcode-block" id="Project.add_slog">
 <a class="viewcode-back" href="../../api.html#pyfpga.project.Project.add_slog">[docs]</a>
