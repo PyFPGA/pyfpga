@@ -25,9 +25,6 @@ for TOOL in "${!TOOLS[@]}"; do
       if [[ "$TOOL" == "ise" && "$SOURCE" == "slog" ]]; then
         continue
       fi
-      if [[ "$TOOL" == "openflow" && "$SOURCE" == "vhdl" ]]; then
-        continue
-      fi
       echo "> $TOOL - $BOARD - $SOURCE"
       python3 $TOOL.py --board $BOARD --source $SOURCE
     done

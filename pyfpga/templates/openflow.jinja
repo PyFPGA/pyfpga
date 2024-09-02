@@ -13,6 +13,16 @@ DOCKER="docker run --user $(id -u):$(id -g) --rm -v $HOME:$HOME -w $PWD"
 {% if 'syn' in steps %}# Synthesis
 $DOCKER hdlc/ghdl:yosys /bin/bash -c "
 {% if hooks %}{{ hooks.presyn | join('\n') }}{% endif %}
+
+{% set gflags = '--std=08 -fsynopsys -fexplicit -frelaxed' %}
+{% if files %}# VHDL Files inclusion
+{% for name, attr in files.items() %}
+{% if attr.hdl == "vhdl" %}
+ghdl -a {{ gflags }}{% if 'lib' in attr %} --work={{ attr.lib }}{% endif %} {{ name }}
+{% endif %}
+{% endfor %}
+{% endif %}
+
 yosys -Q -m ghdl -p '
 
 {% if includes %}# Verilog Includes
@@ -23,18 +33,25 @@ verilog_defaults -add{% for path in includes %} -I{{ path }}{% endfor %}
 verilog_defines{% for key, value in defines.items() %} -D{{ key }}={{ value }}{% endfor %}
 {% endif %}
 
-{% if files %}# Files inclusion
+{% if files %}# VLOG Files inclusion
 {% for name, attr in files.items() %}
 {% if attr.hdl == "vlog" %}
 read_verilog -defer {{ name }}
 {% elif attr.hdl == "slog" %}
 read_verilog -defer -sv {{ name }}
+{% elif attr.hdl == "vhdl" %}
+{% if loop.first %}
+{% if params %}# VHDL Generics
+ghdl {{ gflags }}{% for key, value in params.items() %} -g{{ key }}={{ value }}{% endfor %} {{ top }}
+{% else %}
+ghdl {{ gflags }} {{ top }}
+{% endif %}
+{% endif %}
+{% endif %}
+{% if loop.last and attr.hdl in ["vlog", "slog"] and params %}# Verilog Parameters
+chparam{% for key, value in params.items() %} -set {{ key }} {{ value }}{% endfor %}
 {% endif %}
 {% endfor %}
-{% endif %}
-
-{% if params %}# Verilog Parameters / VHDL Generics
-chparam{% for key, value in params.items() %} -set {{ key }} {{ value }}{% endfor %}
 {% endif %}
 
 # Top-level specification and Syntesis

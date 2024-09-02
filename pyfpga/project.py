@@ -83,13 +83,15 @@ class Project:
         if len(files) == 0:
             raise FileNotFoundError(pathname)
         for file in files:
-            path = Path(file).resolve()
+            path = Path(file).resolve().as_posix()
             attr = {}
             if hdl:
                 attr['hdl'] = hdl
             if lib:
                 attr['lib'] = lib
-            self.data.setdefault('files', {})[path.as_posix()] = attr
+            if path in self.data.get('files', {}):
+                del self.data['files'][path]
+            self.data.setdefault('files', {})[path] = attr
 
     def add_slog(self, pathname):
         """Add System Verilog file/s.
