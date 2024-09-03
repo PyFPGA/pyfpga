@@ -1,40 +1,76 @@
 Extending
 =========
 
-1. Add support for the new tool:
+.. note::
 
-.. code-block:: python
+   All <TOOL> classes inherit from ``Project`` (``project.py``).
+
+This is a guide on how to add support for a new TOOL.
+
+Add support for the new tool
+----------------------------
+
+.. code-block:: bash
 
    pyfpga/templates/<NEWTOOL>.jinja
    pyfpga/templates/<NEWTOOL>-prog.jinja
    pyfpga/<NEWTOOL>.py
+   pyfpga/factory.py # UPDATE
+   pyfpga/helpers/prj2bit.py # UPDATE
 
-2. Include the new tool on Factory:
+Add tests and a tool mock-up
+----------------------------
 
-.. code-block:: python
+.. code-block:: bash
 
-   pyfpga/factory.py
+   tests/test_tools.py # UPDATE
+   tests/support.py # UPDATE if exceptions are needed
+   tests/mocks/<NEWCOMMAND>
 
-3. Add tests and a tool mock-up:
+Add examples
+------------
 
-.. code-block:: python
-
-   tests/test_tools.py
-   tests/mocks/<NEWTOOL_EXECUTABLE>
-
-4. Updated the project's documentation:
-
-.. code-block:: python
-
-   README.md
-   docs
-
-5. [OPTIONAL] Add examples:
-
-.. code-block:: python
+.. code-block:: bash
 
    examples/sources/cons/<NEWBOARD>/timing.<EXT>
    examples/sources/cons/<NEWBOARD>/clk.<EXT>
    examples/sources/cons/<NEWBOARD>/led.<EXT>
    examples/projects/<NEWTOOL>.py
-   examples/hooks/<NEWTOOL>.py
+   examples/projects/regress.sh # UPDATE
+   examples/helpers/<NEWTOOL>.sh
+   examples/hooks/<NEWTOOL>.py # OPTIONAL
+
+Verify the code
+---------------
+
+Run it at the root of the repo.
+
+.. code-block:: bash
+
+   make docs
+   make lint
+   make test
+
+.. tip::
+
+   You can simply run ``make`` to perform all the operations.
+   Running ``make clean`` will remove all the generated files.
+
+Verify the functionality
+------------------------
+
+.. code-block:: bash
+
+   cd examples/projects/
+   bash regress.sh <NEWTOOL>
+   cd ../../tests/
+   python3 support.py --tool <NEWTOOL>
+
+Updated the documentation
+-------------------------
+
+.. code-block:: bash
+
+   README.md
+   docs/intro.rst
+   docs/tools.rst

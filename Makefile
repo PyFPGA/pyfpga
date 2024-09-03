@@ -2,6 +2,8 @@
 
 .PHONY: docs
 
+all: docs lint test
+
 docs:
 	cd docs; make html
 
@@ -15,11 +17,7 @@ test:
 
 clean:
 	py3clean .
-	cd docs; make clean
-	rm -fr build .pytest_cache
-
-submodule-init:
-	git submodule update --init --recursive
-
-submodule-update:
-	cd examples/resources; git checkout main; git pull
+	rm -fr docs/build
+	rm -fr .pytest_cache
+	rm -fr `find . -name results`
+	rm -fr `find . -name __pycache__`

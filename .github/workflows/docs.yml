@@ -2,8 +2,11 @@ name: 'docs'
 
 on:
   push:
+    paths:
+      - 'docs/**'
     branches:
-#      - main
+      - main
+      - dev
 
 jobs:
   docs:
@@ -19,4 +22,4 @@ jobs:
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: docs/_build/html
+        publish_dir: docs/build/html

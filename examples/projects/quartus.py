@@ -17,7 +17,7 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-prj = Quartus(odir='../build/quartus')
+prj = Quartus(odir=f'results/quartus/{args.source}/{args.board}')
 
 if args.board == 'de10nano':
     prj.set_part('5CSEBA6U23I7')
@@ -29,6 +29,7 @@ prj.add_param('SECS', '1')
 
 if args.source == 'vhdl':
     prj.add_vhdl('../sources/vhdl/*.vhdl', 'blink_lib')
+    prj.add_vhdl('../sources/vhdl/top.vhdl')
 if args.source == 'vlog':
     prj.add_include('../sources/vlog/include1')
     prj.add_include('../sources/vlog/include2')

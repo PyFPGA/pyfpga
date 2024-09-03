@@ -60,7 +60,7 @@ class Project:
         :param name: FPGA part name
         :type name: str
         """
-        self.logger.debug('Executing set_part')
+        self.logger.debug('Executing set_part: %s', name)
         self.data['part'] = name
 
     def add_include(self, path):
@@ -72,7 +72,7 @@ class Project:
         :type name: str
         :raises NotADirectoryError: if path is not a directory
         """
-        self.logger.debug('Executing add_include')
+        self.logger.debug('Executing add_include: %s', path)
         path = Path(path).resolve()
         if not path.is_dir():
             raise NotADirectoryError(path)
@@ -83,7 +83,7 @@ class Project:
         if len(files) == 0:
             raise FileNotFoundError(pathname)
         for file in files:
-            path = Path(file).resolve()
+            path = Path(file).resolve().as_posix()
             attr = {}
             if hdl:
                 attr['hdl'] = hdl
@@ -91,7 +91,9 @@ class Project:
                 attr['lib'] = lib
             if options:
                 attr['opt'] = options
-            self.data.setdefault('files', {})[path.as_posix()] = attr
+            if path in self.data.get('files', {}):
+                del self.data['files'][path]
+            self.data.setdefault('files', {})[path] = attr
 
     def add_slog(self, pathname, options=None):
         """Add System Verilog file/s.
@@ -102,7 +104,9 @@ class Project:
         :type options: str, optional
         :raises FileNotFoundError: when pathname is not found
         """
-        self.logger.debug('Executing add_slog')
+        self.logger.debug('Executing add_slog:')
+        self.logger.debug('* pathname = %s', pathname)
+        self.logger.debug('* options = %s', options)
         self._add_file(pathname, 'slog', options)
 
     def add_vhdl(self, pathname, lib=None, options=None):
@@ -116,7 +120,11 @@ class Project:
         :type options: str, optional
         :raises FileNotFoundError: when pathname is not found
         """
-        self.logger.debug('Executing add_vhdl')
+        self.logger.debug('Executing add_vhdl:')
+        self.logger.debug('* pathname = %s', pathname)
+        lib_str = 'default library' if lib is None else lib
+        self.logger.debug('* lib = %s', lib_str)
+        self.logger.debug('* options = %s', options)
         self._add_file(pathname, 'vhdl', lib, options)
 
     def add_vlog(self, pathname, options=None):
@@ -128,7 +136,9 @@ class Project:
         :type options: str, optional
         :raises FileNotFoundError: when pathname is not found
         """
-        self.logger.debug('Executing add_vlog')
+        self.logger.debug('Executing add_vlog:')
+        self.logger.debug('* pathname = %s', pathname)
+        self.logger.debug('* options = %s', options)
         self._add_file(pathname, 'vlog', options)
 
     def add_cons(self, path, options=None):
@@ -140,7 +150,7 @@ class Project:
         :type options: str, optional
         :raises FileNotFoundError: if path is not found
         """
-        self.logger.debug('Executing add_cons')
+        self.logger.debug('Executing add_cons: %s', path)
         path = Path(path).resolve()
         if not path.is_file():
             raise FileNotFoundError(path)
@@ -157,7 +167,9 @@ class Project:
         :param value: parameter/generic value
         :type name: str
         """
-        self.logger.debug('Executing add_param')
+        self.logger.debug('Executing add_param:')
+        self.logger.debug('* name = %s', name)
+        self.logger.debug('* value = %s', value)
         self.data.setdefault('params', {})[name] = value
 
     def add_define(self, name, value):
@@ -168,7 +180,9 @@ class Project:
         :param value: define value
         :type name: str
         """
-        self.logger.debug('Executing add_define')
+        self.logger.debug('Executing add_define:')
+        self.logger.debug('* name = %s', name)
+        self.logger.debug('* value = %s', value)
         self.data.setdefault('defines', {})[name] = value
 
     def add_fileset(self, pathname):
@@ -178,7 +192,7 @@ class Project:
         :type pathname: str
         :raises FileNotFoundError: when pathname is not found
         """
-        self.logger.debug('Executing add_fileset')
+        self.logger.debug('Executing add_fileset: %s', pathname)
         if not os.path.exists(pathname):
             raise FileNotFoundError(pathname)
         raise NotImplementedError()
@@ -189,7 +203,7 @@ class Project:
         :param name: top-level name
         :type name: str
         """
-        self.logger.debug('Executing set_top')
+        self.logger.debug('Executing set_top: %s', name)
         self.data['top'] = name
 
     def add_hook(self, stage, hook):
@@ -203,7 +217,9 @@ class Project:
         :type hook: str
         :raises ValueError: when stage is invalid
         """
-        self.logger.debug('Executing add_hook')
+        self.logger.debug('Executing add_hook:')
+        self.logger.debug('* stage = %s', stage)
+        self.logger.debug('* hook = %s', hook)
         stages = [
             'precfg', 'postcfg', 'presyn', 'postsyn',
             'prepar', 'postpar', 'prebit', 'postbit'
@@ -221,7 +237,9 @@ class Project:
         :type options: str
         :raises ValueError: when command is invalid
         """
-        self.logger.debug('Executing add_options')
+        self.logger.debug('Executing set_options:')
+        self.logger.debug('* command = %s', command)
+        self.logger.debug('* options = %s', options)
         commands = ['prj', 'syn', 'par', 'bit']
         if command not in commands:
             raise ValueError('Invalid command.')
@@ -245,7 +263,9 @@ class Project:
 
         .. note:: valid steps are ``cfg``, ``syn``, ``par`` and ``bit``.
         """
-        self.logger.debug('Executing make')
+        self.logger.debug('Executing make:')
+        self.logger.debug('* first = %s', first)
+        self.logger.debug('* last = %s', last)
         if last not in STEPS:
             raise ValueError('Invalid last step.')
         if first not in STEPS:
@@ -273,7 +293,9 @@ class Project:
         :raises ValueError: for missing or wrong values
         :raises RuntimeError: error running the needed underlying tool
         """
-        self.logger.debug('Executing prog')
+        self.logger.debug('Executing prog:')
+        self.logger.debug('* bitstream = %s', bitstream)
+        self.logger.debug('* position = %s', position)
         if position not in range(1, 9):
             raise ValueError('Invalid position.')
         self.logger.info('Programming')

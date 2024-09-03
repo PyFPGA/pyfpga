@@ -17,7 +17,7 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-prj = Diamond(odir='../build/diamond')
+prj = Diamond(odir=f'results/diamond/{args.source}/{args.board}')
 
 if args.board == 'brevia2':
     prj.set_part('LFXP2-5E-5TN144C')

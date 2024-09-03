@@ -4,7 +4,7 @@ Basic usage
 Project Configuration
 ---------------------
 
-The first steps involve importing the necessary module to support the desired tool and instantiating the corresponding *class*:
+The first steps involve importing the necessary module to support the desired tool and instantiating the corresponding ``class``:
 
 .. code-block:: python
 
@@ -12,7 +12,9 @@ The first steps involve importing the necessary module to support the desired to
 
    prj = Vivado('PRJNAME', odir='OUTDIR')
 
-In the example, we are using Vivado, specifying the optional parameter *project name* (*tool name* if omitted) and *output directory* (*results* by default).
+In the example, we are using Vivado, specifying the optional parameters
+``project name`` (``tool name`` if omitted) and ``output directory``
+(``results`` by default).
 
 Next step is to specify the target FPGA device:
 
@@ -32,9 +34,8 @@ HDL source files are added using one of the following methods:
    prj.add_vlog('PATH_TO_FILES_GLOB_COMPATIBLE')
    prj.add_slog('PATH_TO_FILES_GLOB_COMPATIBLE')
 
-In these methods, you provide a path to the files. The path can include wildcards (like `*.vhdl`), allowing you to match multiple files at once.
-
-For `add_vhdl`, you can also optionally specify a library name where the files will be included.
+In these methods, you provide a path to the files. The path can include wildcards (like ``*.vhdl``), allowing you to match multiple files at once.
+In case of ``add_vhdl``, you can also optionally specify a library name where the files will be included.
 
 .. note::
 
@@ -42,6 +43,15 @@ For `add_vhdl`, you can also optionally specify a library name where the files w
 
   .. _glob: https://docs.python.org/3/library/glob.html
   .. _Path: https://docs.python.org/3/library/pathlib.html
+
+.. hint::
+
+   Files are processed in the order they are added. If a file is specified more than once,
+   it is removed from its previous position and placed at the end of the list.
+   This allows you to ensure that a file is processed after others when necessary
+   (e.g., placing a top-level at the end) or to customize options
+   (e.g., removing a VHDL library specification in case of a top-level)
+   when multiple files are added using a wildcard.
 
 Generics/parameters can be specified with:
 
@@ -82,7 +92,8 @@ After configuring the project, you can run the following to generate a bitstream
 
    prj.make()
 
-By default, this method performs *project creation*, *synthesis*, *place and route*, and *bitstream generation*.
+By default, this method performs **project creation**, **synthesis**, **place and route**,
+and **bitstream generation**.
 However, you can optionally specify both the initial and final stages, as follows:
 
 .. code-block:: python
@@ -100,7 +111,8 @@ However, you can optionally specify both the initial and final stages, as follow
 
 .. note::
 
-   After executing this method, you will find the file `<TOOL>.tcl` (or `sh` in some cases) in the output directory.
+   After executing this method, you will find the file ``<TOOL>.tcl``
+   (``<TOOL>.sh`` in some cases) in the output directory.
    For debugging purposes, if things do not work as expected, you can review this file.
 
 Bitstream programming
@@ -112,13 +124,14 @@ The final step is programming the FPGA:
 
    prj.prog('BITSTREAM', 'POSITION')
 
-Both `BITSTREAM` and `POSITION` are optional.
-If `BITSTREAM` is not specified, PyFPGA will attempt to discover it based on project information.
-The `POSITION` parameter is not always required (depends on the tool being used).
+Both ``BITSTREAM`` and ``POSITION`` are optional.
+If ``BITSTREAM`` is not specified, PyFPGA will attempt to discover it based on project information.
+The ``POSITION`` parameter is not always required (depends on the tool being used).
 
 .. note::
 
-   After executing this method, you will find the file `<TOOL>prog.tcl` (or `sh` in some cases) in the output directory.
+   After executing this method, you will find the file ``<TOOL>prog.tcl``
+   (``<TOOL>-prog.sh`` in some cases) in the output directory.
    For debugging purposes, if things do not work as expected, you can review this file.
 
 Debugging

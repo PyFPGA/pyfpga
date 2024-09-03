@@ -1,7 +1,7 @@
 PyFPGA's documentation
 ======================
 
-.. image:: _static/logo.png
+.. image:: images/logo.png
    :width: 200 px
    :align: center
    :target: https://github.com/PyFPGA/pyfpga
@@ -16,3 +16,9 @@ PyFPGA's documentation
    tools
    internals
    extending
+
+.. |timestamp| date:: %Y-%m-%d %H:%M (%Z)
+
+.. note::
+
+   Documentation generated on |timestamp|.

@@ -1,7 +1,7 @@
 SPHINXOPTS    ?=
 SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = .
-BUILDDIR      = _build
+BUILDDIR      = build
 HELPERS       = $(BUILDDIR)/hdl2bit $(BUILDDIR)/prj2bit $(BUILDDIR)/bitprog
 
 help:

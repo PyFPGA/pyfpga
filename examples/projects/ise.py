@@ -17,7 +17,7 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-prj = Ise(odir='../build/ise')
+prj = Ise(odir=f'results/ise/{args.source}/{args.board}')
 
 if args.board == 's6micro':
     prj.set_part('xc6slx9-2-csg324')
@@ -35,6 +35,7 @@ prj.add_param('SECS', '1')
 
 if args.source == 'vhdl':
     prj.add_vhdl('../sources/vhdl/*.vhdl', 'blink_lib')
+    prj.add_vhdl('../sources/vhdl/top.vhdl')
 if args.source == 'vlog':
     prj.add_include('../sources/vlog/include1')
     prj.add_include('../sources/vlog/include2')

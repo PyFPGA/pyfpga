@@ -18,7 +18,7 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-prj = Openflow(odir='../build/openflow')
+prj = Openflow(odir=f'results/openflow/{args.source}/{args.board}')
 
 if args.board == 'icestick':
     prj.set_part('hx1k-tq144')
@@ -44,6 +44,7 @@ prj.add_param('SECS', '1')
 
 if args.source == 'vhdl':
     prj.add_vhdl('../sources/vhdl/*.vhdl', 'blink_lib')
+    prj.add_vhdl('../sources/vhdl/top.vhdl')
 if args.source == 'vlog':
     prj.add_include('../sources/vlog/include1')
     prj.add_include('../sources/vlog/include2')
