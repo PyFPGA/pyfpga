@@ -5,7 +5,8 @@ on:
     paths:
       - 'docs/**'
     branches:
-#      - main
+      - main
+      - dev
 
 jobs:
   docs:
