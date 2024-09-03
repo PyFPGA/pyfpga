@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  test:
+  test-lin:
     strategy:
       matrix:
         os: ['ubuntu']
@@ -25,3 +25,20 @@ jobs:
       run: pip install . && pip install pytest
     - name: Run tests
       run: source tests/mocks/source-me.sh && make test
+  test-win:
+    runs-on: windows-latest
+    name: windows | 3.12
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: true
+        fetch-depth: 0
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.12
+    - name: Install dependencies
+      run: pip install . && pip install pytest
+    - name: Run tests
+      run: make test
