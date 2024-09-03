@@ -24,7 +24,9 @@ jobs:
     - name: Install dependencies
       run: pip install . && pip install pytest
     - name: Run tests
-      run: source tests/mocks/source-me.sh && make test
+      run: |
+        source tests/mocks/source-me.sh && make test
+        cd examples/projects && bash regress.sh
   test-win:
     runs-on: windows-latest
     name: windows | 3.12
