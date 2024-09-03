@@ -94,6 +94,10 @@ Openflow
 
 Openflow is the combination of different Free/Libre and Open Source (FLOSS) tools:
 
+.. image:: images/openflow.svg
+   :width: 70%
+   :align: center
+
 * Yosys for synthesis, with ghdl-yosys-plugin for VHDL support.
 * nextpnr in its ice40 and ecp5 versions.
 * Projects icestorm and Trellis.
