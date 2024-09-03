@@ -212,8 +212,8 @@ class Project:
             raise ValueError('Invalid stage.')
         self.data.setdefault('hooks', {}).setdefault(stage, []).append(hook)
 
-    def add_options(self, command, options):
-        """Add options for the specified underlying command.
+    def set_options(self, command, options):
+        """Set extra options for the specified underlying command.
 
         :param command: command where to apply the options
         :type command: str
