@@ -4,19 +4,25 @@ on:
   push:
 
 jobs:
-  test-lin:
+  test:
     strategy:
       matrix:
-        os: ['ubuntu']
-        pyver: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        os: [ubuntu, windows]
+        pyver: [3.8, 3.9, 3.10, 3.11, 3.12]
+        exclude:
+          - os: windows
+            pyver: 3.8
+          - os: windows
+            pyver: 3.9
+          - os: windows
+            pyver: 3.10
+          - os: windows
+            pyver: 3.11
     runs-on: ${{ matrix.os }}-latest
     name: ${{ matrix.os }} | ${{ matrix.pyver }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      with:
-        submodules: true
-        fetch-depth: 0
     - name: Set up Python ${{ matrix.pyver }}
       uses: actions/setup-python@v5
       with:
@@ -25,22 +31,5 @@ jobs:
       run: pip install . && pip install pytest
     - name: Run tests
       run: |
-        source tests/mocks/source-me.sh && make test
-        cd examples/projects && bash regress.sh
-  test-win:
-    runs-on: windows-latest
-    name: windows | 3.12
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        submodules: true
-        fetch-depth: 0
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.12
-    - name: Install dependencies
-      run: pip install . && pip install pytest
-    - name: Run tests
-      run: make test
+        make test
+        cd examples/projects && bash regress.sh --notool
