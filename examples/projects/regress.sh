@@ -13,7 +13,24 @@ TOOLS["vivado"]="zybo arty"
 
 SOURCES=("vlog" "vhdl" "slog")
 
-SPECIFIED_TOOL=$1
+SPECIFIED_TOOL=""
+NOTOOL=false
+while [[ "$#" -gt 0 ]]; do
+  case $1 in
+    --tool)
+      SPECIFIED_TOOL="$2"
+      shift 2
+      ;;
+    --notool)
+      NOTOOL=true
+      shift
+      ;;
+    *)
+      echo "Invalid option: $1"
+      exit 1
+      ;;
+  esac
+done
 
 for TOOL in "${!TOOLS[@]}"; do
   if [[ -n "$SPECIFIED_TOOL" && "$TOOL" != "$SPECIFIED_TOOL" ]]; then
@@ -26,7 +43,11 @@ for TOOL in "${!TOOLS[@]}"; do
         continue
       fi
       echo "> $TOOL - $BOARD - $SOURCE"
-      python3 $TOOL.py --board $BOARD --source $SOURCE
+      if [[ "$NOTOOL" == true ]]; then
+        python3 $TOOL.py --board $BOARD --source $SOURCE --notool
+      else
+        python3 $TOOL.py --board $BOARD --source $SOURCE
+      fi
     done
   done
 done
