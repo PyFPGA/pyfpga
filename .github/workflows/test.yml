@@ -7,17 +7,17 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [ubuntu, windows]
-        pyver: [3.8, 3.9, 3.10, 3.11, 3.12]
+        os: ['ubuntu', 'windows']
+        pyver: ['3.8', '3.9', '3.10', '3.11', '3.12']
         exclude:
-          - os: windows
-            pyver: 3.8
-          - os: windows
-            pyver: 3.9
-          - os: windows
-            pyver: 3.10
-          - os: windows
-            pyver: 3.11
+          - os: 'windows'
+            pyver: '3.8'
+          - os: 'windows'
+            pyver: '3.9'
+          - os: 'windows'
+            pyver: '3.10'
+          - os: 'windows'
+            pyver: '3.11'
     runs-on: ${{ matrix.os }}-latest
     name: ${{ matrix.os }} | ${{ matrix.pyver }}
     steps:
