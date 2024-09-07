@@ -85,9 +85,9 @@ def generate(tool, part):
     prj.add_hook('postbit', 'HOOK16')
     try:
         prj.make()
-    except Exception:
+    except RuntimeError:
         pass
     try:
         prj.prog()
-    except Exception:
+    except RuntimeError:
         pass

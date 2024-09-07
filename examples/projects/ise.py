@@ -15,6 +15,9 @@ parser.add_argument(
 parser.add_argument(
     '--action', choices=['make', 'prog', 'all'], default='make'
 )
+parser.add_argument(
+    '--notool', action='store_true'
+)
 args = parser.parse_args()
 
 prj = Ise(odir=f'results/ise/{args.source}/{args.board}')
@@ -45,8 +48,11 @@ if args.source == 'vlog':
 
 prj.set_top('Top')
 
-if args.action in ['make', 'all']:
-    prj.make()
-
-if args.action in ['prog', 'all']:
-    prj.prog()
+try:
+    if args.action in ['make', 'all']:
+        prj.make()
+    if args.action in ['prog', 'all']:
+        prj.prog()
+except RuntimeError:
+    if not args.notool:
+        raise
