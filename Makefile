@@ -14,6 +14,7 @@ lint:
 
 test:
 	pytest
+	cd examples/projects && bash regress.sh --notool
 
 clean:
 	py3clean .

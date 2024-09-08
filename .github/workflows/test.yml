@@ -30,6 +30,4 @@ jobs:
     - name: Install dependencies
       run: pip install . && pip install pytest
     - name: Run tests
-      run: |
-        make test
-        cd examples/projects && bash regress.sh --notool
+      run: make test
