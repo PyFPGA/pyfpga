@@ -63,7 +63,7 @@ def main():
     prjfile = Path(args.prjfile)
 
     if not prjfile.exists():
-        sys.exit('file not found.')
+        sys.exit(f'ERROR: {prjfile} file not found.')
 
     directory = prjfile.parent
     base_name = prjfile.stem
@@ -72,9 +72,9 @@ def main():
     tool = ''
     if extension in tool_per_ext:
         tool = tool_per_ext[extension]
-        print(f'* {tool} project file found.')
+        print(f'INFO: {tool} project file found.')
     else:
-        sys.exit('Unknown project file extension')
+        sys.exit(f'ERROR: unknown project file extension ({extension})')
 
     # -------------------------------------------------------------------------
     # Solving with PyFPGA
