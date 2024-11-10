@@ -6,7 +6,7 @@ from pyfpga.libero import Libero
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    '--board', choices=['maker'], default='maker'
+    '--board', choices=['mpfs-disco-kit', 'maker'], default='mpfs-disco-kit'
 )
 parser.add_argument(
     '--source', choices=['vlog', 'vhdl', 'slog'], default='vlog'
@@ -21,6 +21,13 @@ args = parser.parse_args()
 
 prj = Libero(odir=f'results/libero/{args.source}/{args.board}')
 
+
+if args.board == 'mpfs-disco-kit':
+    prj.set_part('MPFS095T-1-FCSG325E')
+    prj.add_param('FREQ', '50000000')
+    prj.add_cons('../sources/cons/mpfs-disco-kit/timing.sdc')
+    prj.add_cons('../sources/cons/mpfs-disco-kit/clk.pdc')
+    prj.add_cons('../sources/cons/mpfs-disco-kit/led.pdc')
 if args.board == 'maker':
     prj.set_part('m2s010-1-tq144')
     prj.add_param('FREQ', '125000000')

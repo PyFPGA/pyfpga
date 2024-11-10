@@ -31,9 +31,10 @@ class Libero(Project):
         self.data['device'] = info['device']
         self.data['speed'] = info['speed']
         self.data['package'] = info['package']
+        self.data['prange'] = info['prange']
 
     def _prog_custom(self):
-        raise NotImplementedError('Libero programming not supported')
+        raise NotImplementedError('Libero programming not supported yet')
 
 
 # pylint: disable=duplicate-code
@@ -42,7 +43,7 @@ def get_info(part):
     """Get info about the FPGA part.
 
     :param part: the FPGA part as specified by the tool
-    :returns: a dictionary with the keys family, device, speed and package
+    :returns: a dict with the keys family, device, speed, package and prange
     """
     part = part.lower()
     # Looking for the family
@@ -51,6 +52,7 @@ def get_info(part):
         r'm2s': 'SmartFusion2',
         r'm2gl': 'Igloo2',
         r'rt4g': 'RTG4',
+        r'mpfs': 'PolarFireSoC',
         r'mpf': 'PolarFire',
         r'a2f': 'SmartFusion',
         r'afs': 'Fusion',
@@ -65,10 +67,11 @@ def get_info(part):
         if re.match(key, part):
             family = value
             break
-    # Looking for the device and package
+    # Looking for the device, speed and package
     device = None
     speed = None
     package = None
+    prange = None
     aux = part.split('-')
     if len(aux) == 2:
         device = aux[0]
@@ -86,7 +89,25 @@ def get_info(part):
         raise ValueError(
             'Part must be DEVICE-SPEED-PACKAGE or DEVICE-PACKAGE'
         )
+    # Looking for a part_range
+    pranges = {
+        'c': 'COM',
+        'e': 'EXT',
+        'i': 'IND',
+        'm': 'MIL',
+        't1': 'TGrade1'
+    }
+    prange = 'COM'
+    for suffix, name in pranges.items():
+        if package.endswith(suffix):
+            package = package[:-len(suffix)]
+            prange = name
+            break
     # Finish
     return {
-        'family': family, 'device': device, 'speed': speed, 'package': package
+        'family': family,
+        'device': device,
+        'speed': speed,
+        'package': package,
+        'prange': prange
     }

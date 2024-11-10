@@ -19,7 +19,8 @@ def test_libero():
         'family': 'SmartFusion2',
         'device': 'm2s010',
         'speed': '-1',
-        'package': 'tq144'
+        'package': 'tq144',
+        'prange': 'COM'
     }
     assert get_info_libero('m2s010-1-tq144') == info
     assert get_info_libero('m2s010-tq144-1') == info
