@@ -34,9 +34,9 @@ def get_info(part):
     """Get info about the FPGA part.
 
     :param part: the FPGA part as specified by the tool
-    :returns: a dictionary with the keys family, device and package
+    :returns: a dict with the keys family, device and package
     """
-    part = part.lower()
+    part = part.lower().replace(' ', '')
     # Looking for the family
     family = None
     families = [
@@ -62,7 +62,7 @@ def get_info(part):
     ]
     if part.startswith(tuple(families)):
         family = 'ecp5'
-    # Looking for the device and package
+    # Looking for the other values
     device = None
     package = None
     aux = part.split('-')
@@ -73,11 +73,16 @@ def get_info(part):
         device = f'{aux[0]}-{aux[1]}'
         package = aux[2]
     else:
-        raise ValueError('Part must be DEVICE-PACKAGE')
+        valid = 'DEVICE-PACKAGE'
+        raise ValueError(f'Invalid PART format ({valid})')
     if family in ['lp4k', 'hx4k']:  # See http://www.clifford.at/icestorm
         device = device.replace('4', '8')
         package += ":4k"
     if family == 'ecp5':
         package = package.upper()
     # Finish
-    return {'family': family, 'device': device, 'package': package}
+    return {
+        'family': family,
+        'device': device,
+        'package': package
+    }

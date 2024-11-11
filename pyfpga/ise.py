@@ -43,9 +43,9 @@ def get_info(part):
     """Get info about the FPGA part.
 
     :param part: the FPGA part as specified by the tool
-    :returns: a dictionary with the keys family, device, speed and package
+    :returns: a dict with the keys family, device, speed and package
     """
-    part = part.lower()
+    part = part.lower().replace(' ', '')
     # Looking for the family
     family = None
     families = {
@@ -71,7 +71,7 @@ def get_info(part):
         if re.match(key, part):
             family = value
             break
-    # Looking for the device, package and speed
+    # Looking for the other values
     device = None
     speed = None
     package = None
@@ -79,16 +79,18 @@ def get_info(part):
     if len(aux) == 3:
         device = aux[0]
         if len(aux[1]) < len(aux[2]):
-            speed = aux[1]
+            speed = f'-{aux[1]}'
             package = aux[2]
         else:
-            speed = aux[2]
+            speed = f'-{aux[2]}'
             package = aux[1]
     else:
-        raise ValueError(
-            'Part must be DEVICE-SPEED-PACKAGE or DEVICE-PACKAGE-SPEED'
-        )
+        valid = 'DEVICE-SPEED-PACKAGE or DEVICE-PACKAGE-SPEED'
+        raise ValueError(f'Invalid PART format ({valid})')
     # Finish
     return {
-        'family': family, 'device': device, 'speed': speed, 'package': package
+        'family': family,
+        'device': device,
+        'speed': speed,
+        'package': package
     }

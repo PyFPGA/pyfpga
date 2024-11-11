@@ -13,7 +13,7 @@ project new {{ project }}.xise
 project set family  {{ family }}
 project set device  {{ device }}
 project set package {{ package }}
-project set speed  -{{ speed }}
+project set speed   {{ speed }}
 
 {% if hooks %}{{ hooks.precfg | join('\n') }}{% endif %}
 

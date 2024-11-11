@@ -70,6 +70,13 @@ Example:
 
    prj = Ise()
 
+Valid PART formats:
+
+.. code::
+
+   <DEVICE>-<SPEED>-<PACKAGE>
+   <DEVICE>-<PACKAGE>-<SPEED>
+
 Libero
 ------
 
@@ -86,6 +93,19 @@ Example:
    from pyfpga.libero import Libero
 
    prj = Libero()
+
+Valid PART formats:
+
+.. code::
+
+   <DEVICE>-<PACKAGE>
+   <DEVICE>-<SPEED><PACKAGE>
+   <DEVICE>-<SPEED>-<PACKAGE>
+   <DEVICE>-<PACKAGE>-<SPEED>
+   <DEVICE>-<PACKAGE><RANGE>
+   <DEVICE>-<SPEED><PACKAGE><RANGE>
+   <DEVICE>-<SPEED>-<PACKAGE><RANGE>
+   <DEVICE>-<PACKAGE><RANGE>-<SPEED>
 
 Openflow
 --------
@@ -115,6 +135,12 @@ Example:
    from pyfpga.openflow import Openflow
 
    prj = Openflow()
+
+Valid PART formats:
+
+.. code::
+
+   <DEVICE>-<PACKAGE>
 
 Quartus
 -------

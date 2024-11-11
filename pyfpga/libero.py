@@ -14,7 +14,7 @@ from pyfpga.project import Project
 
 
 class Libero(Project):
-    """Class to support Libero."""
+    """Class to support Libero projects."""
 
     def _configure(self):
         tool = 'libero'
@@ -45,12 +45,12 @@ def get_info(part):
     :param part: the FPGA part as specified by the tool
     :returns: a dict with the keys family, device, speed, package and prange
     """
-    part = part.lower()
+    part = part.lower().replace(' ', '')
     # Looking for the family
     family = None
     families = {
         r'm2s': 'SmartFusion2',
-        r'm2gl': 'Igloo2',
+        r'm2gl': 'IGLOO2',
         r'rt4g': 'RTG4',
         r'mpfs': 'PolarFireSoC',
         r'mpf': 'PolarFire',
@@ -67,7 +67,7 @@ def get_info(part):
         if re.match(key, part):
             family = value
             break
-    # Looking for the device, speed and package
+    # Looking for the other values
     device = None
     speed = None
     package = None
@@ -75,8 +75,12 @@ def get_info(part):
     aux = part.split('-')
     if len(aux) == 2:
         device = aux[0]
-        speed = 'STD'
         package = aux[1]
+        if package[0].isdigit():
+            speed = f'-{package[0]}'
+            package = package[1:]
+        else:
+            speed = 'STD'
     elif len(aux) == 3:
         device = aux[0]
         if len(aux[1]) < len(aux[2]):
@@ -86,10 +90,8 @@ def get_info(part):
             speed = f'-{aux[2]}'
             package = aux[1]
     else:
-        raise ValueError(
-            'Part must be DEVICE-SPEED-PACKAGE or DEVICE-PACKAGE'
-        )
-    # Looking for a part_range
+        valid = 'DEVICE-[SPEED][-]PACKAGE[PRANGE][-SPEED]'
+        raise ValueError(f'Invalid PART format ({valid})')
     pranges = {
         'c': 'COM',
         'e': 'EXT',
