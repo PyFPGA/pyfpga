@@ -1,14 +1,12 @@
+{#
 #
-# Copyright (C) 2015-2024 PyFPGA Project
+# Copyright (C) 2024 PyFPGA Project
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 #}
 
-# open_project -file {$TEMPDIR/libero.prjx}
-# run_tool -name {CONFIGURE_CHAIN} -script {$TEMPDIR/flashpro.tcl}
-# run_tool -name {PROGRAMDEVICE}
-
-# set flashpro_programmer "configure_flashpro5_prg -vpump {ON} \
-# -clk_mode {free_running_clk} -programming_method {spi_slave} \
-# -force_freq {OFF} -freq {4000000}"
+if { [catch {open_project {{ project }}/{{ project }}.prjx} ] } {
+  open_project {{ project }}.prjx
+}
+run_tool -name {PROGRAMDEVICE}

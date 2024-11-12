@@ -21,9 +21,9 @@ class Libero(Project):
         self.conf['tool'] = tool
         self.conf['make_cmd'] = f'{tool} SCRIPT:{tool}.tcl'
         self.conf['make_ext'] = 'tcl'
-        self.conf['prog_bit'] = None
-        self.conf['prog_cmd'] = None
-        self.conf['prog_ext'] = None
+        self.conf['prog_bit'] = 'pdd'
+        self.conf['prog_cmd'] = f'{tool} SCRIPT:{tool}-prog.tcl'
+        self.conf['prog_ext'] = 'tcl'
 
     def _make_custom(self):
         info = get_info(self.data.get('part', 'mpf100t-1-fcg484'))
@@ -32,9 +32,6 @@ class Libero(Project):
         self.data['speed'] = info['speed']
         self.data['package'] = info['package']
         self.data['prange'] = info['prange']
-
-    def _prog_custom(self):
-        raise NotImplementedError('Libero programming not supported yet')
 
 
 # pylint: disable=duplicate-code
@@ -97,7 +94,8 @@ def get_info(part):
         'e': 'EXT',
         'i': 'IND',
         'm': 'MIL',
-        't1': 'TGrade1'
+        't1': 'TGrade1',
+        't2': 'TGrade2'
     }
     prange = 'COM'
     for suffix, name in pranges.items():
