@@ -94,7 +94,7 @@ if { [process get "Place & Route" status] == "errors" } { exit 1 }
 
 process run "Generate Programming File"
 if { [process get "Generate Programming File" status] == "errors" } { exit 1 }
-catch { file rename -force {{ top }}.bit {{ project }}.bit }
+catch { file copy -force {{ top }}.bit {{ project }}.bit }
 
 {% if hooks %}{{ hooks.postbit | join('\n') }}{% endif %}
 
