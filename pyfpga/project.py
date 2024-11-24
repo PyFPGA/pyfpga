@@ -245,6 +245,7 @@ class Project:
         :param position: position of the device in the JTAG chain
         :type position: str, optional
         :raises ValueError: for missing or wrong values
+        :raises FileNotFoundError: when bitstream is not found
         :raises RuntimeError: error running the needed underlying tool
         """
         self.logger.debug('Executing prog')
@@ -255,6 +256,8 @@ class Project:
             bitstream = f'{self.data["project"]}.{self.conf["prog_bit"]}'
         else:
             bitstream = Path(bitstream).resolve().as_posix()
+        if not os.path.exists(bitstream):
+            raise FileNotFoundError(bitstream)
         self.data['bitstream'] = bitstream
         self._prog_custom()
         self._create_file(f'{self.conf["tool"]}-prog', self.conf['prog_ext'])
