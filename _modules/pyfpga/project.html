@@ -365,6 +365,7 @@
 <span class="sd">        :param position: position of the device in the JTAG chain</span>
 <span class="sd">        :type position: str, optional</span>
 <span class="sd">        :raises ValueError: for missing or wrong values</span>
+<span class="sd">        :raises FileNotFoundError: when bitstream is not found</span>
 <span class="sd">        :raises RuntimeError: error running the needed underlying tool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing prog&#39;</span><span class="p">)</span>
@@ -375,6 +376,8 @@
             <span class="n">bitstream</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;project&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;prog_bit&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">bitstream</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">bitstream</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">bitstream</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">bitstream</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;bitstream&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bitstream</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_prog_custom</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_file</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;tool&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">-prog&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;prog_ext&#39;</span><span class="p">])</span>
