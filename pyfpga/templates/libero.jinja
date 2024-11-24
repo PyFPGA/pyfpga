@@ -113,6 +113,7 @@ run_tool -name {VERIFYTIMING}
 {% if hooks %}{{ hooks.prebit | join('\n') }}{% endif %}
 
 run_tool -name {GENERATEPROGRAMMINGFILE}
+catch { file copy -force {{ project }}/designer/{{ top }}/{{ top }}.ppd {{ project }}.ppd }
 
 {% if hooks %}{{ hooks.postbit | join('\n') }}{% endif %}
 

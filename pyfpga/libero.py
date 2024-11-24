@@ -21,8 +21,8 @@ class Libero(Project):
         self.conf['tool'] = tool
         self.conf['make_cmd'] = f'{tool} SCRIPT:{tool}.tcl'
         self.conf['make_ext'] = 'tcl'
-        self.conf['prog_bit'] = 'pdd'
-        self.conf['prog_cmd'] = f'{tool} SCRIPT:{tool}-prog.tcl'
+        self.conf['prog_bit'] = 'ppd'
+        self.conf['prog_cmd'] = f'FPExpress SCRIPT:{tool}-prog.tcl'
         self.conf['prog_ext'] = 'tcl'
 
     def _make_custom(self):

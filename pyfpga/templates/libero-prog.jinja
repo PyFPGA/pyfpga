@@ -6,7 +6,10 @@
 #
 #}
 
-if { [catch {open_project {{ project }}/{{ project }}.prjx} ] } {
-  open_project {{ project }}.prjx
-}
-run_tool -name {PROGRAMDEVICE}
+file delete -force -- libero-prog
+new_project -name libero -location libero-prog -mode single
+
+set_programming_file -file {{ bitstream }}
+set_programming_action -action {PROGRAM}
+
+run_selected_actions
