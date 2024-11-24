@@ -253,6 +253,9 @@ class Project:
         self.logger.info('Programming')
         if not bitstream:
             bitstream = f'{self.data["project"]}.{self.conf["prog_bit"]}'
+        else:
+            bitstream = Path(bitstream).resolve().as_posix()
+        self.data['bitstream'] = bitstream
         self._prog_custom()
         self._create_file(f'{self.conf["tool"]}-prog', self.conf['prog_ext'])
         self._run(self.conf['prog_cmd'], 'prog.log')
