@@ -253,10 +253,14 @@ class Project:
             raise ValueError('Invalid position.')
         self.logger.info('Programming')
         if not bitstream:
-            bitstream = f'{self.data["project"]}.{self.conf["prog_bit"]}'
+            for ext in self.conf['prog_bit']:
+                candidate = Path(self.odir) / f'{self.data["project"]}.{ext}'
+                if candidate.exists():
+                    bitstream = candidate.resolve()
+                    break
         else:
-            bitstream = Path(bitstream).resolve().as_posix()
-        if not os.path.exists(bitstream):
+            bitstream = Path(bitstream).resolve()
+        if not bitstream or not bitstream.exists():
             raise FileNotFoundError(bitstream)
         self.data['bitstream'] = bitstream
         self._prog_custom()

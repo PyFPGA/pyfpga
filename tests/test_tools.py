@@ -9,6 +9,7 @@ def test_diamond():
     generate(tool, 'PARTNAME')
     base = f'results/{tool}/{tool}'
     assert Path(f'{base}.tcl').exists(), 'file not found'
+    assert Path(f'{base}-prog.sh').exists(), 'file not found'
 
 
 def test_ise():
@@ -24,6 +25,7 @@ def test_libero():
     generate(tool, 'DEVICE-PACKAGE-SPEED')
     base = f'results/{tool}/{tool}'
     assert Path(f'{base}.tcl').exists(), 'file not found'
+    assert Path(f'{base}-prog.tcl').exists(), 'file not found'
 
 
 def test_openflow():
@@ -87,6 +89,12 @@ def generate(tool, part):
         prj.make()
     except RuntimeError:
         pass
+    if tool == 'libero':
+        open(f'results/{tool}/{tool}.ppd', 'w').close()
+    elif tool == 'quartus':
+        open(f'results/{tool}/{tool}.sof', 'w').close()
+    else:
+        open(f'results/{tool}/{tool}.bit', 'w').close()
     try:
         prj.prog()
     except RuntimeError:

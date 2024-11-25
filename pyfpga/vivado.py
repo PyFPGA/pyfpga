@@ -20,7 +20,7 @@ class Vivado(Project):
         self.conf['tool'] = tool
         self.conf['make_cmd'] = f'{command} {tool}.tcl'
         self.conf['make_ext'] = 'tcl'
-        self.conf['prog_bit'] = 'bit'
+        self.conf['prog_bit'] = ['bit']
         self.conf['prog_cmd'] = f'{command} {tool}-prog.tcl'
         self.conf['prog_ext'] = 'tcl'
 

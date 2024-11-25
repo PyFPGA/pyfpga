@@ -19,7 +19,7 @@ class Openflow(Project):
         self.conf['tool'] = tool
         self.conf['make_cmd'] = f'bash {tool}.sh'
         self.conf['make_ext'] = 'sh'
-        self.conf['prog_bit'] = 'bit'
+        self.conf['prog_bit'] = ['svf', 'bit']
         self.conf['prog_cmd'] = f'bash {tool}-prog.sh'
         self.conf['prog_ext'] = 'sh'
 
@@ -28,6 +28,10 @@ class Openflow(Project):
         self.data['family'] = info['family']
         self.data['device'] = info['device']
         self.data['package'] = info['package']
+
+    def _prog_custom(self):
+        info = get_info(self.data.get('part', 'hx8k-ct256'))
+        self.data['family'] = info['family']
 
 
 def get_info(part):

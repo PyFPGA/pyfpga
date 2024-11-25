@@ -7,6 +7,7 @@
 #
 
 import argparse
+import re
 import subprocess
 
 
@@ -33,5 +34,13 @@ subprocess.run(
    check=True,
    universal_newlines=True
 )
+
+pattern = r'project\s+new\s+(\S+)\.xise'
+with open(args.source, 'r', encoding='utf-8') as file:
+    match = re.search(pattern, file.read())
+    if match:
+        project = match.group(1)
+        with open(f'{project}.bit', 'w', encoding='utf-8') as file:
+            pass
 
 print(f'INFO:the {tool.upper()} mock has been executed')

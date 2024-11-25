@@ -8,6 +8,7 @@
 
 import argparse
 import os
+import re
 import subprocess
 
 
@@ -40,5 +41,13 @@ subprocess.run(
    check=True,
    universal_newlines=True
 )
+
+pattern = r'project_new\s+(\S+)\s'
+with open(args.script, 'r', encoding='utf-8') as file:
+    match = re.search(pattern, file.read())
+    if match:
+        project = match.group(1)
+        with open(f'{project}.sof', 'w', encoding='utf-8') as file:
+            pass
 
 print(f'INFO:the {tool.upper()} mock has been executed')

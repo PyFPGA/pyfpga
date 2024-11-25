@@ -19,7 +19,7 @@ class Quartus(Project):
         self.conf['tool'] = tool
         self.conf['make_cmd'] = f'quartus_sh --script {tool}.tcl'
         self.conf['make_ext'] = 'tcl'
-        self.conf['prog_bit'] = 'sof'
+        self.conf['prog_bit'] = ['sof', 'pof']
         self.conf['prog_cmd'] = f'bash {tool}-prog.tcl'
         self.conf['prog_ext'] = 'tcl'
 

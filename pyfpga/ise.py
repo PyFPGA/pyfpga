@@ -21,7 +21,7 @@ class Ise(Project):
         self.conf['tool'] = tool
         self.conf['make_cmd'] = f'xtclsh {tool}.tcl'
         self.conf['make_ext'] = 'tcl'
-        self.conf['prog_bit'] = 'bit'
+        self.conf['prog_bit'] = ['bit']
         self.conf['prog_cmd'] = f'impact -batch {tool}-prog.tcl'
         self.conf['prog_ext'] = 'tcl'
 
