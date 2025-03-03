@@ -11,5 +11,5 @@ jobs:
       uses: actions/checkout@v4
     - name: Install dependencies
       run: pip install pycodestyle pylint
-    - name: Run linters
+    - name: Run linting
       run: make lint
