@@ -16,6 +16,7 @@ PyFPGA's documentation
    tools
    internals
    extending
+   misc
 
 .. |timestamp| date:: %Y-%m-%d %H:%M (%Z)
 
