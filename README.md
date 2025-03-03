@@ -49,15 +49,23 @@ For a comprehensive list of supported tools, features and limitations, please re
 
 ## Installation
 
-PyFPGA requires Python>=3.8.
+> **NOTE:** PyFPGA requires Python >= 3.8.
 
-At the moment, it's only available as a git repository hosted on GitHub. It can be installed with pip:
+PyFPGA can be installed in several ways:
+
+1. From PyPi using pip:
+
+```
+pip install pyfpga
+```
+
+2. From the GitHub repository:
 
 ```
 pip install 'git+https://github.com/PyFPGA/pyfpga#egg=pyfpga'
 ```
 
-Alternatively, you can get a copy of the repository either through git clone or downloading a tarball/zipfile, and then:
+3. Clone/download the repository and install it manually:
 
 ```
 git clone https://github.com/PyFPGA/pyfpga.git
@@ -65,8 +73,7 @@ cd pyfpga
 pip install -e .
 ```
 
-> With `-e` (`--editable`) your application is installed into site-packages via a kind of symlink.
-> That allows pulling changes through git or changing the branch, avoiding the need to reinstall the package.
+> **NOTE:** with `-e` (`--editable`), the application is installed into site-packages via a symlink, which allows you to pull changes through git or switch branches without reinstalling the package.
 
 ## Similar projects
 
