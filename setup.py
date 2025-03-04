@@ -6,7 +6,7 @@ with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 setup(
-    name='pyfpga',
+    name='PyFPGA',
     version=pyfpga.__version__,
     description='A Python package to use FPGA development tools programmatically',
     long_description=long_description,
@@ -19,9 +19,9 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'fpga-hdl2bit = pyfpga.helpers.hdl2bit:main',
-            'fpga-prj2bit = pyfpga.helpers.prj2bit:main',
-            'fpga-bitprog = pyfpga.helpers.bitprog:main'
+            'hdl2bit = pyfpga.helpers.hdl2bit:main',
+            'prj2bit = pyfpga.helpers.prj2bit:main',
+            'bitprog = pyfpga.helpers.bitprog:main'
         ],
     },
     classifiers=[
