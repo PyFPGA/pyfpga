@@ -2,6 +2,10 @@ name: 'lint'
 
 on:
   push:
+    paths:
+      - 'examples/**'
+      - 'pyfpga/**'
+      - 'tests/**'
 
 jobs:
   lint:
