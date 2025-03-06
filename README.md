@@ -78,7 +78,8 @@ pip install -e .
 ## Similar projects
 
 * [edalize](https://github.com/olofk/edalize): an abstraction library for interfacing EDA tools.
-* [Hdlmake](https://ohwr.org/project/hdl-make): tool for generating multi-purpose makefiles for FPGA projects.
+* Firmware Framework ([FWK](https://gitlab.desy.de/fpgafw/fwk)): set of scripts and functions/procedures that combine all the input files needed to produce build.
 * HDL On Git ([Hog](https://gitlab.com/hog-cern/Hog)): a set of Tcl/Shell scripts plus a suitable methodology to handle HDL designs in a GitLab repository.
+* [Hdlmake](https://ohwr.org/project/hdl-make): tool for generating multi-purpose makefiles for FPGA projects.
 * IPbus Builder ([IPBB](https://github.com/ipbus/ipbb)): a tool for streamlining the synthesis, implementation and simulation of modular firmware projects over multiple platforms.
 * [tsfpga](https://github.com/tsfpga/tsfpga): a flexible and scalable development platform for modern FPGA projects.
