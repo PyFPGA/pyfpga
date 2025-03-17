@@ -85,17 +85,5 @@ def generate(tool, part):
     prj.add_hook('prebit', 'HOOK14')
     prj.add_hook('postbit', 'HOOK15')
     prj.add_hook('postbit', 'HOOK16')
-    try:
-        prj.make()
-    except RuntimeError:
-        pass
-    if tool == 'libero':
-        open(f'results/{tool}/{tool}.ppd', 'w').close()
-    elif tool == 'quartus':
-        open(f'results/{tool}/{tool}.sof', 'w').close()
-    else:
-        open(f'results/{tool}/{tool}.bit', 'w').close()
-    try:
-        prj.prog()
-    except RuntimeError:
-        pass
+    prj.make()
+    prj.prog()

@@ -6,9 +6,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-with open('openflow.bit', 'w', encoding='utf-8') as file:
-    pass
-with open('openflow.svf', 'w', encoding='utf-8') as file:
-    pass
+open('openflow.bit', 'w', encoding='utf-8').close()
+open('openflow.svf', 'w', encoding='utf-8').close()
 
 print('INFO:the DOCKER mock has been executed')
