@@ -2,7 +2,12 @@
 
 .PHONY: docs
 
-export PATH := $(PWD)/tests/mocks:$(PATH)
+ifeq ($(OS),Windows_NT)
+  PATH_SEP := ;
+else
+  PATH_SEP := :
+endif
+export PATH := $(CURDIR)/tests/mocks$(PATH_SEP)$(PATH)
 
 all: docs lint test
 
