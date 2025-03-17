@@ -327,5 +327,4 @@ class Project:
         path = Path(path).resolve()
         if ext == 'tcl':
             return path.as_posix()
-        else:
-            return path
+        return path
