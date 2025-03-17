@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+
+#
+# Copyright (C) 2025 PyFPGA Project
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+print('1) USB-Blaster [USB-0]')
+print('   02D120DD   EP4CE22')

@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#
+# Copyright (C) 2024-2025 PyFPGA Project
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
 set -e
 
 declare -A TOOLS
@@ -44,9 +50,9 @@ for TOOL in "${!TOOLS[@]}"; do
       fi
       echo "> $TOOL - $BOARD - $SOURCE"
       if [[ "$NOTOOL" == true ]]; then
-        python3 $TOOL.py --board $BOARD --source $SOURCE --notool
+        python3 $TOOL.py --board $BOARD --source $SOURCE --action all --notool
       else
-        python3 $TOOL.py --board $BOARD --source $SOURCE
+        python3 $TOOL.py --board $BOARD --source $SOURCE --action all
       fi
     done
   done
