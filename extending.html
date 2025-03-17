@@ -52,7 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="internals.html">Internals</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Extending</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#add-support-for-the-new-tool">Add support for the new tool</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#add-tests-and-a-tool-mock-up">Add tests and a tool mock-up</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#add-tests-and-tools-mock-ups">Add tests and tools mock-ups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#add-examples">Add examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#verify-the-code">Verify the code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#verify-the-functionality">Verify the functionality</a></li>
@@ -103,9 +103,10 @@ pyfpga/helpers/prj2bit.py<span class="w"> </span><span class="c1"># UPDATE</span
 </pre></div>
 </div>
 </section>
-<section id="add-tests-and-a-tool-mock-up">
-<h2>Add tests and a tool mock-up<a class="headerlink" href="#add-tests-and-a-tool-mock-up" title="Link to this heading"></a></h2>
+<section id="add-tests-and-tools-mock-ups">
+<h2>Add tests and tools mock-ups<a class="headerlink" href="#add-tests-and-tools-mock-ups" title="Link to this heading"></a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tests/test_tools.py<span class="w"> </span><span class="c1"># UPDATE</span>
+tests/regress.sh<span class="w"> </span><span class="c1"># UPDATE</span>
 tests/support.py<span class="w"> </span><span class="c1"># UPDATE if exceptions are needed</span>
 tests/mocks/&lt;NEWCOMMAND&gt;
 </pre></div>
@@ -117,7 +118,6 @@ tests/mocks/&lt;NEWCOMMAND&gt;
 examples/sources/cons/&lt;NEWBOARD&gt;/clk.&lt;EXT&gt;
 examples/sources/cons/&lt;NEWBOARD&gt;/led.&lt;EXT&gt;
 examples/projects/&lt;NEWTOOL&gt;.py
-examples/projects/regress.sh<span class="w"> </span><span class="c1"># UPDATE</span>
 examples/helpers/&lt;NEWTOOL&gt;.sh
 examples/hooks/&lt;NEWTOOL&gt;.py<span class="w"> </span><span class="c1"># OPTIONAL</span>
 </pre></div>
@@ -139,9 +139,7 @@ Running <code class="docutils literal notranslate"><span class="pre">make</span>
 </section>
 <section id="verify-the-functionality">
 <h2>Verify the functionality<a class="headerlink" href="#verify-the-functionality" title="Link to this heading"></a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>examples/projects/
-bash<span class="w"> </span>regress.sh<span class="w"> </span>&lt;NEWTOOL&gt;
-<span class="nb">cd</span><span class="w"> </span>../../tests/
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>tests
 python3<span class="w"> </span>support.py<span class="w"> </span>--tool<span class="w"> </span>&lt;NEWTOOL&gt;
 </pre></div>
 </div>
