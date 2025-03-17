@@ -18,12 +18,13 @@ Add support for the new tool
    pyfpga/factory.py # UPDATE
    pyfpga/helpers/prj2bit.py # UPDATE
 
-Add tests and a tool mock-up
+Add tests and tools mock-ups
 ----------------------------
 
 .. code-block:: bash
 
    tests/test_tools.py # UPDATE
+   tests/regress.sh # UPDATE
    tests/support.py # UPDATE if exceptions are needed
    tests/mocks/<NEWCOMMAND>
 
@@ -36,7 +37,6 @@ Add examples
    examples/sources/cons/<NEWBOARD>/clk.<EXT>
    examples/sources/cons/<NEWBOARD>/led.<EXT>
    examples/projects/<NEWTOOL>.py
-   examples/projects/regress.sh # UPDATE
    examples/helpers/<NEWTOOL>.sh
    examples/hooks/<NEWTOOL>.py # OPTIONAL
 
@@ -61,9 +61,7 @@ Verify the functionality
 
 .. code-block:: bash
 
-   cd examples/projects/
-   bash regress.sh <NEWTOOL>
-   cd ../../tests/
+   cd tests
    python3 support.py --tool <NEWTOOL>
 
 Updated the documentation
