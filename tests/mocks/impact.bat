@@ -1,2 +1,1 @@
-@echo off
-python "%~dp0impact" %*
+@echo off & python "%~dp0%~n0" %*

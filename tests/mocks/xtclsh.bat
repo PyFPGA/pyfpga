@@ -1,2 +1,1 @@
-@echo off
-python "%~dp0xtclsh" %*
+@echo off & python "%~dp0%~n0" %*

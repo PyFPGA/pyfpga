@@ -1,2 +1,1 @@
-@echo off
-python "%~dp0quartus_sh" %*
+@echo off & python "%~dp0%~n0" %*

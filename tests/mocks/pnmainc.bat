@@ -1,2 +1,1 @@
-@echo off
-python "%~dp0diamondc" %*
+@echo off & python "%~dp0diamondc" %*
