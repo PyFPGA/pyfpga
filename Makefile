@@ -2,6 +2,8 @@
 
 .PHONY: docs
 
+export PATH := $(PWD)/tests/mocks:$(PATH)
+
 all: docs lint test
 
 docs:
@@ -14,7 +16,7 @@ lint:
 
 test:
 	pytest
-	cd examples/projects && bash regress.sh --notool
+	cd tests && bash regress.sh
 
 clean:
 	py3clean .

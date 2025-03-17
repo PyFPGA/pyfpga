@@ -19,6 +19,9 @@ TOOLS["vivado"]="zybo arty"
 
 SOURCES=("vlog" "vhdl" "slog")
 
+SDIR=$PWD
+TDIR=../examples/projects
+
 SPECIFIED_TOOL=""
 NOTOOL=false
 while [[ "$#" -gt 0 ]]; do
@@ -26,10 +29,6 @@ while [[ "$#" -gt 0 ]]; do
     --tool)
       SPECIFIED_TOOL="$2"
       shift 2
-      ;;
-    --notool)
-      NOTOOL=true
-      shift
       ;;
     *)
       echo "Invalid option: $1"
@@ -49,11 +48,9 @@ for TOOL in "${!TOOLS[@]}"; do
         continue
       fi
       echo "> $TOOL - $BOARD - $SOURCE"
-      if [[ "$NOTOOL" == true ]]; then
-        python3 $TOOL.py --board $BOARD --source $SOURCE --action all --notool
-      else
-        python3 $TOOL.py --board $BOARD --source $SOURCE --action all
-      fi
+      cd $TDIR;
+      python3 $TOOL.py --board $BOARD --source $SOURCE --action all;
+      cd $SDIR;
     done
   done
 done

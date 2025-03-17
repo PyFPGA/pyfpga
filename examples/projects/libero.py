@@ -14,9 +14,6 @@ parser.add_argument(
 parser.add_argument(
     '--action', choices=['make', 'prog', 'all'], default='make'
 )
-parser.add_argument(
-    '--notool', action='store_true'
-)
 args = parser.parse_args()
 
 prj = Libero(odir=f'results/libero/{args.source}/{args.board}')
@@ -53,11 +50,7 @@ if args.source in ['vlog', 'slog']:
 
 prj.set_top('Top')
 
-try:
-    if args.action in ['make', 'all']:
-        prj.make()
-    if args.action in ['prog', 'all']:
-        prj.prog()
-except RuntimeError:
-    if not args.notool:
-        raise
+if args.action in ['make', 'all']:
+    prj.make()
+if args.action in ['prog', 'all']:
+    prj.prog()
