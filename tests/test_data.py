@@ -1,60 +1,40 @@
 from pathlib import Path
-
 from pyfpga.vivado import Vivado
 
 tdir = Path(__file__).parent.resolve()
+
+
+def prepare(path):
+    return Path(tdir / path).as_posix()
+
 
 pattern = {
     'project': 'EXAMPLE',
     'part': 'PARTNAME',
     'includes': [
-        Path(tdir / 'fakedata/dir1').resolve().as_posix(),
-        Path(tdir / 'fakedata/dir2').resolve().as_posix(),
-        Path(tdir / 'fakedata/dir3').resolve().as_posix()
+        prepare('fakedata/dir1'),
+        prepare('fakedata/dir2'),
+        prepare('fakedata/dir3')
     ],
     'files': {
-        Path(tdir / 'fakedata/vhdl0.vhdl').resolve().as_posix(): {
-            'hdl': 'vhdl', 'lib': 'LIB'
-        },
-        Path(tdir / 'fakedata/dir1/vhdl1.vhdl').resolve().as_posix(): {
-            'hdl': 'vhdl', 'lib': 'LIB'
-        },
-        Path(tdir / 'fakedata/dir2/vhdl2.vhdl').resolve().as_posix(): {
-            'hdl': 'vhdl', 'lib': 'LIB'
-        },
-        Path(tdir / 'fakedata/dir3/vhdl3.vhdl').resolve().as_posix(): {
-            'hdl': 'vhdl', 'lib': 'LIB'
-        },
-        Path(tdir / 'fakedata/vlog0.v').resolve().as_posix(): {
-            'hdl': 'vlog'
-        },
-        Path(tdir / 'fakedata/dir1/vlog1.v').resolve().as_posix(): {
-            'hdl': 'vlog'
-        },
-        Path(tdir / 'fakedata/dir2/vlog2.v').resolve().as_posix(): {
-            'hdl': 'vlog'
-        },
-        Path(tdir / 'fakedata/dir3/vlog3.v').resolve().as_posix(): {
-            'hdl': 'vlog'
-        },
-        Path(tdir / 'fakedata/slog0.sv').resolve().as_posix(): {
-            'hdl': 'slog'
-        },
-        Path(tdir / 'fakedata/dir1/slog1.sv').resolve().as_posix(): {
-            'hdl': 'slog'
-        },
-        Path(tdir / 'fakedata/dir2/slog2.sv').resolve().as_posix(): {
-            'hdl': 'slog'
-        },
-        Path(tdir / 'fakedata/dir3/slog3.sv').resolve().as_posix(): {
-            'hdl': 'slog'
-        }
+        prepare('fakedata/vhdl0.vhdl'): {'hdl': 'vhdl', 'lib': 'LIB'},
+        prepare('fakedata/dir1/vhdl1.vhdl'): {'hdl': 'vhdl', 'lib': 'LIB'},
+        prepare('fakedata/dir2/vhdl2.vhdl'): {'hdl': 'vhdl', 'lib': 'LIB'},
+        prepare('fakedata/dir3/vhdl3.vhdl'): {'hdl': 'vhdl', 'lib': 'LIB'},
+        prepare('fakedata/vlog0.v'): {'hdl': 'vlog'},
+        prepare('fakedata/dir1/vlog1.v'): {'hdl': 'vlog'},
+        prepare('fakedata/dir2/vlog2.v'): {'hdl': 'vlog'},
+        prepare('fakedata/dir3/vlog3.v'): {'hdl': 'vlog'},
+        prepare('fakedata/slog0.sv'): {'hdl': 'slog'},
+        prepare('fakedata/dir1/slog1.sv'): {'hdl': 'slog'},
+        prepare('fakedata/dir2/slog2.sv'): {'hdl': 'slog'},
+        prepare('fakedata/dir3/slog3.sv'): {'hdl': 'slog'}
     },
     'top': 'TOPNAME',
     'constraints': {
-        Path(tdir / 'fakedata/cons/all.xdc').resolve().as_posix(): {},
-        Path(tdir / 'fakedata/cons/syn.xdc').resolve().as_posix(): {},
-        Path(tdir / 'fakedata/cons/par.xdc').resolve().as_posix(): {}
+        prepare('fakedata/cons/all.xdc'): {},
+        prepare('fakedata/cons/syn.xdc'): {},
+        prepare('fakedata/cons/par.xdc'): {}
     },
     'params': {
         'PAR1': 'VAL01',
