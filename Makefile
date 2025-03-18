@@ -20,7 +20,7 @@ lint:
 	git diff --check --cached
 
 test:
-	pytest
+	pytest -vv
 	cd tests && bash regress.sh
 
 clean:
