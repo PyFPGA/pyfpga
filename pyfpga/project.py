@@ -237,6 +237,17 @@ class Project:
         self._create_file(self.conf['tool'], self.conf['make_ext'])
         self._run(self.conf['make_cmd'], 'make.log')
 
+    def _get_bitstream(self, bitstream):
+        if not bitstream:
+            for ext in self.conf['prog_bit']:
+                candidate = Path(self.odir) / f'{self.data["project"]}.{ext}'
+                if candidate.is_file():
+                    bitstream = candidate
+                    break
+        if not bitstream or not Path(bitstream).is_file():
+            raise FileNotFoundError(bitstream)
+        return self._get_absolute(bitstream, self.conf['prog_ext'])
+
     def prog(self, bitstream=None, position=1):
         """Program the FPGA
 
@@ -252,16 +263,7 @@ class Project:
         if position not in range(1, 9):
             raise ValueError('Invalid position.')
         self.logger.info('Programming')
-        if not bitstream:
-            for ext in self.conf['prog_bit']:
-                candidate = Path(self.odir) / f'{self.data["project"]}.{ext}'
-                if candidate.is_file():
-                    bitstream = candidate
-                    break
-        if not bitstream or not Path(bitstream).is_file():
-            raise FileNotFoundError(bitstream)
-        bitstream = self._get_absolute(bitstream, self.conf['prog_ext'])
-        self.data['bitstream'] = bitstream
+        self.data['bitstream'] = self._get_bitstream(bitstream)
         self.data['position'] = position
         self._prog_custom()
         self._create_file(f'{self.conf["tool"]}-prog', self.conf['prog_ext'])
