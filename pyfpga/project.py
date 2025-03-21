@@ -262,6 +262,7 @@ class Project:
             raise FileNotFoundError(bitstream)
         bitstream = self._get_absolute(bitstream, self.conf['prog_ext'])
         self.data['bitstream'] = bitstream
+        self.data['position'] = position
         self._prog_custom()
         self._create_file(f'{self.conf["tool"]}-prog', self.conf['prog_ext'])
         self._run(self.conf['prog_cmd'], 'prog.log')
