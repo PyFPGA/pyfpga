@@ -11,6 +11,8 @@ import re
 import subprocess
 import sys
 
+from pathlib import Path
+
 
 parser = argparse.ArgumentParser()
 
@@ -47,6 +49,9 @@ with open(args.source, 'r', encoding='utf-8') as file:
     match = re.search(pattern, file.read())
     if match:
         project = match.group(1)
+        directory = Path('libero')
+        directory.mkdir(parents=True, exist_ok=True)
+        open(directory / f'{project}.prjx', 'w', encoding='utf-8').close()
         open(f'{project}.ppd', 'w', encoding='utf-8').close()
 
 print(f'INFO:the {tool.upper()} mock has been executed')

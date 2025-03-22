@@ -8,6 +8,12 @@
 
 set -e
 
+SDIR=$PWD
+
+echo "##################################################################################"
+echo "# Tools                                                                          #"
+echo "##################################################################################"
+
 declare -A TOOLS
 
 TOOLS["diamond"]="brevia2"
@@ -18,9 +24,6 @@ TOOLS["quartus"]="de10nano"
 TOOLS["vivado"]="zybo arty"
 
 SOURCES=("vlog" "vhdl" "slog")
-
-SDIR=$PWD
-TDIR=../examples/projects
 
 SPECIFIED_TOOL=""
 NOTOOL=false
@@ -48,9 +51,24 @@ for TOOL in "${!TOOLS[@]}"; do
         continue
       fi
       echo "> $TOOL - $BOARD - $SOURCE"
-      cd $TDIR;
+      cd ../examples/projects;
       python3 $TOOL.py --board $BOARD --source $SOURCE --action all;
       cd $SDIR;
     done
   done
 done
+
+echo "##################################################################################"
+echo "# Helpers                                                                        #"
+echo "##################################################################################"
+
+cd ../examples/helpers
+
+for TOOL in "${!TOOLS[@]}"; do
+  if [[ "$TOOL" == "diamond" ]]; then
+    continue
+  fi
+  bash "$TOOL".sh
+done
+
+cd $SDIR
