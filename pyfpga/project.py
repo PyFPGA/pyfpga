@@ -237,7 +237,7 @@ class Project:
         self._create_file(self.conf['tool'], self.conf['make_ext'])
         self._run(self.conf['make_cmd'], 'make.log')
 
-    def _get_bitstream(self, bitstream):
+    def _get_bitstream(self, bitstream=None):
         if not bitstream:
             for ext in self.conf['prog_bit']:
                 candidate = Path(self.odir) / f'{self.data["project"]}.{ext}'
@@ -330,4 +330,4 @@ class Project:
         path = Path(path).resolve()
         if ext == 'tcl':
             return path.as_posix()
-        return path
+        return str(path)
