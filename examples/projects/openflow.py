@@ -16,21 +16,18 @@ parser.add_argument(
 parser.add_argument(
     '--action', choices=['make', 'prog', 'all'], default='make'
 )
-parser.add_argument(
-    '--notool', action='store_true'
-)
 args = parser.parse_args()
 
 prj = Openflow(odir=f'results/openflow/{args.source}/{args.board}')
 
 if args.board == 'icestick':
     prj.set_part('hx1k-tq144')
-    prj.add_param('FREQ', '100000000')
+    prj.add_param('FREQ', '12000000')
     prj.add_cons('../sources/cons/icestick/clk.pcf')
     prj.add_cons('../sources/cons/icestick/led.pcf')
 if args.board == 'edu-ciaa':
-    prj.set_part('hx1k-tq144')
-    prj.add_param('FREQ', '100000000')
+    prj.set_part('hx4k-tq144')
+    prj.add_param('FREQ', '12000000')
     prj.add_cons('../sources/cons/edu-ciaa/clk.pcf')
     prj.add_cons('../sources/cons/edu-ciaa/led.pcf')
 if args.board == 'orangecrab':
@@ -62,11 +59,7 @@ if args.source in ['vlog', 'slog']:
 
 prj.set_top('Top')
 
-try:
-    if args.action in ['make', 'all']:
-        prj.make()
-    if args.action in ['prog', 'all']:
-        prj.prog()
-except RuntimeError:
-    if not args.notool:
-        raise
+if args.action in ['make', 'all']:
+    prj.make()
+if args.action in ['prog', 'all']:
+    prj.prog()

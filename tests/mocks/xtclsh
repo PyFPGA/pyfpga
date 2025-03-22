@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 #
-# Copyright (C) 2022-2024 PyFPGA Project
+# Copyright (C) 2022-2025 PyFPGA Project
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
@@ -40,7 +40,7 @@ with open(args.source, 'r', encoding='utf-8') as file:
     match = re.search(pattern, file.read())
     if match:
         project = match.group(1)
-        with open(f'{project}.bit', 'w', encoding='utf-8') as file:
-            pass
+        open(f'{project}.xise', 'w', encoding='utf-8').close()
+        open(f'{project}.bit', 'w', encoding='utf-8').close()
 
 print(f'INFO:the {tool.upper()} mock has been executed')

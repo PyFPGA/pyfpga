@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019-2024 PyFPGA Project
+# Copyright (C) 2019-2025 PyFPGA Project
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
@@ -73,17 +73,17 @@ class Project:
         :raises NotADirectoryError: if path is not a directory
         """
         self.logger.debug('Executing add_include: %s', path)
-        path = Path(path).resolve()
-        if not path.is_dir():
+        path = self._get_absolute(path, self.conf['make_ext'])
+        if not Path(path).is_dir():
             raise NotADirectoryError(path)
-        self.data.setdefault('includes', []).append(path.as_posix())
+        self.data.setdefault('includes', []).append(path)
 
     def _add_file(self, pathname, hdl=None, lib=None):
         files = glob.glob(pathname, recursive=True)
         if len(files) == 0:
             raise FileNotFoundError(pathname)
         for file in files:
-            path = Path(file).resolve().as_posix()
+            path = self._get_absolute(file, self.conf['make_ext'])
             attr = {}
             if hdl:
                 attr['hdl'] = hdl
@@ -134,11 +134,11 @@ class Project:
         :raises FileNotFoundError: if path is not found
         """
         self.logger.debug('Executing add_cons: %s', path)
-        path = Path(path).resolve()
-        if not path.is_file():
+        path = self._get_absolute(path, self.conf['make_ext'])
+        if not Path(path).is_file():
             raise FileNotFoundError(path)
         attr = {}
-        self.data.setdefault('constraints', {})[path.as_posix()] = attr
+        self.data.setdefault('constraints', {})[path] = attr
 
     def add_param(self, name, value):
         """Add a Parameter/Generic Value.
@@ -170,7 +170,7 @@ class Project:
         :raises FileNotFoundError: when pathname is not found
         """
         self.logger.debug('Executing add_fileset: %s', pathname)
-        if not os.path.exists(pathname):
+        if not Path(pathname).is_file():
             raise FileNotFoundError(pathname)
         raise NotImplementedError()
 
@@ -237,6 +237,17 @@ class Project:
         self._create_file(self.conf['tool'], self.conf['make_ext'])
         self._run(self.conf['make_cmd'], 'make.log')
 
+    def _get_bitstream(self, bitstream=None):
+        if not bitstream:
+            for ext in self.conf['prog_bit']:
+                candidate = Path(self.odir) / f'{self.data["project"]}.{ext}'
+                if candidate.is_file():
+                    bitstream = candidate
+                    break
+        if not bitstream or not Path(bitstream).is_file():
+            raise FileNotFoundError(bitstream)
+        return self._get_absolute(bitstream, self.conf['prog_ext'])
+
     def prog(self, bitstream=None, position=1):
         """Program the FPGA
 
@@ -252,17 +263,8 @@ class Project:
         if position not in range(1, 9):
             raise ValueError('Invalid position.')
         self.logger.info('Programming')
-        if not bitstream:
-            for ext in self.conf['prog_bit']:
-                candidate = Path(self.odir) / f'{self.data["project"]}.{ext}'
-                if candidate.exists():
-                    bitstream = candidate.resolve()
-                    break
-        else:
-            bitstream = Path(bitstream).resolve()
-        if not bitstream or not bitstream.exists():
-            raise FileNotFoundError(bitstream)
-        self.data['bitstream'] = bitstream
+        self.data['bitstream'] = self._get_bitstream(bitstream)
+        self.data['position'] = position
         self._prog_custom()
         self._create_file(f'{self.conf["tool"]}-prog', self.conf['prog_ext'])
         self._run(self.conf['prog_cmd'], 'prog.log')
@@ -322,3 +324,10 @@ class Project:
             )
             if error:
                 raise RuntimeError('Problem with the underlying tool')
+
+    @staticmethod
+    def _get_absolute(path, ext):
+        path = Path(path).resolve()
+        if ext == 'tcl':
+            return path.as_posix()
+        return str(path)

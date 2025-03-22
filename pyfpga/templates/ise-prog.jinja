@@ -1,6 +1,6 @@
 {#
 #
-# Copyright (C) 2015-2024 PyFPGA Project
+# Copyright (C) 2015-2025 PyFPGA Project
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
@@ -8,19 +8,16 @@
 
 cleancablelock
 
-{# ------------------------------------------------------------------------- #}
+{% if not spi and not bpi %}
 
-{% if fpga %}
 setMode -bs
 setCable -port auto
 Identify -inferir
 assignFile -p {{ position }} -file  {{ bitstream }}
 Program -p {{ position }}
-{% endif %}
 
-{# ------------------------------------------------------------------------- #}
+{% elif spi %}
 
-{% if spi %}
 setMode -pff
 addConfigDevice -name {{ name }} -path .
 setSubmode -pffspi
@@ -35,11 +32,9 @@ Identify
 attachflash -position {{ position }} -spi {{ name }}
 assignfiletoattachedflash -position {{ position }} -file ./{{ name }}.mcs
 Program -p {{ position }} -dataWidth {{ width }} -spionly -e -v -loadfpga
-{% endif %}
 
-{# ------------------------------------------------------------------------- #}
+{% else %}
 
-{% if bpi %}
 setMode -pff
 addConfigDevice -name {{ name }} -path .
 setSubmode -pffbpi
@@ -55,8 +50,7 @@ Identify
 attachflash -position {{ position }} -bpi {{ name }}
 assignfiletoattachedflash -position {{ position }} -file ./{{ name }}.mcs
 Program -p {{ position }} -dataWidth {{ width }} -rs1 NONE -rs0 NONE -bpionly -e -v -loadfpga
-{% endif %}
 
-{# ------------------------------------------------------------------------- #}
+{% endif %}
 
 quit

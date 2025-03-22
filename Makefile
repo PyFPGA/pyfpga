@@ -2,6 +2,13 @@
 
 .PHONY: docs
 
+ifeq ($(OS),Windows_NT)
+  PATH_SEP := ;
+else
+  PATH_SEP := :
+endif
+export PATH := $(CURDIR)/tests/mocks$(PATH_SEP)$(PATH)
+
 all: docs lint test
 
 docs:
@@ -13,8 +20,8 @@ lint:
 	git diff --check --cached
 
 test:
-	pytest
-	cd examples/projects && bash regress.sh --notool
+	pytest -vv
+	cd tests && bash regress.sh
 
 clean:
 	py3clean .
