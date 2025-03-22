@@ -1,3 +1,5 @@
+import os
+
 from pathlib import Path
 from pyfpga.factory import Factory
 
@@ -41,7 +43,7 @@ def test_quartus():
     generate(tool, 'PARTNAME')
     base = f'results/{tool}/{tool}'
     assert Path(f'{base}.tcl').exists(), 'file not found'
-    assert Path(f'{base}-prog.tcl').exists(), 'file not found'
+    assert Path(f'{base}-prog.sh').exists(), 'file not found'
 
 
 def test_vivado():
@@ -88,11 +90,15 @@ def generate(tool, part):
     prj.make()
     prj.prog()
     #
+    separator = '\\'
+    #
     for path in prj.data['includes']:
-        assert "\\" not in path, f'invalid path {path}'
+        assert separator not in path, f'invalid path {path}'
     for category in ['files', 'constraints']:
         for path in prj.data[category]:
-            assert "\\" not in path, f'invalid path {path}'
+            assert separator not in path, f'invalid path {path}'
     #
+    if os.name == 'nt' and tool in ['diamond', 'quartus']:
+        separator = '/'
     path = prj._get_bitstream()
-    assert "\\" not in path, f'invalid path {path}'
+    assert separator not in path, f'invalid path {path}'

@@ -8,6 +8,7 @@
 Implements support for an Open Source development flow.
 """
 
+from pathlib import Path
 from pyfpga.project import Project
 
 
@@ -32,6 +33,10 @@ class Openflow(Project):
     def _prog_custom(self):
         info = get_info(self.data.get('part', 'hx8k-ct256'))
         self.data['family'] = info['family']
+
+    @staticmethod
+    def _get_absolute(path, ext):
+        return Path(path).resolve().as_posix()
 
 
 def get_info(part):
