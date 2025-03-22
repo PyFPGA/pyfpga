@@ -1,6 +1,6 @@
 {#
 #
-# Copyright (C) 2020-2024 PyFPGA Project
+# Copyright (C) 2020-2025 PyFPGA Project
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
@@ -8,7 +8,7 @@
 
 set -e
 
-DOCKER="docker run --user $(id -u):$(id -g) --rm -v $HOME:$HOME -w $PWD"
+DOCKER="docker run --rm -v $HOME:$HOME -w $PWD"
 
 {% if family == 'ecp5' %}
 $DOCKER --device /dev/bus/usb hdlc/prog openocd -f /usr/share/trellis/misc/openocd/ecp5-evn.cfg -c "transport select jtag; init; svf {{ bitstream }}; exit"

@@ -22,12 +22,12 @@ prj = Openflow(odir=f'results/openflow/{args.source}/{args.board}')
 
 if args.board == 'icestick':
     prj.set_part('hx1k-tq144')
-    prj.add_param('FREQ', '100000000')
+    prj.add_param('FREQ', '12000000')
     prj.add_cons('../sources/cons/icestick/clk.pcf')
     prj.add_cons('../sources/cons/icestick/led.pcf')
 if args.board == 'edu-ciaa':
-    prj.set_part('hx1k-tq144')
-    prj.add_param('FREQ', '100000000')
+    prj.set_part('hx4k-tq144')
+    prj.add_param('FREQ', '12000000')
     prj.add_cons('../sources/cons/edu-ciaa/clk.pcf')
     prj.add_cons('../sources/cons/edu-ciaa/led.pcf')
 if args.board == 'orangecrab':
