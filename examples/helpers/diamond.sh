@@ -16,3 +16,5 @@ python3 $HDIR/hdl2bit.py -t diamond -o results/diamond-vhdl -p lfxp2-5e-5tn144c 
     --param FREQ 125000000 --param SECS 1 --last cfg Top
 
 python3 $HDIR/prj2bit.py results/diamond-vhdl/example.ldf
+
+# Diamond programming is not yet supported

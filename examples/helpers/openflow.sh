@@ -13,6 +13,8 @@ python3 $HDIR/hdl2bit.py -t openflow -o results/openflow-vlog -p hx1k-tq144 \
 python3 $HDIR/hdl2bit.py -t openflow -o results/openflow-vhdl -p hx1k-tq144 --project example \
     -f ../sources/vhdl/blink.vhdl,blink_lib -f ../sources/vhdl/blink_pkg.vhdl,blink_lib -f ../sources/vhdl/top.vhdl \
     -f ../sources/cons/icestick/clk.pcf -f ../sources/cons/icestick/led.pcf \
-    --param FREQ 125000000 --param SECS 1 --last cfg Top
+    --param FREQ 125000000 --param SECS 1 --last syn Top
 
 # OpenFlow doesn't have a project file, so it is not supported by prj2bit
+
+python3 $HDIR/bitprog.py -t openflow results/openflow-vhdl/openflow.bit

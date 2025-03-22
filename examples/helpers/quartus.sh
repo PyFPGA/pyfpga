@@ -16,3 +16,5 @@ python3 $HDIR/hdl2bit.py -t quartus -o results/quartus-vhdl -p 5CSEBA6U23I7 --pr
     --param FREQ 125000000 --param SECS 1 --last cfg Top
 
 python3 $HDIR/prj2bit.py results/quartus-vhdl/example.qpf
+
+python3 $HDIR/bitprog.py -t quartus results/quartus-vhdl/example.sof
