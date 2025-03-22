@@ -87,3 +87,12 @@ def generate(tool, part):
     prj.add_hook('postbit', 'HOOK16')
     prj.make()
     prj.prog()
+    #
+    for path in prj.data['includes']:
+        assert "\\" not in path, f'invalid path {path}'
+    for category in ['files', 'constraints']:
+        for path in prj.data[category]:
+            assert "\\" not in path, f'invalid path {path}'
+    #
+    path = prj._get_bitstream()
+    assert "\\" not in path, f'invalid path {path}'
