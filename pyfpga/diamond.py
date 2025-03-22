@@ -21,7 +21,7 @@ class Diamond(Project):
         self.conf['tool'] = tool
         self.conf['make_cmd'] = f'{executable} {tool}.tcl'
         self.conf['make_ext'] = 'tcl'
-        self.conf['prog_bit'] = 'bit'
+        self.conf['prog_bit'] = ['bit']
         self.conf['prog_cmd'] = f'sh {tool}-prog.sh'
         self.conf['prog_ext'] = 'sh'
 

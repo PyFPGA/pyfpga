@@ -16,3 +16,5 @@ python3 $HDIR/hdl2bit.py -t vivado -o results/vivado-vhdl -p xc7z010-1-clg400 --
     --param FREQ 125000000 --param SECS 1 --last cfg Top
 
 python3 $HDIR/prj2bit.py results/vivado-vhdl/example.xpr
+
+python3 $HDIR/bitprog.py -t vivado results/vivado-vhdl/example.bit

@@ -49,15 +49,23 @@ For a comprehensive list of supported tools, features and limitations, please re
 
 ## Installation
 
-PyFPGA requires Python>=3.8.
+> **NOTE:** PyFPGA requires Python >= 3.8.
 
-At the moment, it's only available as a git repository hosted on GitHub. It can be installed with pip:
+PyFPGA can be installed in several ways:
+
+1. From PyPi using pip:
+
+```
+pip install pyfpga
+```
+
+2. From the GitHub repository:
 
 ```
 pip install 'git+https://github.com/PyFPGA/pyfpga#egg=pyfpga'
 ```
 
-Alternatively, you can get a copy of the repository either through git clone or downloading a tarball/zipfile, and then:
+3. Clone/download the repository and install it manually:
 
 ```
 git clone https://github.com/PyFPGA/pyfpga.git
@@ -65,13 +73,13 @@ cd pyfpga
 pip install -e .
 ```
 
-> With `-e` (`--editable`) your application is installed into site-packages via a kind of symlink.
-> That allows pulling changes through git or changing the branch, avoiding the need to reinstall the package.
+> **NOTE:** with `-e` (`--editable`), the application is installed into site-packages via a symlink, which allows you to pull changes through git or switch branches without reinstalling the package.
 
 ## Similar projects
 
 * [edalize](https://github.com/olofk/edalize): an abstraction library for interfacing EDA tools.
-* [Hdlmake](https://ohwr.org/project/hdl-make): tool for generating multi-purpose makefiles for FPGA projects.
+* Firmware Framework ([FWK](https://gitlab.desy.de/fpgafw/fwk)): set of scripts and functions/procedures that combine all the input files needed to produce build.
 * HDL On Git ([Hog](https://gitlab.com/hog-cern/Hog)): a set of Tcl/Shell scripts plus a suitable methodology to handle HDL designs in a GitLab repository.
+* [Hdlmake](https://ohwr.org/project/hdl-make): tool for generating multi-purpose makefiles for FPGA projects.
 * IPbus Builder ([IPBB](https://github.com/ipbus/ipbb)): a tool for streamlining the synthesis, implementation and simulation of modular firmware projects over multiple platforms.
 * [tsfpga](https://github.com/tsfpga/tsfpga): a flexible and scalable development platform for modern FPGA projects.

@@ -16,3 +16,5 @@ python3 $HDIR/hdl2bit.py -t ise -o results/ise-vhdl -p xc6slx16-3-csg32 --projec
     --param FREQ 125000000 --param SECS 1 --last cfg Top
 
 python3 $HDIR/prj2bit.py results/ise-vhdl/example.xise
+
+python3 $HDIR/bitprog.py -t ise results/ise-vhdl/example.bit

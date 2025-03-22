@@ -16,3 +16,5 @@ python3 $HDIR/hdl2bit.py -t libero -o results/libero-vhdl -p m2s010-1-tq144 --pr
     --param FREQ 125000000 --param SECS 1 --last cfg Top
 
 python3 $HDIR/prj2bit.py results/libero-vhdl/libero/example.prjx
+
+python3 $HDIR/bitprog.py -t libero results/libero-vhdl/example.ppd

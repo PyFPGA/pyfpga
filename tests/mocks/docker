@@ -1,0 +1,12 @@
+#!/usr/bin/env python3
+
+#
+# Copyright (C) 2025 PyFPGA Project
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+open('openflow.bit', 'w', encoding='utf-8').close()
+open('openflow.svf', 'w', encoding='utf-8').close()
+
+print('INFO:the DOCKER mock has been executed')

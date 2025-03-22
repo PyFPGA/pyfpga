@@ -52,6 +52,5 @@ prj.set_top('Top')
 
 if args.action in ['make', 'all']:
     prj.make()
-
 if args.action in ['prog', 'all']:
     prj.prog()

@@ -14,16 +14,16 @@ from pyfpga.project import Project
 
 
 class Libero(Project):
-    """Class to support Libero."""
+    """Class to support Libero projects."""
 
     def _configure(self):
         tool = 'libero'
         self.conf['tool'] = tool
         self.conf['make_cmd'] = f'{tool} SCRIPT:{tool}.tcl'
         self.conf['make_ext'] = 'tcl'
-        self.conf['prog_bit'] = None
-        self.conf['prog_cmd'] = None
-        self.conf['prog_ext'] = None
+        self.conf['prog_bit'] = ['ppd', 'stp', 'bit', 'jed']
+        self.conf['prog_cmd'] = f'FPExpress SCRIPT:{tool}-prog.tcl'
+        self.conf['prog_ext'] = 'tcl'
 
     def _make_custom(self):
         info = get_info(self.data.get('part', 'mpf100t-1-fcg484'))
@@ -31,9 +31,7 @@ class Libero(Project):
         self.data['device'] = info['device']
         self.data['speed'] = info['speed']
         self.data['package'] = info['package']
-
-    def _prog_custom(self):
-        raise NotImplementedError('Libero programming not supported')
+        self.data['prange'] = info['prange']
 
 
 # pylint: disable=duplicate-code
@@ -42,15 +40,16 @@ def get_info(part):
     """Get info about the FPGA part.
 
     :param part: the FPGA part as specified by the tool
-    :returns: a dictionary with the keys family, device, speed and package
+    :returns: a dict with the keys family, device, speed, package and prange
     """
-    part = part.lower()
+    part = part.lower().replace(' ', '')
     # Looking for the family
     family = None
     families = {
         r'm2s': 'SmartFusion2',
-        r'm2gl': 'Igloo2',
+        r'm2gl': 'IGLOO2',
         r'rt4g': 'RTG4',
+        r'mpfs': 'PolarFireSoC',
         r'mpf': 'PolarFire',
         r'a2f': 'SmartFusion',
         r'afs': 'Fusion',
@@ -65,15 +64,20 @@ def get_info(part):
         if re.match(key, part):
             family = value
             break
-    # Looking for the device and package
+    # Looking for the other values
     device = None
     speed = None
     package = None
+    prange = None
     aux = part.split('-')
     if len(aux) == 2:
         device = aux[0]
-        speed = 'STD'
         package = aux[1]
+        if package[0].isdigit():
+            speed = f'-{package[0]}'
+            package = package[1:]
+        else:
+            speed = 'STD'
     elif len(aux) == 3:
         device = aux[0]
         if len(aux[1]) < len(aux[2]):
@@ -83,10 +87,27 @@ def get_info(part):
             speed = f'-{aux[2]}'
             package = aux[1]
     else:
-        raise ValueError(
-            'Part must be DEVICE-SPEED-PACKAGE or DEVICE-PACKAGE'
-        )
+        valid = 'DEVICE-[SPEED][-]PACKAGE[PRANGE][-SPEED]'
+        raise ValueError(f'Invalid PART format ({valid})')
+    pranges = {
+        'c': 'COM',
+        'e': 'EXT',
+        'i': 'IND',
+        'm': 'MIL',
+        't1': 'TGrade1',
+        't2': 'TGrade2'
+    }
+    prange = 'COM'
+    for suffix, name in pranges.items():
+        if package.endswith(suffix):
+            package = package[:-len(suffix)]
+            prange = name
+            break
     # Finish
     return {
-        'family': family, 'device': device, 'speed': speed, 'package': package
+        'family': family,
+        'device': device,
+        'speed': speed,
+        'package': package,
+        'prange': prange
     }

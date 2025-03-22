@@ -1,3 +1,5 @@
+import os
+
 from pathlib import Path
 from pyfpga.factory import Factory
 
@@ -9,6 +11,7 @@ def test_diamond():
     generate(tool, 'PARTNAME')
     base = f'results/{tool}/{tool}'
     assert Path(f'{base}.tcl').exists(), 'file not found'
+    assert Path(f'{base}-prog.sh').exists(), 'file not found'
 
 
 def test_ise():
@@ -24,6 +27,7 @@ def test_libero():
     generate(tool, 'DEVICE-PACKAGE-SPEED')
     base = f'results/{tool}/{tool}'
     assert Path(f'{base}.tcl').exists(), 'file not found'
+    assert Path(f'{base}-prog.tcl').exists(), 'file not found'
 
 
 def test_openflow():
@@ -39,7 +43,7 @@ def test_quartus():
     generate(tool, 'PARTNAME')
     base = f'results/{tool}/{tool}'
     assert Path(f'{base}.tcl').exists(), 'file not found'
-    assert Path(f'{base}-prog.tcl').exists(), 'file not found'
+    assert Path(f'{base}-prog.sh').exists(), 'file not found'
 
 
 def test_vivado():
@@ -83,11 +87,18 @@ def generate(tool, part):
     prj.add_hook('prebit', 'HOOK14')
     prj.add_hook('postbit', 'HOOK15')
     prj.add_hook('postbit', 'HOOK16')
-    try:
-        prj.make()
-    except Exception:
-        pass
-    try:
-        prj.prog()
-    except Exception:
-        pass
+    prj.make()
+    prj.prog()
+    #
+    separator = '\\'
+    #
+    for path in prj.data['includes']:
+        assert separator not in path, f'invalid path {path}'
+    for category in ['files', 'constraints']:
+        for path in prj.data[category]:
+            assert separator not in path, f'invalid path {path}'
+    #
+    if os.name == 'nt' and tool in ['diamond', 'quartus']:
+        separator = '/'
+    path = prj._get_bitstream()
+    assert separator not in path, f'invalid path {path}'
