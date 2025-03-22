@@ -65,9 +65,6 @@ echo "##########################################################################
 cd ../examples/helpers
 
 for TOOL in "${!TOOLS[@]}"; do
-  if [[ "$TOOL" == "diamond" ]]; then
-    continue
-  fi
   bash "$TOOL".sh
 done
 

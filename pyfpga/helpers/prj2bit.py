@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (C) 2020-2024 PyFPGA Project
+# Copyright (C) 2020-2025 PyFPGA Project
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
@@ -54,6 +54,7 @@ def main():
     # Detecting a Project file
 
     tool_per_ext = {
+        '.ldf': 'diamond',
         '.xise': 'ise',
         '.prjx': 'libero',
         '.qpf': 'quartus',
