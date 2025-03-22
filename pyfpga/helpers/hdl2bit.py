@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (C) 2020-2024 PyFPGA Project
+# Copyright (C) 2020-2025 PyFPGA Project
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
@@ -58,13 +58,6 @@ def main():
     )
 
     parser.add_argument(
-        '-o', '--odir',
-        metavar='PATH',
-        default='results',
-        help='where to generate files [results]'
-    )
-
-    parser.add_argument(
         '-p', '--part',
         metavar='PART',
         help='the target device'
@@ -112,6 +105,13 @@ def main():
         choices=steps,
         default='bit',
         help=f'last step to perform [{steps[-1]}] ({"|".join(steps)})'
+    )
+
+    parser.add_argument(
+        '-o', '--odir',
+        metavar='PATH',
+        default='results',
+        help='where to generate files [results]'
     )
 
     parser.add_argument(

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (C) 2020-2024 PyFPGA Project
+# Copyright (C) 2020-2025 PyFPGA Project
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
@@ -18,16 +18,12 @@ from pyfpga.factory import Factory, TOOLS
 from pyfpga.project import STEPS
 
 tools = list(TOOLS.keys())
-devs = ['fpga', 'spi', 'bpi']
 positions = range(1, 10)
-widths = [2**i for i in range(6)]
 
 EPILOGUE = f"""
 Supported values of arguments with choices:
 * TOOL = {'|'.join(tools)}
-* TYPE = {'|'.join(devs)}
 * POSITION = {'|'.join(map(str, positions))}
-* WIDTH = {'|'.join(map(str, widths))}
 """
 
 
@@ -57,21 +53,6 @@ def main():
     )
 
     parser.add_argument(
-        '-o', '--odir',
-        metavar='PATH',
-        default='results',
-        help='where to generate files [results]'
-    )
-
-    parser.add_argument(
-        '-d', '--device',
-        metavar='TYPE',
-        choices=devs,
-        default=devs[0],
-        help=f'the target device type [{devs[0]}]'
-    )
-
-    parser.add_argument(
         '-p', '--position',
         metavar='POSITION',
         choices=positions,
@@ -81,18 +62,10 @@ def main():
     )
 
     parser.add_argument(
-        '-m', '--memname',
-        metavar='NAME',
-        help='memory name for SPI or BPI devices [None]'
-    )
-
-    parser.add_argument(
-        '-w', '--width',
-        metavar='WIDTH',
-        choices=widths,
-        type=int,
-        default=1,
-        help='memory width for SPI or BPI devices [1]'
+        '-o', '--odir',
+        metavar='PATH',
+        default='results',
+        help='where to generate files [results]'
     )
 
     parser.add_argument(
@@ -110,12 +83,7 @@ def main():
     prj = Factory(args.tool, odir=args.odir)
 
     try:
-        if args.device == 'fpga':
-            prj.prog(args.bit, args.position)
-        if args.device == 'spi':
-            prj.prog_spi(args.bit, args.position, args.width, args.memname)
-        if args.device == 'bpi':
-            prj.prog_bpi(args.bit, args.position, args.width, args.memname)
+        prj.prog(args.bit, args.position)
     except Exception as e:
         sys.exit('{} ({})'.format(type(e).__name__, e))
 
