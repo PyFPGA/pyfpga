@@ -9,7 +9,7 @@
 {% if 'cfg' in steps %}# Project configuration -------------------------------------------------------
 
 if { [ file exists {{ project }} ] } { file delete -force -- {{ project }} }
-new_project -name {{ project }} -location libero -hdl VERILOG -family {{ family }}
+new_project -name {{ project }} -location {{ project }} -hdl VERILOG -family {{ family }}
 set_device -family {{ family }} -die {{ device }} -package {{ package}} -speed {{ speed }} -part_range {{ prange }}
 
 {% if hooks %}{{ hooks.precfg | join('\n') }}{% endif %}
