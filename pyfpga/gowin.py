@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019-2024 PyFPGA Project
+# Copyright (C) 2026 PyFPGA Project
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
