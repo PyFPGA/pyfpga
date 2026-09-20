@@ -54,8 +54,8 @@ def main():
     # Detecting a Project file
 
     tool_per_ext = {
-        '.gprj': 'gowin',
         '.ldf': 'diamond',
+        '.gprj': 'gowin',
         '.xise': 'ise',
         '.prjx': 'libero',
         '.qpf': 'quartus',
