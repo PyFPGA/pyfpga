@@ -41,8 +41,11 @@ class Gowin(Project):
                 if candidate.is_file():
                     bitstream = candidate
                     break
+        else:
+            bitstream = Path(bitstream)
 
-        if not bitstream or not Path(bitstream).is_file():
+        if not bitstream or not bitstream.is_file():
             raise FileNotFoundError(bitstream)
 
-        return self._get_absolute(bitstream, self.conf['prog_ext'])
+        abs_path = self._get_absolute(bitstream, self.conf['prog_ext'])
+        return Path(abs_path).as_posix()
