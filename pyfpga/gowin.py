@@ -31,14 +31,16 @@ class Gowin(Project):
 
     def _get_bitstream(self, bitstream=None):
         if not bitstream:
+            project = self.data['project']
+            pnr_dir = Path(self.odir) / project / 'impl' / 'pnr'
+
             for ext in self.conf['prog_bit']:
-                candidate = (
-                    Path(self.odir) /
-                    f'{self.data["project"]}/impl/pnr/{self.data["project"]}.{ext}'
-                )
+                candidate = pnr_dir / f'{project}.{ext}'
                 if candidate.is_file():
                     bitstream = candidate
                     break
+
         if not bitstream or not Path(bitstream).is_file():
             raise FileNotFoundError(bitstream)
+
         return self._get_absolute(bitstream, self.conf['prog_ext'])
