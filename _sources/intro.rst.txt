@@ -13,7 +13,7 @@ With PyFPGA, you can create your own FPGA development workflow tailored to your 
 * Ensured reproducibility and repeatability.
 * Lower resource consumption compared to GUI-based workflows.
 
-It currently supports vendor tools such as ``Diamond``, ``Ise``, ``Quartus``, ``Libero``, and ``Vivado``, as well as ``Openflow``, a solution based on *Free/Libre and Open Source Software* (**FLOSS**).
+It currently supports vendor tools such as ``Diamond``, ``Gowin``, ``Ise``, ``Quartus``, ``Libero``, and ``Vivado``, as well as ``Openflow``, a solution based on *Free/Libre and Open Source Software* (**FLOSS**).
 
 .. ATTENTION::
 
