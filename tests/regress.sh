@@ -17,6 +17,7 @@ echo "##########################################################################
 declare -A TOOLS
 
 TOOLS["diamond"]="brevia2"
+TOOLS["gowin"]="tangnano20k"
 TOOLS["ise"]="s6micro nexys3"
 TOOLS["libero"]="maker"
 TOOLS["openflow"]="icestick edu-ciaa orangecrab ecp5evn"

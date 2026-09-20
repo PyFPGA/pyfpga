@@ -55,6 +55,7 @@ def main():
 
     tool_per_ext = {
         '.ldf': 'diamond',
+        '.gprj': 'gowin',
         '.xise': 'ise',
         '.prjx': 'libero',
         '.qpf': 'quartus',

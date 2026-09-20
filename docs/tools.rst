@@ -12,6 +12,10 @@ Tools
      - Lattice
      - LFXP2-5E-5TN144C
      - device-speed-package
+   * - Gowin
+     - Gowin Semiconductor
+     - GW2AR-LV18QN88C8/I7
+     - part
    * - ISE
      - Xilinx
      - XC7K160T-3-FBG484
@@ -47,6 +51,27 @@ Example:
    from pyfpga.diamond import Diamond
 
    prj = Diamond()
+
+Gowin
+-----
+
+`Gowin downloads <https://www.gowinsemi.com/en/support/download_eda/>`_
+
+Gowin EDA (``gw_sh``) supports Gowin FPGA families. The default part is
+``GW2AR-LV18QN88C8/I7`` (Sipeed Tang Nano 20K). Bitstreams are ``.fs`` files
+produced at the end of place-and-route.
+
+Gowin 1.9.9 has no ``open_project`` / ``-ifdef`` / ``-verilog_param``; pyfpga
+runs create+syn+pnr in one ``gw_sh`` invocation and wraps the newer options in
+``catch``. Prefer 1.9.11+ when licensed.
+
+Example:
+
+.. code::
+
+   from pyfpga.gowin import Gowin
+
+   prj = Gowin()
 
 ISE
 ---

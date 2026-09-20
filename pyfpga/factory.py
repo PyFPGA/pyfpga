@@ -11,6 +11,7 @@ A factory class to create FPGA projects.
 # pylint: disable=too-few-public-methods
 
 from pyfpga.diamond import Diamond
+from pyfpga.gowin import Gowin
 from pyfpga.ise import Ise
 from pyfpga.libero import Libero
 from pyfpga.openflow import Openflow
@@ -20,6 +21,7 @@ from pyfpga.vivado import Vivado
 
 TOOLS = {
     'diamond': Diamond,
+    'gowin': Gowin,
     'ise': Ise,
     'libero': Libero,
     'openflow': Openflow,

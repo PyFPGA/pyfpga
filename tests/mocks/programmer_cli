@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+
+#
+# Copyright (C) 2026 PyFPGA Project
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+print('INFO:the PROGRAMMER_CLI mock has been executed')

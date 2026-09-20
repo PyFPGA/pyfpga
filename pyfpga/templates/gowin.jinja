@@ -1,0 +1,95 @@
+{#
+#
+# Copyright (C) 2026 PyFPGA Project
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+#}
+
+{% if 'cfg' in steps %}# Project configuration -------------------------------------------------------
+
+create_project -force  -name {{ project }} -dir . -pn {{ part }} -device_version C
+
+{% if hooks %}{{ hooks.precfg | join('\n') }}{% endif %}
+
+{% if files %}# Files inclusion
+{% for name, attr in files.items() %}
+add_file {{ name }}
+{% if 'lib' in attr %}set_property library {{ attr.lib }} [get_files {{ name }}]{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if constraints %}# Constraints inclusion
+{% for name, attr in constraints.items() %}
+add_file {{ name }}
+{% endfor %}
+{% endif %}
+
+{% if top %}# Top-level specification
+set_option -top_module {{ top }}
+{% endif %}
+
+set_option -verilog_std sysv2017
+
+{% if includes %}# Verilog Includes
+set_option -include_path { {{- includes | join(';') -}} }
+{% endif %}
+
+{% if defines %}# Verilog Defines (Gowin 1.9.11+; 1.9.9 has no -ifdef)
+if {[catch {set_option -ifdef { {{ defines.items() | map('join', '=') | join(' ') }} }} err]} {
+    puts "WARNING: set_option -ifdef unsupported: $err"
+}
+{% endif %}
+
+{% if params %}# Verilog Parameters (Gowin 1.9.11+; 1.9.9 has no -verilog_param)
+if {[catch {set_option -verilog_param { {{ params.items() | map('join', '=') | join(' ') }} }} err]} {
+    puts "WARNING: set_option -verilog_param unsupported: $err"
+}
+{% endif %}
+
+{% if hooks %}{{ hooks.postcfg | join('\n') }}{% endif %}
+
+{% endif %}
+
+{% if 'syn' in steps or 'par' in steps or 'bit' in steps %}# Design flow -----------------------------------------------------------------
+
+{% if 'cfg' not in steps %}
+# 1.9.11+ only. 1.9.9 has no open_project — run cfg+syn+pnr in one gw_sh.
+if {[catch {open_project {{ project }}/{{ project }}.gprj} err]} {
+    puts "WARNING: open_project failed: $err"
+}
+{% endif %}
+
+{% if 'syn' in steps %}# Synthesis
+
+{% if hooks %}{{ hooks.presyn | join('\n') }}{% endif %}
+
+run syn
+
+{% if hooks %}{{ hooks.postsyn | join('\n') }}{% endif %}
+
+{% endif %}
+
+{% if 'par' in steps %}# Place and Route
+
+{% if hooks %}{{ hooks.prepar | join('\n') }}{% endif %}
+
+set_option -bit_format txt
+run pnr
+
+{% if hooks %}{{ hooks.postpar | join('\n') }}{% endif %}
+
+{% endif %}
+
+{% if 'bit' in steps %}# Bitstream generation
+
+{% if hooks %}{{ hooks.prebit | join('\n') }}{% endif %}
+
+# There is no bit phase in gowin, the bitstream is created at the end of the 'par' phase
+{% if hooks %}{{ hooks.postbit | join('\n') }}{% endif %}
+
+{% endif %}
+
+run close
+
+{% endif %}

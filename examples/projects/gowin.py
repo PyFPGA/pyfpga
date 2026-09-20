@@ -1,0 +1,50 @@
+"""Gowin examples."""
+
+import argparse
+
+from pyfpga.gowin import Gowin
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    '--board', choices=['tangnano20k'], default='tangnano20k'
+)
+parser.add_argument(
+    '--source', choices=['vlog', 'vhdl', 'slog'], default='vlog'
+)
+parser.add_argument(
+    '--action', choices=['make', 'prog', 'all'], default='make'
+)
+args = parser.parse_args()
+
+prj = Gowin(odir=f'results/gowin/{args.source}/{args.board}')
+
+if args.board == 'tangnano20k':
+    prj.set_part('GW2AR-LV18QN88C8/I7')
+    prj.add_param('FREQ', '27000000')
+    prj.add_cons('../sources/cons/tangnano20k/timing.sdc')
+    prj.add_cons('../sources/cons/tangnano20k/clk.cst')
+    prj.add_cons('../sources/cons/tangnano20k/led.cst')
+prj.add_param('SECS', '1')
+
+if args.source == 'vhdl':
+    prj.add_vhdl('../sources/vhdl/*.vhdl', 'blink_lib')
+    prj.add_vhdl('../sources/vhdl/top.vhdl')
+if args.source == 'vlog':
+    prj.add_include('../sources/vlog/include1')
+    prj.add_include('../sources/vlog/include2')
+    prj.add_vlog('../sources/vlog/*.v')
+if args.source == 'slog':
+    prj.add_include('../sources/slog/include1')
+    prj.add_include('../sources/slog/include2')
+    prj.add_slog('../sources/slog/*.sv')
+if args.source in ['vlog', 'slog']:
+    prj.add_define('DEFINE1', '1')
+    prj.add_define('DEFINE2', '1')
+
+prj.set_top('Top')
+
+if args.action in ['make', 'all']:
+    prj.make()
+if args.action in ['prog', 'all']:
+    prj.prog()
