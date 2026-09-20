@@ -29,6 +29,8 @@ class Gowin(Project):
         if 'part' not in self.data:
             self.data['part'] = 'GW2AR-LV18QN88C8/I7'
 
+    # pylint: disable=duplicate-code
+
     def _get_bitstream(self, bitstream=None):
         if not bitstream:
             project = self.data['project']
