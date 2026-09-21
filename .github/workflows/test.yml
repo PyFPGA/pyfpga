@@ -2,10 +2,12 @@ name: 'test'
 
 on:
   push:
-    paths:
+    paths: &shared_paths
       - 'examples/projects/**'
       - 'pyfpga/**'
       - 'tests/**'
+  pull_request:
+    paths: *shared_paths
 
 jobs:
   test:
@@ -25,7 +27,7 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     name: ${{ matrix.os }} | ${{ matrix.pyver }}
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.pyver }}
       uses: actions/setup-python@v5
